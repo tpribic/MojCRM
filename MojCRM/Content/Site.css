@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+  
     padding-bottom: 20px;
 }
 
@@ -34,3 +34,51 @@ textarea {
         padding: 10px 15px;
     }
 }
+.special-wrap {
+    max-height:103px;
+    height:103px;
+}
+.info-left{
+    float:left;
+    width:50%;
+   // background-color:#d3e1e4;
+}
+.info-right{
+    float:left;
+    width:50%;
+    //background-color:#d3e1e4;
+}
+.ticket-body{
+    overflow:auto;
+}
+.info{overflow:auto;
+      //background-color:#d3e1e4;
+      width:100%;}
+
+.number-list {
+list-style:none;
+padding-left:0;
+}
+.number-list li{
+   
+     padding-left:10px; }
+    
+
+ li:hover {
+    background-color:  darkcyan;
+}
+
+.contant-info{
+    padding-left:0;
+}
+.contant-info li{
+      display:block;
+     float:none;
+     line-height:35px;
+     text-decoration:none;
+     background-color:cadetblue;
+     border-bottom-style:solid; 
+     border-bottom-width:1px; 
+     border-bottom-color:#CCCCCC; 
+}
+
