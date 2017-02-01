@@ -1,7 +1,50 @@
-﻿
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Moj-CRM</title>
+    <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!--Header Wrapper-->
+    <div class="special-wrap">
+        <nav id="navbar-left" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header" style="color: lavender">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a id="logo" class="navbar-brand" style="margin-top: 0px;margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px;height: 90px;">
+                        <img alt="Moj-eRačun logo" src="/Content/CRM_logo_source-krivulje.tekst.svg" )"="">
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse" style="margin: 8px">
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </nav>
+        <nav id="navbar-left" class="navbar-left" style="background-color: lavender; border-color:lavender">
 
+        </nav>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        @RenderSection("SPAViews", required: false)
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Elektronički računi d.o.o.</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

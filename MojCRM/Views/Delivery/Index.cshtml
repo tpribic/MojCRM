@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MojCRM.Models.Delivery>
+
+@{
+    ViewBag.Title = "Popis računa za dostavu";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2>Popis računa za dostavu</h2>
+
+<p>
+    @Html.ActionLink("Stvori nove kartice", "CreateTickets")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SenderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceiverId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MerDocumentTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SentDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InsertDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SenderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceiverId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MerDocumentTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SentDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InsertDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserId)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
+            @Html.ActionLink("Detalji", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Izbriši", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
