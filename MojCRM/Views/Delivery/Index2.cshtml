@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MojCRM.Models.Delivery>
+﻿@model IEnumerable<MojCRM.ViewModels.DeliverySearchModel>
 
 @{
     ViewBag.Title = "Dostava eRačuna";
@@ -25,6 +25,12 @@
             @Html.DisplayNameFor(model => model.UserId)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.MerLink)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MerElectronicId)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.SentDate)
         </th>
         <th>
@@ -35,6 +41,15 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.InsertDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceiverVAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReceiverName)
         </th>
         <th></th>
     </tr>
@@ -54,6 +69,12 @@
             @Html.DisplayFor(modelItem => item.UserId)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.MerLink)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MerElectronicId)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.SentDate)
         </td>
         <td>
@@ -66,9 +87,18 @@
             @Html.DisplayFor(modelItem => item.InsertDate)
         </td>
         <td>
-            @*Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceiverVAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceiverName)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
+            @Html.ActionLink("Detalji", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Izbriši", "Delete", new { id=item.Id })
         </td>
     </tr>
 }

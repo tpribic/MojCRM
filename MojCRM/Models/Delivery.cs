@@ -15,10 +15,10 @@ namespace MojCRM.Models
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "OIB pošiljatelja")]
+        [Display(Name = "Moj-eRačun ID pošiljatelja")]
         public int SenderId { get; set; }
 
-        [Display(Name = "OIB primatelja")]
+        [Display(Name = "Moj-eRačun ID pošiljatelja")]
         public int? ReceiverId { get; set; }
 
         [Display(Name = "Interni broj računa")]

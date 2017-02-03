@@ -35,5 +35,7 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.Delivery> DeliveryTicketModels { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.ViewModels.DeliverySearchModel> Deliveries { get; set; }
     }
 }

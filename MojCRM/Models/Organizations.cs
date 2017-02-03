@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MojCRM.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +12,8 @@ namespace MojCRM.Models
     public class Organizations
     {
         [Key]
-        public int OrganizationId { get; set; }
+        [Display(Name = "Moj-eRačun ID")]
+        public int MerId { get; set; }
 
         [Display(Name = "OIB)")]
         public string VAT { get; set; }
@@ -19,8 +21,7 @@ namespace MojCRM.Models
         [Display(Name = "Naziv tvrtke")]
         public string SubjectName { get; set; }
 
-        [Display(Name = "Moj-eRačun ID")]
-        public int MerId { get; set; }
+        public virtual ICollection<DeliverySearchModel> Deliveries { get; set; }
     }
 
     public class OrganizationsDbContext : ApplicationDbContext

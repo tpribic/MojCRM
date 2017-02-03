@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MojCRM.Models;
+using MojCRM.ViewModels;
 using ActiveUp.Net.Mail;
 using System.Globalization;
 using System.Text.RegularExpressions;

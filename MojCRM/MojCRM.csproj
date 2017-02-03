@@ -327,6 +327,10 @@
     <Compile Include="Migrations\201702011804435_Feb1Update.Designer.cs">
       <DependentUpon>201702011804435_Feb1Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702031602502_Feb3Update.cs" />
+    <Compile Include="Migrations\201702031602502_Feb3Update.Designer.cs">
+      <DependentUpon>201702031602502_Feb3Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Delivery.cs" />
@@ -338,6 +342,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\DeliverySearchModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -435,8 +440,9 @@
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
-    <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Views\Delivery\CreateTickets.cshtml" />
+    <Content Include="Views\Delivery\Index2.cshtml" />
+    <Content Include="Views\Delivery\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -461,6 +467,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702011804435_Feb1Update.resx">
       <DependentUpon>201702011804435_Feb1Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702031602502_Feb3Update.resx">
+      <DependentUpon>201702031602502_Feb3Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
