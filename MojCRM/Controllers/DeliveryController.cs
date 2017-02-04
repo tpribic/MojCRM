@@ -22,9 +22,41 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string SortOrder, string SearchParameter)
         {
-            return View(await db.DeliveryTicketModels.ToListAsync());
+            ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
+            ViewBag.SentDateParm = SortOrder == "SentDate" ? "SentDateDesc" : "SentDate";
+            ViewBag.DocumentTypeParm = SortOrder == "DocType" ? "DocTypeDesc" : "DocType";
+            var Results = from D in db.DeliveryTicketModels
+                          select D;
+
+            if (!String.IsNullOrEmpty(SearchParameter))
+            {
+                Results = Results.Where(d => d.MerDocumentTypeId.Equals(SearchParameter));
+            }
+
+            switch (SortOrder)
+            {
+                case "InsertDate":
+                    Results = Results.OrderBy(d => d.InsertDate);
+                    break;
+                case "SentDate":
+                    Results = Results.OrderBy(d => d.SentDate);
+                    break;
+                case "SentDateDesc":
+                    Results = Results.OrderByDescending(d => d.SentDate);
+                    break;
+                case "DocType":
+                    Results = Results.OrderBy(d => d.MerDocumentTypeId);
+                    break;
+                case "DocTypeDesc":
+                    Results = Results.OrderByDescending(d => d.MerDocumentTypeId);
+                    break;
+                default:
+                    Results = Results.OrderByDescending(d => d.InsertDate);
+                    break;
+            }
+            return View(await Results.ToListAsync());
         }
 
         // GET : Delivery/CreateTickets

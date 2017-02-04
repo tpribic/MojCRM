@@ -5,72 +5,91 @@
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h2>Pregled dokumenata za dostavu</h2>
+<body>
+    <h2>Pregled dokumenata za dostavu</h2>
 
-<p>
-    @Html.ActionLink("Kreiranje kartica za dostavu", "CreateTickets")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SenderId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReceiverId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InvoiceNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SentDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MerDocumentTypeId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DocumentStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InsertDate)
-        </th>
-        <th></th>
-    </tr>
+    <p>
+        @Html.ActionLink("Kreiranje kartica za dostavu", "CreateTickets")
+    </p>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SenderId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReceiverId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InvoiceNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SentDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MerDocumentTypeId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocumentStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InsertDate)
-        </td>
-        <td>
-            @*Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @using (Html.BeginForm(null, "Delivery", FormMethod.Get, new { id = "SearchParameter" })) {
+    <div class="row" style="padding: 5px">
+        <div class="col-lg-4">
+            <label for="SearchParameter">Pretraživanje po tipu dokumenta</label>
+            <div class="input-group">
+                <input id="DocTypeSearch" type="number" class="form-control" placeholder="Tip dokumenta" />
+                <span class="input-group-btn">
+                    <button id="SearchParameter" type="submit" class="btn btn-default">Traži!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    }
 
-</table>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.ActionLink("Datum slanja dokumenta", "Index", new { SortOrder = ViewBag.SentDateParm })
+            </th>
+            <th>
+                @Html.ActionLink("Tip dokumenta", "Index", new { SortOrder = ViewBag.DocumentTypeParm })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocumentStatus)
+            </th>
+            <th>
+                @Html.ActionLink("Datum kreiranja kartice", "Index", new { SortOrder = ViewBag.InsertDateParm })
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SenderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceiverId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MerDocumentTypeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocumentStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InsertDate)
+                </td>
+                <td>
+                    @*Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
+                    @Html.ActionLink("Detalji", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Izbriši", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</body>
+</html>

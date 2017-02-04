@@ -31,7 +31,8 @@ namespace MojCRM.Models
         public MerDeliveryJsonResponse MerJson { get; set; }
         public int MerElectronicId { get; set; }
 
-        [Display(Name = "Datum slanja računa")]
+        [Display(Name = "Datum slanja dokumenta")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime SentDate { get; set; }
 
         [Display(Name = "Tip dokumenta")]
@@ -41,6 +42,7 @@ namespace MojCRM.Models
         public int DocumentStatus { get; set; }
 
         [Display(Name = "Datum kreiranja kartice")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }
