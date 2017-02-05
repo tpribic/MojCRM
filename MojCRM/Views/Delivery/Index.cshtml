@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<MojCRM.Models.Delivery>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Dostava eRačuna";
@@ -8,22 +10,40 @@
 <body>
     <h2>Pregled dokumenata za dostavu</h2>
 
-    <p>
-        @Html.ActionLink("Kreiranje kartica za dostavu", "CreateTickets")
-    </p>
-
-    @using (Html.BeginForm(null, "Delivery", FormMethod.Get, new { id = "SearchParameter" })) {
-    <div class="row" style="padding: 5px">
-        <div class="col-lg-4">
-            <label for="SearchParameter">Pretraživanje po tipu dokumenta</label>
-            <div class="input-group">
-                <input id="DocTypeSearch" type="number" class="form-control" placeholder="Tip dokumenta" />
-                <span class="input-group-btn">
-                    <button id="SearchParameter" type="submit" class="btn btn-default">Traži!</button>
-                </span>
+    <br />
+    <div>
+        <div class="row">
+            <div class="col-md-4">
+                <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary">
+                    Kreiranje kartica za dostavu
+                </a>
+                <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning">
+                    Provjeri sve statuse
+                </a>
             </div>
         </div>
     </div>
+    <br />
+
+    @using (Html.BeginForm("Index", "Delivery", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <label>Interni broj računa</label>
+                <div class="form-group">
+                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Interni broj računa"})
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button id="Search" type="submit" class="btn btn-success">Traži!</button>
+                    <button id="ResetSearch" type="reset" class="btn btn-danger">Poništi!</button>
+                </div>
+            </div>
+        </div>
     }
 
     <table class="table">
@@ -41,16 +61,16 @@
                 @Html.DisplayNameFor(model => model.UserId)
             </th>
             <th>
-                @Html.ActionLink("Datum slanja dokumenta", "Index", new { SortOrder = ViewBag.SentDateParm })
+                @Html.ActionLink("Datum slanja dokumenta", "Index", new { SortOrder = ViewBag.SentDateParm, CurrentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
-                @Html.ActionLink("Tip dokumenta", "Index", new { SortOrder = ViewBag.DocumentTypeParm })
+                @Html.ActionLink("Tip dokumenta", "Index", new { SortOrder = ViewBag.DocumentTypeParm, CurrentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DocumentStatus)
             </th>
             <th>
-                @Html.ActionLink("Datum kreiranja kartice", "Index", new { SortOrder = ViewBag.InsertDateParm })
+                @Html.ActionLink("Datum kreiranja kartice", "Index", new { SortOrder = ViewBag.InsertDateParm, CurrentFilter = ViewBag.CurrentFilter })
             </th>
             <th></th>
         </tr>
@@ -92,4 +112,3 @@
 
     </table>
 </body>
-</html>

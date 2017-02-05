@@ -8,12 +8,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MojCRM.Models;
-using MojCRM.ViewModels;
 using ActiveUp.Net.Mail;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using MojCRM.Helpers;
+using PagedList;
 
 namespace MojCRM.Controllers
 {
@@ -22,17 +22,21 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
-        public async Task<ActionResult> Index(string SortOrder, string SearchParameter)
+        public async Task<ActionResult> Index(string SortOrder, string InvoiceNumber)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
             ViewBag.SentDateParm = SortOrder == "SentDate" ? "SentDateDesc" : "SentDate";
             ViewBag.DocumentTypeParm = SortOrder == "DocType" ? "DocTypeDesc" : "DocType";
-            var Results = from D in db.DeliveryTicketModels
-                          select D;
 
-            if (!String.IsNullOrEmpty(SearchParameter))
+            var Results = from t in db.DeliveryTicketModels
+                          where t.DocumentStatus == 30
+                          select t;
+
+            //Results = db.DeliveryTicketModels.Include(t => t.Organization);
+
+            if (!String.IsNullOrEmpty(InvoiceNumber))
             {
-                Results = Results.Where(d => d.MerDocumentTypeId.Equals(SearchParameter));
+                Results = Results.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
             }
 
             switch (SortOrder)
@@ -56,6 +60,7 @@ namespace MojCRM.Controllers
                     Results = Results.OrderByDescending(d => d.InsertDate);
                     break;
             }
+
             return View(await Results.ToListAsync());
         }
 
@@ -108,7 +113,7 @@ namespace MojCRM.Controllers
                                         SentDate = Result.IssueDate,
                                         MerDocumentTypeId = Result.Type,
                                         DocumentStatus = Result.Status,
-                                        InsertDate = DateTime.Now
+                                        InsertDate = DateTime.Now,
                                     });
                                     db.SaveChanges();
                                 }
@@ -126,7 +131,12 @@ namespace MojCRM.Controllers
                 imap.Disconnect();
             }
 
-            return View(db.DeliveryTicketModels.ToListAsync());
+            var Count = (from t in db.DeliveryTicketModels
+                         where t.InsertDate > DateTime.Today
+                         select t).Count();
+            ViewBag.Count = Count;
+
+            return View();
         }
 
         static MerDeliveryJsonResponse ParseJson(string url)

@@ -21,7 +21,7 @@ namespace MojCRM.Models
         [Display(Name = "Naziv tvrtke")]
         public string SubjectName { get; set; }
 
-        public virtual ICollection<DeliverySearchModel> Deliveries { get; set; }
+        public virtual ICollection<Delivery> Deliveries { get; set; }
     }
 
     public class OrganizationsDbContext : ApplicationDbContext
