@@ -1,6 +1,10 @@
-﻿@model IEnumerable<MojCRM.Models.Delivery>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@using GridMvc.Html
+
+@model IEnumerable<MojCRM.Models.Delivery>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
 @{
     ViewBag.Title = "Dostava eRačuna";
@@ -29,9 +33,33 @@
     {
         <div class="row">
             <div class="col-md-4">
-                <label>Interni broj računa</label>
                 <div class="form-group">
-                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Interni broj računa"})
+                    <label for="sender-search">Naziv pošiljatelja</label>
+                    <div id="sender-search">
+                        @Html.TextBox("Sender", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv pošiljatelja" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="receiver-search">Naziv primatelja</label>
+                    <div id="receiver-search">
+                        @Html.TextBox("Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv primatelja" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="invoice-number-search">Interni broj</label>
+                    <div id="invoice-number-search">
+                        @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Interni broj" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group" data-provide="datepicker">
+                    <label for="sent-date-search">Datum slanja dokumenta</label>
+                    <input id="sent-date-search" name="sent-date-search" type="text" class="form-control" />
                 </div>
             </div>
         </div>
@@ -39,35 +67,48 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
-                    <button id="Search" type="submit" class="btn btn-success">Traži!</button>
-                    <button id="ResetSearch" type="reset" class="btn btn-danger">Poništi!</button>
+                    <button id="Search" type="submit" class="btn btn-primary">Traži!</button>
+                    <button id="ResetSearch" type="reset" class="btn btn-warning">Poništi!</button>
                 </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
+                <div class="alert alert-info">
+                    Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
+                </div>
+            </div>
+            <div class="col-md-2">
+
             </div>
         </div>
     }
 
-    <table class="table">
+        <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SenderId)
+                @Html.DisplayNameFor(model => model.Sender)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReceiverId)
+                @Html.DisplayNameFor(model => model.Receiver)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.InvoiceNumber)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
+            @*
+                <th>
+                    @Html.DisplayNameFor(model => model.UserId)
+                </th>
+            *@
             <th>
                 @Html.ActionLink("Datum slanja dokumenta", "Index", new { SortOrder = ViewBag.SentDateParm, CurrentFilter = ViewBag.CurrentFilter })
             </th>
             <th>
-                @Html.ActionLink("Tip dokumenta", "Index", new { SortOrder = ViewBag.DocumentTypeParm, CurrentFilter = ViewBag.CurrentFilter })
+                @Html.DisplayNameFor(model => model.MerDocumentTypeIdString)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DocumentStatus)
+                @Html.DisplayNameFor(model => model.DocumentStatusString)
             </th>
             <th>
                 @Html.ActionLink("Datum kreiranja kartice", "Index", new { SortOrder = ViewBag.InsertDateParm, CurrentFilter = ViewBag.CurrentFilter })
@@ -76,35 +117,39 @@
         </tr>
 
         @foreach (var item in Model)
-        {
+            {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SenderId)
+                    @Html.DisplayFor(modelItem => item.Sender.SubjectName)
+                    (@Html.DisplayFor(modelItem => item.Sender.VAT))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ReceiverId)
+                    @Html.DisplayFor(modelItem => item.Receiver.SubjectName)
+                    (@Html.DisplayFor(modelItem => item.Receiver.VAT))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.InvoiceNumber)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
-                </td>
+                @*
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserId)
+                    </td>
+                *@
                 <td>
                     @Html.DisplayFor(modelItem => item.SentDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MerDocumentTypeId)
+                    @Html.DisplayFor(modelItem => item.MerDocumentTypeIdString)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DocumentStatus)
+                    @Html.DisplayFor(modelItem => item.DocumentStatusString)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.InsertDate)
                 </td>
                 <td>
                     @*Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
-                    @Html.ActionLink("Detalji", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Detalji", "Details", new { id = item.Id })
                     @Html.ActionLink("Izbriši", "Delete", new { id = item.Id })
                 </td>
             </tr>
@@ -112,3 +157,15 @@
 
     </table>
 </body>
+
+
+
+<script>
+    $(document).ready(function(){
+        var date_input = $('input[name="sent-date-search"]');
+        var options = {
+            autoclose: true,
+        };
+        date_input.datepicker(options);
+    })
+</script>

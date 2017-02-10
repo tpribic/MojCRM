@@ -1,5 +1,4 @@
-﻿using MojCRM.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,7 +14,7 @@ namespace MojCRM.Models
         [Display(Name = "Moj-eRačun ID")]
         public int MerId { get; set; }
 
-        [Display(Name = "OIB)")]
+        [Display(Name = "OIB")]
         public string VAT { get; set; }
 
         [Display(Name = "Naziv tvrtke")]
@@ -26,6 +25,6 @@ namespace MojCRM.Models
 
     public class OrganizationsDbContext : ApplicationDbContext
     {
-        public DbSet<Organizations> Organization { get; set; } 
+        public DbSet<Organizations> Organizations { get; set; } 
     }
 }

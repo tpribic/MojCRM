@@ -22,7 +22,7 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
-        public async Task<ActionResult> Index(string SortOrder, string InvoiceNumber)
+        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
             ViewBag.SentDateParm = SortOrder == "SentDate" ? "SentDateDesc" : "SentDate";
@@ -32,7 +32,17 @@ namespace MojCRM.Controllers
                           where t.DocumentStatus == 30
                           select t;
 
-            //Results = db.DeliveryTicketModels.Include(t => t.Organization);
+            ViewBag.OpenTickets = Results.Count();
+
+            if (!String.IsNullOrEmpty(Sender))
+            {
+                Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender));
+            }
+
+            if (!String.IsNullOrEmpty(Receiver))
+            {
+                Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver));
+            }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
@@ -61,7 +71,7 @@ namespace MojCRM.Controllers
                     break;
             }
 
-            return View(await Results.ToListAsync());
+            return View(await Results.Take(20).ToListAsync());
         }
 
         // GET : Delivery/CreateTickets
@@ -97,10 +107,7 @@ namespace MojCRM.Controllers
                             if (MerLinkMatch.Success && MerCheckerMatch.Success)
                             {
                                 DeliveryLink = MerLinkMatch.Groups[1].ToString();
-                                using (var MeR = new WebClient())
-                                {
-                                    var json = MeR.DownloadString(DeliveryLink);
-                                    MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
+                                MerDeliveryJsonResponse Result = ParseJson(DeliveryLink);
 
                                     db.DeliveryTicketModels.Add(new Delivery
                                     {
@@ -118,7 +125,6 @@ namespace MojCRM.Controllers
                                     db.SaveChanges();
                                 }
                             }
-                        }
                         //TO DO: Add Exceptions
                         catch
                         {
@@ -139,15 +145,30 @@ namespace MojCRM.Controllers
             return View();
         }
 
-        static MerDeliveryJsonResponse ParseJson(string url)
+        //GET: Delivery/UpdateAllStatuses
+        public ActionResult UpdateAllStatuses()
         {
-            // TO DO: Make try-catch for the entire method
-            using (var MeR = new WebClient())
+            var OpenTickets = from t in db.DeliveryTicketModels
+                              where t.DocumentStatus == 30
+                              select t.MerLink;
+
+            var MerLinks = OpenTickets.ToList();
+
+            foreach (var Link in MerLinks)
             {
-                var json = MeR.DownloadString(url);
-                MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
-                return (Result);
+                    MerDeliveryJsonResponse Result = ParseJson(Link);
+
+                    var TicketForUpdate = from t in db.DeliveryTicketModels
+                                          where t.MerLink == Link
+                                          select t;
+                    foreach (Delivery t in TicketForUpdate)
+                    {
+                        t.DocumentStatus = Result.Status;
+                        t.UpdateDate = DateTime.Now;
+                    }
+                        db.SaveChanges();
             }
+            return RedirectToAction("Index");
         }
 
         // GET: Delivery/Details/5
@@ -252,6 +273,17 @@ namespace MojCRM.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        static MerDeliveryJsonResponse ParseJson(string url)
+        {
+            // TO DO: Make try-catch for the entire method
+            using (var MeR = new WebClient())
+            {
+                var json = MeR.DownloadString(url);
+                MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
+                return (Result);
+            }
         }
     }
 }

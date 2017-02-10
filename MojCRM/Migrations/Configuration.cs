@@ -9,8 +9,7 @@ namespace MojCRM.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            ContextKey = "MojCRM.Models.ApplicationDbContext";
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(MojCRM.Models.ApplicationDbContext context)

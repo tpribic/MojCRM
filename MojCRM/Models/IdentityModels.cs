@@ -10,6 +10,8 @@ namespace MojCRM.Models
     public class ApplicationUser : IdentityUser
     {
         public string Hometown { get; set; }
+        public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -35,7 +37,5 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.Delivery> DeliveryTicketModels { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
-
-        public System.Data.Entity.DbSet<MojCRM.ViewModels.DeliverySearchModel> Deliveries { get; set; }
     }
 }
