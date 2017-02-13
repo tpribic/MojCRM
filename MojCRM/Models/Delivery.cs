@@ -37,7 +37,6 @@ namespace MojCRM.Models
 
         [Display(Name = "Datum slanja dokumenta")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime SentDate { get; set; }
 
         [Display(Name = "Tip dokumenta")]
@@ -45,19 +44,8 @@ namespace MojCRM.Models
         public int DocumentStatus { get; set; }
 
         [Display(Name = "Datum kreiranja kartice")]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-
-        public IQueryable<Delivery> Results { get; set; }
-
-        public DeliveryModel()
-        {
-            using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
-            {
-                Results = DeliveryDbContext.AsQueryable();
-            }
-        }
 
         [NotMapped]
         [Display(Name = "Status dokumenta")]
@@ -73,6 +61,7 @@ namespace MojCRM.Models
                     case 40: return "Dostavljen";
                     case 45: return "Ispisan";
                     case 50: return "Neuspješan";
+                    case 55: return "Uklonjen";
                 }
                 return "Status";
             }

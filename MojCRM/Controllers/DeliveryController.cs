@@ -22,11 +22,9 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
-        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber)
+        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, string SentDate)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
-            ViewBag.SentDateParm = SortOrder == "SentDate" ? "SentDateDesc" : "SentDate";
-            ViewBag.DocumentTypeParm = SortOrder == "DocType" ? "DocTypeDesc" : "DocType";
 
             var Results = from t in db.DeliveryTicketModels
                           where t.DocumentStatus == 30
@@ -49,29 +47,23 @@ namespace MojCRM.Controllers
                 Results = Results.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
             }
 
+            if (!String.IsNullOrEmpty(SentDate))
+            {
+                var date = Convert.ToDateTime(SentDate);
+                Results = Results.Where(t => t.SentDate == date);
+            }
+
             switch (SortOrder)
             {
                 case "InsertDate":
                     Results = Results.OrderBy(d => d.InsertDate);
-                    break;
-                case "SentDate":
-                    Results = Results.OrderBy(d => d.SentDate);
-                    break;
-                case "SentDateDesc":
-                    Results = Results.OrderByDescending(d => d.SentDate);
-                    break;
-                case "DocType":
-                    Results = Results.OrderBy(d => d.MerDocumentTypeId);
-                    break;
-                case "DocTypeDesc":
-                    Results = Results.OrderByDescending(d => d.MerDocumentTypeId);
                     break;
                 default:
                     Results = Results.OrderByDescending(d => d.InsertDate);
                     break;
             }
 
-            return View(await Results.Take(20).ToListAsync());
+            return View(await Results.ToListAsync());
         }
 
         // GET : Delivery/CreateTickets
@@ -169,6 +161,22 @@ namespace MojCRM.Controllers
                         db.SaveChanges();
             }
             return RedirectToAction("Index");
+        }
+
+        // POST Delivery/Remove/1125768
+        [HttpPost]
+        public JsonResult Remove(int MerElectronicId)
+        {
+            var Tickets = from t in db.DeliveryTicketModels
+                                   where t.MerElectronicId == MerElectronicId
+                                   select t;
+            var TicketForRemoval = Tickets.ToList().First();
+
+            TicketForRemoval.DocumentStatus = 55;
+            TicketForRemoval.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
         }
 
         // GET: Delivery/Details/5

@@ -6,7 +6,13 @@
     <title>@ViewBag.Title - Moj-CRM</title>
     <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
-
+    <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    
+    <script src="~/Scripts/bootstrap-datepicker.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/jquery-3.1.1.min.js")" type="text/javascript"> </script>
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -23,7 +29,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a id="logo" class="navbar-brand" style="margin-top: 0px;margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px">
-                        <img alt="Moj-eRačun logo" src="/Content/CRM_logo_source-krivulje.tekst.svg" )"="">
+                        <img alt="Moj-eRačun logo" src="@Url.Content("~/Content/CRM_logo_source-krivulje.tekst.svg")" />
                     </a>
                 </div>
                 <div class="navbar-collapse collapse" style="margin: 8px">

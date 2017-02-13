@@ -2,10 +2,6 @@
 
 @model IEnumerable<MojCRM.Models.Delivery>
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
-
 @{
     ViewBag.Title = "Dostava eRačuna";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -59,7 +55,9 @@
             <div class="col-md-4">
                 <div class="form-group" data-provide="datepicker">
                     <label for="sent-date-search">Datum slanja dokumenta</label>
-                    <input id="sent-date-search" name="sent-date-search" type="text" class="form-control" />
+                    <div>
+                        @Html.TextBox("SentDate", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Datum slanja dokumenta", @type = "text", @id = "sent-date-search", @name = "sent-date-search" })
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,100 +70,70 @@
                 </div>
             </div>
             <div class="col-md-4">
-
-            </div>
-            <div class="col-md-4">
                 <div class="alert alert-info">
                     Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
                 </div>
+            </div>
+            <div class="col-md-4">
+
             </div>
             <div class="col-md-2">
 
             </div>
         </div>
     }
+    @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+@*columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false));*@
+    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + "(" + m.Sender.VAT + ")").Sortable(true);
+    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + "(" + m.Receiver.VAT + ")").Sortable(true);
+    columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
+    columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
+    columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
+    columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kreiranja kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        if (m.DocumentStatus == 30)
+            return @<span>
+                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+                <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i class="glyphicon glyphicon-remove"></i></a>
+                </span>;
 
-        <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Sender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Receiver)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InvoiceNumber)
-            </th>
-            @*
-                <th>
-                    @Html.DisplayNameFor(model => model.UserId)
-                </th>
-            *@
-            <th>
-                @Html.ActionLink("Datum slanja dokumenta", "Index", new { SortOrder = ViewBag.SentDateParm, CurrentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MerDocumentTypeIdString)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DocumentStatusString)
-            </th>
-            <th>
-                @Html.ActionLink("Datum kreiranja kartice", "Index", new { SortOrder = ViewBag.InsertDateParm, CurrentFilter = ViewBag.CurrentFilter })
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sender.SubjectName)
-                    (@Html.DisplayFor(modelItem => item.Sender.VAT))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Receiver.SubjectName)
-                    (@Html.DisplayFor(modelItem => item.Receiver.VAT))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InvoiceNumber)
-                </td>
-                @*
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserId)
-                    </td>
-                *@
-                <td>
-                    @Html.DisplayFor(modelItem => item.SentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MerDocumentTypeIdString)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DocumentStatusString)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsertDate)
-                </td>
-                <td>
-                    @*Html.ActionLink("Edit", "Edit", new { id=item.Id }) |*@
-                    @Html.ActionLink("Detalji", "Details", new { id = item.Id })
-                    @Html.ActionLink("Izbriši", "Delete", new { id = item.Id })
-                </td>
-            </tr>
-        }
-
-    </table>
+    return @<span>
+                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+    </span>;
+    });
+}).WithPaging(20)
 </body>
 
 
 
+
 <script>
-    $(document).ready(function(){
-        var date_input = $('input[name="sent-date-search"]');
-        var options = {
-            autoclose: true,
-        };
-        date_input.datepicker(options);
+    $(document).on("click", "a.remove-from-list-ajax", function (e) {
+        e.preventDefault();
+        if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
+            $.ajax({
+                method: 'POST',
+                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                data: {
+                    MerElectronicId: $(this).data("mer-id")
+                },
+                success: function (data) {
+                    if (data.Status === 'OK')
+                        alert("Uspješno ste uklonili račun iz popisa za dostavu!");
+                    else
+                        alert("Greška!");
+                },
+                dataType: 'json'
+            });
+    });
+</script>
+<script>
+    $('#sent-date-search').datepicker({
+        format: "dd.mm.yyyy",
+        todayBtn: true,
+        language: "hr",
+        autoclose: true
     })
 </script>
