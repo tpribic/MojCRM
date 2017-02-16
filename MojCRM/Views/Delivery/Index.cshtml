@@ -85,8 +85,9 @@
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
 @*columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false));*@
-    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + "(" + m.Sender.VAT + ")").Sortable(true);
-    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + "(" + m.Receiver.VAT + ")").Sortable(true);
+    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ")").Sortable(true);
+    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ")").Sortable(true);
+    columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail primatelja").Sortable(false);
     columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
     columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
     columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);

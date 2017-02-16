@@ -339,6 +339,10 @@
     <Compile Include="Migrations\201702071317545_Feb7Update.Designer.cs">
       <DependentUpon>201702071317545_Feb7Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702161821122_Feb16Update.cs" />
+    <Compile Include="Migrations\201702161821122_Feb16Update.Designer.cs">
+      <DependentUpon>201702161821122_Feb16Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Delivery.cs" />
@@ -520,7 +524,6 @@
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
     <Content Include="Views\Delivery\CreateTickets.cshtml" />
-    <Content Include="Views\Delivery\Index2.cshtml" />
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
@@ -547,6 +550,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702071317545_Feb7Update.resx">
       <DependentUpon>201702071317545_Feb7Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161821122_Feb16Update.resx">
+      <DependentUpon>201702161821122_Feb16Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

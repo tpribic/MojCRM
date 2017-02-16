@@ -113,6 +113,7 @@ namespace MojCRM.Controllers
                                         MerDocumentTypeId = Result.Type,
                                         DocumentStatus = Result.Status,
                                         InsertDate = DateTime.Now,
+                                        BuyerEmail = Result.EmailPrimatelja,
                                     });
                                     db.SaveChanges();
                                 }

@@ -42,6 +42,7 @@ namespace MojCRM.Models
         [Display(Name = "Tip dokumenta")]
         public int MerDocumentTypeId { get; set; }
         public int DocumentStatus { get; set; }
+        public string BuyerEmail { get; set; }
 
         [Display(Name = "Datum kreiranja kartice")]
         public DateTime InsertDate { get; set; }
