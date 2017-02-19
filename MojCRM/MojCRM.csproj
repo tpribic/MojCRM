@@ -329,7 +329,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\MerDeliveryJsonResponse.cs" />
     <Compile Include="Migrations\201702061631424_Init.cs" />
     <Compile Include="Migrations\201702061631424_Init.Designer.cs">
@@ -343,17 +342,31 @@
     <Compile Include="Migrations\201702161821122_Feb16Update.Designer.cs">
       <DependentUpon>201702161821122_Feb16Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702171820523_Feb17Update.cs" />
+    <Compile Include="Migrations\201702171820523_Feb17Update.Designer.cs">
+      <DependentUpon>201702171820523_Feb17Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702180920395_Feb18UpdateOrganizationBU.cs" />
+    <Compile Include="Migrations\201702180920395_Feb18UpdateOrganizationBU.Designer.cs">
+      <DependentUpon>201702180920395_Feb18UpdateOrganizationBU.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702181043328_Feb18UpdateViewModel.cs" />
+    <Compile Include="Migrations\201702181043328_Feb18UpdateViewModel.Designer.cs">
+      <DependentUpon>201702181043328_Feb18UpdateViewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Delivery.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MerDeliveryDetails.cs" />
     <Compile Include="Models\MeViewModels.cs" />
     <Compile Include="Models\Organizations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -530,6 +543,7 @@
     <Content Include="Scripts\knockout.validation.min.js.map" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Views\Delivery\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -553,6 +567,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702161821122_Feb16Update.resx">
       <DependentUpon>201702161821122_Feb16Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702171820523_Feb17Update.resx">
+      <DependentUpon>201702171820523_Feb17Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702180920395_Feb18UpdateOrganizationBU.resx">
+      <DependentUpon>201702180920395_Feb18UpdateOrganizationBU.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702181043328_Feb18UpdateViewModel.resx">
+      <DependentUpon>201702181043328_Feb18UpdateViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

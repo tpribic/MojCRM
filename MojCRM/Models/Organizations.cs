@@ -20,7 +20,11 @@ namespace MojCRM.Models
         [Display(Name = "Naziv tvrtke")]
         public string SubjectName { get; set; }
 
+        [Display(Name = "Poslovna jedinica")]
+        public string SubjectBusinessUnit { get; set; }
+
         public virtual ICollection<Delivery> Deliveries { get; set; }
+        public virtual MerDeliveryDetails MerDeliveryDetail { get; set; }
     }
 
     public class OrganizationsDbContext : ApplicationDbContext

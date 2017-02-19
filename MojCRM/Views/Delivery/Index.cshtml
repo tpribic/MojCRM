@@ -13,12 +13,15 @@
     <br />
     <div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary">
                     Kreiranje kartica za dostavu
                 </a>
                 <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning">
                     Provjeri sve statuse
+                </a>
+                <a id="remove-all" action="@Url.Action("RemoveAll", "Delivery")" method="post">
+                    <input type="button" class="btn btn-danger" onclick="javascript: RemoveAll()" value="Ukloni sve račune" />
                 </a>
             </div>
         </div>
@@ -84,10 +87,9 @@
     }
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-@*columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false));*@
-    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ")").Sortable(true);
-    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ")").Sortable(true);
-    columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail primatelja").Sortable(false);
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox"}));
+    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
+    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
     columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
     columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
     columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
@@ -96,17 +98,16 @@
     {
         if (m.DocumentStatus == 30)
             return @<span>
-                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-                <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i class="glyphicon glyphicon-remove"></i></a>
-                </span>;
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i class="glyphicon glyphicon-remove"></i></a>
+    </span>;
 
-    return @<span>
-                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        return @<span>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
     </span>;
     });
 }).WithPaging(20)
 </body>
-
 
 
 
@@ -116,7 +117,7 @@
         if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
             $.ajax({
                 method: 'POST',
-                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
                 data: {
                     MerElectronicId: $(this).data("mer-id")
                 },
@@ -129,6 +130,29 @@
                 dataType: 'json'
             });
     });
+</script>
+<script>
+    function RemoveAll () {
+        $(document).on("click", "#remove-all", function (e) {
+            e.preventDefault();
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr(MerElectronicId); })
+            if (window.confirm("Jeste li sigurni da želite ukloniti označene račune iz popisa za dostavu?"))
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                    data: {
+                        selectedItems
+                    },
+                    success: function (data) {
+                        if (data.Status === 'OK')
+                            alert("Uspješno ste uklonili račune iz popisa za dostavu!");
+                        else
+                            alert("Greška!");
+                    },
+                    dataType: 'json'
+                });
+        });
+    }
 </script>
 <script>
     $('#sent-date-search').datepicker({

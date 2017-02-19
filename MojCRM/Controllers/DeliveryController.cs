@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MojCRM.Models;
+using MojCRM.ViewModels;
 using ActiveUp.Net.Mail;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -180,19 +181,59 @@ namespace MojCRM.Controllers
             return Json(new { Status = "OK" });
         }
 
+        // POST Delivery/RemoveAll
+        [HttpPost]
+        public JsonResult RemoveAll(int[] MerElectronicIds)
+        {
+            foreach (var Id in MerElectronicIds)
+            {
+                var Tickets = from t in db.DeliveryTicketModels
+                              where t.MerElectronicId == Id
+                              select t;
+                var TicketForRemoval = Tickets.ToList().First();
+
+                TicketForRemoval.DocumentStatus = 55;
+                TicketForRemoval.UpdateDate = DateTime.Now;
+                db.SaveChanges();
+            }
+
+            return Json(new { Status = "OK" });
+        }
+
         // GET: Delivery/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Delivery deliveryTicketModel = await db.DeliveryTicketModels.FindAsync(id);
+            Delivery deliveryTicketModel = db.DeliveryTicketModels.Find(id);
             if (deliveryTicketModel == null)
             {
                 return HttpNotFound();
             }
-            return View(deliveryTicketModel);
+
+            DeliveryDetailsViewModel DeliveryDetails = new DeliveryDetailsViewModel
+            {
+                TicketId = deliveryTicketModel.Id,
+                SenderName = deliveryTicketModel.Sender.SubjectName,
+                ReceiverName = deliveryTicketModel.Receiver.SubjectName,
+                InvoiceNumber = deliveryTicketModel.InvoiceNumber,
+                SentDate = deliveryTicketModel.SentDate,
+                MerDocumentTypeId = deliveryTicketModel.MerDocumentTypeId,
+                ReceiverEmail = deliveryTicketModel.BuyerEmail,
+                MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
+                MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
+                ReceiverId = deliveryTicketModel.ReceiverId,
+            };
+
+            var _InvoiceNumber = from t in db.DeliveryTicketModels
+                                 where t.Id == id
+                                 select t.InvoiceNumber;
+
+            ViewBag.InvoiceNumber = _InvoiceNumber.First();
+
+            return View(DeliveryDetails);
         }
 
         // GET: Delivery/Create
