@@ -64,5 +64,8 @@ namespace MojCRM.ViewModels
                 return "Tip dokumenta";
             }
         }
+
+        [NotMapped]
+        public List<Delivery> UndeliveredInvoices { get; set; }
     }
 }

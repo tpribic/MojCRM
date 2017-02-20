@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Moj-CRM</title>
     <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap-datepicker3.min.css" rel="stylesheet" />
-    
-    <script src="~/Scripts/bootstrap-datepicker.min.js" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
-    <script src="@Url.Content("~/Scripts/jquery-3.1.1.min.js")" type="text/javascript"> </script>
 
+    @Scripts.Render("~/bundles/jquery")
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/modernizr")
+
+    <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
+    
+    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
 </head>
 <body>
     <!--Header Wrapper-->

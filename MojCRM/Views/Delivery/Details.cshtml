@@ -53,11 +53,70 @@
     </div>
 </div>
 <hr />
-<div class="panel panel-default">
-    <div class="panel-heading">Pregled ostalih nepreuzetih dokumenata</div>
-    <table class="table">
-    </table>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Pregled ostalih nepreuzetih dokumenata
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.SenderName)</th>
+                    <th>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReceiverEmail)</th>
+                    <th>@Html.DisplayNameFor(model => model.InvoiceNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.SentDate)</th>
+                </tr>
+                @foreach (var Invoice in Model.UndeliveredInvoices)
+                {
+                    <tr>
+                        <td>@Invoice.Sender.SubjectName</td>
+                        <td>@Invoice.MerDocumentTypeIdString</td>
+                        <td>@Invoice.BuyerEmail</td>
+                        <td>@Invoice.InvoiceNumber</td>
+                        <td>@Invoice.SentDate</td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
 </div>
+
+@*<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a data-toggle="collapse" href="#content">Pregled ostalih nepreuzetih dokumenata</a>
+            </div>
+        </div>
+        <div id="content" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.SenderName)</th>
+                        <th>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</th>
+                        <th>@Html.DisplayNameFor(model => model.ReceiverEmail)</th>
+                        <th>@Html.DisplayNameFor(model => model.InvoiceNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.SentDate)</th>
+                    </tr>
+                    @foreach (var Invoice in Model.UndeliveredInvoices)
+                    {
+                        <tr>
+                            <td>@Invoice.Sender.SubjectName</td>
+                            <td>@Invoice.MerDocumentTypeIdString</td>
+                            <td>@Invoice.BuyerEmail</td>
+                            <td>@Invoice.InvoiceNumber</td>
+                            <td>@Invoice.SentDate</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>*@
 
 <hr />
 

@@ -141,7 +141,7 @@
                     method: 'POST',
                     url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
                     data: {
-                        selectedItems
+                        MerElectronicIds: selectedItems
                     },
                     success: function (data) {
                         if (data.Status === 'OK')

@@ -213,6 +213,10 @@ namespace MojCRM.Controllers
                 return HttpNotFound();
             }
 
+            var _UndeliveredInvoicesList = (from t in db.DeliveryTicketModels
+                                           where t.Id != id && t.DocumentStatus == 30 && t.ReceiverId == deliveryTicketModel.ReceiverId
+                                           select t).ToList();
+
             DeliveryDetailsViewModel DeliveryDetails = new DeliveryDetailsViewModel
             {
                 TicketId = deliveryTicketModel.Id,
@@ -225,6 +229,7 @@ namespace MojCRM.Controllers
                 MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                 MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
                 ReceiverId = deliveryTicketModel.ReceiverId,
+                UndeliveredInvoices = _UndeliveredInvoicesList
             };
 
             var _InvoiceNumber = from t in db.DeliveryTicketModels
@@ -232,6 +237,8 @@ namespace MojCRM.Controllers
                                  select t.InvoiceNumber;
 
             ViewBag.InvoiceNumber = _InvoiceNumber.First();
+
+            
 
             return View(DeliveryDetails);
         }
