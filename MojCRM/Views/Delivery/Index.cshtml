@@ -87,7 +87,7 @@
     }
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox"}));
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId}));
     columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
     columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
     columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
@@ -117,7 +117,7 @@
         if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
             $.ajax({
                 method: 'POST',
-                url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
+                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
                 data: {
                     MerElectronicId: $(this).data("mer-id")
                 },
@@ -135,11 +135,11 @@
     function RemoveAll () {
         $(document).on("click", "#remove-all", function (e) {
             e.preventDefault();
-            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr(MerElectronicId); })
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idValue'); })
             if (window.confirm("Jeste li sigurni da želite ukloniti označene račune iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                    url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
                     data: {
                         MerElectronicIds: selectedItems
                     },

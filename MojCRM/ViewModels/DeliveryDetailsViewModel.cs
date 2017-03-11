@@ -26,9 +26,11 @@ namespace MojCRM.ViewModels
         [Display(Name = "Interni broj dokumenta:")]
         public string InvoiceNumber { get; set; }
 
-        [Display(Name = "Datum i vrijeme slanja dokumenta:")]
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Datum slanja dokumenta:")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime SentDate { get; set; }
+
         public int MerDocumentTypeId { get; set; }
 
         [Display(Name = "E-mail adresa primatelja:")]

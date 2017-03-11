@@ -23,6 +23,7 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
+        [Authorize]
         public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, string SentDate)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
@@ -158,6 +159,7 @@ namespace MojCRM.Controllers
                     foreach (Delivery t in TicketForUpdate)
                     {
                         t.DocumentStatus = Result.Status;
+                        t.BuyerEmail = Result.EmailPrimatelja;
                         t.UpdateDate = DateTime.Now;
                     }
                         db.SaveChanges();
