@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "CreateTickets";
+    ViewBag.Title = "Kreiranje kartica";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
@@ -8,5 +8,15 @@
 
 <h4>Čestitamo! Uspješno ste kreirali kartice za današnji dan.</h4>
 
-@Html.ActionLink("Povratak", "Index")
+<p>
+    Broj ukupno kreiranih kartica: <strong>@ViewBag.Count</strong>
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
+            Povratak na popis kartica
+        </a>
+    </div>
+</div>
 

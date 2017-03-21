@@ -1,0 +1,242 @@
+﻿@model MojCRM.ViewModels.DeliveryDetailsViewModel
+
+@{
+    ViewBag.Title = "Detalji";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<!--Modal - CreateContact-->
+@using (Html.BeginForm("CreateFromDelivery", "Contact", FormMethod.Post))
+{
+    <div class="modal fade" id="CreateContact" tabindex="-1" role="dialog" aria-labelledby="CreateContact">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Kreiraj kontakt za dostavu</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="delivery-contact-first-name">@Html.DisplayNameFor(model => model.DeliveryContactFirstName)</label>
+                                <div id="delivery-contact-first-name">
+                                    @Html.TextBox("FirstName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Ime kontakta" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery-contact-last-name">@Html.DisplayNameFor(model => model.DeliveryContactLastName)</label>
+                                <div id="delivery-contact-last-name">
+                                    @Html.TextBox("LastName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Prezime kontakta" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery-contact-telephone">@Html.DisplayNameFor(model => model.DeliveryContactTelephone)</label>
+                                <div id="delivery-contact-telephone">
+                                    @Html.TextBox("Telephone", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj telefona kontakta" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="delivery-contact-mobile">@Html.DisplayNameFor(model => model.DeliveryContactMobileTelephone)</label>
+                                <div id="delivery-contact-mobile">
+                                    @Html.TextBox("Mobile", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery-contact-email">@Html.DisplayNameFor(model => model.DeliveryEmailAddress)</label>
+                                <div id="delivery-contact-email">
+                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery-contact-user">@Html.DisplayNameFor(model => model.DeliveryContactAgent)</label>
+                                <div id="delivery-contact-agent">
+                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control disabled", @value = @User.Identity.Name })
+                                </div>
+                            </div>
+                            <div class="hidden" name="Receiver">
+                                @Model.ReceiverId
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<a id="create-contact" action="@Url.Action("CreateFromDelivery", "Contact")" method="post" class="create-contact">
+                        <input type="button" class="btn btn-primary btn-sm" onclick="javascript: CreateContact()" value="Kreiraj kontakt" />
+                    </a>*@
+                    <button type="submit" class="btn btn-primary">Kreiraj kontakt</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<h2>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @ViewBag.InvoiceNumber</h2>
+
+<hr />
+
+<div>
+    <div class="row">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.SenderName)</strong>
+            @Html.DisplayFor(model => model.SenderName)
+        </div>
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.ReceiverName)</strong>
+            @Html.DisplayFor(model => model.ReceiverName)
+        </div>
+        <div class="col-md-6">
+            <strong>@Html.DisplayNameFor(model => model.ReceiverEmail)</strong>
+            @Html.DisplayFor(model => model.ReceiverEmail)
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</strong>
+            @Html.DisplayFor(model => model.MerDocumentTypeIdString)
+        </div>
+        <div class="col-md-3">
+            <strong>@Html.DisplayNameFor(model => model.InvoiceNumber)</strong>
+            @Html.DisplayFor(model => model.InvoiceNumber)
+        </div>
+        <div class="col-md-6">
+            <strong>@Html.DisplayNameFor(model => model.SentDate)</strong>
+            @Html.DisplayFor(model => model.SentDate)
+        </div>
+    </div>
+    <hr />
+    <h4><img src="~/Content/e_racun_logo_source.png" style="width:100px; height:30px" /></h4>
+    <div class="row">
+        <div class="col-md-6">
+            <strong>@Html.DisplayNameFor(model => model.MerDeliveryDetailComment)</strong>
+            @Html.DisplayFor(model => model.MerDeliveryDetailComment)
+        </div>
+        <div class="col-md-6">
+            <strong>@Html.DisplayNameFor(model => model.MerDeliveryDetailTelephone)</strong>
+            @Html.DisplayFor(model => model.MerDeliveryDetailTelephone)
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Kontakt podaci</h4>
+    </div>
+    <div class="col-md-6">
+        <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact">Kreiraj kontakt</button>
+    </div>
+</div>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a role="button" data-toggle="collapse" href="#content-contacts" aria-expanded="false" aria-controls="content-contacts">Pregled kontakata za dostavu eRačuna</a>
+            </div>
+        </div>
+        <div id="content-contacts" class="collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactFirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactLastName)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactTelephone)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryEmailAddress)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactAgent)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Contact in Model.RelatedDeliveryContacts)
+                    {
+                        <tr>
+                            <td>@Contact.ContactFirstName</td>
+                            <td>@Contact.ContactLastName</td>
+                            <td>@Contact.TelephoneNumber</td>
+                            <td><a href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td>@Contact.User.UserName</td>
+                            <td>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Contact.ContactId, returnUrl = Request.Url })"><i style="color:forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-mer-id="@Html.Raw(Contact.ContactId)" href="#" class="remove-from-list-ajax"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a data-toggle="collapse" href="#content-undelivered" aria-expanded="false">Pregled ostalih nepreuzetih dokumenata</a>
+            </div>
+        </div>
+        <div id="content-undelivered" class="collapse">
+            <div class="">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.SenderName)</th>
+                        <th>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</th>
+                        <th>@Html.DisplayNameFor(model => model.ReceiverEmail)</th>
+                        <th>@Html.DisplayNameFor(model => model.InvoiceNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.SentDate)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Invoice in Model.UndeliveredInvoices)
+                    {
+                        <tr>
+                            <td>@Invoice.Sender.SubjectName</td>
+                            <td>@Invoice.MerDocumentTypeIdString</td>
+                            <td>@Invoice.BuyerEmail</td>
+                            <td>@Invoice.InvoiceNumber</td>
+                            <td>@Invoice.SentDate</td>
+                            <td>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
+            Povratak na popis kartica
+        </a>
+    </div>
+</div>
+
+<script>
+    $(document).on("click", "a.remove-from-list-ajax", function (e) {
+        e.preventDefault();
+        if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
+            $.ajax({
+                method: 'POST',
+                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                data: {
+                    MerElectronicId: $(this).data("mer-id")
+                },
+                success: function (data) {
+                    if (data.Status === 'OK')
+                        alert("Uspješno ste uklonili račun iz popisa za dostavu!");
+                    else
+                        alert("Greška!");
+                },
+                dataType: 'json'
+            });
+    });
+</script>

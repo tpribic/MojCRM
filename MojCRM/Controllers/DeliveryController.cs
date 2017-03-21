@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using MojCRM.Helpers;
+using PagedList;
 
 namespace MojCRM.Controllers
 {
@@ -22,9 +23,49 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Delivery
-        public async Task<ActionResult> Index()
+        [Authorize]
+        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, string SentDate)
         {
-            return View(await db.DeliveryTicketModels.ToListAsync());
+            ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
+
+            var Results = from t in db.DeliveryTicketModels
+                          where t.DocumentStatus == 30
+                          select t;
+
+            ViewBag.OpenTickets = Results.Count();
+
+            if (!String.IsNullOrEmpty(Sender))
+            {
+                Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender));
+            }
+
+            if (!String.IsNullOrEmpty(Receiver))
+            {
+                Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver));
+            }
+
+            if (!String.IsNullOrEmpty(InvoiceNumber))
+            {
+                Results = Results.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
+            }
+
+            if (!String.IsNullOrEmpty(SentDate))
+            {
+                var date = Convert.ToDateTime(SentDate);
+                Results = Results.Where(t => t.SentDate == date);
+            }
+
+            switch (SortOrder)
+            {
+                case "InsertDate":
+                    Results = Results.OrderBy(d => d.InsertDate);
+                    break;
+                default:
+                    Results = Results.OrderByDescending(d => d.InsertDate);
+                    break;
+            }
+
+            return View(await Results.ToListAsync());
         }
 
         // GET : Delivery/CreateTickets
@@ -60,10 +101,7 @@ namespace MojCRM.Controllers
                             if (MerLinkMatch.Success && MerCheckerMatch.Success)
                             {
                                 DeliveryLink = MerLinkMatch.Groups[1].ToString();
-                                using (var MeR = new WebClient())
-                                {
-                                    var json = MeR.DownloadString(DeliveryLink);
-                                    MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
+                                MerDeliveryJsonResponse Result = ParseJson(DeliveryLink);
 
                                     db.DeliveryTicketModels.Add(new Delivery
                                     {
@@ -76,12 +114,12 @@ namespace MojCRM.Controllers
                                         SentDate = Result.IssueDate,
                                         MerDocumentTypeId = Result.Type,
                                         DocumentStatus = Result.Status,
-                                        InsertDate = DateTime.Now
+                                        InsertDate = DateTime.Now,
+                                        BuyerEmail = Result.EmailPrimatelja,
                                     });
                                     db.SaveChanges();
                                 }
                             }
-                        }
                         //TO DO: Add Exceptions
                         catch
                         {
@@ -94,33 +132,122 @@ namespace MojCRM.Controllers
                 imap.Disconnect();
             }
 
-            return View(db.DeliveryTicketModels.ToListAsync());
+            var Count = (from t in db.DeliveryTicketModels
+                         where t.InsertDate > DateTime.Today
+                         select t).Count();
+            ViewBag.Count = Count;
+
+            return View();
         }
 
-        static MerDeliveryJsonResponse ParseJson(string url)
+        //GET: Delivery/UpdateAllStatuses
+        public ActionResult UpdateAllStatuses()
         {
-            // TO DO: Make try-catch for the entire method
-            using (var MeR = new WebClient())
+            var OpenTickets = from t in db.DeliveryTicketModels
+                              where t.DocumentStatus == 30
+                              select t.MerLink;
+
+            var MerLinks = OpenTickets.ToList();
+
+            foreach (var Link in MerLinks)
             {
-                var json = MeR.DownloadString(url);
-                MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
-                return (Result);
+                    MerDeliveryJsonResponse Result = ParseJson(Link);
+
+                    var TicketForUpdate = from t in db.DeliveryTicketModels
+                                          where t.MerLink == Link
+                                          select t;
+                    foreach (Delivery t in TicketForUpdate)
+                    {
+                        t.DocumentStatus = Result.Status;
+                        t.BuyerEmail = Result.EmailPrimatelja;
+                        t.UpdateDate = DateTime.Now;
+                    }
+                        db.SaveChanges();
             }
+            return RedirectToAction("Index");
+        }
+
+        // POST Delivery/Remove/1125768
+        [HttpPost]
+        public JsonResult Remove(int MerElectronicId)
+        {
+            var Tickets = from t in db.DeliveryTicketModels
+                                   where t.MerElectronicId == MerElectronicId
+                                   select t;
+            var TicketForRemoval = Tickets.ToList().First();
+
+            TicketForRemoval.DocumentStatus = 55;
+            TicketForRemoval.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
+        }
+
+        // POST Delivery/RemoveAll
+        [HttpPost]
+        public JsonResult RemoveAll(int[] MerElectronicIds)
+        {
+            foreach (var Id in MerElectronicIds)
+            {
+                var Tickets = from t in db.DeliveryTicketModels
+                              where t.MerElectronicId == Id
+                              select t;
+                var TicketForRemoval = Tickets.ToList().First();
+
+                TicketForRemoval.DocumentStatus = 55;
+                TicketForRemoval.UpdateDate = DateTime.Now;
+                db.SaveChanges();
+            }
+
+            return Json(new { Status = "OK" });
         }
 
         // GET: Delivery/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id, int? receiverId)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Delivery deliveryTicketModel = await db.DeliveryTicketModels.FindAsync(id);
+            Delivery deliveryTicketModel = db.DeliveryTicketModels.Find(id);
             if (deliveryTicketModel == null)
             {
                 return HttpNotFound();
             }
-            return View(deliveryTicketModel);
+
+            var _UndeliveredInvoicesList = (from t in db.DeliveryTicketModels
+                                           where t.Id != id && t.DocumentStatus == 30 && t.ReceiverId == deliveryTicketModel.ReceiverId
+                                           select t).ToList();
+
+            var _RelatedDeliveryContacts = (from t in db.Contacts
+                                            where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
+                                            select t).ToList();
+
+            var DeliveryDetails = new DeliveryDetailsViewModel
+            {
+                TicketId = deliveryTicketModel.Id,
+                SenderName = deliveryTicketModel.Sender.SubjectName,
+                ReceiverName = deliveryTicketModel.Receiver.SubjectName,
+                InvoiceNumber = deliveryTicketModel.InvoiceNumber,
+                SentDate = deliveryTicketModel.SentDate,
+                MerDocumentTypeId = deliveryTicketModel.MerDocumentTypeId,
+                ReceiverEmail = deliveryTicketModel.BuyerEmail,
+                MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
+                MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
+                ReceiverId = deliveryTicketModel.ReceiverId,
+                UndeliveredInvoices = _UndeliveredInvoicesList,
+                RelatedDeliveryContacts = _RelatedDeliveryContacts
+            };
+
+            var _InvoiceNumber = from t in db.DeliveryTicketModels
+                                 where t.Id == id
+                                 select t.InvoiceNumber;
+
+            ViewBag.InvoiceNumber = _InvoiceNumber.First();
+
+            
+
+            return View(DeliveryDetails);
         }
 
         // GET: Delivery/Create
@@ -210,6 +337,17 @@ namespace MojCRM.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        static MerDeliveryJsonResponse ParseJson(string url)
+        {
+            // TO DO: Make try-catch for the entire method
+            using (var MeR = new WebClient())
+            {
+                var json = MeR.DownloadString(url);
+                MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
+                return (Result);
+            }
         }
     }
 }

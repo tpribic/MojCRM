@@ -7,6 +7,7 @@ namespace MojCRM.Helpers
     {
         [JsonProperty]
         public string BuyerID { get; set; }
+        public string EmailPrimatelja { get; set; }
         public int Id { get; set; }
         public string InterniBroj { get; set; }
         public string SupplierName { get; set; }
