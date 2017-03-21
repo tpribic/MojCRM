@@ -14,19 +14,19 @@
     <div>
         <div class="row">
             <div class="col-md-6">
-                <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary">
+                <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary btn-sm">
                     Kreiranje kartica za dostavu
                 </a>
-                <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning">
+                <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm">
                     Provjeri sve statuse
                 </a>
                 <a id="remove-all" action="@Url.Action("RemoveAll", "Delivery")" method="post">
-                    <input type="button" class="btn btn-danger" onclick="javascript: RemoveAll()" value="Ukloni sve račune" />
+                    <input type="button" class="btn btn-danger btn-sm" onclick="javascript: RemoveAll()" value="Ukloni sve račune" />
                 </a>
             </div>
         </div>
     </div>
-    <br />
+    <hr />
 
     @using (Html.BeginForm("Index", "Delivery", FormMethod.Get))
     {
@@ -56,10 +56,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group" data-provide="datepicker">
+                <div class="form-group">
                     <label for="sent-date-search">Datum slanja dokumenta</label>
                     <div>
-                        @Html.TextBox("SentDate", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Datum slanja dokumenta", @type = "text", @id = "sent-date-search", @name = "sent-date-search" })
+                        @Html.TextBox("SentDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Datum slanja dokumenta", @type = "text", @id = "sent-date-search", @name = "sent-date-search"})
                     </div>
                 </div>
             </div>
@@ -68,8 +68,8 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
-                    <button id="Search" type="submit" class="btn btn-primary">Traži!</button>
-                    <button id="ResetSearch" type="reset" class="btn btn-warning">Poništi!</button>
+                    <button id="Search" type="submit" class="btn btn-primary btn-sm">Traži!</button>
+                    <button id="ResetSearch" type="reset" class="btn btn-warning btn-sm">Poništi!</button>
                 </div>
             </div>
             <div class="col-md-4">
@@ -85,6 +85,7 @@
             </div>
         </div>
     }
+    <hr />
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
     columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId}));
@@ -98,8 +99,8 @@
     {
         if (m.DocumentStatus == 30)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-        <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i class="glyphicon glyphicon-remove"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
     </span>;
 
         return @<span>
@@ -155,10 +156,13 @@
     }
 </script>
 <script>
-    $('#sent-date-search').datepicker({
-        format: "dd.mm.yyyy",
-        todayBtn: true,
-        language: "hr",
-        autoclose: true
+    $(function () {
+        $(".date-picker").datepicker({
+            language: 'hr',
+            weekStart: 1,
+            format: "dd.mm.yyyy.",
+            autoclose: true,
+            orientation: "auto bottom",
+        });
     })
 </script>

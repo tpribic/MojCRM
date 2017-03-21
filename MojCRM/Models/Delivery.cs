@@ -93,9 +93,4 @@ namespace MojCRM.Models
             }
         }
     }
-
-    public class DeliveryDbContext : ApplicationDbContext
-    {
-        public DbSet<Delivery> DeliveryTicketModels { get; set; }
-    }
 }

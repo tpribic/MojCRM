@@ -203,7 +203,7 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? receiverId)
         {
             if (id == null)
             {
@@ -219,7 +219,11 @@ namespace MojCRM.Controllers
                                            where t.Id != id && t.DocumentStatus == 30 && t.ReceiverId == deliveryTicketModel.ReceiverId
                                            select t).ToList();
 
-            DeliveryDetailsViewModel DeliveryDetails = new DeliveryDetailsViewModel
+            var _RelatedDeliveryContacts = (from t in db.Contacts
+                                            where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
+                                            select t).ToList();
+
+            var DeliveryDetails = new DeliveryDetailsViewModel
             {
                 TicketId = deliveryTicketModel.Id,
                 SenderName = deliveryTicketModel.Sender.SubjectName,
@@ -231,7 +235,8 @@ namespace MojCRM.Controllers
                 MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                 MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
                 ReceiverId = deliveryTicketModel.ReceiverId,
-                UndeliveredInvoices = _UndeliveredInvoicesList
+                UndeliveredInvoices = _UndeliveredInvoicesList,
+                RelatedDeliveryContacts = _RelatedDeliveryContacts
             };
 
             var _InvoiceNumber = from t in db.DeliveryTicketModels

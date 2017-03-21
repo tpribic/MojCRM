@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MojCRM.Models
 {
@@ -12,6 +14,8 @@ namespace MojCRM.Models
         public string Hometown { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
+
+        public virtual ICollection<Contact> Contacts { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -38,6 +42,6 @@ namespace MojCRM.Models
 
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
 
-        public System.Data.Entity.DbSet<MojCRM.ViewModels.DeliveryDetailsViewModel> DeliveryDetailsViewModels { get; set; }
+        public System.Data.Entity.DbSet<MojCRM.Models.Contact> Contacts { get; set; }
     }
 }

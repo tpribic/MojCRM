@@ -11,7 +11,6 @@ namespace MojCRM.ViewModels
 {
     public class DeliveryDetailsViewModel
     {
-        [Key]
         public int? TicketId { get; set; }
 
         [Display(Name = "Pošiljatelj:")]
@@ -42,6 +41,24 @@ namespace MojCRM.ViewModels
         [Display(Name = "Kontakt podaci:")]
         public string MerDeliveryDetailTelephone { get; set; }
 
+        [Display(Name = "Ime kontakta")]
+        public string DeliveryContactFirstName { get; set; }
+
+        [Display(Name = "Prezime kontakta")]
+        public string DeliveryContactLastName { get; set; }
+
+        [Display(Name = "Broj telefona")]
+        public string DeliveryContactTelephone { get; set; }
+
+        [Display(Name = "Broj mobitela")]
+        public string DeliveryContactMobileTelephone { get; set; }
+
+        [Display(Name = "E-mail adresa")]
+        public string DeliveryEmailAddress { get; set; }
+
+        [Display(Name = "Agent")]
+        public string DeliveryContactAgent { get; set; }
+
 
         [Display(Name = "Tip dokumenta:")]
         public string MerDocumentTypeIdString
@@ -66,8 +83,7 @@ namespace MojCRM.ViewModels
                 return "Tip dokumenta";
             }
         }
-
-        [NotMapped]
         public List<Delivery> UndeliveredInvoices { get; set; }
+        public List<Contact> RelatedDeliveryContacts { get; set; }
     }
 }

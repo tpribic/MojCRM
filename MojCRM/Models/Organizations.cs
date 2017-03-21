@@ -25,10 +25,6 @@ namespace MojCRM.Models
 
         public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual MerDeliveryDetails MerDeliveryDetail { get; set; }
-    }
-
-    public class OrganizationsDbContext : ApplicationDbContext
-    {
-        public DbSet<Organizations> Organizations { get; set; } 
+        public virtual ICollection<Contact> Contacts { get; set; }
     }
 }

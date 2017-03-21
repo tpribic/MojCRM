@@ -13,7 +13,7 @@
 <body>
     <!--Header Wrapper-->
     <div class="special-wrap">
-        <nav id="navbar-left" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-fixed-top">
+        <nav id="navbar-top" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header" style="color: lavender">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -32,6 +32,20 @@
         </nav>
     </div>
     <div class="container body-content">
+        @*<div class="row">
+            <div class="col-md-12">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                    Početna
+                </a>
+                <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
+                    Dostava
+                </a>
+                <a href="@Url.Action("Index", "Account")" class="btn btn-default">
+                    Administracija korisnika
+                </a>
+            </div>
+        </div>*@
+        <hr />
         @RenderBody()
         @RenderSection("SPAViews", required: false)
         <hr />

@@ -64,6 +64,13 @@ namespace MojCRM.Controllers
             return new EmptyResult();
         }
 
+        // GET: /Account/Index
+        [Authorize]
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
