@@ -37,22 +37,26 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(Sender))
             {
                 Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender));
+                ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
                 Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver));
+                ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
                 Results = Results.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
+                ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var date = Convert.ToDateTime(SentDate);
                 Results = Results.Where(t => t.SentDate == date);
+                ViewBag.SearchResults = Results.Count();
             }
 
             switch (SortOrder)
@@ -203,6 +207,7 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/Details/5
+        [Authorize]
         public ActionResult Details(int? id, int? receiverId)
         {
             if (id == null)

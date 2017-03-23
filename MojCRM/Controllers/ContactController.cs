@@ -18,21 +18,27 @@ namespace MojCRM.Controllers
         }
 
         // GET: Contact/CreateFromDelivery
-        public ActionResult CreateFromDelivery(string FirstName, string LastName, string Telephone, string Mobile, string Email, string Agent, string Receiver)
+        public ActionResult CreateFromDelivery(string FirstName, string LastName, string Telephone, string Mobile, string Email, string Agent, string Receiver, string DocumentId)
         {
-            var NewContact = new Contact();
+            int ReceiverInt = Int32.Parse(Receiver);
 
-            NewContact.ContactFirstName = FirstName;
-            NewContact.ContactLastName = LastName;
-            NewContact.ContactType = "Delivery";
-            NewContact.TelephoneNumber = Telephone;
-            NewContact.MobilePhoneNumber = Mobile;
-            NewContact.Email = Email;
-            NewContact.User.UserName = Agent;
-            NewContact.InsertDate = DateTime.Now;
-            NewContact.Organization.MerId = Int32.Parse(Receiver);
+            db.Contacts.Add(new Contact
+            {
+                Organization = new Organizations { MerId = ReceiverInt },
+                ContactFirstName = FirstName,
+                ContactLastName = LastName,
+                Title = "N/A",
+                TelephoneNumber = Telephone,
+                MobilePhoneNumber = Mobile,
+                Email = Email,
+                User = new ApplicationUser { UserName = Agent },
+                InsertDate = DateTime.Now,
+                ContactType = "Delivery",
+            });
 
-            return RedirectToAction("Details");
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Delivery");
         }
     }
 }

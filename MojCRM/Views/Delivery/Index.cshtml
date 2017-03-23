@@ -1,4 +1,5 @@
 ﻿@using GridMvc.Html
+@using System.Data.Entity
 
 @model IEnumerable<MojCRM.Models.Delivery>
 
@@ -59,7 +60,7 @@
                 <div class="form-group">
                     <label for="sent-date-search">Datum slanja dokumenta</label>
                     <div>
-                        @Html.TextBox("SentDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Datum slanja dokumenta", @type = "text", @id = "sent-date-search", @name = "sent-date-search"})
+                        @Html.TextBox("SentDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Datum slanja dokumenta", @type = "text", @id = "sent-date-search", @name = "sent-date-search" })
                     </div>
                 </div>
             </div>
@@ -78,7 +79,9 @@
                 </div>
             </div>
             <div class="col-md-4">
-
+                <div class="alert alert-info">
+                    Broj rezultata pretrage: <strong>@ViewBag.SearchResults</strong>
+                </div>
             </div>
             <div class="col-md-2">
 
@@ -88,27 +91,31 @@
     <hr />
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId}));
-    columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
-    columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
-    columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
-    columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
-    columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
-    columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kreiranja kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
-    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
-    {
-        if (m.DocumentStatus == 30)
-            return @<span>
+columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId }));
+columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
+columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
+columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
+columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
+columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
+columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kreiranja kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
+columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+{
+    if (m.DocumentStatus == 30)
+        return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
         <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
     </span>;
 
-        return @<span>
+    return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
     </span>;
-    });
+});
 }).WithPaging(20)
 </body>
+
+
+
+
 
 
 

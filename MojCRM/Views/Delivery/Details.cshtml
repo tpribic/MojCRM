@@ -54,11 +54,18 @@
                             <div class="col-md-4">
                                 <label for="delivery-contact-user">@Html.DisplayNameFor(model => model.DeliveryContactAgent)</label>
                                 <div id="delivery-contact-agent">
-                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control disabled", @value = @User.Identity.Name })
+                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
                                 </div>
                             </div>
-                            <div class="hidden" name="Receiver">
-                                @Model.ReceiverId
+                            <div class="hidden">
+                                <div id="delivery-contact-receiver">
+                                    @Html.TextBox("Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-contact-documentid">
+                                    @Html.TextBox("DocumentId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                </div>
                             </div>
                         </div>
                     </div>
