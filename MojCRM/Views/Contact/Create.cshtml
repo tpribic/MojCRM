@@ -1,0 +1,180 @@
+﻿@model MojCRM.Models.Contact
+@using System.Web.UI.WebControls
+
+@{
+    ViewBag.Title = "Kreiraj kontakt";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Kreiraj kontakt</strong></h2>
+
+@{
+    var coctactTypeList = new List<ListItem>
+        {
+            new ListItem {Text = "Odaberi tip kontakta", Value = null },
+            new ListItem {Text = "Dostava", Value = "Delivery" },
+        };
+}
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactFirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactFirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactFirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactLastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactLastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactLastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TelephoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TelephoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TelephoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MobilePhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MobilePhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MobilePhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="hidden">
+            @Html.LabelFor(model => model.InsertDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.InsertDate, new { htmlAttributes = new { @class = "form-control", @Value = DateTime.Now} })
+                @Html.ValidationMessageFor(model => model.InsertDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ContactType, new SelectList(coctactTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Organization.VAT, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Organization.VAT, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Organization.SubjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Organization.SubjectName, new { @class = "form-control", @id = "Organization" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Kreiraj" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
+            Povratak na administraciju kontakata
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="@Url.Action("List", "Delivery")" class="btn btn-default">
+            Popis kontakata
+        </a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Organization").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("GetOrganization", "Contact")',
+                    datatype: "json",
+                    data: {
+                        Areas: 'Sales',
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Name,
+                                value: val.Name,
+                                customerId: val.ID
+                            }
+                        }))
+                    }
+                })
+            },
+            select: function (event, ui) {
+                $("#CustomerID").val(ui.item.customerId);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#Organization").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("GetOrganization", "Contact")',
+                    datatype: "json",
+                    data: {
+                        Areas: 'Sales',
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (val, item) {
+                            return {
+                                label: val.Naziv,
+                                value: val.Naziv,
+                                customerId: val.OIB
+                            }
+                        }))
+                    }
+                })
+            },
+            select: function (event, ui) {
+                $("#CustomerID").val(ui.item.customerId);
+            }
+        });
+    });
+</script>

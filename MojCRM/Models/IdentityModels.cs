@@ -15,8 +15,6 @@ namespace MojCRM.Models
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
 
-        public virtual ICollection<Contact> Contacts { get; set; }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -43,5 +41,9 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Contact> Contacts { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.DeliveryDetail> DeliveryDetails { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.LogError> LogError { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@using GridMvc.Html
-@using System.Data.Entity
+@using System.Web.UI.WebControls
 
 @model IEnumerable<MojCRM.Models.Delivery>
 
@@ -9,12 +9,12 @@
 }
 
 <body>
-    <h2>Pregled dokumenata za dostavu</h2>
+    <h2 style="text-align:center"><strong>Pregled dokumenata za dostavu</strong></h2>
 
-    <br />
+    <hr />
     <div>
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row" style="text-align:center">
+            <div class="col-md-12">
                 <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary btn-sm">
                     Kreiranje kartica za dostavu
                 </a>
@@ -28,6 +28,25 @@
         </div>
     </div>
     <hr />
+
+    @{
+        var documentTypeList = new List<ListItem>
+        {
+            new ListItem {Text = "Odaberi tip dokumenra", Value = null },
+            new ListItem {Text = "eDokument", Value = "0" },
+            new ListItem {Text = "eRačun", Value = "1" },
+            new ListItem {Text = "Storno", Value = "3" },
+            new ListItem {Text = "eOpomena", Value = "4" },
+            new ListItem {Text = "eOdgovor", Value = "7" },
+            new ListItem {Text = "eNarudžba", Value = "105" },
+            new ListItem {Text = "eOpoziv", Value = "226" },
+            new ListItem {Text = "eIzmjena", Value = "230" },
+            new ListItem {Text = "eOdgovorN", Value = "231" },
+            new ListItem {Text = "eOtpremnica", Value = "351" },
+            new ListItem {Text = "eOdobrenje", Value = "381" },
+            new ListItem {Text = "eTerećenje", Value = "383" },
+        };
+    }
 
     @using (Html.BeginForm("Index", "Delivery", FormMethod.Get))
     {
@@ -64,6 +83,22 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="ticket-date-search">Datum kreiranja kartice</label>
+                    <div>
+                        @Html.TextBox("TicketDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Datum kreiranja kartice", @type = "text", @id = "ticket-date-search", @name = "ticket-date-search" })
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-md-4">
+                <div class="form-group">
+                    <label for="document-type-search">Tip dokumenta</label>
+                    <div>
+                        @Html.DropDownList("DocumentType", new SelectList(documentTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text", @id = "document-type-search", @name = "document-type-search" })
+                    </div>
+                </div>
+            </div>*@
         </div>
 
         <div class="row">

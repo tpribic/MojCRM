@@ -24,7 +24,8 @@ namespace MojCRM.Controllers
 
         // GET: Delivery
         [Authorize]
-        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, string SentDate)
+        public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, 
+                                               string SentDate, string TicketDate/*, string DocumentType*/)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
 
@@ -54,10 +55,25 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(SentDate))
             {
-                var date = Convert.ToDateTime(SentDate);
-                Results = Results.Where(t => t.SentDate == date);
+                var sentDate = Convert.ToDateTime(SentDate);
+                Results = Results.Where(t => t.SentDate == sentDate);
                 ViewBag.SearchResults = Results.Count();
             }
+
+            if (!String.IsNullOrEmpty(TicketDate))
+            {
+                var insertDate = Convert.ToDateTime(TicketDate);
+                Results = Results.Where(t => t.InsertDate > insertDate);
+                ViewBag.SearchResults = Results.Count();
+            }
+
+            //if (!String.IsNullOrEmpty(DocumentType))
+            //{
+            //    var ResultsDocumentType = from t in db.DeliveryTicketModels
+            //                              where t.MerDocumentTypeIdString == DocumentType
+            //                              select t.MerDocumentTypeId;
+            //    ViewBag.SearchResults = Results.Count();
+            //}
 
             switch (SortOrder)
             {

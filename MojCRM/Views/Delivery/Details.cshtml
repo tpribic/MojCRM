@@ -164,7 +164,7 @@
                             <td>@Contact.ContactLastName</td>
                             <td>@Contact.TelephoneNumber</td>
                             <td><a href="mailto:@Contact.Email">@Contact.Email</a></td>
-                            <td>@Contact.User.UserName</td>
+                            <td>@Contact.User</td>
                             <td>
                                 <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Contact.ContactId, returnUrl = Request.Url })"><i style="color:forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
                                 <a data-mer-id="@Html.Raw(Contact.ContactId)" href="#" class="remove-from-list-ajax"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>

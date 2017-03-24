@@ -26,5 +26,6 @@ namespace MojCRM.Models
         public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual MerDeliveryDetails MerDeliveryDetail { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
     }
 }
