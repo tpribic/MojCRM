@@ -139,6 +139,20 @@ namespace MojCRM.Controllers
                                     });
                                     db.SaveChanges();
                                 }
+                            //TO DO: Remove else and add it to catch segment
+                            else
+                            {
+                                db.LogError.Add(new LogError
+                                {
+                                    Method = @"Delivery - CreateTickets",
+                                    Parameters = "",
+                                    Message = "Moj-CRM was unable to generete ticket",
+                                    InnerException = "",
+                                    Request = "",
+                                    User = "Moj-CRM",
+                                    InsertDate = DateTime.Now,
+                                });
+                            }
                             }
                         //TO DO: Add Exceptions
                         catch
@@ -244,6 +258,10 @@ namespace MojCRM.Controllers
                                             where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
                                             select t).ToList();
 
+            var _RelatedDeliveryDetails = (from t in db.DeliveryDetails
+                                           where t.Receiver.MerId == receiverId
+                                           select t).ToList();
+
             var DeliveryDetails = new DeliveryDetailsViewModel
             {
                 TicketId = deliveryTicketModel.Id,
@@ -257,7 +275,8 @@ namespace MojCRM.Controllers
                 MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
                 ReceiverId = deliveryTicketModel.ReceiverId,
                 UndeliveredInvoices = _UndeliveredInvoicesList,
-                RelatedDeliveryContacts = _RelatedDeliveryContacts
+                RelatedDeliveryContacts = _RelatedDeliveryContacts,
+                RelatedDeliveryDetails = _RelatedDeliveryDetails
             };
 
             var _InvoiceNumber = from t in db.DeliveryTicketModels

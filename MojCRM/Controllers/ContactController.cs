@@ -100,7 +100,7 @@ namespace MojCRM.Controllers
             }
         }
 
-        public JsonResult GetOrganization(string Areas, string term = "")
+        public JsonResult GetOrganization(string term = "")
         {
             var OrganizationList = db.Organizations.Where(
                 c => 

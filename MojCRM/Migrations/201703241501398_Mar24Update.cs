@@ -18,6 +18,7 @@ namespace MojCRM.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         User = c.String(),
+                        DetailNote = c.String(),
                         InsertDate = c.DateTime(nullable: false),
                         Contact_ContactId = c.Int(),
                         Ticket_Id = c.Int(),

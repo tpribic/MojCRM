@@ -71,9 +71,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    @*<a id="create-contact" action="@Url.Action("CreateFromDelivery", "Contact")" method="post" class="create-contact">
-                        <input type="button" class="btn btn-primary btn-sm" onclick="javascript: CreateContact()" value="Kreiraj kontakt" />
-                    </a>*@
                     <button type="submit" class="btn btn-primary">Kreiraj kontakt</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
                 </div>
@@ -131,6 +128,43 @@
 </div>
 <hr />
 
+<div class="row">
+    <div class="col-md-6">
+        <h4>Napomene dostave</h4>
+    </div>
+</div>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a role="button" data-toggle="collapse" href="#content-delivery-details" aria-expanded="false" aria-controls="content-contacts">Pregled napomena dostave</a>
+            </div>
+        </div>
+        <div id="content-delivery-details" class="collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDateTime)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDetail)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailContact)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Detail in Model.RelatedDeliveryDetails)
+                    {
+                        <tr>
+                            <td>@Detail.InsertDate</td>
+                            <td>@Detail.User</td>
+                            <td>@Detail.DetailNote</td>
+                            <td>@Detail.Contact.ContactFirstName + "" + @Detail.Contact.ContactLastName</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
 <div class="row">
     <div class="col-md-6">
         <h4>Kontakt podaci</h4>

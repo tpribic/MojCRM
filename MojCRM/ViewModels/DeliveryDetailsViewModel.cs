@@ -59,6 +59,22 @@ namespace MojCRM.ViewModels
         [Display(Name = "Agent")]
         public string DeliveryContactAgent { get; set; }
 
+        [Display(Name = "Naziv tvrtke")]
+        public string DeliveryDetailReceiver { get; set; }
+
+        [Display(Name = "Agent")]
+        public string DeliveryDetailAgent { get; set; }
+
+        [Display(Name = "Datum i vrijeme napomene")]
+        [DataType(DataType.DateTime)]
+        public DateTime DeliveryDetailDateTime { get; set; }
+
+        [Display(Name = "Povezani kontakt")]
+        public string DeliveryDetailContact { get; set; }
+
+        [Display(Name = "Napomena")]
+        public string DeliveryDetailDetail { get; set; }
+
 
         [Display(Name = "Tip dokumenta:")]
         public string MerDocumentTypeIdString
@@ -85,5 +101,6 @@ namespace MojCRM.ViewModels
         }
         public List<Delivery> UndeliveredInvoices { get; set; }
         public List<Contact> RelatedDeliveryContacts { get; set; }
+        public List<DeliveryDetail> RelatedDeliveryDetails { get; set; }
     }
 }

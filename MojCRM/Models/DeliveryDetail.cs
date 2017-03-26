@@ -15,6 +15,7 @@ namespace MojCRM.Models
 
         public virtual Organizations Receiver { get; set; }
         public string User { get; set; }
+        public string DetailNote { get; set; }
         public DateTime InsertDate { get; set; }
         public virtual Contact Contact { get; set; }
         public virtual Delivery Ticket { get; set; }
