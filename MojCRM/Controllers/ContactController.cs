@@ -44,6 +44,7 @@ namespace MojCRM.Controllers
         public ActionResult CreateFromDelivery(string FirstName, string LastName, string Telephone, string Mobile, string Email, string Agent, string Receiver, string DocumentId)
         {
             int ReceiverInt = Int32.Parse(Receiver);
+            int DocumentIdInt = Int32.Parse(DocumentId);
 
             try
             {
@@ -63,7 +64,7 @@ namespace MojCRM.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Index", "Delivery");
+                return RedirectToAction("Details", new { id = DocumentIdInt, receiverId = ReceiverInt });
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)

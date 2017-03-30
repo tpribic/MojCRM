@@ -94,6 +94,13 @@ namespace MojCRM.Models
         [Required]
         [Display(Name = "Prezime korisnika")]
         public string UserLastName { get; set; }
+
+        [Display(Name = "Moj-eRačun ID")]
+        public string MerUserUsername { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Moj-eRačun lozinka")]
+        public string MerUserPassword { get; set; }
     }
 
     public class ResetPasswordViewModel

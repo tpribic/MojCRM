@@ -14,6 +14,8 @@ namespace MojCRM.Models
         public string Hometown { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
+        public string MerUserUsername { get; set; }
+        public string MerUserPassword { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using MojCRM.Helpers;
 using PagedList;
+using System.Data.Entity.Infrastructure;
 
 namespace MojCRM.Controllers
 {
@@ -294,6 +295,55 @@ namespace MojCRM.Controllers
         public ActionResult Create()
         {
             return View();
+        }
+
+        // POST: AddDetail/1125768
+        [HttpPost]
+        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _DetailNote, string _ContactId, int _TicketId)
+        {
+            try
+            {
+                db.DeliveryDetails.Add(new DeliveryDetail
+                {
+                    ReceiverId = _ReceiverId,
+                    User = _Agent,
+                    DetailNote = _DetailNote,
+                    InsertDate = DateTime.Now,
+                    Contact = _ContactId,
+                    TicketId = _TicketId
+                });
+                db.SaveChanges();
+            }
+            catch (NullReferenceException ex)
+            {
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Delivery - AddDetail",
+                    Parameters = ex.Source,
+                    Message = ex.Message,
+                    InnerException = "",
+                    Request = ex.TargetSite.ToString(),
+                    User = _Agent,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Delivery - AddDetail",
+                    Parameters = ex.Source,
+                    Message = ex.Message,
+                    InnerException = ex.InnerException.ToString(),
+                    Request = ex.TargetSite.ToString(),
+                    User = _Agent,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
         }
 
         // POST: Delivery/Create

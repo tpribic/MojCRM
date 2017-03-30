@@ -59,7 +59,7 @@ namespace MojCRM.ViewModels
         [Display(Name = "Agent")]
         public string DeliveryContactAgent { get; set; }
 
-        [Display(Name = "Naziv tvrtke")]
+        [Display(Name = "Tvrtka primatelj")]
         public string DeliveryDetailReceiver { get; set; }
 
         [Display(Name = "Agent")]
@@ -102,5 +102,19 @@ namespace MojCRM.ViewModels
         public List<Delivery> UndeliveredInvoices { get; set; }
         public List<Contact> RelatedDeliveryContacts { get; set; }
         public List<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public IList<SelectListItem> RelatedDeliveryContactsForDetails
+        {
+            get
+            {
+                var list = (from t in RelatedDeliveryContacts
+                            select new SelectListItem()
+                            {
+                                Text = t.ContactFirstName + " " + t.ContactLastName,
+                                Value = t.ContactFirstName + " " + t.ContactLastName
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
     }
 }

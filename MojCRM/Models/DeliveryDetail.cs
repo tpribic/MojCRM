@@ -13,11 +13,15 @@ namespace MojCRM.Models
         [Key]
         public int Id { get; set; }
 
+        public int? ReceiverId { get; set; }
+        [ForeignKey("ReceiverId")]
         public virtual Organizations Receiver { get; set; }
         public string User { get; set; }
         public string DetailNote { get; set; }
         public DateTime InsertDate { get; set; }
-        public virtual Contact Contact { get; set; }
+        public string Contact { get; set; }
+        public int? TicketId { get; set; }
+        [ForeignKey("TicketId")]
         public virtual Delivery Ticket { get; set; }
     }
 }

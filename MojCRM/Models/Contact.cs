@@ -41,6 +41,5 @@ namespace MojCRM.Models
 
         [Display(Name = "Tip kontakta")]
         public string ContactType { get; set; }
-        public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
     }
 }
