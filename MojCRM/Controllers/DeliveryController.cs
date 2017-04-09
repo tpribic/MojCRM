@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using MojCRM.Helpers;
 using PagedList;
 using System.Data.Entity.Infrastructure;
+using System.Text;
 
 namespace MojCRM.Controllers
 {
@@ -89,7 +90,7 @@ namespace MojCRM.Controllers
             return View(await Results.ToListAsync());
         }
 
-        // GET : Delivery/CreateTickets
+        // GET: Delivery/CreateTickets
         public ActionResult CreateTickets()
         {
             using (Imap4Client imap = new Imap4Client())
@@ -175,7 +176,34 @@ namespace MojCRM.Controllers
             return View();
         }
 
-        //GET: Delivery/UpdateAllStatuses
+        // GET: Delivery/UpdateStatus/12345
+        public ActionResult UpdateStatus(int Id)
+        {
+            var OpenTicket = from t in db.DeliveryTicketModels
+                              where t.Id == Id
+                              select t.MerLink;
+
+            var MerLinks = OpenTicket.ToList();
+
+            foreach (var Link in MerLinks)
+            {
+                MerDeliveryJsonResponse Result = ParseJson(Link);
+
+                var TicketForUpdate = from t in db.DeliveryTicketModels
+                                      where t.MerLink == Link
+                                      select t;
+                foreach (Delivery t in TicketForUpdate)
+                {
+                    t.DocumentStatus = Result.Status;
+                    t.BuyerEmail = Result.EmailPrimatelja;
+                    t.UpdateDate = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // GET: Delivery/UpdateAllStatuses
         public ActionResult UpdateAllStatuses()
         {
             var OpenTickets = from t in db.DeliveryTicketModels
@@ -200,6 +228,82 @@ namespace MojCRM.Controllers
                         db.SaveChanges();
             }
             return RedirectToAction("Index");
+        }
+
+        // GET: Delivery/Resend/12345
+        public ActionResult Resend(int? TicketId, int MerElectronicId, int? ReceiverId, string Name)
+        {
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserPassword).First();
+
+            MerApiResend Request = new MerApiResend();
+
+            Request.Id = MerUser.ToString();
+            Request.Pass = MerPass.ToString();
+            Request.Oib = "99999999927";
+            Request.PJ = "";
+            Request.SoftwareId = "MojCRM-001";
+            Request.DocumentId = MerElectronicId;
+
+            string MerRequest = JsonConvert.SerializeObject(Request);
+
+            using (var Mer = new WebClient())
+            {
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
+            }
+
+            if (TicketId == null)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
+            }
+        }
+
+        // GET Delivery/ChangeEmail
+        public ActionResult ChangeEmail(string _Id, string _Receiver,  string _Email, string _Agent, string _TicketId)
+        {
+            int _IdInt = Int32.Parse(_Id);
+            int _TicketIdInt = Int32.Parse(_TicketId);
+            int _ReceiverInt = Int32.Parse(_Receiver);
+
+            var MerUser = (from u in db.Users
+                          where u.UserName == _Agent
+                          select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                          where u.UserName == _Agent
+                          select u.MerUserPassword).First();
+
+            MerApiChangeEmail Request = new MerApiChangeEmail();
+
+            Request.Id = MerUser.ToString();
+            Request.Pass = MerPass.ToString();
+            Request.Oib = "99999999927";
+            Request.PJ = "";
+            Request.SoftwareId = "MojCRM-001";
+            Request.DocumentId = _IdInt;
+            Request.Email = _Email;
+
+            string MerRequest = JsonConvert.SerializeObject(Request);
+
+            using (var Mer = new WebClient())
+            {
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
+            }
+
+            UpdateStatus(_IdInt);
+
+            return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt });
         }
 
         // POST Delivery/Remove/1125768
@@ -274,6 +378,7 @@ namespace MojCRM.Controllers
                 ReceiverEmail = deliveryTicketModel.BuyerEmail,
                 MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                 MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
+                MerElectronicId = deliveryTicketModel.MerElectronicId,
                 ReceiverId = deliveryTicketModel.ReceiverId,
                 UndeliveredInvoices = _UndeliveredInvoicesList,
                 RelatedDeliveryContacts = _RelatedDeliveryContacts,

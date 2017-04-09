@@ -92,13 +92,13 @@
                 </div>
             </div>
             @*<div class="col-md-4">
-                <div class="form-group">
-                    <label for="document-type-search">Tip dokumenta</label>
-                    <div>
-                        @Html.DropDownList("DocumentType", new SelectList(documentTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text", @id = "document-type-search", @name = "document-type-search" })
+                    <div class="form-group">
+                        <label for="document-type-search">Tip dokumenta</label>
+                        <div>
+                            @Html.DropDownList("DocumentType", new SelectList(documentTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text", @id = "document-type-search", @name = "document-type-search" })
+                        </div>
                     </div>
-                </div>
-            </div>*@
+                </div>*@
         </div>
 
         <div class="row">
@@ -138,6 +138,9 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     if (m.DocumentStatus == 30)
         return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", m.MerElectronicId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
+        @*<a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="resend-document-ajax"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
         <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
     </span>;
 
@@ -155,31 +158,56 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
 
 
 <script>
-    $(document).on("click", "a.remove-from-list-ajax", function (e) {
+    function RemoveFromList() {
+        $(document).on("click", "a.remove-from-list-ajax", function (e) {
+            e.preventDefault();
+            if (window.confirm("Jeste li sigurni da želite ukloniti ovaj dokument iz popisa za dostavu?"))
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                    data: {
+                        MerElectronicId: $(this).data("mer-id")
+                    },
+                    success: function (data) {
+                        if (data.Status === 'OK')
+                            alert("Uspješno ste uklonili dokument iz popisa za dostavu!");
+                        else
+                            alert("Greška!");
+                    },
+                    dataType: 'json'
+                });
+        });
+    }
+
+    function Resend() {
+            $(document).on("click", "a.resend-document-ajax", function (e) {
         e.preventDefault();
-        if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
+        if (window.confirm("Ponovo pošalji obavijest o ovom dokumentu?"))
             $.ajax({
                 method: 'POST',
-                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                url: '@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = ""})',
                 data: {
-                    MerElectronicId: $(this).data("mer-id")
+                    Id: $(this).data("mer-id"),
+                    Agent: $(this).data("@User.Identity.Name")
                 },
                 success: function (data) {
+//                    console.log(data.Status);
                     if (data.Status === 'OK')
-                        alert("Uspješno ste uklonili račun iz popisa za dostavu!");
+                        alert("Poruka je ponovno poslana!");
                     else
                         alert("Greška!");
                 },
                 dataType: 'json'
             });
     });
+    }
 </script>
 <script>
     function RemoveAll () {
         $(document).on("click", "#remove-all", function (e) {
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idValue'); })
-            if (window.confirm("Jeste li sigurni da želite ukloniti označene račune iz popisa za dostavu?"))
+            if (window.confirm("Jeste li sigurni da želite ukloniti označene dokumente iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
                     url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
@@ -188,7 +216,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
                     },
                     success: function (data) {
                         if (data.Status === 'OK')
-                            alert("Uspješno ste uklonili račune iz popisa za dostavu!");
+                            alert("Uspješno ste uklonili dokumente iz popisa za dostavu!");
                         else
                             alert("Greška!");
                     },

@@ -330,6 +330,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
     <Compile Include="Helpers\MerDeliveryJsonResponse.cs" />
     <Compile Include="Migrations\201702061631424_Init.cs" />

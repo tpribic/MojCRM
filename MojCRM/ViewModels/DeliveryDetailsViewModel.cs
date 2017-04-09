@@ -19,7 +19,6 @@ namespace MojCRM.ViewModels
         [Display(Name = "Primatelj:")]
         public string ReceiverName { get; set; }
 
-        [NotMapped]
         public int? ReceiverId { get; set; }
 
         [Display(Name = "Interni broj dokumenta:")]
@@ -30,6 +29,7 @@ namespace MojCRM.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime SentDate { get; set; }
 
+        public int MerElectronicId { get; set; }
         public int MerDocumentTypeId { get; set; }
 
         [Display(Name = "E-mail adresa primatelja:")]

@@ -80,10 +80,6 @@
     </div>
 }
 
-@{ 
-
-}
-
 <!--Modal - CreateContact-->
 @using (Html.BeginForm("AddDetail", "Delivery", FormMethod.Post))
 {
@@ -142,8 +138,74 @@
     </div>
 }
 
-<h2>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @ViewBag.InvoiceNumber</h2>
+<!--Modal - ChangeEmail-->
+@using (Html.BeginForm("ChangeEmail", "Delivery", FormMethod.Post))
+{
+    <div class="modal fade" id="ChangeEmail" tabindex="-1" role="dialog" aria-labelledby="ChangeEmail">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni e-mail adresu za dostavu dokumenta</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="hidden">
+                                <div id="delivery-detail-receiver">
+                                    @Html.TextBox("_Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-user">
+                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="delivery-email">
+                                    <label for="delivery-email">@Html.DisplayNameFor(model => model.ReceiverEmail)</label>
+                                    @Html.DisplayFor(model => model.ReceiverEmail)
+                                </div>
+                            </div>
+                            <br />
+                            <div class="col-md-12">
+                                <div id="delivery-new-email">
+                                    @Html.TextBox("_Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-ticketid">
+                                    @Html.TextBox("_Id", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.MerElectronicId })
+                                </div>
+                                <div id="delivery-detail-ticketid">
+                                    @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Izmijeni adresu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
+<h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @ViewBag.InvoiceNumber</strong></h2>
+<br />
+<div>
+    <div class="row" style="text-align:center">
+        <div class="col-md-12">
+            <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", Model.TicketId, returnUrl = Request.Url })" class="btn btn-sm btn-success" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> Osvježi status</a>
+            <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-warning" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> Ponovi slanje</a>
+            <button type="button" title="Promjena e-mail adrese za dostavu eRačuna" class="btn btn-primary btn-sm" data-toggle="modal" href="#ChangeEmail"><i class="glyphicon glyphicon-envelope"></i> Izmjena e-maila</button>
+        </div>
+    </div>
+</div>
 <hr />
 
 <div>
@@ -303,6 +365,8 @@
                             <td>@Invoice.SentDate</td>
                             <td>
                                 <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
                                 <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
                             </td>
                         </tr>
