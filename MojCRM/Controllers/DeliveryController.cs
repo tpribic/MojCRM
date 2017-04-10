@@ -453,6 +453,26 @@ namespace MojCRM.Controllers
             return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
         }
 
+        // POST: Delivery/EditDetail/12345
+        [HttpPost]
+        [Authorize]
+        public ActionResult EditDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailNote, string _TicketId)
+        {
+            int _TicketIdInt = Int32.Parse(_TicketId);
+            var DetailForEdit = from t in db.DeliveryDetails
+                                 where t.ReceiverId == _ReceiverId && t.TicketId == _TicketIdInt
+                                 select t;
+
+            foreach (DeliveryDetail dt in DetailForEdit)
+            {
+                dt.DetailNote = _DetailNote;
+                dt.Contact = _ContactId;
+                dt.UpdateDate = DateTime.Now;
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
+        }
         // POST: Delivery/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.

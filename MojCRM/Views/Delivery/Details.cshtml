@@ -80,7 +80,7 @@
     </div>
 }
 
-<!--Modal - CreateContact-->
+<!--Modal - AddDetail-->
 @using (Html.BeginForm("AddDetail", "Delivery", FormMethod.Post))
 {
     <div class="modal fade" id="AddDetail" tabindex="-1" role="dialog" aria-labelledby="AddDetail">
@@ -89,6 +89,64 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4>Kreiraj napomenu dostave</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="hidden">
+                                <div id="delivery-detail-receiver">
+                                    @Html.TextBox("_ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="delivery-detail-user">@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</label>
+                                <div id="delivery-detail-user">
+                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="delivery-detail-contact">Kontakt osoba</label>
+                                <div id="delivery-detail-contact">
+                                    @Html.DropDownList("_ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="delivery-detail">@Html.DisplayNameFor(model => model.DeliveryDetailDetail)</label>
+                                <div id="delivery-detail">
+                                    @Html.TextArea("_DetailNote", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-ticketid">
+                                    @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Kreiraj napomenu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!--Modal - EditDetail-->
+@using (Html.BeginForm("EditDetail", "Delivery", FormMethod.Post))
+{
+    <div class="modal fade" id="EditDetail" tabindex="-1" role="dialog" aria-labelledby="EditDetail">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni napomenu dostave</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -286,6 +344,9 @@
                             <td>@Detail.User</td>
                             <td>@Detail.DetailNote</td>
                             <td>@Detail.Contact</td>
+                            <td>
+                                <a href="#EditDetail" data-toggle="modal"><i class="glyphicon glyphicon-edit"></i></a>
+                            </td>
                         </tr>
                     }
                 </table>

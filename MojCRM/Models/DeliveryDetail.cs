@@ -19,6 +19,7 @@ namespace MojCRM.Models
         public string User { get; set; }
         public string DetailNote { get; set; }
         public DateTime InsertDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public string Contact { get; set; }
         public int? TicketId { get; set; }
         [ForeignKey("TicketId")]

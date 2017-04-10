@@ -18,7 +18,7 @@
 </head>
 <body>
     <!--Header Wrapper-->
-    <div class="special-wrap">
+    <div class="special-wrap" style="background-color:lavender">
         <nav id="navbar-top" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header" style="color: lavender">
@@ -37,30 +37,32 @@
             </div>
         </nav>
     </div>
-    <div class="container body-content" style="background-color:lavender">
-        <div class="row">
-            <div class="col-md-12">
-                <a href="@Url.Action("Index", "Home")" class="btn btn-default">
-                    Početna
-                </a>
-                <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
-                    Dostava
-                </a>
-                <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
-                    Kontakti
-                </a>
-                <a href="@Url.Action("Index", "Account")" class="btn btn-default">
-                    Administracija korisnika
-                </a>
+    <div id="main-wrapper" style="background-color:lavender">
+        <div class="container body-content" style="background-color:white">
+            <div class="row" style="padding-top:6px; margin-top:6px">
+                <div class="col-md-12">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                        Početna
+                    </a>
+                    <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
+                        Dostava
+                    </a>
+                    <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
+                        Kontakti
+                    </a>
+                    <a href="@Url.Action("Index", "Account")" class="btn btn-default">
+                        Administracija korisnika
+                    </a>
+                </div>
             </div>
+            <hr />
+            @RenderBody()
+            @RenderSection("SPAViews", required: false)
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Elektronički računi d.o.o.</p>
+            </footer>
         </div>
-        <hr />
-        @RenderBody()
-        @RenderSection("SPAViews", required: false)
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Elektronički računi d.o.o.</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
