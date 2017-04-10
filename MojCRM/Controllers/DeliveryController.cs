@@ -39,13 +39,13 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(Sender))
             {
-                Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender));
+                Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
-                Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver));
+                Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
                 ViewBag.SearchResults = Results.Count();
             }
 
@@ -231,6 +231,7 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/Resend/12345
+        [Authorize]
         public ActionResult Resend(int? TicketId, int MerElectronicId, int? ReceiverId, string Name)
         {
             var MerUser = (from u in db.Users
@@ -269,6 +270,7 @@ namespace MojCRM.Controllers
         }
 
         // GET Delivery/ChangeEmail
+        [Authorize]
         public ActionResult ChangeEmail(string _Id, string _Receiver,  string _Email, string _Agent, string _TicketId)
         {
             int _IdInt = Int32.Parse(_Id);

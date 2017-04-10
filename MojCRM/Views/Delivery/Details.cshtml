@@ -203,6 +203,7 @@
             <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", Model.TicketId, returnUrl = Request.Url })" class="btn btn-sm btn-success" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> Osvježi status</a>
             <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-warning" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> Ponovi slanje</a>
             <button type="button" title="Promjena e-mail adrese za dostavu eRačuna" class="btn btn-primary btn-sm" data-toggle="modal" href="#ChangeEmail"><i class="glyphicon glyphicon-envelope"></i> Izmjena e-maila</button>
+            <a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i> Povratak</a>
         </div>
     </div>
 </div>
@@ -256,6 +257,9 @@
 <div class="row">
     <div class="col-md-6">
         <h4>Napomene dostave</h4>
+    </div>
+    <div class="col-md-6">
+        <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail">Kreiraj napomenu</button>
     </div>
 </div>
 <div class="panel-group">
@@ -321,7 +325,7 @@
                         <tr>
                             <td>@Contact.ContactFirstName</td>
                             <td>@Contact.ContactLastName</td>
-                            <td>@Contact.TelephoneNumber</td>
+                            <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
                             <td><a href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td>@Contact.User</td>
                             <td>
@@ -335,7 +339,6 @@
         </div>
     </div>
 </div>
-
 <hr />
 <div class="panel-group">
     <div class="panel panel-default">
@@ -379,14 +382,6 @@
 </div>
 
 <hr />
-
-<div class="row">
-    <div class="col-md-4">
-        <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
-            Povratak na popis kartica
-        </a>
-    </div>
-</div>
 
 <script>
     $(document).on("click", "a.remove-from-list-ajax", function (e) {

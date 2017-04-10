@@ -53,17 +53,17 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="sender-search">Naziv pošiljatelja</label>
+                    <label for="sender-search">Naziv ili OIB pošiljatelja</label>
                     <div id="sender-search">
-                        @Html.TextBox("Sender", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv pošiljatelja" })
+                        @Html.TextBox("Sender", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB pošiljatelja" })
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="receiver-search">Naziv primatelja</label>
+                    <label for="receiver-search">Naziv ili OIB primatelja</label>
                     <div id="receiver-search">
-                        @Html.TextBox("Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv primatelja" })
+                        @Html.TextBox("Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB primatelja" })
                     </div>
                 </div>
             </div>
@@ -129,10 +129,11 @@
 columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId }));
 columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
-columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj dokumenta").Sortable(false);
-columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja dokumenta").Sortable(true).Format("{0:dd.MM.yyyy}");
+columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
+columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}");
+columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false);
 columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
-columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kreiranja kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
+columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
 columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
 {
     if (m.DocumentStatus == 30)

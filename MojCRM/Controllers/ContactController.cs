@@ -64,7 +64,7 @@ namespace MojCRM.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", new { id = DocumentIdInt, receiverId = ReceiverInt });
+                return RedirectToAction("Details", "Delivery", new { id = DocumentIdInt, receiverId = ReceiverInt });
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)

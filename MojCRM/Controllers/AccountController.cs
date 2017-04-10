@@ -170,7 +170,7 @@ namespace MojCRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserFirstName + " " + model.UserLastName, Email = model.Email, Hometown = model.Hometown, UserFirstName = model.UserFirstName, UserLastName  = model.UserLastName };
+                var user = new ApplicationUser { UserName = model.UserFirstName + " " + model.UserLastName, Email = model.Email, Hometown = model.Hometown, UserFirstName = model.UserFirstName, UserLastName  = model.UserLastName, MerUserUsername = model.MerUserUsername, MerUserPassword = model.MerUserPassword };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
