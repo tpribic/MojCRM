@@ -27,15 +27,38 @@ namespace MojCRM.Controllers
         // GET: Delivery
         [Authorize]
         public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, 
-                                               string SentDate, string TicketDate/*, string DocumentType*/)
+                                               string SentDate, string TicketDate, string BuyerEmail, string DocumentStatus, string DocumentType)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
 
             var Results = from t in db.DeliveryTicketModels
+                          select t;
+
+            var ResultsUndelivered = from t in db.DeliveryTicketModels
                           where t.DocumentStatus == 30
                           select t;
 
-            ViewBag.OpenTickets = Results.Count();
+            ViewBag.OpenTickets = ResultsUndelivered.Count();
+
+            int DocumentStatusInt;
+            if (!String.IsNullOrEmpty(DocumentStatus))
+            {
+                DocumentStatusInt = Int32.Parse(DocumentStatus);
+            }
+            else
+            {
+                DocumentStatusInt = 30;
+            };
+
+            int DocumentTypeInt;
+            if (!String.IsNullOrEmpty(DocumentType))
+            {
+                DocumentTypeInt = Int32.Parse(DocumentType);
+            }
+            else
+            {
+                DocumentTypeInt = 1;
+            };
 
             if (!String.IsNullOrEmpty(Sender))
             {
@@ -69,13 +92,23 @@ namespace MojCRM.Controllers
                 ViewBag.SearchResults = Results.Count();
             }
 
-            //if (!String.IsNullOrEmpty(DocumentType))
-            //{
-            //    var ResultsDocumentType = from t in db.DeliveryTicketModels
-            //                              where t.MerDocumentTypeIdString == DocumentType
-            //                              select t.MerDocumentTypeId;
-            //    ViewBag.SearchResults = Results.Count();
-            //}
+            if (!String.IsNullOrEmpty(BuyerEmail))
+            {
+                Results = Results.Where(t => t.BuyerEmail.Contains(BuyerEmail));
+                ViewBag.SearchResults = Results.Count();
+            }
+
+            if (!String.IsNullOrEmpty(DocumentStatus))
+            {
+                Results = Results.Where(t => t.DocumentStatus == DocumentStatusInt);
+                ViewBag.SearchResults = Results.Count();
+            }
+
+            if (!String.IsNullOrEmpty(DocumentType))
+            {
+                Results = Results.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
+                ViewBag.SearchResults = Results.Count();
+            }
 
             switch (SortOrder)
             {
@@ -177,10 +210,10 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/UpdateStatus/12345
-        public ActionResult UpdateStatus(int Id)
+        public ActionResult UpdateStatus(int TicketId, int? ReceiverId)
         {
             var OpenTicket = from t in db.DeliveryTicketModels
-                              where t.Id == Id
+                              where t.Id == TicketId
                               select t.MerLink;
 
             var MerLinks = OpenTicket.ToList();
@@ -200,7 +233,15 @@ namespace MojCRM.Controllers
                 }
                 db.SaveChanges();
             }
-            return RedirectToAction("Index");
+
+            if (ReceiverId != null)
+            {
+                return RedirectToAction("Details", "Delivery", new { id = TicketId, receiverId = ReceiverId });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Delivery/UpdateAllStatuses
@@ -303,7 +344,7 @@ namespace MojCRM.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
-            UpdateStatus(_IdInt);
+            UpdateStatus(_IdInt, _ReceiverInt);
 
             return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt });
         }
@@ -377,11 +418,14 @@ namespace MojCRM.Controllers
                 InvoiceNumber = deliveryTicketModel.InvoiceNumber,
                 SentDate = deliveryTicketModel.SentDate,
                 MerDocumentTypeId = deliveryTicketModel.MerDocumentTypeId,
+                MerDocumentStatusId = deliveryTicketModel.DocumentStatus,
                 ReceiverEmail = deliveryTicketModel.BuyerEmail,
                 MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                 MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
                 MerElectronicId = deliveryTicketModel.MerElectronicId,
                 ReceiverId = deliveryTicketModel.ReceiverId,
+                ReceiverVAT = deliveryTicketModel.Receiver.VAT,
+                SenderVAT = deliveryTicketModel.Sender.VAT,
                 UndeliveredInvoices = _UndeliveredInvoicesList,
                 RelatedDeliveryContacts = _RelatedDeliveryContacts,
                 RelatedDeliveryDetails = _RelatedDeliveryDetails

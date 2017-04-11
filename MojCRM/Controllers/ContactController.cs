@@ -101,6 +101,32 @@ namespace MojCRM.Controllers
             }
         }
 
+        // POST: Contact/EditFromDelivery
+        [HttpPost]
+        public ActionResult EditFromDelivery(string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
+        {
+            int _ReceiverInt = Int32.Parse(_Receiver);
+            int _DocumentIdInt = Int32.Parse(_DocumentId);
+
+            var ContactForUpdate = from c in db.Contacts
+                                   where c.ContactType == "Delivery" && c.OrganizationId == _ReceiverInt
+                                   select c;
+
+            foreach (Contact c in ContactForUpdate)
+            {
+                c.ContactFirstName = _FirstName;
+                c.ContactLastName = _LastName;
+                c.TelephoneNumber = _Telephone;
+                c.MobilePhoneNumber = _Mobile;
+                c.Email = _Email;
+                c.UpdateDate = DateTime.Now;
+                c.User = _Agent;
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt });
+        }
+
         public JsonResult GetOrganization(string term = "")
         {
             var OrganizationList = db.Organizations.Where(

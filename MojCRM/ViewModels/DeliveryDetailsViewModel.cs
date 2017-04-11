@@ -16,10 +16,13 @@ namespace MojCRM.ViewModels
         [Display(Name = "Pošiljatelj:")]
         public string SenderName { get; set; }
 
+        public string SenderVAT { get; set; }
+
         [Display(Name = "Primatelj:")]
         public string ReceiverName { get; set; }
 
         public int? ReceiverId { get; set; }
+        public string ReceiverVAT { get; set; }
 
         [Display(Name = "Interni broj dokumenta:")]
         public string InvoiceNumber { get; set; }
@@ -31,6 +34,7 @@ namespace MojCRM.ViewModels
 
         public int MerElectronicId { get; set; }
         public int MerDocumentTypeId { get; set; }
+        public int MerDocumentStatusId { get; set; }
 
         [Display(Name = "E-mail adresa primatelja:")]
         public string ReceiverEmail { get; set; }
@@ -49,6 +53,9 @@ namespace MojCRM.ViewModels
 
         [Display(Name = "Broj telefona")]
         public string DeliveryContactTelephone { get; set; }
+
+        [Display(Name = "E-mail adresa kontakta")]
+        public string DeliveryContactEmail { get; set; }
 
         [Display(Name = "Broj mobitela")]
         public string DeliveryContactMobileTelephone { get; set; }
@@ -97,6 +104,25 @@ namespace MojCRM.ViewModels
                     case 383: return "eTerećenje";
                 }
                 return "Tip dokumenta";
+            }
+        }
+
+        [Display(Name = "Status dokumenta")]
+        public string DocumentStatusString
+        {
+            get
+            {
+                switch (MerDocumentStatusId)
+                {
+                    case 10: return "U pripremi";
+                    case 20: return "Potpisan";
+                    case 30: return "Poslan";
+                    case 40: return "Dostavljen";
+                    case 45: return "Ispisan";
+                    case 50: return "Neuspješan";
+                    case 55: return "Uklonjen";
+                }
+                return "Status";
             }
         }
         public List<Delivery> UndeliveredInvoices { get; set; }

@@ -32,7 +32,7 @@
     @{
         var documentTypeList = new List<ListItem>
         {
-            new ListItem {Text = "Odaberi tip dokumenra", Value = null },
+            //new ListItem {Text = "Odaberi tip dokumenta", Value = null },
             new ListItem {Text = "eDokument", Value = "0" },
             new ListItem {Text = "eRačun", Value = "1" },
             new ListItem {Text = "Storno", Value = "3" },
@@ -48,10 +48,24 @@
         };
     }
 
+    @{
+        var documentStatusList = new List<ListItem>
+        {
+            //new ListItem{ Value = null, Text = "Odaberi status dokumenta" },
+            new ListItem{ Value= "10", Text = "U pripremi"},
+            new ListItem{ Value= "20", Text = "Potpisan"},
+            new ListItem{ Value= "30", Text = "Poslan"},
+            new ListItem{ Value= "40", Text = "Dostavljen"},
+            new ListItem{ Value= "45", Text = "Ispisan"},
+            new ListItem{ Value= "50", Text = "Neuspješan"},
+            new ListItem{ Value= "55", Text = "Uklonjen"},
+        };
+    }
+
     @using (Html.BeginForm("Index", "Delivery", FormMethod.Get))
     {
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="sender-search">Naziv ili OIB pošiljatelja</label>
                     <div id="sender-search">
@@ -59,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="receiver-search">Naziv ili OIB primatelja</label>
                     <div id="receiver-search">
@@ -67,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="invoice-number-search">Interni broj</label>
                     <div id="invoice-number-search">
@@ -75,7 +89,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="buyer-email-search">E-mail adresa primatelja</label>
+                    <div id="buyer-email-search">
+                        @Html.TextBox("BuyerEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa primatelja" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="sent-date-search">Datum slanja dokumenta</label>
                     <div>
@@ -83,7 +105,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="ticket-date-search">Datum kreiranja kartice</label>
                     <div>
@@ -91,14 +113,22 @@
                     </div>
                 </div>
             </div>
-            @*<div class="col-md-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="ticket-status-search">Status dokumenta</label>
+                    <div id="delivery-detail-contact">
+                        @Html.DropDownList("DocumentStatus", new SelectList(documentStatusList, "Value", "Text"), "Odaberi status dokumenta", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
                     <div class="form-group">
                         <label for="document-type-search">Tip dokumenta</label>
                         <div>
-                            @Html.DropDownList("DocumentType", new SelectList(documentTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text", @id = "document-type-search", @name = "document-type-search" })
+                            @Html.DropDownList("DocumentType", new SelectList(documentTypeList, "Value", "Text"), "Odaberi tip dokumenta", new { @class = "form-control" })
                         </div>
                     </div>
-                </div>*@
+             </div>
         </div>
 
         <div class="row">
@@ -113,7 +143,7 @@
                     Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="alert alert-info">
                     Broj rezultata pretrage: <strong>@ViewBag.SearchResults</strong>
                 </div>
@@ -132,7 +162,22 @@ columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled(
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
 columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}");
 columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false);
-columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true);
+columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
+    {
+        if (m.DocumentStatus == 30)
+            return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-warning">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 40)
+        return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-success">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 50)
+        return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-danger">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 55)
+        return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-default">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+        return @<div></div>;
+    });
 columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kartice").Sortable(true).Format("{0:dd.MM.yyyy}");
 columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
 {
@@ -159,7 +204,6 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
 
 
 <script>
-    function RemoveFromList() {
         $(document).on("click", "a.remove-from-list-ajax", function (e) {
             e.preventDefault();
             if (window.confirm("Jeste li sigurni da želite ukloniti ovaj dokument iz popisa za dostavu?"))
@@ -178,7 +222,6 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
                     dataType: 'json'
                 });
         });
-    }
 
     function Resend() {
             $(document).on("click", "a.resend-document-ajax", function (e) {
