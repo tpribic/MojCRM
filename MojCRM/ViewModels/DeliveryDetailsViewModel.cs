@@ -125,7 +125,7 @@ namespace MojCRM.ViewModels
                 return "Status";
             }
         }
-        public List<Delivery> UndeliveredInvoices { get; set; }
+        public List<Delivery> RelatedInvoices { get; set; }
         public List<Contact> RelatedDeliveryContacts { get; set; }
         public List<DeliveryDetail> RelatedDeliveryDetails { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails

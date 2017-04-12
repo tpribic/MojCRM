@@ -32,7 +32,6 @@
     @{
         var documentTypeList = new List<ListItem>
         {
-            //new ListItem {Text = "Odaberi tip dokumenta", Value = null },
             new ListItem {Text = "eDokument", Value = "0" },
             new ListItem {Text = "eRačun", Value = "1" },
             new ListItem {Text = "Storno", Value = "3" },
@@ -51,7 +50,6 @@
     @{
         var documentStatusList = new List<ListItem>
         {
-            //new ListItem{ Value = null, Text = "Odaberi status dokumenta" },
             new ListItem{ Value= "10", Text = "U pripremi"},
             new ListItem{ Value= "20", Text = "Potpisan"},
             new ListItem{ Value= "30", Text = "Poslan"},
@@ -161,7 +159,7 @@ columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("P
 columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
 columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}");
-columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false);
+columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).SetWidth("50");
 columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
     {
         if (m.DocumentStatus == 30)
@@ -184,7 +182,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     if (m.DocumentStatus == 30)
         return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-        <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
+        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", m.MerElectronicId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
         @*<a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="resend-document-ajax"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
         <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>

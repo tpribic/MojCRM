@@ -162,6 +162,16 @@
     </div>
 }
 
+@{
+    var deliveryTemplates = new List<ListItem>
+        {
+            new ListItem {Text = "Preuzet će", Value = "Preuzet će" },
+            new ListItem {Text = "Promjena e-maila", Value = "Promjena e-maila" },
+            new ListItem {Text = "Ponovno poslana obavijest o dostavi", Value = "Ponovno poslana obavijest o dostavi" },
+            new ListItem {Text = "Nisu se javili", Value = "Nisu se javili" },
+        };
+}
+
 <!--Modal - AddDetail-->
 @using (Html.BeginForm("AddDetail", "Delivery", FormMethod.Post))
 {
@@ -192,6 +202,14 @@
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
                                 <div id="delivery-detail-contact">
                                     @Html.DropDownList("_ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="delivery-detail-template">Napomena</label>
+                                <div id="delivery-detail-contact">
+                                    @Html.DropDownList("_DetailTemplate", new SelectList(deliveryTemplates, "Value", "Text"), "Odaberi napomenu",new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
@@ -502,7 +520,7 @@
                         <th>@Html.DisplayNameFor(model => model.SentDate)</th>
                         <th></th>
                     </tr>
-                    @foreach (var Invoice in Model.UndeliveredInvoices)
+                    @foreach (var Invoice in Model.RelatedInvoices)
                     {
                         <tr>
                             <td>@Invoice.Sender.SubjectName</td>
@@ -512,7 +530,7 @@
                             <td>@Invoice.SentDate</td>
                             <td>
                                 <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
                                 <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
                                 <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
                             </td>

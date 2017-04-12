@@ -29,16 +29,16 @@ namespace MojCRM.Controllers
         public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, 
                                                string SentDate, string TicketDate, string BuyerEmail, string DocumentStatus, string DocumentType)
         {
-            ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : "";
+            ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
 
             var Results = from t in db.DeliveryTicketModels
-                          select t;
-
-            var ResultsUndelivered = from t in db.DeliveryTicketModels
                           where t.DocumentStatus == 30
                           select t;
 
-            ViewBag.OpenTickets = ResultsUndelivered.Count();
+            var ResultsAll = from t in db.DeliveryTicketModels
+                          select t;
+
+            ViewBag.OpenTickets = Results.Count();
 
             int DocumentStatusInt;
             if (!String.IsNullOrEmpty(DocumentStatus))
@@ -62,51 +62,51 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(Sender))
             {
-                Results = Results.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
+                Results = ResultsAll.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
-                Results = Results.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
+                Results = ResultsAll.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
-                Results = Results.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
+                Results = ResultsAll.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var sentDate = Convert.ToDateTime(SentDate);
-                Results = Results.Where(t => t.SentDate == sentDate);
+                Results = ResultsAll.Where(t => t.SentDate == sentDate);
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
-                Results = Results.Where(t => t.InsertDate > insertDate);
+                Results = ResultsAll.Where(t => t.InsertDate > insertDate);
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(BuyerEmail))
             {
-                Results = Results.Where(t => t.BuyerEmail.Contains(BuyerEmail));
+                Results = ResultsAll.Where(t => t.BuyerEmail.Contains(BuyerEmail));
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentStatus))
             {
-                Results = Results.Where(t => t.DocumentStatus == DocumentStatusInt);
+                Results = ResultsAll.Where(t => t.DocumentStatus == DocumentStatusInt);
                 ViewBag.SearchResults = Results.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentType))
             {
-                Results = Results.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
+                Results = ResultsAll.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
                 ViewBag.SearchResults = Results.Count();
             }
 
@@ -180,10 +180,10 @@ namespace MojCRM.Controllers
                                 db.LogError.Add(new LogError
                                 {
                                     Method = @"Delivery - CreateTickets",
-                                    Parameters = "",
+                                    Parameters = String.Empty,
                                     Message = "Moj-CRM was unable to generete ticket",
-                                    InnerException = "",
-                                    Request = "",
+                                    InnerException = String.Empty,
+                                    Request = String.Empty,
                                     User = "Moj-CRM",
                                     InsertDate = DateTime.Now,
                                 });
@@ -210,10 +210,10 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/UpdateStatus/12345
-        public ActionResult UpdateStatus(int TicketId, int? ReceiverId)
+        public ActionResult UpdateStatusIndex(int Id)
         {
             var OpenTicket = from t in db.DeliveryTicketModels
-                              where t.Id == TicketId
+                              where t.Id == Id
                               select t.MerLink;
 
             var MerLinks = OpenTicket.ToList();
@@ -234,14 +234,34 @@ namespace MojCRM.Controllers
                 db.SaveChanges();
             }
 
-            if (ReceiverId != null)
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult UpdateStatus(int TicketId, int ReceiverId)
+        {
+            var OpenTicket = from t in db.DeliveryTicketModels
+                             where t.Id == TicketId
+                             select t.MerLink;
+
+            var MerLinks = OpenTicket.ToList();
+
+            foreach (var Link in MerLinks)
             {
-                return RedirectToAction("Details", "Delivery", new { id = TicketId, receiverId = ReceiverId });
+                MerDeliveryJsonResponse Result = ParseJson(Link);
+
+                var TicketForUpdate = from t in db.DeliveryTicketModels
+                                      where t.MerLink == Link
+                                      select t;
+                foreach (Delivery t in TicketForUpdate)
+                {
+                    t.DocumentStatus = Result.Status;
+                    t.BuyerEmail = Result.EmailPrimatelja;
+                    t.UpdateDate = DateTime.Now;
+                }
+                db.SaveChanges();
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+
+            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
         }
 
         // GET: Delivery/UpdateAllStatuses
@@ -398,9 +418,9 @@ namespace MojCRM.Controllers
                 return HttpNotFound();
             }
 
-            var _UndeliveredInvoicesList = (from t in db.DeliveryTicketModels
-                                           where t.Id != id && t.DocumentStatus == 30 && t.ReceiverId == deliveryTicketModel.ReceiverId
-                                           select t).ToList();
+            var _RelatedInvoicesList = (from t in db.DeliveryTicketModels
+                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate == DateTime.Now.AddMonths(-2)
+                                        select t).ToList();
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
                                             where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
@@ -426,7 +446,7 @@ namespace MojCRM.Controllers
                 ReceiverId = deliveryTicketModel.ReceiverId,
                 ReceiverVAT = deliveryTicketModel.Receiver.VAT,
                 SenderVAT = deliveryTicketModel.Sender.VAT,
-                UndeliveredInvoices = _UndeliveredInvoicesList,
+                RelatedInvoices = _RelatedInvoicesList,
                 RelatedDeliveryContacts = _RelatedDeliveryContacts,
                 RelatedDeliveryDetails = _RelatedDeliveryDetails
             };
@@ -450,46 +470,75 @@ namespace MojCRM.Controllers
 
         // POST: AddDetail/1125768
         [HttpPost]
-        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _DetailNote, string _ContactId, int _TicketId)
+        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote, int _TicketId)
         {
-            try
+            if (_DetailTemplate == String.Empty && _DetailNote != String.Empty)
+            {
+                try
+                {
+                    db.DeliveryDetails.Add(new DeliveryDetail
+                    {
+                        ReceiverId = _ReceiverId,
+                        User = _Agent,
+                        DetailNote = _DetailNote,
+                        InsertDate = DateTime.Now,
+                        Contact = _ContactId,
+                        TicketId = _TicketId
+                    });
+                    db.SaveChanges();
+                }
+                catch (NullReferenceException ex)
+                {
+                    db.LogError.Add(new LogError
+                    {
+                        Method = @"Delivery - AddDetail",
+                        Parameters = ex.Source,
+                        Message = ex.Message,
+                        InnerException = String.Empty,
+                        Request = ex.TargetSite.ToString(),
+                        User = _Agent,
+                        InsertDate = DateTime.Now
+                    });
+                    db.SaveChanges();
+                }
+                catch (DbUpdateException ex)
+                {
+                    db.LogError.Add(new LogError
+                    {
+                        Method = @"Delivery - AddDetail",
+                        Parameters = ex.Source,
+                        Message = ex.Message,
+                        InnerException = ex.InnerException.ToString(),
+                        Request = ex.TargetSite.ToString(),
+                        User = _Agent,
+                        InsertDate = DateTime.Now
+                    });
+                    db.SaveChanges();
+                }
+            }
+            else if (_DetailNote == String.Empty && _DetailTemplate != String.Empty)
             {
                 db.DeliveryDetails.Add(new DeliveryDetail
                 {
                     ReceiverId = _ReceiverId,
                     User = _Agent,
-                    DetailNote = _DetailNote,
+                    DetailNote = _DetailTemplate,
                     InsertDate = DateTime.Now,
                     Contact = _ContactId,
                     TicketId = _TicketId
                 });
                 db.SaveChanges();
             }
-            catch (NullReferenceException ex)
+            else
             {
-                db.LogError.Add(new LogError
+                db.DeliveryDetails.Add(new DeliveryDetail
                 {
-                    Method = @"Delivery - AddDetail",
-                    Parameters = ex.Source,
-                    Message = ex.Message,
-                    InnerException = "",
-                    Request = ex.TargetSite.ToString(),
+                    ReceiverId = _ReceiverId,
                     User = _Agent,
-                    InsertDate = DateTime.Now
-                });
-                db.SaveChanges();
-            }
-            catch (DbUpdateException ex)
-            {
-                db.LogError.Add(new LogError
-                {
-                    Method = @"Delivery - AddDetail",
-                    Parameters = ex.Source,
-                    Message = ex.Message,
-                    InnerException = ex.InnerException.ToString(),
-                    Request = ex.TargetSite.ToString(),
-                    User = _Agent,
-                    InsertDate = DateTime.Now
+                    DetailNote = _DetailTemplate + " - " + _DetailNote,
+                    InsertDate = DateTime.Now,
+                    Contact = _ContactId,
+                    TicketId = _TicketId
                 });
                 db.SaveChanges();
             }
