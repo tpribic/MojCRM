@@ -155,7 +155,7 @@ namespace MojCRM.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        [Authorize(Roles = "Superadmin")]
         public ActionResult Register()
         {
             return View();
@@ -164,7 +164,7 @@ namespace MojCRM.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Superadmin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {

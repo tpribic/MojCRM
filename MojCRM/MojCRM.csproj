@@ -603,6 +603,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Support\Controllers\" />
+    <Folder Include="Areas\Support\Models\" />
+    <Folder Include="Areas\Support\Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

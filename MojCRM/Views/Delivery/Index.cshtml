@@ -130,24 +130,31 @@
         </div>
 
         <div class="row">
-            <div class="col-md-2">
+            @*<div class="col-md-2">
                 <div class="form-group">
                     <button id="Search" type="submit" class="btn btn-primary btn-sm">Traži!</button>
                     <button id="ResetSearch" type="reset" class="btn btn-warning btn-sm">Poništi!</button>
                 </div>
-            </div>
-            <div class="col-md-4">
+            </div>*@
+            <div class="col-md-6">
                 <div class="alert alert-info">
                     Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="alert alert-info">
                     Broj rezultata pretrage: <strong>@ViewBag.SearchResults</strong>
                 </div>
             </div>
             <div class="col-md-2">
 
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži"/>
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi"/>
             </div>
         </div>
     }
@@ -275,6 +282,10 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
             format: "dd.mm.yyyy.",
             autoclose: true,
             orientation: "auto bottom",
+        });
+        $("#btn-reset").click(function (e) {
+            $(document).find('input[type=text]').attr('value', '');
+            $(document).find("select option").attr('selected', false);
         });
     })
 </script>

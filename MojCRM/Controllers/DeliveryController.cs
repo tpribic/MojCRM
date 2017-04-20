@@ -38,6 +38,8 @@ namespace MojCRM.Controllers
             var ResultsAll = from t in db.DeliveryTicketModels
                           select t;
 
+            var ResultsNew = db.DeliveryTicketModels.AsQueryable();
+
             ViewBag.OpenTickets = Results.Count();
 
             int DocumentStatusInt;
@@ -62,65 +64,65 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(Sender))
             {
-                Results = ResultsAll.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
-                Results = ResultsAll.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
-                Results = ResultsAll.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var sentDate = Convert.ToDateTime(SentDate);
-                Results = ResultsAll.Where(t => t.SentDate == sentDate);
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.SentDate == sentDate);
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
-                Results = ResultsAll.Where(t => t.InsertDate > insertDate);
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.InsertDate > insertDate);
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(BuyerEmail))
             {
-                Results = ResultsAll.Where(t => t.BuyerEmail.Contains(BuyerEmail));
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.BuyerEmail.Contains(BuyerEmail));
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentStatus))
             {
-                Results = ResultsAll.Where(t => t.DocumentStatus == DocumentStatusInt);
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.DocumentStatus == DocumentStatusInt);
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentType))
             {
-                Results = ResultsAll.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
-                ViewBag.SearchResults = Results.Count();
+                ResultsNew = ResultsNew.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             switch (SortOrder)
             {
                 case "InsertDate":
-                    Results = Results.OrderBy(d => d.InsertDate);
+                    ResultsNew = ResultsNew.OrderBy(d => d.InsertDate);
                     break;
                 default:
-                    Results = Results.OrderByDescending(d => d.InsertDate);
+                    ResultsNew = ResultsNew.OrderByDescending(d => d.InsertDate);
                     break;
             }
 
-            return View(await Results.ToListAsync());
+            return View(await ResultsNew.ToListAsync());
         }
 
         // GET: Delivery/CreateTickets
@@ -209,7 +211,7 @@ namespace MojCRM.Controllers
             return View();
         }
 
-        // GET: Delivery/UpdateStatus/12345
+        // GET: Delivery/UpdateStatusIndex/12345
         public ActionResult UpdateStatusIndex(int Id)
         {
             var OpenTicket = from t in db.DeliveryTicketModels
@@ -237,6 +239,7 @@ namespace MojCRM.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Delivery/UpdateStatus/12345
         public ActionResult UpdateStatus(int TicketId, int ReceiverId)
         {
             var OpenTicket = from t in db.DeliveryTicketModels
@@ -262,6 +265,31 @@ namespace MojCRM.Controllers
             }
 
             return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
+        }
+
+        public void UpdateStatus(int Id)
+        {
+            var OpenTicket = from t in db.DeliveryTicketModels
+                             where t.Id == Id
+                             select t.MerLink;
+
+            var MerLinks = OpenTicket.ToList();
+
+            foreach (var Link in MerLinks)
+            {
+                MerDeliveryJsonResponse Result = ParseJson(Link);
+
+                var TicketForUpdate = from t in db.DeliveryTicketModels
+                                      where t.MerLink == Link
+                                      select t;
+                foreach (Delivery t in TicketForUpdate)
+                {
+                    t.DocumentStatus = Result.Status;
+                    t.BuyerEmail = Result.EmailPrimatelja;
+                    t.UpdateDate = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
         }
 
         // GET: Delivery/UpdateAllStatuses
@@ -406,7 +434,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Details/5
         [Authorize]
-        public ActionResult Details(int? id, int? receiverId)
+        public ActionResult Details(int id, int? receiverId)
         {
             if (id == null)
             {
@@ -418,8 +446,12 @@ namespace MojCRM.Controllers
                 return HttpNotFound();
             }
 
+            UpdateStatus(id);
+
+            DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
+
             var _RelatedInvoicesList = (from t in db.DeliveryTicketModels
-                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate == DateTime.Now.AddMonths(-2)
+                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate
                                         select t).ToList();
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
@@ -566,6 +598,7 @@ namespace MojCRM.Controllers
 
             return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
         }
+        
         // POST: Delivery/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
