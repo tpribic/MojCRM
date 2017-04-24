@@ -46,6 +46,9 @@ namespace MojCRM
                  "~/Content/bootstrap.css",
                  "~/Content/Site.css",
                  "~/Content/bootstrap-datepicker3.min.css"));
+
+            bundles.Add(new ScriptBundle("~/Scripts").Include(
+                "~/Scripts/merscripts.js"));
         }
     }
 }

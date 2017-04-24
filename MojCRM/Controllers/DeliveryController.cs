@@ -65,52 +65,54 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(Sender))
             {
                 ResultsNew = ResultsNew.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
                 ResultsNew = ResultsNew.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
                 ResultsNew = ResultsNew.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var sentDate = Convert.ToDateTime(SentDate);
                 ResultsNew = ResultsNew.Where(t => t.SentDate == sentDate);
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
                 ResultsNew = ResultsNew.Where(t => t.InsertDate > insertDate);
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(BuyerEmail))
             {
                 ResultsNew = ResultsNew.Where(t => t.BuyerEmail.Contains(BuyerEmail));
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentStatus))
             {
                 ResultsNew = ResultsNew.Where(t => t.DocumentStatus == DocumentStatusInt);
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentType))
             {
                 ResultsNew = ResultsNew.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
-                ViewBag.SearchResults = ResultsNew.Count();
+                //ViewBag.SearchResults = ResultsNew.Count();
             }
+
+            ViewBag.SearchResults = ResultsNew.Count();
 
             switch (SortOrder)
             {
@@ -126,8 +128,19 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/CreateTickets
-        public ActionResult CreateTickets()
+        public ActionResult CreateTickets(string Name)
         {
+
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserPassword).First();
+
+            var Organizations = (from o in db.Organizations
+                                select o).ToList();
+
             using (Imap4Client imap = new Imap4Client())
             {
                 imap.Connect("mail.moj-eracun.hr");
@@ -160,6 +173,10 @@ namespace MojCRM.Controllers
                                 DeliveryLink = MerLinkMatch.Groups[1].ToString();
                                 MerDeliveryJsonResponse Result = ParseJson(DeliveryLink);
 
+                                bool ExistingOrganization = Organizations.Any(o => o.MerId.ToString() == Result.BuyerID.ToString());
+
+                                if (ExistingOrganization)
+                                {
                                     db.DeliveryTicketModels.Add(new Delivery
                                     {
                                         SenderId = Int32.Parse(Result.SupplierID),
@@ -176,6 +193,53 @@ namespace MojCRM.Controllers
                                     });
                                     db.SaveChanges();
                                 }
+                                else
+                                {
+                                    MerApiGetSubjekt Request = new MerApiGetSubjekt();
+
+                                    Request.Id = MerUser.ToString();
+                                    Request.Pass = MerPass.ToString();
+                                    Request.Oib = "99999999927";
+                                    Request.PJ = "";
+                                    Request.SoftwareId = "MojCRM-001";
+                                    Request.SubjektPJ = Result.BuyerID;
+
+                                    string MerRequest = JsonConvert.SerializeObject(Request);
+
+                                    using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
+                                    {
+                                        Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                                        Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                                        var Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
+                                        Response = Response.Replace("[", "").Replace("]", "");
+                                        MerGetSubjektDataResponse ResultOrg = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(Response);
+                                        db.Organizations.Add(new Organizations
+                                        {
+                                            MerId = ResultOrg.Id,
+                                            SubjectName = ResultOrg.Naziv,
+                                            SubjectBusinessUnit = ResultOrg.PoslovnaJedinica,
+                                            VAT = ResultOrg.Oib
+                                        });
+                                        db.SaveChanges();
+
+                                        db.DeliveryTicketModels.Add(new Delivery
+                                        {
+                                            SenderId = Int32.Parse(Result.SupplierID),
+                                            ReceiverId = Int32.Parse(Result.BuyerID),
+                                            InvoiceNumber = Result.InterniBroj,
+                                            MerLink = DeliveryLink,
+                                            MerJson = Result,
+                                            MerElectronicId = Result.Id,
+                                            SentDate = Result.IssueDate,
+                                            MerDocumentTypeId = Result.Type,
+                                            DocumentStatus = Result.Status,
+                                            InsertDate = DateTime.Now,
+                                            BuyerEmail = Result.EmailPrimatelja,
+                                        });
+                                        db.SaveChanges();
+                                    }
+                                }
+                            }
                             //TO DO: Remove else and add it to catch segment
                             else
                             {
@@ -194,8 +258,7 @@ namespace MojCRM.Controllers
                         //TO DO: Add Exceptions
                         catch
                         {
-
-                            throw;
+                                throw;
                         }
                         Date = DateTime.Parse(inbox.Fetch.InternalDate(OrdinalNumber));
                     }

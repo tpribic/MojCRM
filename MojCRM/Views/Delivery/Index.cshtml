@@ -15,9 +15,7 @@
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
-                <a href="@Url.Action("CreateTickets", "Delivery")" class="btn btn-primary btn-sm">
-                    Kreiranje kartica za dostavu
-                </a>
+                <a class="btn btn-primary btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name})">Kreiranje kartica za dostavu</a>
                 <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm">
                     Provjeri sve statuse
                 </a>
@@ -255,7 +253,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     function RemoveAll () {
         $(document).on("click", "#remove-all", function (e) {
             e.preventDefault();
-            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idValue'); })
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idValue'); }).get();
             if (window.confirm("Jeste li sigurni da želite ukloniti označene dokumente iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',

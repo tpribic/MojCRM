@@ -492,7 +492,7 @@
                             <td>@Contact.User</td>
                             <td>
                                 <a href="#AddDetail" data-toggle="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a href="#AddDetail" data-toggle="modal"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
                             </td>
                         </tr>
                     }
@@ -563,5 +563,21 @@
                 },
                 dataType: 'json'
             });
+    });
+    $(document).on("click", "a.add-unsuccessfull-call", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
+            data: {
+                _ReceiverId: $(this).data("receiver-id"),
+                _Agent: $(this).data("agent"),
+                _ContactId: $(this).data("contact"),
+                _DetailTemplate: $(this).data("detail-template"),
+                _DetailNote: $(this).data("detail-note"),
+                _TicketId: $(this).data("ticket-id")
+            },
+            dataType: 'json'
+        });
     });
 </script>
