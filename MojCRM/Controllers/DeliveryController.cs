@@ -645,7 +645,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Details/5
         [Authorize]
-        public ActionResult Details(int id, int? receiverId)
+        public ActionResult Details(int id, int? receiverId, string Name)
         {
             if (id == null)
             {
@@ -662,7 +662,7 @@ namespace MojCRM.Controllers
             DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
 
             var _RelatedInvoicesList = (from t in db.DeliveryTicketModels
-                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate
+                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate && t.DocumentStatus == 30
                                         select t).ToList();
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
@@ -673,36 +673,59 @@ namespace MojCRM.Controllers
                                            where t.Receiver.MerId == receiverId
                                            select t).ToList();
 
-            var DeliveryDetails = new DeliveryDetailsViewModel
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserPassword).First();
+            var Organizations = (from o in db.Organizations
+                                 select o).ToList();
+
+            MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments();
+
+            RequestGetSentDocuments.Id = MerUser;
+            RequestGetSentDocuments.Pass = MerPass;
+            RequestGetSentDocuments.Oib = "99999999927";
+            RequestGetSentDocuments.PJ = "";
+            RequestGetSentDocuments.SoftwareId = "MojCRM-001";
+            RequestGetSentDocuments.SubjektPJ = receiverId.ToString();
+            RequestGetSentDocuments.Take = 30;
+
+            string MerRequest = JsonConvert.SerializeObject(RequestGetSentDocuments);
+
+            using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
             {
-                TicketId = deliveryTicketModel.Id,
-                SenderName = deliveryTicketModel.Sender.SubjectName,
-                ReceiverName = deliveryTicketModel.Receiver.SubjectName,
-                InvoiceNumber = deliveryTicketModel.InvoiceNumber,
-                SentDate = deliveryTicketModel.SentDate,
-                MerDocumentTypeId = deliveryTicketModel.MerDocumentTypeId,
-                MerDocumentStatusId = deliveryTicketModel.DocumentStatus,
-                ReceiverEmail = deliveryTicketModel.BuyerEmail,
-                MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
-                MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
-                MerElectronicId = deliveryTicketModel.MerElectronicId,
-                ReceiverId = deliveryTicketModel.ReceiverId,
-                ReceiverVAT = deliveryTicketModel.Receiver.VAT,
-                SenderVAT = deliveryTicketModel.Sender.VAT,
-                RelatedInvoices = _RelatedInvoicesList,
-                RelatedDeliveryContacts = _RelatedDeliveryContacts,
-                RelatedDeliveryDetails = _RelatedDeliveryDetails
-            };
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                var ResponseRegularDelivery = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSentDocuments").ToString(), "POST", MerRequest);
+                //ResponseRegularDelivery = ResponseRegularDelivery.Replace("[", "").Replace("]", "");
+                MerGetSentDocumentsResponse[] ResultsDocumentHistory = JsonConvert.DeserializeObject<MerGetSentDocumentsResponse[]>(ResponseRegularDelivery);
 
-            var _InvoiceNumber = from t in db.DeliveryTicketModels
-                                 where t.Id == id
-                                 select t.InvoiceNumber;
+                var DeliveryDetails = new DeliveryDetailsViewModel
+                {
+                    TicketId = deliveryTicketModel.Id,
+                    SenderName = deliveryTicketModel.Sender.SubjectName,
+                    ReceiverName = deliveryTicketModel.Receiver.SubjectName,
+                    InvoiceNumber = deliveryTicketModel.InvoiceNumber,
+                    SentDate = deliveryTicketModel.SentDate,
+                    MerDocumentTypeId = deliveryTicketModel.MerDocumentTypeId,
+                    MerDocumentStatusId = deliveryTicketModel.DocumentStatus,
+                    ReceiverEmail = deliveryTicketModel.BuyerEmail,
+                    MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
+                    MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
+                    MerElectronicId = deliveryTicketModel.MerElectronicId,
+                    ReceiverId = deliveryTicketModel.ReceiverId,
+                    ReceiverVAT = deliveryTicketModel.Receiver.VAT,
+                    SenderVAT = deliveryTicketModel.Sender.VAT,
+                    RelatedInvoices = _RelatedInvoicesList,
+                    RelatedDeliveryContacts = _RelatedDeliveryContacts,
+                    RelatedDeliveryDetails = _RelatedDeliveryDetails,
+                    DocumentHistory = ResultsDocumentHistory
+                };
 
-            ViewBag.InvoiceNumber = _InvoiceNumber.First();
-
-            
-
-            return View(DeliveryDetails);
+                return View(DeliveryDetails);
+            }
         }
 
         // GET: Delivery/Create

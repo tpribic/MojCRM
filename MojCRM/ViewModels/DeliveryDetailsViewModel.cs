@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Helpers;
+using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -128,6 +129,7 @@ namespace MojCRM.ViewModels
         public List<Delivery> RelatedInvoices { get; set; }
         public List<Contact> RelatedDeliveryContacts { get; set; }
         public List<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public MerGetSentDocumentsResponse[] DocumentHistory { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails
         {
             get

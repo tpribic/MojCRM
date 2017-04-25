@@ -195,7 +195,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
 {
     if (m.DocumentStatus == 30)
         return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
         <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", m.MerElectronicId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
         @*<a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="resend-document-ajax"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
@@ -203,7 +203,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     </span>;
 
     return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
     </span>;
 });
 }).WithPaging(20)

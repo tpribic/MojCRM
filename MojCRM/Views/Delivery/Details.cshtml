@@ -353,7 +353,7 @@
     </div>
 }
 
-<h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @ViewBag.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
+<h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @Model.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
 <br />
 <div>
     <div class="row" style="text-align:center">
@@ -529,7 +529,7 @@
                             <td>@Invoice.InvoiceNumber</td>
                             <td>@Invoice.SentDate.ToShortDateString()</td>
                             <td>
-                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
                                 <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
                                 <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
                                 <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
@@ -539,10 +539,44 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
+<hr />
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <a data-toggle="collapse" href="#content-history" aria-expanded="false">Povijest razmjene eDokumenata</a>
+            </div>
+        </div>
+        <div id="content-history" class="collapse">
+            <div class="">
+                <table class="table">
+                    <tr>
+                        <th>Tip dokumenta</th>
+                        <th>Status dokumenta</th>
+                        <th>Naziv pošiljatelja</th>
+                        <th>E-mail adresa</th>
+                        <th>Datum slanja</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Document in Model.DocumentHistory)
+                    {
+                        <tr>
+                            <td>@Document.DokumentTypeId</td>
+                            <td>@Document.DokumentStatusId</td>
+                            <td>@Document.PosiljateljNaziv</td>
+                            <td>@Document.EmailPrimatelja</td>
+                            <td>@Document.DatumOtpreme.ToShortDateString()</td>
+                            <td></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
 
     </div>
 </div>
-
 <hr />
 
 <script>
