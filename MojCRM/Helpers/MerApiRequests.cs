@@ -31,4 +31,18 @@ namespace MojCRM.Helpers
         public string SubjektOib { get; set; }
         public string SubjektPJ { get; set; }
     }
+
+    public class MerApiGetNondeliveredDocuments : MerApiRequest
+    {
+        [JsonProperty]
+        public int Type { get; set; }
+    }
+
+    public class MerApiGetSentDocuments : MerApiRequest
+    {
+        [JsonProperty]
+        public string SubjektOib { get; set; }
+        public string SubjektPJ { get; set; }
+        public int? Take { get; set; }
+    }
 }

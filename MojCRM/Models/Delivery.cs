@@ -49,6 +49,9 @@ namespace MojCRM.Models
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
+        [Display(Name = "Prvi račun")]
+        public bool FirstInvoice { get; set; }
+
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
 
         [NotMapped]

@@ -27,20 +27,25 @@ namespace MojCRM.Controllers
         // GET: Delivery
         [Authorize]
         public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, 
-                                               string SentDate, string TicketDate, string BuyerEmail, string DocumentStatus, string DocumentType)
+                                               string SentDate, string TicketDate, string BuyerEmail, string DocumentStatus, 
+                                               string DocumentType)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
 
             var Results = from t in db.DeliveryTicketModels
                           where t.DocumentStatus == 30
                           select t;
-
-            var ResultsAll = from t in db.DeliveryTicketModels
-                          select t;
-
             var ResultsNew = db.DeliveryTicketModels.AsQueryable();
+            var TicketsCreatedToday = from t in db.DeliveryTicketModels
+                                      where t.InsertDate > DateTime.Today.Date
+                                      select t;
+            var TicketsCreatedTodayFirstTime = from t in db.DeliveryTicketModels
+                                               where t.InsertDate > DateTime.Today.Date && t.FirstInvoice == true
+                                               select t;
 
             ViewBag.OpenTickets = Results.Count();
+            ViewBag.TicketsCreatedToday = TicketsCreatedToday.Count();
+            ViewBag.TicketsCreatedTodayFirstTime = TicketsCreatedTodayFirstTime.Count();
 
             int DocumentStatusInt;
             if (!String.IsNullOrEmpty(DocumentStatus))
@@ -65,51 +70,51 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(Sender))
             {
                 ResultsNew = ResultsNew.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
                 ResultsNew = ResultsNew.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
                 ResultsNew = ResultsNew.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var sentDate = Convert.ToDateTime(SentDate);
                 ResultsNew = ResultsNew.Where(t => t.SentDate == sentDate);
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
                 ResultsNew = ResultsNew.Where(t => t.InsertDate > insertDate);
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(BuyerEmail))
             {
                 ResultsNew = ResultsNew.Where(t => t.BuyerEmail.Contains(BuyerEmail));
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentStatus))
             {
                 ResultsNew = ResultsNew.Where(t => t.DocumentStatus == DocumentStatusInt);
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentType))
             {
                 ResultsNew = ResultsNew.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
-                //ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResults = ResultsNew.Count();
             }
 
             ViewBag.SearchResults = ResultsNew.Count();
@@ -127,10 +132,162 @@ namespace MojCRM.Controllers
             return View(await ResultsNew.ToListAsync());
         }
 
-        // GET: Delivery/CreateTickets
-        public ActionResult CreateTickets(string Name)
+        // GET: Delivery/CreateTicketsFirstTime
+        // Kreiranje kartica za prvo preuzimanje
+        public void CreateTicketsFirstTime(string Name)
         {
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserPassword).First();
+            var Organizations = (from o in db.Organizations
+                                 select o).ToList();
 
+            MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments();
+
+            RequestFirstTime.Id = MerUser;
+            RequestFirstTime.Pass = MerPass;
+            RequestFirstTime.Oib = "99999999927";
+            RequestFirstTime.PJ = "";
+            RequestFirstTime.SoftwareId = "MojCRM-001";
+            RequestFirstTime.Type = 1;
+
+            string MerRequestFirstTime = JsonConvert.SerializeObject(RequestFirstTime);
+
+            using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
+            {
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                var ResponseFirstTime = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getNondeliveredDocuments").ToString(), "POST", MerRequestFirstTime);
+                //ResponseFirstTime = ResponseFirstTime.Replace("[", "").Replace("]", "");
+                MerGetNondeliveredDocumentsResponse[] ResultsFirstTime = JsonConvert.DeserializeObject<MerGetNondeliveredDocumentsResponse[]>(ResponseFirstTime);
+                foreach (var Result in ResultsFirstTime)
+                {
+                    bool ExistingOrganization = Organizations.Any(o => o.MerId.ToString() == Result.PrimateljId.ToString());
+                    if (ExistingOrganization)
+                    {
+                        db.DeliveryTicketModels.Add(new Delivery
+                        {
+                            SenderId = Result.PosiljateljId,
+                            ReceiverId = Result.PrimateljId,
+                            InvoiceNumber = Result.InterniBroj,
+                            //MerJson = Result,
+                            MerElectronicId = Result.Id,
+                            SentDate = Result.DatumOtpreme,
+                            MerDocumentTypeId = Result.DokumentTypeId,
+                            DocumentStatus = 30,
+                            InsertDate = DateTime.Now,
+                            BuyerEmail = Result.EmailPrimatelja,
+                            FirstInvoice = true,
+                        });
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        MerApiGetSubjekt RequestGetNonexistingSubjekt = new MerApiGetSubjekt();
+
+                        RequestGetNonexistingSubjekt.Id = MerUser.ToString();
+                        RequestGetNonexistingSubjekt.Pass = MerPass.ToString();
+                        RequestGetNonexistingSubjekt.Oib = "99999999927";
+                        RequestGetNonexistingSubjekt.PJ = "";
+                        RequestGetNonexistingSubjekt.SoftwareId = "MojCRM-001";
+                        RequestGetNonexistingSubjekt.SubjektPJ = Result.PrimateljId.ToString();
+
+                        string MerRequest = JsonConvert.SerializeObject(RequestGetNonexistingSubjekt);
+
+                        Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                        Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                        var ResponseNonExistingSubjekt = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
+                        ResponseNonExistingSubjekt = ResponseNonExistingSubjekt.Replace("[", "").Replace("]", "");
+                        MerGetSubjektDataResponse ResultNonExistingSubjekt = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(ResponseNonExistingSubjekt);
+                        db.Organizations.Add(new Organizations
+                        {
+                            MerId = ResultNonExistingSubjekt.Id,
+                            SubjectName = ResultNonExistingSubjekt.Naziv,
+                            SubjectBusinessUnit = ResultNonExistingSubjekt.PoslovnaJedinica,
+                            VAT = ResultNonExistingSubjekt.Oib
+                        });
+                        db.SaveChanges();
+
+                        db.DeliveryTicketModels.Add(new Delivery
+                        {
+                            SenderId = Result.PosiljateljId,
+                            ReceiverId = Result.PrimateljId,
+                            InvoiceNumber = Result.InterniBroj,
+                            //MerJson = Result,
+                            MerElectronicId = Result.Id,
+                            SentDate = Result.DatumOtpreme,
+                            MerDocumentTypeId = Result.DokumentTypeId,
+                            DocumentStatus = 30,
+                            InsertDate = DateTime.Now,
+                            BuyerEmail = Result.EmailPrimatelja,
+                            FirstInvoice = true,
+                        });
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        // GET: Delivery/CreateTickets
+        // Kreiranje kartica za redovito preuzimanje
+        public void CreateTickets(string Name)
+        {
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserPassword).First();
+            var Organizations = (from o in db.Organizations
+                                 select o).ToList();
+
+            MerApiGetNondeliveredDocuments RequestRegularDelivery = new MerApiGetNondeliveredDocuments();
+
+            RequestRegularDelivery.Id = MerUser;
+            RequestRegularDelivery.Pass = MerPass;
+            RequestRegularDelivery.Oib = "99999999927";
+            RequestRegularDelivery.PJ = "";
+            RequestRegularDelivery.SoftwareId = "MojCRM-001";
+            RequestRegularDelivery.Type = 2;
+
+            string MerRequestFirstTime = JsonConvert.SerializeObject(RequestRegularDelivery);
+
+            using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
+            {
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                var ResponseRegularDelivery = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getNondeliveredDocuments").ToString(), "POST", MerRequestFirstTime);
+                //ResponseRegularDelivery = ResponseRegularDelivery.Replace("[", "").Replace("]", "");
+                MerGetNondeliveredDocumentsResponse[] ResultsRegularDelivery = JsonConvert.DeserializeObject<MerGetNondeliveredDocumentsResponse[]>(ResponseRegularDelivery);
+                foreach (var Result in ResultsRegularDelivery)
+                {
+                    db.DeliveryTicketModels.Add(new Delivery
+                    {
+                        SenderId = Result.PosiljateljId,
+                        ReceiverId = Result.PrimateljId,
+                        InvoiceNumber = Result.InterniBroj,
+                        //MerJson = Result,
+                        MerElectronicId = Result.Id,
+                        SentDate = Result.DatumOtpreme,
+                        MerDocumentTypeId = Result.DokumentTypeId,
+                        DocumentStatus = 30,
+                        InsertDate = DateTime.Now,
+                        BuyerEmail = Result.EmailPrimatelja,
+                        FirstInvoice = false,
+                    });
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        // GET: Delivery/CreateTicketsOld
+        [Authorize(Roles = "Superadmin")]
+        [Obsolete]
+        public ActionResult CreateTicketsOld(string Name)
+        {
             var MerUser = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserUsername).First();
@@ -332,27 +489,18 @@ namespace MojCRM.Controllers
 
         public void UpdateStatus(int Id)
         {
-            var OpenTicket = from t in db.DeliveryTicketModels
-                             where t.Id == Id
-                             select t.MerLink;
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id;
 
-            var MerLinks = OpenTicket.ToList();
+            MerDeliveryJsonResponse Response = ParseJson(MerString);
 
-            foreach (var Link in MerLinks)
-            {
-                MerDeliveryJsonResponse Result = ParseJson(Link);
+            var TicketForUpdate = (from t in db.DeliveryTicketModels
+                                  where t.MerElectronicId == Id
+                                  select t).First();
 
-                var TicketForUpdate = from t in db.DeliveryTicketModels
-                                      where t.MerLink == Link
-                                      select t;
-                foreach (Delivery t in TicketForUpdate)
-                {
-                    t.DocumentStatus = Result.Status;
-                    t.BuyerEmail = Result.EmailPrimatelja;
-                    t.UpdateDate = DateTime.Now;
-                }
-                db.SaveChanges();
-            }
+            TicketForUpdate.DocumentStatus = Response.Status;
+            TicketForUpdate.BuyerEmail = Response.EmailPrimatelja;
+            TicketForUpdate.UpdateDate = DateTime.Now;
+            db.SaveChanges();
         }
 
         // GET: Delivery/UpdateAllStatuses

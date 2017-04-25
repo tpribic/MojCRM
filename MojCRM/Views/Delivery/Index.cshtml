@@ -15,7 +15,7 @@
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
-                <a class="btn btn-primary btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name})">Kreiranje kartica za dostavu</a>
+                @*<a class="btn btn-primary btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name})">Kreiranje kartica za dostavu</a>*@
                 <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm">
                     Provjeri sve statuse
                 </a>
@@ -128,12 +128,6 @@
         </div>
 
         <div class="row">
-            @*<div class="col-md-2">
-                <div class="form-group">
-                    <button id="Search" type="submit" class="btn btn-primary btn-sm">Traži!</button>
-                    <button id="ResetSearch" type="reset" class="btn btn-warning btn-sm">Poništi!</button>
-                </div>
-            </div>*@
             <div class="col-md-6">
                 <div class="alert alert-info">
                     Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
@@ -144,11 +138,20 @@
                     Broj rezultata pretrage: <strong>@ViewBag.SearchResults</strong>
                 </div>
             </div>
-            <div class="col-md-2">
-
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alert alert-info alert-sm">
+                    Broj kreiranih kartica danas (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedToday</strong>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-info">
+                    Broj kreiranih kartica danas (za prvi put) (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedTodayFirstTime</strong>
+                </div>
             </div>
         </div>
-
+        <br />
         <div class="col-md-2">
             <div class="form-group" style="margin-bottom:0">
                 <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži"/>
@@ -163,9 +166,15 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("
 columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
-columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}");
-columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).SetWidth("50");
-columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
+columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}").RenderValueAs(m =>
+{
+    if (m.FirstInvoice == true)
+        return @<div><span>@Html.Raw(m.SentDate)</span><br /><span class="label label-primary">Prvi račun</span></div>;
+
+    return @<div><span>@Html.Raw(m.SentDate)</span></div>;
+});
+    columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).SetWidth("50");
+    columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
     {
         if (m.DocumentStatus == 30)
             return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-warning">@Html.Raw(m.DocumentStatusString)</span></div>;

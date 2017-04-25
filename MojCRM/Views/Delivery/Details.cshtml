@@ -527,7 +527,7 @@
                             <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Model.DocumentStatusString</span></td>
                             <td>@Invoice.BuyerEmail</td>
                             <td>@Invoice.InvoiceNumber</td>
-                            <td>@Invoice.SentDate</td>
+                            <td>@Invoice.SentDate.ToShortDateString()</td>
                             <td>
                                 <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
                                 <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>

@@ -321,6 +321,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -397,6 +398,10 @@
     <Compile Include="Migrations\201704102111408_Apr10Update.cs" />
     <Compile Include="Migrations\201704102111408_Apr10Update.Designer.cs">
       <DependentUpon>201704102111408_Apr10Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704250902403_Apr25UpdateNewDelivery.cs" />
+    <Compile Include="Migrations\201704250902403_Apr25UpdateNewDelivery.Designer.cs">
+      <DependentUpon>201704250902403_Apr25UpdateNewDelivery.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -590,7 +595,7 @@
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
-    <Content Include="Views\Delivery\CreateTickets.cshtml" />
+    <Content Include="Views\Delivery\CreateTicketsOld.cshtml" />
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
@@ -602,6 +607,7 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Contact\Create.cshtml" />
+    <Content Include="Views\Administration\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -668,6 +674,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704102111408_Apr10Update.resx">
       <DependentUpon>201704102111408_Apr10Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704250902403_Apr25UpdateNewDelivery.resx">
+      <DependentUpon>201704250902403_Apr25UpdateNewDelivery.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
