@@ -143,7 +143,7 @@ namespace MojCRM.Controllers
                            where u.UserName == Name
                            select u.MerUserPassword).First();
             var Organizations = (from o in db.Organizations
-                                 select o).ToList();
+                                 select o).AsEnumerable();
 
             MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments();
 
@@ -182,7 +182,6 @@ namespace MojCRM.Controllers
                             BuyerEmail = Result.EmailPrimatelja,
                             FirstInvoice = true,
                         });
-                        db.SaveChanges();
                     }
                     else
                     {
@@ -209,7 +208,6 @@ namespace MojCRM.Controllers
                             SubjectBusinessUnit = ResultNonExistingSubjekt.PoslovnaJedinica,
                             VAT = ResultNonExistingSubjekt.Oib
                         });
-                        db.SaveChanges();
 
                         db.DeliveryTicketModels.Add(new Delivery
                         {
@@ -225,8 +223,8 @@ namespace MojCRM.Controllers
                             BuyerEmail = Result.EmailPrimatelja,
                             FirstInvoice = true,
                         });
-                        db.SaveChanges();
                     }
+                    db.SaveChanges();
                 }
             }
         }
@@ -241,8 +239,6 @@ namespace MojCRM.Controllers
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
-            var Organizations = (from o in db.Organizations
-                                 select o).ToList();
 
             MerApiGetNondeliveredDocuments RequestRegularDelivery = new MerApiGetNondeliveredDocuments();
 
@@ -278,8 +274,8 @@ namespace MojCRM.Controllers
                         BuyerEmail = Result.EmailPrimatelja,
                         FirstInvoice = false,
                     });
-                    db.SaveChanges();
                 }
+                db.SaveChanges();
             }
         }
 
@@ -489,7 +485,7 @@ namespace MojCRM.Controllers
 
         public void UpdateStatus(int Id)
         {
-            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id + "ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
 
             MerDeliveryJsonResponse Response = ParseJson(MerString);
 
@@ -514,7 +510,7 @@ namespace MojCRM.Controllers
 
             foreach (var Link in MerLinks)
             {
-                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.Id + "ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
+                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.Id + "&ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
                 MerDeliveryJsonResponse Result = ParseJson(MerString);
 
                     var TicketForUpdate = from t in db.DeliveryTicketModels
@@ -526,7 +522,7 @@ namespace MojCRM.Controllers
                         t.BuyerEmail = Result.EmailPrimatelja;
                         t.UpdateDate = DateTime.Now;
                     }
-                        db.SaveChanges();
+                    db.SaveChanges();
             }
             return RedirectToAction("Index");
         }
@@ -638,8 +634,8 @@ namespace MojCRM.Controllers
 
                 TicketForRemoval.DocumentStatus = 55;
                 TicketForRemoval.UpdateDate = DateTime.Now;
-                db.SaveChanges();
             }
+            db.SaveChanges();
 
             return Json(new { Status = "OK" });
         }
@@ -658,7 +654,10 @@ namespace MojCRM.Controllers
                 return HttpNotFound();
             }
 
-            UpdateStatus(id);
+            var ElectronicId = (from t in db.DeliveryTicketModels
+                                where t.Id == id
+                                select t.MerElectronicId).First();
+            UpdateStatus(ElectronicId);
 
             DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
 
@@ -680,8 +679,6 @@ namespace MojCRM.Controllers
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
-            var Organizations = (from o in db.Organizations
-                                 select o).ToList();
 
             MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments();
 

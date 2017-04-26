@@ -51,7 +51,7 @@ namespace MojCRM.Helpers
         public int DokumentStatusId { get; set; }
         public DateTime DatumOtpreme { get; set; }
         public DateTime DatumZadnjePoruke { get; set; }
-        public DateTime DatumDostave { get; set; }
+        public DateTime? DatumDostave { get; set; }
         public string EmailPrimatelja { get; set; }
         public string EmailPosiljatelja { get; set; }
         public int PosiljateljId { get; set; }
