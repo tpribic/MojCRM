@@ -165,7 +165,7 @@ namespace MojCRM.Controllers
                 MerGetNondeliveredDocumentsResponse[] ResultsFirstTime = JsonConvert.DeserializeObject<MerGetNondeliveredDocumentsResponse[]>(ResponseFirstTime);
                 foreach (var Result in ResultsFirstTime)
                 {
-                    bool ExistingOrganization = Organizations.Any(o => o.MerId.ToString() == Result.PrimateljId.ToString());
+                    bool ExistingOrganization = Organizations.Any(o => o.MerId == Result.PrimateljId);
                     if (ExistingOrganization)
                     {
                         db.DeliveryTicketModels.Add(new Delivery
@@ -489,7 +489,7 @@ namespace MojCRM.Controllers
 
         public void UpdateStatus(int Id)
         {
-            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id;
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id + "ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
 
             MerDeliveryJsonResponse Response = ParseJson(MerString);
 
@@ -508,16 +508,17 @@ namespace MojCRM.Controllers
         {
             var OpenTickets = from t in db.DeliveryTicketModels
                               where t.DocumentStatus == 30
-                              select t.MerLink;
+                              select t;
 
             var MerLinks = OpenTickets.ToList();
 
             foreach (var Link in MerLinks)
             {
-                    MerDeliveryJsonResponse Result = ParseJson(Link);
+                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.Id + "ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
+                MerDeliveryJsonResponse Result = ParseJson(MerString);
 
                     var TicketForUpdate = from t in db.DeliveryTicketModels
-                                          where t.MerLink == Link
+                                          where t.Id == Link.Id
                                           select t;
                     foreach (Delivery t in TicketForUpdate)
                     {

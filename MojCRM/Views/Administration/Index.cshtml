@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Administracija sustava";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
@@ -12,7 +12,7 @@
         <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTicketsFirstTime", controller = "Delivery", area = "", User.Identity.Name })">Kreiranje kartica za prvi put</a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name })">Kreiranje kartica za prvi put</a>
+        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name })">Kreiranje kartica za preuzimanje</a>
     </div>
 </div>
 <hr />
