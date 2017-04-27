@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Helpers;
+using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,11 +17,13 @@ namespace MojCRM.ViewModels
         [Display(Name = "Pošiljatelj:")]
         public string SenderName { get; set; }
 
+        public string SenderVAT { get; set; }
+
         [Display(Name = "Primatelj:")]
         public string ReceiverName { get; set; }
 
-        [NotMapped]
         public int? ReceiverId { get; set; }
+        public string ReceiverVAT { get; set; }
 
         [Display(Name = "Interni broj dokumenta:")]
         public string InvoiceNumber { get; set; }
@@ -30,7 +33,9 @@ namespace MojCRM.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime SentDate { get; set; }
 
+        public int MerElectronicId { get; set; }
         public int MerDocumentTypeId { get; set; }
+        public int MerDocumentStatusId { get; set; }
 
         [Display(Name = "E-mail adresa primatelja:")]
         public string ReceiverEmail { get; set; }
@@ -50,6 +55,9 @@ namespace MojCRM.ViewModels
         [Display(Name = "Broj telefona")]
         public string DeliveryContactTelephone { get; set; }
 
+        [Display(Name = "E-mail adresa kontakta")]
+        public string DeliveryContactEmail { get; set; }
+
         [Display(Name = "Broj mobitela")]
         public string DeliveryContactMobileTelephone { get; set; }
 
@@ -59,6 +67,21 @@ namespace MojCRM.ViewModels
         [Display(Name = "Agent")]
         public string DeliveryContactAgent { get; set; }
 
+        [Display(Name = "Tvrtka primatelj")]
+        public string DeliveryDetailReceiver { get; set; }
+
+        [Display(Name = "Agent")]
+        public string DeliveryDetailAgent { get; set; }
+
+        [Display(Name = "Datum i vrijeme napomene")]
+        [DataType(DataType.DateTime)]
+        public DateTime DeliveryDetailDateTime { get; set; }
+
+        [Display(Name = "Povezani kontakt")]
+        public string DeliveryDetailContact { get; set; }
+
+        [Display(Name = "Napomena")]
+        public string DeliveryDetailDetail { get; set; }
 
         [Display(Name = "Tip dokumenta:")]
         public string MerDocumentTypeIdString
@@ -83,7 +106,101 @@ namespace MojCRM.ViewModels
                 return "Tip dokumenta";
             }
         }
-        public List<Delivery> UndeliveredInvoices { get; set; }
-        public List<Contact> RelatedDeliveryContacts { get; set; }
+
+        [Display(Name = "Status dokumenta")]
+        public string DocumentStatusString
+        {
+            get
+            {
+                switch (MerDocumentStatusId)
+                {
+                    case 10: return "U pripremi";
+                    case 20: return "Potpisan";
+                    case 30: return "Poslan";
+                    case 40: return "Dostavljen";
+                    case 45: return "Ispisan";
+                    case 50: return "Neuspješan";
+                    case 55: return "Uklonjen";
+                }
+                return "Status";
+            }
+        }
+        public IEnumerable<Delivery> RelatedInvoices { get; set; }
+        public IEnumerable<Contact> RelatedDeliveryContacts { get; set; }
+        public IEnumerable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public MerGetSentDocumentsResponse[] DocumentHistory { get; set; }
+        public IList<SelectListItem> RelatedDeliveryContactsForDetails
+        {
+            get
+            {
+                var list = (from t in RelatedDeliveryContacts
+                            select new SelectListItem()
+                            {
+                                Text = t.ContactFirstName + " " + t.ContactLastName,
+                                Value = t.ContactFirstName + " " + t.ContactLastName
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
+        public IList<SelectListItem> DeliveryDetailsIds
+        {
+            get
+            {
+                var list = (from t in RelatedDeliveryDetails
+                            select new SelectListItem()
+                            {
+                                Text = t.DetailNote,
+                                Value = t.Id.ToString()
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
+        public string DocumentHistoryStatusString
+        {
+            get
+            {
+                foreach (var Document in DocumentHistory)
+                {
+                    switch (Document.DokumentStatusId)
+                    {
+                        case 10: return "U pripremi";
+                        case 20: return "Potpisan";
+                        case 30: return "Poslan";
+                        case 40: return "Dostavljen";
+                        case 45: return "Ispisan";
+                        case 50: return "Neuspješan";
+                        case 55: return "Uklonjen";
+                    }
+                }
+                return "Status";
+            }
+        }
+        public string DocumentHistoryDocTypeString
+        {
+            get
+            {
+                foreach (var Document in DocumentHistory)
+                {
+                    switch (Document.DokumentTypeId)
+                    {
+                        case 0: return "eDokument";
+                        case 1: return "eRačun";
+                        case 3: return "Storno";
+                        case 4: return "eOpomena";
+                        case 7: return "eOdgovor";
+                        case 105: return "eNarudžba";
+                        case 226: return "eOpoziv";
+                        case 230: return "eIzmjena";
+                        case 231: return "eOdgovorN";
+                        case 351: return "eOtrpemnica";
+                        case 381: return "eOdobrenje";
+                        case 383: return "eTerećenje";
+                    }
+                }
+                return "Tip dokumenta";
+            }
+        }
     }
 }

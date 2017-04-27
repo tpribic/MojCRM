@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Transactions;
 using System.Web;
+using System.Web.Mvc;
 
 namespace MojCRM.Models
 {
@@ -48,6 +49,11 @@ namespace MojCRM.Models
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
+        [Display(Name = "Prvi račun")]
+        public bool FirstInvoice { get; set; }
+
+        public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
+
         [NotMapped]
         [Display(Name = "Status dokumenta")]
         public string DocumentStatusString
@@ -85,7 +91,7 @@ namespace MojCRM.Models
                     case 226: return "eOpoziv";
                     case 230: return "eIzmjena";
                     case 231: return "eOdgovorN";
-                    case 351: return "eOtrpemnica";
+                    case 351: return "eOtpremnica";
                     case 381: return "eOdobrenje";
                     case 383: return "eTerećenje";
                 }

@@ -12,7 +12,9 @@ namespace MojCRM
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery-{version}.min.js"));
+                "~/Scripts/jquery-{version}.min.js",
+                "~/Scripts/jquery-ui.js",
+                "~/Scripts/jquery-ui.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.unobtrusive*",
@@ -44,6 +46,9 @@ namespace MojCRM
                  "~/Content/bootstrap.css",
                  "~/Content/Site.css",
                  "~/Content/bootstrap-datepicker3.min.css"));
+
+            bundles.Add(new ScriptBundle("~/Scripts").Include(
+                "~/Scripts/merscripts.js"));
         }
     }
 }

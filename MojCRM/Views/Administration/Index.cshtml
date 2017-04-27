@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Administracija sustava";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Administracija sustava</strong></h2>
+<hr />
+<h4>Dostava</h4>
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTicketsFirstTime", controller = "Delivery", area = "", User.Identity.Name })">Kreiranje kartica za prvi put</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name })">Kreiranje kartica za preuzimanje</a>
+    </div>
+</div>
+<hr />
+

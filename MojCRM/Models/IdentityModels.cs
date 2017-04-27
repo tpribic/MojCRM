@@ -14,8 +14,8 @@ namespace MojCRM.Models
         public string Hometown { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
-
-        public virtual ICollection<Contact> Contacts { get; set; }
+        public string MerUserUsername { get; set; }
+        public string MerUserPassword { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -43,5 +43,9 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Contact> Contacts { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.DeliveryDetail> DeliveryDetails { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.LogError> LogError { get; set; }
     }
 }

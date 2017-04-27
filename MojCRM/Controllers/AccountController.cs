@@ -155,7 +155,7 @@ namespace MojCRM.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        [Authorize(Roles = "Superadmin")]
         public ActionResult Register()
         {
             return View();
@@ -164,13 +164,13 @@ namespace MojCRM.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Superadmin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserFirstName + " " + model.UserLastName, Email = model.Email, Hometown = model.Hometown, UserFirstName = model.UserFirstName, UserLastName  = model.UserLastName };
+                var user = new ApplicationUser { UserName = model.UserFirstName + " " + model.UserLastName, Email = model.Email, Hometown = model.Hometown, UserFirstName = model.UserFirstName, UserLastName  = model.UserLastName, MerUserUsername = model.MerUserUsername, MerUserPassword = model.MerUserPassword };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -182,7 +182,7 @@ namespace MojCRM.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Account");
                 }
                 AddErrors(result);
             }
