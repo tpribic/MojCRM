@@ -157,5 +157,50 @@ namespace MojCRM.ViewModels
             }
             set { }
         }
+        public string DocumentHistoryStatusString
+        {
+            get
+            {
+                foreach (var Document in DocumentHistory)
+                {
+                    switch (Document.DokumentStatusId)
+                    {
+                        case 10: return "U pripremi";
+                        case 20: return "Potpisan";
+                        case 30: return "Poslan";
+                        case 40: return "Dostavljen";
+                        case 45: return "Ispisan";
+                        case 50: return "Neuspješan";
+                        case 55: return "Uklonjen";
+                    }
+                }
+                return "Status";
+            }
+        }
+        public string DocumentHistoryDocTypeString
+        {
+            get
+            {
+                foreach (var Document in DocumentHistory)
+                {
+                    switch (Document.DokumentTypeId)
+                    {
+                        case 0: return "eDokument";
+                        case 1: return "eRačun";
+                        case 3: return "Storno";
+                        case 4: return "eOpomena";
+                        case 7: return "eOdgovor";
+                        case 105: return "eNarudžba";
+                        case 226: return "eOpoziv";
+                        case 230: return "eIzmjena";
+                        case 231: return "eOdgovorN";
+                        case 351: return "eOtrpemnica";
+                        case 381: return "eOdobrenje";
+                        case 383: return "eTerećenje";
+                    }
+                }
+                return "Tip dokumenta";
+            }
+        }
     }
 }

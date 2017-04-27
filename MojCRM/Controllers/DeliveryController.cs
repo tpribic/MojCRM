@@ -494,7 +494,7 @@ namespace MojCRM.Controllers
                 MerDeliveryJsonResponse Result = ParseJson(MerString);
 
                 var TicketForUpdate = (from t in db.DeliveryTicketModels
-                                       where t.MerElectronicId == Result.Id
+                                       where t.MerElectronicId == Link.MerElectronicId
                                        select t).First();
                 TicketForUpdate.DocumentStatus = Result.Status;
                 TicketForUpdate.BuyerEmail = Result.EmailPrimatelja;
