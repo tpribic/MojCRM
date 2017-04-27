@@ -35,7 +35,9 @@ namespace MojCRM.Controllers
             var Results = from t in db.DeliveryTicketModels
                           where t.DocumentStatus == 30
                           select t;
-            var ResultsNew = db.DeliveryTicketModels.AsQueryable();
+            var ResultsNew = from t in db.DeliveryTicketModels
+                             select t;
+            //var ResultsNew = db.DeliveryTicketModels.AsQueryable();
             var TicketsCreatedToday = from t in db.DeliveryTicketModels
                                       where t.InsertDate > DateTime.Today.Date
                                       select t;
@@ -95,7 +97,7 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
-                ResultsNew = ResultsNew.Where(t => t.InsertDate > insertDate);
+                ResultsNew = ResultsNew.Where(t => t.InsertDate == insertDate);
                 ViewBag.SearchResults = ResultsNew.Count();
             }
 
@@ -292,7 +294,7 @@ namespace MojCRM.Controllers
                            select u.MerUserPassword).First();
 
             var Organizations = (from o in db.Organizations
-                                select o).ToList();
+                                select o).AsEnumerable();
 
             using (Imap4Client imap = new Imap4Client())
             {
@@ -430,57 +432,37 @@ namespace MojCRM.Controllers
         // GET: Delivery/UpdateStatusIndex/12345
         public ActionResult UpdateStatusIndex(int Id)
         {
-            var OpenTicket = from t in db.DeliveryTicketModels
-                              where t.Id == Id
-                              select t.MerLink;
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
 
-            var MerLinks = OpenTicket.ToList();
+            MerDeliveryJsonResponse Response = ParseJson(MerString);
 
-            foreach (var Link in MerLinks)
-            {
-                MerDeliveryJsonResponse Result = ParseJson(Link);
-
-                var TicketForUpdate = from t in db.DeliveryTicketModels
-                                      where t.MerLink == Link
-                                      select t;
-                foreach (Delivery t in TicketForUpdate)
-                {
-                    t.DocumentStatus = Result.Status;
-                    t.BuyerEmail = Result.EmailPrimatelja;
-                    t.UpdateDate = DateTime.Now;
-                }
-                db.SaveChanges();
-            }
+            var TicketForUpdate = (from t in db.DeliveryTicketModels
+                                   where t.MerElectronicId == Id
+                                   select t).First();
+            TicketForUpdate.DocumentStatus = Response.Status;
+            TicketForUpdate.BuyerEmail = Response.EmailPrimatelja;
+            TicketForUpdate.UpdateDate = DateTime.Now;
+            db.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
         // GET: Delivery/UpdateStatus/12345
-        public ActionResult UpdateStatus(int TicketId, int ReceiverId)
+        public ActionResult UpdateStatus(int TicketId, int MerElectronicId, int ReceiverId)
         {
-            var OpenTicket = from t in db.DeliveryTicketModels
-                             where t.Id == TicketId
-                             select t.MerLink;
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + MerElectronicId + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
 
-            var MerLinks = OpenTicket.ToList();
+            MerDeliveryJsonResponse Response = ParseJson(MerString);
 
-            foreach (var Link in MerLinks)
-            {
-                MerDeliveryJsonResponse Result = ParseJson(Link);
+            var TicketForUpdate = (from t in db.DeliveryTicketModels
+                                   where t.MerElectronicId == MerElectronicId
+                                   select t).First();
+            TicketForUpdate.DocumentStatus = Response.Status;
+            TicketForUpdate.BuyerEmail = Response.EmailPrimatelja;
+            TicketForUpdate.UpdateDate = DateTime.Now;
+            db.SaveChanges();
 
-                var TicketForUpdate = from t in db.DeliveryTicketModels
-                                      where t.MerLink == Link
-                                      select t;
-                foreach (Delivery t in TicketForUpdate)
-                {
-                    t.DocumentStatus = Result.Status;
-                    t.BuyerEmail = Result.EmailPrimatelja;
-                    t.UpdateDate = DateTime.Now;
-                }
-                db.SaveChanges();
-            }
-
-            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
+            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
         }
 
         public void UpdateStatus(int Id)
@@ -492,7 +474,6 @@ namespace MojCRM.Controllers
             var TicketForUpdate = (from t in db.DeliveryTicketModels
                                   where t.MerElectronicId == Id
                                   select t).First();
-
             TicketForUpdate.DocumentStatus = Response.Status;
             TicketForUpdate.BuyerEmail = Response.EmailPrimatelja;
             TicketForUpdate.UpdateDate = DateTime.Now;
@@ -505,24 +486,20 @@ namespace MojCRM.Controllers
             var OpenTickets = from t in db.DeliveryTicketModels
                               where t.DocumentStatus == 30
                               select t;
-
-            var MerLinks = OpenTickets.ToList();
+            var MerLinks = OpenTickets.AsEnumerable();
 
             foreach (var Link in MerLinks)
             {
-                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.Id + "&ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
+                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.MerElectronicId + "&ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
                 MerDeliveryJsonResponse Result = ParseJson(MerString);
 
-                    var TicketForUpdate = from t in db.DeliveryTicketModels
-                                          where t.Id == Link.Id
-                                          select t;
-                    foreach (Delivery t in TicketForUpdate)
-                    {
-                        t.DocumentStatus = Result.Status;
-                        t.BuyerEmail = Result.EmailPrimatelja;
-                        t.UpdateDate = DateTime.Now;
-                    }
-                    db.SaveChanges();
+                var TicketForUpdate = (from t in db.DeliveryTicketModels
+                                       where t.MerElectronicId == Result.Id
+                                       select t).First();
+                TicketForUpdate.DocumentStatus = Result.Status;
+                TicketForUpdate.BuyerEmail = Result.EmailPrimatelja;
+                TicketForUpdate.UpdateDate = DateTime.Now;
+                db.SaveChanges();
             }
             return RedirectToAction("Index");
         }
@@ -600,7 +577,7 @@ namespace MojCRM.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
-            UpdateStatus(_IdInt, _ReceiverInt);
+            UpdateStatus(_IdInt);
 
             return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt });
         }
@@ -609,10 +586,9 @@ namespace MojCRM.Controllers
         [HttpPost]
         public JsonResult Remove(int MerElectronicId)
         {
-            var Tickets = from t in db.DeliveryTicketModels
-                                   where t.MerElectronicId == MerElectronicId
-                                   select t;
-            var TicketForRemoval = Tickets.ToList().First();
+            var TicketForRemoval = (from t in db.DeliveryTicketModels
+                                    where t.MerElectronicId == MerElectronicId
+                                    select t).First();
 
             TicketForRemoval.DocumentStatus = 55;
             TicketForRemoval.UpdateDate = DateTime.Now;
@@ -627,10 +603,9 @@ namespace MojCRM.Controllers
         {
             foreach (var Id in MerElectronicIds)
             {
-                var Tickets = from t in db.DeliveryTicketModels
-                              where t.MerElectronicId == Id
-                              select t;
-                var TicketForRemoval = Tickets.ToList().First();
+                var TicketForRemoval = (from t in db.DeliveryTicketModels
+                                        where t.MerElectronicId == Id
+                                        select t).First();
 
                 TicketForRemoval.DocumentStatus = 55;
                 TicketForRemoval.UpdateDate = DateTime.Now;
@@ -663,15 +638,15 @@ namespace MojCRM.Controllers
 
             var _RelatedInvoicesList = (from t in db.DeliveryTicketModels
                                         where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate && t.DocumentStatus == 30
-                                        select t).ToList();
+                                        select t).AsEnumerable();
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
                                             where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
-                                            select t).ToList();
+                                            select t).AsEnumerable();
 
             var _RelatedDeliveryDetails = (from t in db.DeliveryDetails
                                            where t.Receiver.MerId == receiverId
-                                           select t).ToList();
+                                           select t).AsEnumerable();
 
             var MerUser = (from u in db.Users
                            where u.UserName == Name
@@ -807,28 +782,26 @@ namespace MojCRM.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
+            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId, Name = User.Identity.Name });
         }
 
         // POST: Delivery/EditDetail/12345
         [HttpPost]
         [Authorize]
-        public ActionResult EditDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailNote, string _TicketId)
+        public ActionResult EditDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailNoteId, string _DetailNote, string _TicketId)
         {
             int _TicketIdInt = Int32.Parse(_TicketId);
-            var DetailForEdit = from t in db.DeliveryDetails
-                                 where t.ReceiverId == _ReceiverId && t.TicketId == _TicketIdInt
-                                 select t;
+            int _DetailNoteIdInt = Int32.Parse(_DetailNoteId);
+            var DetailForEdit = (from t in db.DeliveryDetails
+                                where t.Id == _DetailNoteIdInt
+                                select t).First();
 
-            foreach (DeliveryDetail dt in DetailForEdit)
-            {
-                dt.DetailNote = _DetailNote;
-                dt.Contact = _ContactId;
-                dt.UpdateDate = DateTime.Now;
-            }
+            DetailForEdit.DetailNote = _DetailNote;
+            DetailForEdit.Contact = _ContactId;
+            DetailForEdit.UpdateDate = DateTime.Now;
             db.SaveChanges();
 
-            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId });
+            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId, Name = User.Identity.Name });
         }
         
         // POST: Delivery/Create

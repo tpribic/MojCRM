@@ -83,7 +83,6 @@ namespace MojCRM.ViewModels
         [Display(Name = "Napomena")]
         public string DeliveryDetailDetail { get; set; }
 
-
         [Display(Name = "Tip dokumenta:")]
         public string MerDocumentTypeIdString
         {
@@ -126,9 +125,9 @@ namespace MojCRM.ViewModels
                 return "Status";
             }
         }
-        public List<Delivery> RelatedInvoices { get; set; }
-        public List<Contact> RelatedDeliveryContacts { get; set; }
-        public List<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public IEnumerable<Delivery> RelatedInvoices { get; set; }
+        public IEnumerable<Contact> RelatedDeliveryContacts { get; set; }
+        public IEnumerable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
         public MerGetSentDocumentsResponse[] DocumentHistory { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails
         {
@@ -139,6 +138,20 @@ namespace MojCRM.ViewModels
                             {
                                 Text = t.ContactFirstName + " " + t.ContactLastName,
                                 Value = t.ContactFirstName + " " + t.ContactLastName
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
+        public IList<SelectListItem> DeliveryDetailsIds
+        {
+            get
+            {
+                var list = (from t in RelatedDeliveryDetails
+                            select new SelectListItem()
+                            {
+                                Text = t.DetailNote,
+                                Value = t.Id.ToString()
                             }).ToList();
                 return list;
             }

@@ -166,14 +166,14 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("
 columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
-columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).Format("{0:dd.MM.yyyy}").RenderValueAs(m =>
+columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).RenderValueAs(m =>
 {
     if (m.FirstInvoice == true)
-        return @<div><span>@Html.Raw(m.SentDate)</span><br /><span class="label label-primary">Prvi račun</span></div>;
+        return @<div><span>@Html.Raw(m.SentDate.ToShortDateString())</span><br /><span class="label label-primary">Prvi račun</span></div>;
 
-    return @<div><span>@Html.Raw(m.SentDate)</span></div>;
+    return @<div><span>@Html.Raw(m.SentDate.ToShortDateString())</span></div>;
 });
-    columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).SetWidth("50");
+    columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false);
     columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
     {
         if (m.DocumentStatus == 30)
