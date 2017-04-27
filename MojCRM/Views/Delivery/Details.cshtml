@@ -366,7 +366,7 @@
 <div>
     <div class="row" style="text-align:center">
         <div class="col-md-12">
-            <a href="@Url.RouteUrl(new { action = "UpdateStatus", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-success" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> Osvježi status</a>
+            <a href="@Url.RouteUrl(new { action = "UpdateStatusDetails", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-success" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> Osvježi status</a>
             <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-warning" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> Ponovi slanje</a>
             <button type="button" title="Promjena e-mail adrese za dostavu eRačuna" class="btn btn-primary btn-sm" data-toggle="modal" href="#ChangeEmail"><i class="glyphicon glyphicon-envelope"></i> Izmjena e-maila</button>
             <a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i> Povratak</a>
@@ -571,8 +571,8 @@
                     @foreach (var Document in Model.DocumentHistory)
                     {
                         <tr>
-                            <td>@Document.DokumentTypeId</td>
-                            <td>@Document.DokumentStatusId</td>
+                            <td>@Model.DocumentHistoryDocTypeString</td>
+                            <td>@Model.DocumentHistoryStatusString</td>
                             <td>@Document.PosiljateljNaziv</td>
                             <td>@Document.EmailPrimatelja</td>
                             <td>@Document.DatumOtpreme.ToShortDateString()</td>

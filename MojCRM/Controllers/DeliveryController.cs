@@ -430,14 +430,14 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/UpdateStatusIndex/12345
-        public ActionResult UpdateStatusIndex(int Id)
+        public ActionResult UpdateStatusIndex(int MerElectronicId)
         {
-            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Id + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
+            var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + MerElectronicId + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
 
             MerDeliveryJsonResponse Response = ParseJson(MerString);
 
             var TicketForUpdate = (from t in db.DeliveryTicketModels
-                                   where t.MerElectronicId == Id
+                                   where t.MerElectronicId == MerElectronicId
                                    select t).First();
             TicketForUpdate.DocumentStatus = Response.Status;
             TicketForUpdate.BuyerEmail = Response.EmailPrimatelja;
@@ -448,7 +448,7 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/UpdateStatus/12345
-        public ActionResult UpdateStatus(int TicketId, int MerElectronicId, int ReceiverId)
+        public ActionResult UpdateStatusDetails(int TicketId, int MerElectronicId, int ReceiverId)
         {
             var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + MerElectronicId + "&ver=5115e32c-6be4-4a92-8e92-afe122e99d1c";
 
@@ -499,8 +499,9 @@ namespace MojCRM.Controllers
                 TicketForUpdate.DocumentStatus = Result.Status;
                 TicketForUpdate.BuyerEmail = Result.EmailPrimatelja;
                 TicketForUpdate.UpdateDate = DateTime.Now;
-                db.SaveChanges();
             }
+            db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
