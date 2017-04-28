@@ -47,5 +47,7 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.DeliveryDetail> DeliveryDetails { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.LogError> LogError { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.ActivityLog> ActivityLogs { get; set; }
     }
 }

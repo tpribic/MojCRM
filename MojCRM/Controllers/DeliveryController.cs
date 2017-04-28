@@ -534,13 +534,22 @@ namespace MojCRM.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
+            db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = "Korisnik " + Name + " je ponovno poslao obavijest za dokument " + MerElectronicId.ToString(),
+                User = Name,
+                ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
+                InsertDate = DateTime.Now,
+            });
+            db.SaveChanges();
+
             if (TicketId == null)
             {
                 return RedirectToAction("Index");
             }
             else
             {
-                return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
+                return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
             }
         }
 
@@ -558,6 +567,10 @@ namespace MojCRM.Controllers
             var MerPass = (from u in db.Users
                           where u.UserName == _Agent
                           select u.MerUserPassword).First();
+
+            var OldEmail = (from t in db.DeliveryTicketModels
+                            where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
+                            select t.BuyerEmail).First();
 
             MerApiChangeEmail Request = new MerApiChangeEmail();
 
@@ -578,9 +591,18 @@ namespace MojCRM.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
+            db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = "Korisnik " + _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument " + _Id,
+                User = _Agent,
+                ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
+                InsertDate = DateTime.Now,
+            });
+            db.SaveChanges();
+
             UpdateStatus(_IdInt);
 
-            return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt });
+            return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
         }
 
         // POST Delivery/Remove/1125768
