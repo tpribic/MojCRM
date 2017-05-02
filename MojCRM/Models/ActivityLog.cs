@@ -13,6 +13,7 @@ namespace MojCRM.Models
         public string Description { get; set; }
         public string User { get; set; }
         public ActivityTypeEnum ActivityType { get; set; }
+        public DepartmentEnum Department { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public enum ActivityTypeEnum
@@ -37,6 +38,14 @@ namespace MojCRM.Models
 
             [Description("Slanje e-mailova prema kontaktima dostave")]
             DELMAIL
+        }
+        public enum DepartmentEnum
+        {
+            [Description("Moj-CRM")]
+            MojCRM,
+
+            [Description("Dostava")]
+            Delivery,
         }
     }
 }

@@ -8,10 +8,10 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts")
-    @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts")
+    @Styles.Render("~/Content/css")
 
     <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
     
@@ -40,22 +40,32 @@
     </div>
     <div id="main-wrapper" style="background-color:lavender">
         <div class="container body-content" style="background-color:white">
-            <div class="row" style="padding-top:6px; margin-top:6px">
-                <div class="col-md-12">
-                    <a href="@Url.Action("Index", "Home")" class="btn btn-default">
-                        Početna
-                    </a>
-                    <a href="@Url.Action("Index", "Delivery")" class="btn btn-default">
-                        Dostava
-                    </a>
-                    <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
-                        Kontakti
-                    </a>
-                    <a href="@Url.Action("Index", "Administration")" class="btn btn-default">
-                        Administracija sustava
-                    </a>
+            <form class="form-inline">
+                <div class="row" style="padding-top:6px; margin-top:6px">
+                    <div class="col-md-12">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                            Početna
+                        </a>
+                        <div class="btn-group dropdown">
+                            <button role="button" class="btn btn-default dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dostava <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="deliveryDropdown" role="menu">
+                                <li><a href="@Url.Action("Index", "Delivery")">Kartice</a></li>
+                                <li><a href="@Url.Action("Contacts", "Delivery")">Kartice</a></li>
+                            </ul>
+                        </div>
+                        <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
+                            Kontakti
+                        </a>
+                        <a href="@Url.Action("Index", "Stats")" class="btn btn-default">
+                            Izvještaji
+                        </a>
+                        <a href="@Url.Action("Index", "Administration")" class="btn btn-default">
+                            Administracija sustava
+                        </a>
+                    </div>
                 </div>
-            </div>
+            </form>
             <hr />
             @RenderBody()
             @RenderSection("SPAViews", required: false)

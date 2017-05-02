@@ -226,6 +226,11 @@
                                     @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                                 </div>
                             </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-identifier">
+                                    @Html.TextBox("Identifier", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = 1 })
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -496,11 +501,12 @@
                             <td>@Contact.ContactFirstName</td>
                             <td>@Contact.ContactLastName</td>
                             <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td><a href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td>@Contact.User</td>
                             <td>
                                 <a href="#AddDetail" data-toggle="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
                             </td>
                         </tr>
                     }
@@ -606,7 +612,7 @@
                 dataType: 'json'
             });
     });
-    $(document).on("click", "a.add-unsuccessfull-call", function (e) {
+    $(document).on("click", "a.add-successfull-call-short", function (e) {
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -617,9 +623,43 @@
                 _ContactId: $(this).data("contact"),
                 _DetailTemplate: $(this).data("detail-template"),
                 _DetailNote: $(this).data("detail-note"),
-                _TicketId: $(this).data("ticket-id")
+                _TicketId: $(this).data("ticket-id"),
+                Identifier: $(this).data("identifier-short")
             },
             dataType: 'json'
         });
     });
+        $(document).on("click", "a.add-unsuccessfull-call", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
+            data: {
+                _ReceiverId: $(this).data("receiver-id"),
+                _Agent: $(this).data("agent"),
+                _ContactId: $(this).data("contact"),
+                _DetailTemplate: $(this).data("detail-template"),
+                _DetailNote: $(this).data("detail-note"),
+                _TicketId: $(this).data("ticket-id"),
+                Identifier: $(this).data("identifier")
+            },
+            dataType: 'json'
+        });
+    });
+        $(document).on("click", "a.delivery-mail", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
+            data: {
+                _Agent: $(this).data("agent"),
+                _Email: $(this).data("email"),
+                _TicketId: $(this).data("ticket-id"),
+            },
+            dataType: 'json'
+        });
+        var email = $(this).data("email");
+        var subject = "Upit";
+        window.location = 'mailto:' + email + '?subject=' + subject;
+        });
 </script>

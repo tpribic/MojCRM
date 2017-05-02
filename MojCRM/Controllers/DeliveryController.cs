@@ -536,9 +536,10 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = "Korisnik " + Name + " je ponovno poslao obavijest za dokument " + MerElectronicId.ToString(),
+                Description = Name + " je ponovno poslao obavijest za dokument " + MerElectronicId.ToString(),
                 User = Name,
                 ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
+                Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
@@ -593,9 +594,10 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = "Korisnik " + _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument " + _Id,
+                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument " + _Id,
                 User = _Agent,
                 ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
+                Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
@@ -669,7 +671,7 @@ namespace MojCRM.Controllers
 
             var _RelatedDeliveryDetails = (from t in db.DeliveryDetails
                                            where t.Receiver.MerId == receiverId
-                                           select t).AsEnumerable();
+                                           select t).AsEnumerable().OrderByDescending(t => t.Id);
 
             var MerUser = (from u in db.Users
                            where u.UserName == Name
@@ -732,7 +734,8 @@ namespace MojCRM.Controllers
 
         // POST: AddDetail/1125768
         [HttpPost]
-        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote, int _TicketId)
+        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
+                                      int _TicketId, int Identifier)
         {
             if (_DetailTemplate == String.Empty && _DetailNote != String.Empty)
             {
@@ -803,6 +806,43 @@ namespace MojCRM.Controllers
                     TicketId = _TicketId
                 });
                 db.SaveChanges();
+            }
+
+            switch (Identifier)
+            {
+                case 1:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = _Agent + " je obavio uspješan poziv za dostavu eDokumenata vezan uz karticu ID: " + _TicketId,
+                        User = _Agent,
+                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
+                        Department = ActivityLog.DepartmentEnum.Delivery,
+                        InsertDate = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                    break;
+                case 2:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = _Agent + " je obavio kraći informativni poziv vezano za dostavu eDokumenata. Veza na karticu ID: " + _TicketId,
+                        User = _Agent,
+                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
+                        Department = ActivityLog.DepartmentEnum.Delivery,
+                        InsertDate = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                    break;
+                case 3:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = _Agent + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata. Veza na karticu ID: " + _TicketId,
+                        User = _Agent,
+                        ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
+                        Department = ActivityLog.DepartmentEnum.Delivery,
+                        InsertDate = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                    break;
             }
 
             return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId, Name = User.Identity.Name });
@@ -919,6 +959,19 @@ namespace MojCRM.Controllers
                 MerDeliveryJsonResponse Result = JsonConvert.DeserializeObject<MerDeliveryJsonResponse>(json);
                 return (Result);
             }
+        }
+
+        public void LogEmail (string _Agent, int _TicketId, string _Email)
+        {
+            db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = _Agent + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata. Veza na karticu ID: " + _TicketId,
+                User = _Agent,
+                ActivityType = ActivityLog.ActivityTypeEnum.DELMAIL,
+                Department = ActivityLog.DepartmentEnum.Delivery,
+                InsertDate = DateTime.Now,
+            });
+            db.SaveChanges();
         }
     }
 }

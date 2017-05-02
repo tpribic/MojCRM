@@ -1,0 +1,36 @@
+﻿@model MojCRM.ViewModels.DeliveryStatsViewModels
+@{
+    ViewBag.Title = "Statistika kreiranih kartica";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Statistike odjela dostave</strong></h2>
+<h3 style="text-align:center"><strong>Statistika kreiranih kartica</strong></h3>
+
+@using (Html.BeginForm("Delivery", "Stats", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="search-date">Datum pretrage</label>
+                <div id="search-date">
+                    @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="col-md-2">
+        <div class="form-group" style="margin-bottom:0">
+            <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+            <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+        </div>
+    </div>
+}
+<br />
+<div>
+    <p style="text-align:justify">
+        Danas je kreirano ukupno <strong>@ViewBag.CreatedTickets</strong> kartica (od toga <strong>@ViewBag.CreatedTicketsFirst</strong> za prvi puta)
+    </p>
+</div>
+

@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Izvještaji";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Izvještaji</strong></h2>
+<hr />
+<h4>Statistike pozivnog centra</h4>
+<div class="row">
+    <div class="col-md-3">
+        <a href="@Url.Action("CallCenterDaily", "Stats")" class="btn btn-default">
+            Dnevna statistika poziva
+        </a>
+    </div>
+</div>
+<hr />
+<h4>Statistike odjela dostave</h4>
+<div class="row">
+    <div class="col-md-3">
+        <a href="@Url.Action("Delivery", "Stats")" class="btn btn-default">
+            Statistika kreiranih kartica
+        </a>
+    </div>
+</div>
+<hr />
+
