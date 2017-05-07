@@ -1,4 +1,4 @@
-﻿@using WebMatrix.Data;
+﻿@model MojCRM.ViewModels.CallCenterDailyStatsViewModel
 @{
     ViewBag.Title = "Dnevna statistika poziva pozivnog centra";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -6,9 +6,27 @@
 
 <h2 style="text-align:center"><strong>Statistike pozivnog centra</strong></h2>
 <h3 style="text-align:center"><strong>Dnevna statistika poziva</strong></h3>
-<hr />
-<div>
-    <img src="~/Views/Stats/_CallCenterDailyQuery.cshtml" />
-</div>
-<hr />
+<body>
+    <div>
+        <div class="col-md-6">
+            <table class="table">
+                <tr>
+                    <th>Naziv agenta</th>
+                </tr>
+                @foreach (var Activity in Model.Activities)
+                {
+                    <tr>
+                        <td>@Activity.User</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
+            </div>
+            <hr />
+        </div>
+    </div>
+</body>
 

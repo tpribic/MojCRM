@@ -47,5 +47,36 @@ namespace MojCRM.Models
             [Description("Dostava")]
             Delivery,
         }
+
+        public string ActivityTypeString
+        {
+            get
+            {
+                switch (ActivityType)
+                {
+                    case ActivityTypeEnum.TEST: return "Test";
+                    case ActivityTypeEnum.SUCCALL: return "Uspješan poziv";
+                    case ActivityTypeEnum.SUCCALSHORT: return "Uspješan poziv (nekonkretni)";
+                    case ActivityTypeEnum.UNSUCCAL: return "Neuspješan poziv";
+                    case ActivityTypeEnum.MAILCHANGE: return "Izmjena e-mail obavijesti";
+                    case ActivityTypeEnum.RESEND: return "Ponovno slanje obavijesti o dostavi";
+                    case ActivityTypeEnum.DELMAIL: return "Slanje e-mailova prema kontaktima dostave";
+                }
+                return "Tip aktivnosti";
+            }
+        }
+
+        public string DepartmentString
+        {
+            get
+            {
+                switch (Department)
+                {
+                    case DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                }
+                return "Odjel";
+            }
+        }
     }
 }

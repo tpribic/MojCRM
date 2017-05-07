@@ -634,6 +634,7 @@
     <Content Include="Views\Stats\CallCenterDaily.cshtml" />
     <Content Include="Views\Stats\_CallCenterDailyQuery.cshtml" />
     <Content Include="Views\Stats\Delivery.cshtml" />
+    <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
