@@ -29,25 +29,29 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(Name))
             {
-                _Activities = _Activities.Where(a => a.User == Name && a.InsertDate == ReferenceDate).ToList();
+                _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= ReferenceDate)).ToList();
+                var _DistinctDepartments = (from a in db.ActivityLogs
+                                            where (a.User == Name) && (a.InsertDate >= ReferenceDate)
+                                            select a.Department).Distinct().Count();
                 ViewBag.User = Name;
+                ViewBag.DistinctDepartments = _DistinctDepartments;
             }
             else if (!String.IsNullOrEmpty(Agent))
             {
-                _Activities = _Activities.Where(a => a.User == Agent && a.InsertDate == ReferenceDate).ToList();
+                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= ReferenceDate)).ToList();
+                var _DistinctDepartments = (from a in db.ActivityLogs
+                                            where (a.User == Agent) && (a.InsertDate >= ReferenceDate)
+                                            select a.Department).Distinct().Count();
                 ViewBag.User = Agent;
+                ViewBag.DistinctDepartments = _DistinctDepartments;
             }
 
             var PersonalActivities = new PersonalDailyActivitiesViewModel
             {
                 PersonalActivities = _Activities,
                 Agents = _Agents
-            };
 
-            var _DistinctDepartments = (from a in db.ActivityLogs
-                                        where a.InsertDate == ReferenceDate
-                                        select a.Department).Distinct().Count();
-            ViewBag.DistinctDepartments = _DistinctDepartments;
+            };
 
             return View(PersonalActivities);
         }
