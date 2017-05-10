@@ -143,7 +143,6 @@ namespace MojCRM.Controllers
                            where u.UserName == Name
                            select u.MerUserPassword).First();
             var Organizations = (from o in db.Organizations
-                                 where o.MerId > 400000
                                  select o).AsEnumerable();
 
             MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments();

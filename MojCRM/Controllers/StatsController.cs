@@ -22,14 +22,17 @@ namespace MojCRM.Controllers
         public ActionResult PersonalDailyActivities(string Name, string Agent)
         {
             var ReferenceDate = DateTime.Today.AddDays(-1);
-            var _Activities = (from a in db.ActivityLogs
-                               where a.User == Name && a.InsertDate == ReferenceDate
-                               select a).ToList();
             var _Agents = (from u in db.Users
                            select u).AsEnumerable();
-            ViewBag.User = Name;
+            var _Activities = (from a in db.ActivityLogs
+                               select a).ToList();
 
-            if (!String.IsNullOrEmpty(Agent))
+            if (!String.IsNullOrEmpty(Name))
+            {
+                _Activities = _Activities.Where(a => a.User == Name && a.InsertDate == ReferenceDate).ToList();
+                ViewBag.User = Name;
+            }
+            else if (!String.IsNullOrEmpty(Agent))
             {
                 _Activities = _Activities.Where(a => a.User == Agent && a.InsertDate == ReferenceDate).ToList();
                 ViewBag.User = Agent;
