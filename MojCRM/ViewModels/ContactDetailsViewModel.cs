@@ -1,17 +1,16 @@
-﻿using System;
+﻿using MojCRM.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using static MojCRM.Models.Contact;
 
-namespace MojCRM.Models
+namespace MojCRM.ViewModels
 {
-    public class Contact
+    public class ContactDetailsViewModel
     {
-        [Key]
         public int ContactId { get; set; }
 
         public int OrganizationId { get; set; }
@@ -42,14 +41,6 @@ namespace MojCRM.Models
 
         [Display(Name = "Tip kontakta")]
         public ContactTypeEnum ContactType { get; set; }
-
-        public enum ContactTypeEnum
-        {
-            [Description("Općeniti")]
-            GENERAL,
-
-            [Description("Dostava")]
-            DELIVERY
-        }
+        public IEnumerable<DeliveryDetail> DeliveryDetails { get; set; }
     }
 }

@@ -420,6 +420,10 @@
     <Compile Include="Migrations\201704281818408_Apr28ActivityLogUpdate.Designer.cs">
       <DependentUpon>201704281818408_Apr28ActivityLogUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705121256308_May12UpdateContacts.cs" />
+    <Compile Include="Migrations\201705121256308_May12UpdateContacts.Designer.cs">
+      <DependentUpon>201705121256308_May12UpdateContacts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -436,6 +440,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
     <Compile Include="ViewModels\StatsViewModels.cs" />
   </ItemGroup>
@@ -635,6 +640,8 @@
     <Content Include="Views\Stats\_CallCenterDailyQuery.cshtml" />
     <Content Include="Views\Stats\Delivery.cshtml" />
     <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
+    <Content Include="Views\Delivery\Contacts.cshtml" />
+    <Content Include="Views\Contact\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -710,6 +717,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704281818408_Apr28ActivityLogUpdate.resx">
       <DependentUpon>201704281818408_Apr28ActivityLogUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705121256308_May12UpdateContacts.resx">
+      <DependentUpon>201705121256308_May12UpdateContacts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,8 +1,10 @@
 ﻿using MojCRM.Models;
+using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -59,7 +61,7 @@ namespace MojCRM.Controllers
                     Email = Email,
                     User = Agent,
                     InsertDate = DateTime.Now,
-                    ContactType = "Delivery",
+                    ContactType = Contact.ContactTypeEnum.DELIVERY,
                 });
 
                 db.SaveChanges();
@@ -101,6 +103,42 @@ namespace MojCRM.Controllers
             }
         }
 
+        // GET: Contact/Details
+        public ActionResult Details(int ContactId)
+        {
+            if (ContactId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact contactModel = db.Contacts.Find(ContactId);
+            if (contactModel == null)
+            {
+                return HttpNotFound();
+            }
+
+            var _DeliveryDetails = (from d in db.DeliveryDetails
+                                    where d.Contact == (contactModel.ContactFirstName + " " + contactModel.ContactLastName)
+                                    select d).AsEnumerable();
+
+            var ContactDetails = new ContactDetailsViewModel
+            {
+                ContactId = contactModel.ContactId,
+                ContactFirstName = contactModel.ContactFirstName,
+                ContactLastName = contactModel.ContactLastName,
+                Title = contactModel.Title,
+                TelephoneNumber = contactModel.TelephoneNumber,
+                MobilePhoneNumber = contactModel.MobilePhoneNumber,
+                Email = contactModel.Email,
+                User = contactModel.User,
+                InsertDate = contactModel.InsertDate,
+                UpdateDate = contactModel.UpdateDate,
+                ContactType = contactModel.ContactType,
+                DeliveryDetails = _DeliveryDetails
+            };
+
+            return View(ContactDetails);
+        }
+
         // POST: Contact/EditFromDelivery
         [HttpPost]
         public ActionResult EditFromDelivery(string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
@@ -109,7 +147,7 @@ namespace MojCRM.Controllers
             int _DocumentIdInt = Int32.Parse(_DocumentId);
 
             var ContactForUpdate = from c in db.Contacts
-                                   where c.ContactType == "Delivery" && c.OrganizationId == _ReceiverInt
+                                   where c.ContactType == Contact.ContactTypeEnum.DELIVERY && c.OrganizationId == _ReceiverInt
                                    select c;
 
             foreach (Contact c in ContactForUpdate)

@@ -664,7 +664,7 @@ namespace MojCRM.Controllers
                                         select t).AsEnumerable();
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
-                                            where t.Organization.MerId == receiverId && t.ContactType == "Delivery"
+                                            where t.Organization.MerId == receiverId && t.ContactType == Contact.ContactTypeEnum.DELIVERY
                                             select t).AsEnumerable();
 
             var _RelatedDeliveryDetails = (from t in db.DeliveryDetails
@@ -937,6 +937,32 @@ namespace MojCRM.Controllers
             db.DeliveryTicketModels.Remove(deliveryTicketModel);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        // POST: Delivery/Contacts
+        public ActionResult Contacts(string Organization, string ContactName, string Number, string Email)
+        {
+            var Results = from c in db.Contacts
+                          where c.ContactType == Contact.ContactTypeEnum.DELIVERY
+                          select c;
+            if (!String.IsNullOrEmpty(Organization))
+            {
+                Results = Results.Where(c => c.Organization.SubjectName.Contains(Organization) || c.Organization.VAT.Contains(Organization));
+            }
+            if (!String.IsNullOrEmpty(ContactName))
+            {
+                Results = Results.Where(c => c.ContactFirstName.Contains(ContactName) || c.ContactLastName.Contains(ContactName));
+            }
+            if (!String.IsNullOrEmpty(Number))
+            {
+                Results = Results.Where(c => c.TelephoneNumber.Contains(Number) || c.MobilePhoneNumber.Contains(Number));
+            }
+            if (!String.IsNullOrEmpty(Email))
+            {
+                Results = Results.Where(c => c.Email.Contains(Email));
+            }
+
+            return View(Results.ToList());
         }
 
         protected override void Dispose(bool disposing)

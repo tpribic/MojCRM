@@ -1,0 +1,71 @@
+﻿@using GridMvc.Html
+@using System.Web.UI.WebControls
+
+@model IEnumerable<MojCRM.Models.Contact>
+@{
+    ViewBag.Title = "Kontakti dostave";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+<body>
+    <h2 style="text-align:center"><strong>Pregled kontakata za dostavu eRačuna</strong></h2>
+    <hr />
+    @using (Html.BeginForm("Contacts", "Delivery", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="organization-search">Naziv ili OIB tvrtke</label>
+                    <div id="organization-search">
+                        @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB tvrtke" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="contact-search">Ime ili prezime kontakta</label>
+                    <div id="contact-search">
+                        @Html.TextBox("ContactName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Ime ili prezime kontakta" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="number-search">Broj telefona ili mobitela</label>
+                    <div id="number-search">
+                        @Html.TextBox("Number", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj telefona ili mobitela" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="email-search">E-mail adresa</label>
+                    <div id="email-search">
+                        @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+            </div>
+        </div>
+    }
+    <hr />
+    @Html.Grid(Model).Named("PopisKontakataDostave").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+    columns.Add(m => m.Organization.SubjectName).Encoded(false).Sanitized(false).Titled("Povezana tvrtka").RenderValueAs(m => m.Organization.SubjectName + " (" + m.Organization.VAT + ")").Sortable(true);
+    columns.Add(m => m.ContactFirstName).Encoded(false).Sanitized(false).Titled("Ime kontakta");
+    columns.Add(m => m.ContactLastName).Encoded(false).Sanitized(false).Titled("Prezime kontakta");
+    columns.Add(m => m.TelephoneNumber).Encoded(false).Sanitized(false).Titled("Broj telefona");
+    columns.Add(m => m.MobilePhoneNumber).Encoded(false).Sanitized(false).Titled("Broj mobitela");
+    columns.Add(m => m.Email).Encoded(false).Sanitized(false).Titled("Email adresa");
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        return @<span>
+    <a href="@Url.RouteUrl(new { action = "Details", controller = "Contact", area = "", m.ContactId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+    </span>;
+    });
+}).WithPaging(20)
+</body>
