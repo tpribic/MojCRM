@@ -6,11 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace MojCRM.Models
 {
     public class Contact
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         [Key]
         public int ContactId { get; set; }
 
@@ -36,6 +39,8 @@ namespace MojCRM.Models
 
         [Display(Name = "E-mail adresa")]
         public string Email { get; set; }
+
+        [Display(Name = "Agent")]
         public string User { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
@@ -50,6 +55,23 @@ namespace MojCRM.Models
 
             [Description("Dostava")]
             DELIVERY
+        }
+
+        [Display(Name = "Dodijeli novog agenta")]
+        [NotMapped]
+        public IList<SelectListItem> Agents
+        {
+            get
+            {
+                var agents = (from u in db.Users
+                              select new SelectListItem()
+                              {
+                                  Text = u.UserName,
+                                  Value = u.UserName
+                              }).ToList();
+                return agents;
+            }
+            set { }
         }
     }
 }

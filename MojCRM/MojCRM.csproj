@@ -642,6 +642,7 @@
     <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
     <Content Include="Views\Delivery\Contacts.cshtml" />
     <Content Include="Views\Contact\Details.cshtml" />
+    <Content Include="Views\Contact\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

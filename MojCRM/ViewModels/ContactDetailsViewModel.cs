@@ -35,6 +35,8 @@ namespace MojCRM.ViewModels
 
         [Display(Name = "E-mail adresa")]
         public string Email { get; set; }
+
+        [Display(Name = "Agent")]
         public string User { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }

@@ -2,6 +2,7 @@
 using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
@@ -137,6 +138,47 @@ namespace MojCRM.Controllers
             };
 
             return View(ContactDetails);
+        }
+
+        // GET: Contact/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact Contact = db.Contacts.Find(id);
+            if (Contact == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Contact);
+        }
+
+        // POST: Contact/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ContactId,ContactFirstName,ContactLastName,Title,TelephoneNumber,MobilePhoneNumber,Email,User,Agent,ContactType")] Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                var editedContact = (from c in db.Contacts
+                                     where c.ContactId == contact.ContactId
+                                     select c).First();
+                editedContact.ContactFirstName = contact.ContactFirstName;
+                editedContact.ContactLastName = contact.ContactLastName;
+                editedContact.Title = contact.Title;
+                editedContact.TelephoneNumber = contact.TelephoneNumber;
+                editedContact.MobilePhoneNumber = contact.MobilePhoneNumber;
+                editedContact.Email = contact.Email;
+                editedContact.User = contact.User;
+                editedContact.UpdateDate = DateTime.Now;
+                db.SaveChanges();
+                return RedirectToAction("Contacts", "Delivery");
+            }
+            return View(contact);
         }
 
         // POST: Contact/EditFromDelivery

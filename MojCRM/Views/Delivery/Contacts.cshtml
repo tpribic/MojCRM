@@ -64,7 +64,7 @@
     columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     {
         return @<span>
-    <a href="@Url.RouteUrl(new { action = "Details", controller = "Contact", area = "", m.ContactId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+    <a href="@Url.RouteUrl(new { action = "Details", controller = "Contact", area = "", m.ContactId, returnUrl = Request.Url })"><i class="glyphicon glyphicon-option-horizontal"></i></a>
     </span>;
     });
 }).WithPaging(20)
