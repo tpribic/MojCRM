@@ -88,14 +88,16 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(SentDate))
             {
                 var sentDate = Convert.ToDateTime(SentDate);
-                ResultsNew = ResultsNew.Where(t => t.SentDate == sentDate);
+                var sentDatePlus = sentDate.AddDays(1);
+                ResultsNew = ResultsNew.Where(t => (t.SentDate > sentDate) && (t.SentDate < sentDatePlus));
                 ViewBag.SearchResults = ResultsNew.Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
             {
                 var insertDate = Convert.ToDateTime(TicketDate);
-                ResultsNew = ResultsNew.Where(t => t.InsertDate == insertDate);
+                var insertDatePlus = insertDate.AddDays(1);
+                ResultsNew = ResultsNew.Where(t => (t.InsertDate > insertDate) && (t.InsertDate < insertDatePlus));
                 ViewBag.SearchResults = ResultsNew.Count();
             }
 
