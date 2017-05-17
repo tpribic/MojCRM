@@ -572,6 +572,9 @@ namespace MojCRM.Controllers
             var OldEmail = (from t in db.DeliveryTicketModels
                             where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
                             select t.BuyerEmail).First();
+            var InvoiceNumber = (from t in db.DeliveryTicketModels
+                                 where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
+                                 select t.InvoiceNumber).First();
 
             MerApiChangeEmail Request = new MerApiChangeEmail();
 
@@ -594,7 +597,7 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument " + _Id,
+                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument broj " + InvoiceNumber,
                 User = _Agent,
                 ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
                 Department = ActivityLog.DepartmentEnum.Delivery,

@@ -7,26 +7,56 @@
 <h2 style="text-align:center"><strong>Statistike pozivnog centra</strong></h2>
 <h3 style="text-align:center"><strong>Dnevna statistika poziva</strong></h3>
 <body>
-    <div>
-        <div class="col-md-6">
-            <table class="table">
-                <tr>
-                    <th>Naziv agenta</th>
-                </tr>
-                @foreach (var Activity in Model.Activities)
-                {
-                    <tr>
-                        <td>@Activity.User</td>
-                    </tr>
-                }
-            </table>
+    @using (Html.BeginForm("CallCenterDaily", "Stats", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="search-date">Datum pretrage</label>
+                    <div id="search-date">
+                        @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top:22px">
+                <div class="form-group">
+                    <div>
+                        <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                        <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
+    }
+    <hr />
+    <div>
+        <table class="table">
+            <tr>
+                <th>Agent</th>
+                <th>Broj uspješnih poziva</th>
+                <th>Broj neuspješnih poziva</th>
+                <th>Broj ispravaka mailova</th>
+                <th>Broj ponovno poslanih obavijesti o dostavi</th>
+                <th>Broj poslanih e-mailova vezanih za dostavu</th>
+            </tr>
+            @foreach (var Activity in Model.Activities)
+            {
+                <tr>
+                    <td>@Activity.Agent</td>
+                    <td>@Activity.NumberSuccessfulCalls</td>
+                    <td>@Activity.NumberUnsuccessfulCalls</td>
+                    <td>@Activity.NumberMailchange</td>
+                    <td>@Activity.NumberResend</td>
+                    <td>@Activity.NumberDeliveryMail</td>
+                </tr>
+            }
+        </table>
+        @*<div class="col-md-6">
             <div>
                 <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
             </div>
             <hr />
-        </div>
+        </div>*@
     </div>
 </body>
 
