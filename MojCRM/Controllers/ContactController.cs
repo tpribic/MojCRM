@@ -140,6 +140,32 @@ namespace MojCRM.Controllers
             return View(ContactDetails);
         }
 
+        // GET: Coontact/Delete/5
+        public ActionResult Delete(int? ContactId)
+        {
+            if (ContactId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact contact = db.Contacts.Find(ContactId);
+            if (contact == null)
+            {
+                return HttpNotFound();
+            }
+            return View(contact);
+        }
+
+        // POST: Contact/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int ContactId)
+        {
+            Contact contact = db.Contacts.Find(ContactId);
+            db.Contacts.Remove(contact);
+            db.SaveChanges();
+            return View("Index");
+        }
+
         // GET: Contact/Edit/5
         public ActionResult Edit(int? id)
         {

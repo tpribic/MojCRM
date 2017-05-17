@@ -14,7 +14,7 @@ namespace MojCRM.Models
         [Display(Name = "Moj-eRačun ID")]
         public int MerId { get; set; }
 
-        [Display(Name = "OIB")]
+        [Display(Name = "OIB tvrtke")]
         public string VAT { get; set; }
 
         [Display(Name = "Naziv tvrtke")]

@@ -182,8 +182,11 @@ columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanj
     if (m.DocumentStatus == 40)
         return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-success">@Html.Raw(m.DocumentStatusString)</span></div>;
 
-    if (m.DocumentStatus == 50)
-        return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-danger">@Html.Raw(m.DocumentStatusString)</span></div>;
+        if (m.DocumentStatus == 45)
+            return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-info">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+        if (m.DocumentStatus == 50)
+            return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-danger">@Html.Raw(m.DocumentStatusString)</span></div>;
 
     if (m.DocumentStatus == 55)
         return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-default">@Html.Raw(m.DocumentStatusString)</span></div>;

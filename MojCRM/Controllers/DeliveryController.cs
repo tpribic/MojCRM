@@ -735,7 +735,7 @@ namespace MojCRM.Controllers
         // POST: AddDetail/1125768
         [HttpPost]
         public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
-                                      int _TicketId, int Identifier)
+                                      int? _TicketId, int Identifier)
         {
             if (_DetailTemplate == String.Empty && _DetailNote != String.Empty)
             {
@@ -938,6 +938,17 @@ namespace MojCRM.Controllers
             Delivery deliveryTicketModel = await db.DeliveryTicketModels.FindAsync(id);
             db.DeliveryTicketModels.Remove(deliveryTicketModel);
             await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // POST: Delivery/DeleteDetail/5
+        [HttpPost, ActionName("DeleteDetail")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteDetail(int DetailId)
+        {
+            DeliveryDetail deliveryDetail = db.DeliveryDetails.Find(DetailId);
+            db.DeliveryDetails.Remove(deliveryDetail);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

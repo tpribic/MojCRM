@@ -366,6 +366,34 @@
     </div>
 }
 
+<!--Modal - DeleteDetail-->
+@using (Html.BeginForm("DeleteDetail", "Delivery", FormMethod.Post))
+{
+    <div class="modal fade" id="DeleteDetail" tabindex="-1" role="dialog" aria-labelledby="DeleteDetail">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content panel-danger" style="overflow:hidden">
+                <div class="modal-header panel-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Brisanje napomene dostave</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Odabirom niže napomene, uklonit ćete napomenu iz sustava!</p>
+                </div>
+                <div class="hidden">
+                    <label for="delivery-detail-id">Odaberi napomenu za brisanje</label>
+                    <div id="delivery-detail-contact">
+                        @Html.DropDownList("DetailId", Model.DeliveryDetailsIds, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Izbriši napomenu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @Model.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
 <br />
 <div>
@@ -459,6 +487,7 @@
                             <td>@Detail.Contact</td>
                             <td>
                                 <a href="#EditDetail" data-toggle="modal"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="#DeleteDetail" data-toggle="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
                             </td>
                         </tr>
                     }
