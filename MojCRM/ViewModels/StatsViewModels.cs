@@ -41,6 +41,16 @@ namespace MojCRM.ViewModels
     public class CallCenterDailyStatsViewModel
     {
         public IList<CallCenterDaily> Activities { get; set; }
+        [Display(Name = "Zbroj uspješnih poziva")]
+        public int SumSuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj neuspješnih poziva")]
+        public int SumUnsuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj ispravaka mailova")]
+        public int? SumMailchange { get; set; }
+        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi")]
+        public int? SumResend { get; set; }
+        [Display(Name = "Zbroj poslanih e-mailova vezanih za dostavu")]
+        public int? SumDeliveryMail { get; set; }
     }
 
     public class PersonalDailyActivitiesViewModel
