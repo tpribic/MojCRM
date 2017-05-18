@@ -51,6 +51,15 @@ namespace MojCRM.Controllers
                 
             }
 
+            if (!String.IsNullOrEmpty(Agent))
+            {
+                ViewBag.User = Agent;
+            }
+            else
+            {
+                ViewBag.User = Name;
+            }
+
             var PersonalActivities = new PersonalDailyActivitiesViewModel
             {
                 PersonalActivities = _Activities,

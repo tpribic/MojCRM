@@ -515,6 +515,9 @@ namespace MojCRM.Controllers
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
+            var InvoiceNumber = (from t in db.DeliveryTicketModels
+                                 where t.MerElectronicId == MerElectronicId
+                                 select t.InvoiceNumber).First();
 
             MerApiResend Request = new MerApiResend();
 
@@ -536,7 +539,7 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = Name + " je ponovno poslao obavijest za dokument " + MerElectronicId.ToString(),
+                Description = Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber,
                 User = Name,
                 ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
                 Department = ActivityLog.DepartmentEnum.Delivery,

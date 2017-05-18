@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-6">
         <div style="text-align:justify">
-            Dnevnik osobnih aktivnosti za agenta: <strong>@ViewBag.User</strong> za datum <strong>@ViewBag.Date</strong><br />
+            Dnevnik osobnih aktivnosti za djelatnika: <strong>@ViewBag.User</strong> za datum <strong>@ViewBag.Date</strong><br />
             Broj odjela u kojima ste odradili neku aktivnost: <strong>@ViewBag.DistinctDepartments</strong>.<br />
             Ukupno ste odradili <strong>@Model.PersonalActivities.Count</strong> različitih aktivnosti.
         </div>
@@ -26,6 +26,9 @@
                     @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
                 </div>
             </div>
+        </div>
+        <div class="hidden">
+            @Html.TextBox("Name", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name})
         </div>
         if (User.IsInRole("Superadmin"))
         {
