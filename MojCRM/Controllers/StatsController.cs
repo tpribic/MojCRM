@@ -21,7 +21,7 @@ namespace MojCRM.Controllers
         }
 
         // GET: Stats/PersonalDailyActivities
-        public ActionResult PersonalDailyActivities(string Name, string Agent)
+        public ActionResult PersonalDailyActivities(string Name, string Agent, string SearchDate)
         {
             var ReferenceDate = DateTime.Today.AddDays(-1);
             var _Agents = (from u in db.Users
@@ -37,6 +37,7 @@ namespace MojCRM.Controllers
                                             select a.Department).Distinct().Count();
                 ViewBag.User = Name;
                 ViewBag.DistinctDepartments = _DistinctDepartments;
+                ViewBag.Date = ReferenceDate.ToShortDateString();
             }
             else if (!String.IsNullOrEmpty(Agent))
             {
@@ -46,6 +47,20 @@ namespace MojCRM.Controllers
                                             select a.Department).Distinct().Count();
                 ViewBag.User = Agent;
                 ViewBag.DistinctDepartments = _DistinctDepartments;
+                ViewBag.Date = ReferenceDate.ToShortDateString();
+            }
+
+            if (!String.IsNullOrEmpty(SearchDate))
+            {
+                var searchDate = Convert.ToDateTime(SearchDate);
+                var searchDatePlus = searchDate.AddDays(1);
+                _Activities = _Activities.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)).ToList();
+                ViewBag.Date = searchDate.ToShortDateString();
+            }
+            else
+            {
+                _Activities = _Activities.Where(t => t.InsertDate >= DateTime.Today).ToList();
+                ViewBag.Date = ReferenceDate.ToShortDateString();
             }
 
             var PersonalActivities = new PersonalDailyActivitiesViewModel

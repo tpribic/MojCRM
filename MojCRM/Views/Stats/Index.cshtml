@@ -16,7 +16,7 @@
         </a>
     </div>
 </div>
-@if (User.IsInRole("Superadmin"))
+@if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
 {
     <hr />
     <h4>Statistike pozivnog centra</h4>

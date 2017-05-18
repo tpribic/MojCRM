@@ -655,6 +655,10 @@
                 _TicketId: $(this).data("ticket-id"),
                 Identifier: $(this).data("identifier-short")
             },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Uspješno ste zabilježili informativni poziv!");
+            },
             dataType: 'json'
         });
     });
@@ -671,6 +675,10 @@
                 _DetailNote: $(this).data("detail-note"),
                 _TicketId: $(this).data("ticket-id"),
                 Identifier: $(this).data("identifier")
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Uspješno ste zabilježili neuspješan poziv!");
             },
             dataType: 'json'
         });

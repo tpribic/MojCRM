@@ -9,28 +9,44 @@
 <div class="row">
     <div class="col-md-6">
         <div style="text-align:justify">
-            Dnevnik osobnih aktivnosti za agenta: <strong>@ViewBag.User</strong> za datum <strong>@DateTime.Today.AddDays(-1).ToShortDateString()</strong><br />
+            Dnevnik osobnih aktivnosti za agenta: <strong>@ViewBag.User</strong> za datum <strong>@ViewBag.Date</strong><br />
             Broj odjela u kojima ste odradili neku aktivnost: <strong>@ViewBag.DistinctDepartments</strong>.<br />
             Ukupno ste odradili <strong>@Model.PersonalActivities.Count</strong> različitih aktivnosti.
         </div>
     </div>
-    @if (User.IsInRole("Superadmin"))
+</div>
+<br />
+<div class="row">
+    @using (Html.BeginForm("PersonalDailyActivities", "Stats", FormMethod.Get))
     {
-        using (Html.BeginForm("PersonalDailyActivities", "Stats", FormMethod.Get))
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="search-date">Datum pretrage</label>
+                <div id="search-date">
+                    @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                </div>
+            </div>
+        </div>
+        if (User.IsInRole("Superadmin"))
         {
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="Agents">Pretraživanje dnevnika agenata</label>
-                    <div id="Agents">
-                        @Html.DropDownList("Agent", Model.AgentList, new { @class = "form-control" })
-                    </div>
-                    <br />
-                    <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+            <div class="col-md-4">
+                <label for="Agents">Pretraživanje dnevnika agenata</label>
+                <div id="Agents">
+                    @Html.DropDownList("Agent", Model.AgentList, new { @class = "form-control" })
                 </div>
             </div>
         }
+        <div class="col-md-3" style="margin-top:22px">
+            <div class="form-group">
+                <div>
+                    <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                    <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                </div>
+            </div>
+        </div>
     }
 </div>
+
 <hr />
 <div class="jumbotron">
     <table class="table">
