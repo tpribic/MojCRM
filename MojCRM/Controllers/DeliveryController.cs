@@ -210,6 +210,7 @@ namespace MojCRM.Controllers
                             SubjectBusinessUnit = ResultNonExistingSubjekt.PoslovnaJedinica,
                             VAT = ResultNonExistingSubjekt.Oib
                         });
+                        db.SaveChanges();
 
                         db.DeliveryTicketModels.Add(new Delivery
                         {
