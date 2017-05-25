@@ -458,6 +458,8 @@
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Gridmvc.css" />
     <Content Include="Content\ikona-preglednik.ico" />
     <Content Include="Content\logo.png" />
@@ -505,6 +507,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -538,6 +541,11 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Grid.mvc.readme" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

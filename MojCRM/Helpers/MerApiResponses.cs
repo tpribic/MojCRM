@@ -49,7 +49,7 @@ namespace MojCRM.Helpers
         public string InterniBroj { get; set; }
         public int DokumentTypeId { get; set; }
         public int DokumentStatusId { get; set; }
-        public DateTime? DatumOtpreme { get; set; }
+        public DateTime DatumOtpreme { get; set; }
         public DateTime? DatumZadnjePoruke { get; set; }
         public DateTime? DatumDostave { get; set; }
         public string EmailPrimatelja { get; set; }

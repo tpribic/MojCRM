@@ -664,7 +664,7 @@ namespace MojCRM.Controllers
             var ElectronicId = (from t in db.DeliveryTicketModels
                                 where t.Id == id
                                 select t.MerElectronicId).First();
-            UpdateStatus(ElectronicId);
+            //UpdateStatus(ElectronicId);
 
             DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
 
@@ -695,7 +695,7 @@ namespace MojCRM.Controllers
             RequestGetSentDocuments.PJ = "";
             RequestGetSentDocuments.SoftwareId = "MojCRM-001";
             RequestGetSentDocuments.SubjektPJ = receiverId.ToString();
-            RequestGetSentDocuments.Take = 30;
+            RequestGetSentDocuments.Take = 20;
 
             string MerRequest = JsonConvert.SerializeObject(RequestGetSentDocuments);
 

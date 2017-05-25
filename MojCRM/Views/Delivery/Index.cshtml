@@ -17,6 +17,7 @@
             <div class="col-md-12">
                 @*<a class="btn btn-primary btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name})">Kreiranje kartica za dostavu</a>*@
                 <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm">
+                    <i class="fa fa-question-circle"></i>
                     Provjeri sve statuse
                 </a>
                 <a id="remove-all" action="@Url.Action("RemoveAll", "Delivery")" method="post">

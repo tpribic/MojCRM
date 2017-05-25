@@ -12,6 +12,7 @@
     <div class="col-md-3">
         <a href="@Url.RouteUrl(new { action = "PersonalDailyActivities", controller = "Stats", area = "", User.Identity.Name})"
         <a href="@Url.Action("PersonalDailyActivities", "Stats")" class="btn btn-default">
+            <i class="fa fa-book"></i>
             Osobni dnevnik
         </a>
     </div>
@@ -23,6 +24,7 @@
     <div class="row">
         <div class="col-md-3">
             <a href="@Url.Action("CallCenterDaily", "Stats")" class="btn btn-default">
+                <i class="fa fa-headphones"></i>
                 Dnevna statistika poziva
             </a>
         </div>
@@ -32,6 +34,7 @@
     <div class="row">
         <div class="col-md-3">
             <a href="@Url.Action("Delivery", "Stats")" class="btn btn-default">
+                <i class="fa fa-ticket"></i>
                 Statistika kreiranih kartica
             </a>
         </div>
