@@ -616,10 +616,10 @@ namespace MojCRM.Controllers
 
         // POST Delivery/Remove/1125768
         [HttpPost]
-        public JsonResult Remove(int MerElectronicId)
+        public JsonResult Remove(int MerElectronicId, int TicketId)
         {
             var TicketForRemoval = (from t in db.DeliveryTicketModels
-                                    where t.MerElectronicId == MerElectronicId
+                                    where t.MerElectronicId == MerElectronicId && t.Id == TicketId
                                     select t).First();
 
             TicketForRemoval.DocumentStatus = 55;
@@ -631,12 +631,12 @@ namespace MojCRM.Controllers
 
         // POST Delivery/RemoveAll
         [HttpPost]
-        public JsonResult RemoveAll(int[] MerElectronicIds)
+        public JsonResult RemoveAll(int[] TicketIds)
         {
-            foreach (var Id in MerElectronicIds)
+            foreach (var Id in TicketIds)
             {
                 var TicketForRemoval = (from t in db.DeliveryTicketModels
-                                        where t.MerElectronicId == Id
+                                        where t.Id == Id
                                         select t).First();
 
                 TicketForRemoval.DocumentStatus = 55;

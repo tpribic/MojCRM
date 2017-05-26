@@ -585,7 +585,7 @@
     </div>
 </div>
 <hr />
-<div class="panel-group">
+@*<div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -619,7 +619,7 @@
         </div>
 
     </div>
-</div>
+</div>*@
 <hr />
 
 <script>
@@ -640,6 +640,7 @@
                 },
                 dataType: 'json'
             });
+        window.location.reload(true)
     });
     $(document).on("click", "a.add-successfull-call-short", function (e) {
         e.preventDefault();
@@ -661,6 +662,7 @@
             },
             dataType: 'json'
         });
+        window.location.reload(true)
     });
         $(document).on("click", "a.add-unsuccessfull-call", function (e) {
         e.preventDefault();
@@ -682,6 +684,7 @@
             },
             dataType: 'json'
         });
+        window.location.reload(true)
     });
         $(document).on("click", "a.delivery-mail", function (e) {
         e.preventDefault();

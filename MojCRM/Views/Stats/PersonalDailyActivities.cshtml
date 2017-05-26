@@ -30,7 +30,7 @@
         <div class="hidden">
             @Html.TextBox("Name", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name})
         </div>
-        if (User.IsInRole("Superadmin"))
+        if (User.IsInRole("Superadmin") || User.IsInRole("Management"))
         {
             <div class="col-md-4">
                 <label for="Agents">Pretraživanje dnevnika agenata</label>

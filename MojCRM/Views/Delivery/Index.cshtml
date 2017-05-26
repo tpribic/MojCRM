@@ -15,7 +15,6 @@
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
-                @*<a class="btn btn-primary btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "", User.Identity.Name})">Kreiranje kartica za dostavu</a>*@
                 <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm">
                     <i class="fa fa-question-circle"></i>
                     Provjeri sve statuse
@@ -23,6 +22,13 @@
                 <a id="remove-all" action="@Url.Action("RemoveAll", "Delivery")" method="post">
                     <input type="button" class="btn btn-danger btn-sm" onclick="javascript: RemoveAll()" value="Ukloni sve račune" />
                 </a>
+                @if (User.IsInRole("Management") ||User.IsInRole("Admin") || User.IsInRole("Superadmin"))
+                {
+                    <a id="send-report" method="post" class="btn btn-default btn-sm" onclick="javascript: SendReport()">
+                        <i class="fa fa-send"></i>
+                        Pošalji jutarnji report
+                    </a>
+                }
             </div>
         </div>
     </div>
@@ -129,26 +135,35 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-4">
                 <div class="alert alert-info">
                     Broj trenutno otvorenih kartica: <strong>@ViewBag.OpenTickets</strong>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="alert alert-info">
                     Broj rezultata pretrage: <strong>@ViewBag.SearchResults</strong>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-4">
                 <div class="alert alert-info alert-sm">
-                    Broj kreiranih kartica danas (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedToday</strong>
+                    Broj kreiranih kartica (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedToday</strong>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="alert alert-info">
-                    Broj kreiranih kartica danas (za prvi put) (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedTodayFirstTime</strong>
+                    Broj kreiranih kartica (za prvi put) (@DateTime.Today.ToShortDateString()): <strong>@ViewBag.TicketsCreatedTodayFirstTime</strong>
                 </div>
             </div>
         </div>
@@ -163,7 +178,7 @@
     <hr />
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idValue = o.MerElectronicId }));
+columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idVal = o.Id }));
 columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
@@ -203,7 +218,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
         <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", m.MerElectronicId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
         @*<a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="resend-document-ajax"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
-        <a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
+        <a data-mer-id="@Html.Raw(m.MerElectronicId)" data-ticket-id="@Html.Raw(m.Id)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
     </span>;
 
     return @<span>
@@ -227,7 +242,8 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
                     method: 'POST',
                     url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
                     data: {
-                        MerElectronicId: $(this).data("mer-id")
+                        MerElectronicId: $(this).data("mer-id"),
+                        TicketId: $(this).data("ticket-id")
                     },
                     success: function (data) {
                         if (data.Status === 'OK')
@@ -237,7 +253,32 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
                     },
                     dataType: 'json'
                 });
+            window.location.reload(true)
+    });
+    $(document).on("click", "a.delivery-mail", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
+            data: {
+                _Agent: $(this).data("agent"),
+                _Email: $(this).data("email"),
+                _TicketId: $(this).data("ticket-id"),
+            },
+            dataType: 'json'
         });
+        var email = $(this).data("email");
+        var subject = "Upit";
+        window.location = 'mailto:' + email + '?subject=' + subject;
+        });
+    $("#send-report").click(function (e) {
+        e.preventDefault();
+        var email = "matej@moj-eracun.hr; alen.jedud@moj-eracun.hr; blanka.grginovic@moj-eracun.hr";
+        var subject = "Moj-CRM -- Dnevni izvještaj -- Odjel dostave";
+        var body = "Poštovani," + "%0D%0A" + "%0D%0A" + "danas je kreirano @ViewBag.TicketsCreatedToday kartica, od toga @ViewBag.TicketsCreatedTodayFirstTime za prvi puta. Zbog toga će raspored na dostavi biti:" + "%0D%0A" + "%0D%0A"
+            + "Darko Glatki: " + "%0D%0A" + "Tomislav Ptiček: " + "%0D%0A" + "Filip Troskot: " + "%0D%0A" + "Filip Karmazen: " + "%0D%0A" + "Katarina Ceković: " + "%0D%0A" + "%0D%0A" + "Lijep pozdrav,";
+        window.location = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+    }); 
 
     function Resend() {
             $(document).on("click", "a.resend-document-ajax", function (e) {
@@ -266,13 +307,13 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     function RemoveAll () {
         $(document).on("click", "#remove-all", function (e) {
             e.preventDefault();
-            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idValue'); }).get();
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idVal'); }).get();
             if (window.confirm("Jeste li sigurni da želite ukloniti označene dokumente iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
                     url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
                     data: {
-                        MerElectronicIds: selectedItems
+                        TicketIds: selectedItems
                     },
                     success: function (data) {
                         if (data.Status === 'OK')
@@ -282,6 +323,7 @@ columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
                     },
                     dataType: 'json'
                 });
+            window.location.reload(true)
         });
     }
 </script>
