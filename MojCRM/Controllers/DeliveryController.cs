@@ -28,7 +28,7 @@ namespace MojCRM.Controllers
         [Authorize]
         public async Task<ActionResult> Index(string SortOrder, string Sender, string Receiver, string InvoiceNumber, 
                                                string SentDate, string TicketDate, string BuyerEmail, string DocumentStatus, 
-                                               string DocumentType)
+                                               string DocumentType, string TicketType, string Assigned, string AssignedTo)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
 
@@ -44,8 +44,11 @@ namespace MojCRM.Controllers
                                                select t;
 
             ViewBag.OpenTickets = ResultsNew.Count();
+            ViewBag.OpenTicketsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             ViewBag.TicketsCreatedToday = TicketsCreatedToday.Count();
+            ViewBag.TicketsCreatedTodayAssigned = TicketsCreatedToday.Where(t => t.IsAssigned == true).Count();
             ViewBag.TicketsCreatedTodayFirstTime = TicketsCreatedTodayFirstTime.Count();
+            ViewBag.TicketsCreatedTodayFirstTimeAssigned = TicketsCreatedTodayFirstTime.Where(t => t.IsAssigned == true).Count();
 
             int DocumentStatusInt;
             if (!String.IsNullOrEmpty(DocumentStatus))
@@ -71,18 +74,21 @@ namespace MojCRM.Controllers
             {
                 ResultsNew = ResultsNew.Where(t => t.Sender.SubjectName.Contains(Sender) || t.Sender.VAT.Contains(Sender));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(Receiver))
             {
                 ResultsNew = ResultsNew.Where(t => t.Receiver.SubjectName.Contains(Receiver) || t.Receiver.VAT.Contains(Receiver));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(InvoiceNumber))
             {
                 ResultsNew = ResultsNew.Where(t => t.InvoiceNumber.Contains(InvoiceNumber));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(SentDate))
@@ -91,6 +97,7 @@ namespace MojCRM.Controllers
                 var sentDatePlus = sentDate.AddDays(1);
                 ResultsNew = ResultsNew.Where(t => (t.SentDate > sentDate) && (t.SentDate < sentDatePlus));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(TicketDate))
@@ -99,27 +106,53 @@ namespace MojCRM.Controllers
                 var insertDatePlus = insertDate.AddDays(1);
                 ResultsNew = ResultsNew.Where(t => (t.InsertDate > insertDate) && (t.InsertDate < insertDatePlus));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(BuyerEmail))
             {
                 ResultsNew = ResultsNew.Where(t => t.BuyerEmail.Contains(BuyerEmail));
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentStatus))
             {
                 ResultsNew = ResultsNew.Where(t => t.DocumentStatus == DocumentStatusInt);
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             if (!String.IsNullOrEmpty(DocumentType))
             {
                 ResultsNew = ResultsNew.Where(t => t.MerDocumentTypeId == DocumentTypeInt);
                 ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+            }
+
+            if (!String.IsNullOrEmpty(TicketType))
+            {
+                ResultsNew = ResultsNew.Where(t => t.FirstInvoice == true);
+                ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+            }
+
+            if (!String.IsNullOrEmpty(Assigned))
+            {
+                ResultsNew = ResultsNew.Where(t => t.IsAssigned == true && t.AssignedTo == User.Identity.Name);
+                ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+            }
+
+            if (!String.IsNullOrEmpty(AssignedTo))
+            {
+                ResultsNew = ResultsNew.Where(t => t.IsAssigned == true && t.AssignedTo == AssignedTo);
+                ViewBag.SearchResults = ResultsNew.Count();
+                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
             }
 
             ViewBag.SearchResults = ResultsNew.Count();
+            ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
 
             switch (SortOrder)
             {
@@ -1005,7 +1038,7 @@ namespace MojCRM.Controllers
             }
         }
 
-        public void LogEmail (string _Agent, int _TicketId, string _Email)
+        public void LogEmail(string _Agent, int _TicketId, string _Email)
         {
             db.ActivityLogs.Add(new ActivityLog
             {
@@ -1016,6 +1049,28 @@ namespace MojCRM.Controllers
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
+        }
+
+        public JsonResult Assign(int Id, string Agent)
+        {
+            var TicketForAssignement = (from t in db.DeliveryTicketModels
+                                        where t.Id == Id
+                                        select t).First();
+            TicketForAssignement.IsAssigned = true;
+            TicketForAssignement.AssignedTo = Agent;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
+        }
+
+        public ActionResult Reassign(bool Unassign, string ReassignedTo)
+        {
+            if (Unassign == true)
+            {
+
+            }
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
     }
 }

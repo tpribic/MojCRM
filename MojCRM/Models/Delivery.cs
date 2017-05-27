@@ -52,6 +52,12 @@ namespace MojCRM.Models
         [Display(Name = "Prvi račun")]
         public bool FirstInvoice { get; set; }
 
+        [Display(Name = "Dodijeljeno")]
+        public bool IsAssigned { get; set; }
+
+        [Display(Name = "Dodijeljeno agentu")]
+        public string AssignedTo { get; set; }
+
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
 
         [NotMapped]
