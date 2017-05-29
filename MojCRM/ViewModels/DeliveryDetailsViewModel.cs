@@ -12,7 +12,7 @@ namespace MojCRM.ViewModels
 {
     public class DeliveryDetailsViewModel
     {
-        public int? TicketId { get; set; }
+        public int TicketId { get; set; }
 
         [Display(Name = "Pošiljatelj:")]
         public string SenderName { get; set; }
@@ -83,6 +83,12 @@ namespace MojCRM.ViewModels
         [Display(Name = "Napomena")]
         public string DeliveryDetailDetail { get; set; }
 
+        [Display(Name = "Dodijeljeno")]
+        public bool IsAssigned { get; set; }
+
+        [Display(Name = "Dodijeljeno agentu")]
+        public string AssignedTo { get; set; }
+
         [Display(Name = "Tip dokumenta:")]
         public string MerDocumentTypeIdString
         {
@@ -128,6 +134,7 @@ namespace MojCRM.ViewModels
         public IEnumerable<Delivery> RelatedInvoices { get; set; }
         public IEnumerable<Contact> RelatedDeliveryContacts { get; set; }
         public IEnumerable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public IEnumerable<ActivityLog> RelatedActivities { get; set; }
         public MerGetSentDocumentsResponse[] DocumentHistory { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails
         {

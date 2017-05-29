@@ -57,5 +57,46 @@ namespace MojCRM.Helpers
         public int PosiljateljId { get; set; }
         public string PosiljateljOib { get; set; }
         public string PosiljateljNaziv { get; set; }
+
+        public string DocumentStatusString
+        {
+            get
+            {
+                switch (DokumentStatusId)
+                {
+                    case 10: return "U pripremi";
+                    case 20: return "Potpisan";
+                    case 30: return "Poslan";
+                    case 40: return "Dostavljen";
+                    case 45: return "Ispisan";
+                    case 50: return "Neuspješan";
+                    case 55: return "Uklonjen";
+                }
+                return "Status";
+            }
+        }
+
+        public string DocumentTypeIdString
+        {
+            get
+            {
+                switch (DokumentTypeId)
+                {
+                    case 0: return "eDokument";
+                    case 1: return "eRačun";
+                    case 3: return "Storno";
+                    case 4: return "eOpomena";
+                    case 7: return "eOdgovor";
+                    case 105: return "eNarudžba";
+                    case 226: return "eOpoziv";
+                    case 230: return "eIzmjena";
+                    case 231: return "eOdgovorN";
+                    case 351: return "eOtpremnica";
+                    case 381: return "eOdobrenje";
+                    case 383: return "eTerećenje";
+                }
+                return "Tip dokumenta";
+            }
+        }
     }
 }

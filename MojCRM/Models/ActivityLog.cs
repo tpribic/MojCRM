@@ -12,6 +12,7 @@ namespace MojCRM.Models
         public int Id { get; set; }
         public string Description { get; set; }
         public string User { get; set; }
+        public int? ReferenceId { get; set; }
         public ActivityTypeEnum ActivityType { get; set; }
         public DepartmentEnum Department { get; set; }
         public DateTime InsertDate { get; set; }

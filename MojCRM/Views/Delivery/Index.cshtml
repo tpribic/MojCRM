@@ -50,54 +50,7 @@
             new ListItem{ Value = "4", Text = "Filip Karmazen"},
             new ListItem{ Value = "5", Text = "Katarina Ceković"},
         };
-}
 
-<!--Modal - Reassign-->
-@using (Html.BeginForm("Reassign", "Delivery", FormMethod.Post))
-{
-    <div class="modal fade" id="Reassign" tabindex="-1" role="dialog" aria-labelledby="Reassign">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content" style="overflow:hidden">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Promijeni dodjelu</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row">
-                            <div>
-                                Kartica je trenutno dodijeljena. Možete ju ili otključati ili dodijeliti drugom agentu.
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="unassign">Otključaj karticu</label>
-                                <div id="unassign">
-                                    @Html.CheckBox("Unassign", false, new { @class = "checked", @id = "checkbox" })
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="reassign">Dodijeli karticu drugom agentu</label>
-                                <div id="unassign">
-                                    @Html.DropDownList("ReassignedTo", new SelectList(deliveryAgents, "Value", "Text"), "Dodijeljeno agentu", new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hidden">
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Predaj promjenu</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
-                </div>
-            </div>
-        </div>
-    </div>
 }
 
 <body>
@@ -107,20 +60,25 @@
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
-                <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-warning btn-sm" title="Provjera statusa svih dokumenata">
-                    <i class="fa fa-question-circle"></i>
-                    Provjeri sve statuse
-                </a>
-                <a id="remove-all" action="@Url.Action("RemoveAll", "Delivery")" method="post">
-                    <input type="button" class="btn btn-danger btn-sm" onclick="javascript: RemoveAll()" value="Ukloni sve dokumente" title="Ukloni sve odabrane dokumenta"/>
-                </a>
-                @if (User.IsInRole("Management") || User.IsInRole("Admin") || User.IsInRole("Superadmin"))
-                {
-                    <a id="send-report" method="post" class="btn btn-default btn-sm" onclick="javascript: SendReport()" title="Pošalji jutarnji report upravi">
-                        <i class="fa fa-send"></i>
-                        Pošalji jutarnji report
+                <div class="btn btn-group" role="group">
+                    <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-primary btn-sm" title="Provjera statusa svih dokumenata">
+                        <i class="fa fa-question-circle"></i>
+                        @*Provjeri sve statuse*@
                     </a>
-                }
+                </div>
+                <div class="btn btn-group" role="group">
+                    <a id="remove-all" method="post" class="btn btn-default btn-sm" onclick="javascript: RemoveAll()" title="Ukloni sve odabrane dokumenta">
+                        <i class="fa fa-times text-danger"></i>
+                        @*Ukloni sve odabrane dokumente*@
+                    </a>
+                    @if (User.IsInRole("Management") || User.IsInRole("Admin") || User.IsInRole("Superadmin"))
+                    {
+                        <a id="send-report" method="post" class="btn btn-default btn-sm" onclick="javascript: SendReport()" title="Pošalji jutarnji report upravi">
+                            <i class="fa fa-send"></i>
+                            @*Pošalji jutarnji report*@
+                        </a>
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -431,7 +389,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
+                    url: '@Url.RouteUrl(new { action = "Assing", controller = "Delivery", area = ""})',
                     data: {
                         Id: $(this).data("ticket-id"),
                         Agent: $(this).data("agent")

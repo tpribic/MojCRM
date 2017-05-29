@@ -541,7 +541,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Resend/12345
         [Authorize]
-        public ActionResult Resend(int? TicketId, int MerElectronicId, int? ReceiverId, string Name)
+        public ActionResult Resend(int TicketId, int MerElectronicId, int? ReceiverId, string Name)
         {
             var MerUser = (from u in db.Users
                            where u.UserName == Name
@@ -575,6 +575,7 @@ namespace MojCRM.Controllers
             {
                 Description = Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber,
                 User = Name,
+                ReferenceId = TicketId,
                 ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
@@ -634,8 +635,9 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument broj " + InvoiceNumber,
+                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument broj: " + InvoiceNumber,
                 User = _Agent,
+                ReferenceId = _TicketIdInt,
                 ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
@@ -713,6 +715,10 @@ namespace MojCRM.Controllers
                                            where t.Receiver.MerId == receiverId
                                            select t).AsEnumerable().OrderByDescending(t => t.Id);
 
+            var _RelatedActivities = (from a in db.ActivityLogs
+                                      where a.ReferenceId == id
+                                      select a).AsEnumerable().OrderByDescending(a => a.Id);
+
             var MerUser = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserUsername).First();
@@ -742,7 +748,7 @@ namespace MojCRM.Controllers
 
                 var DeliveryDetails = new DeliveryDetailsViewModel
                 {
-                    TicketId = deliveryTicketModel.Id,
+                    TicketId = id,
                     SenderName = deliveryTicketModel.Sender.SubjectName,
                     ReceiverName = deliveryTicketModel.Receiver.SubjectName,
                     InvoiceNumber = deliveryTicketModel.InvoiceNumber,
@@ -759,6 +765,9 @@ namespace MojCRM.Controllers
                     RelatedInvoices = _RelatedInvoicesList,
                     RelatedDeliveryContacts = _RelatedDeliveryContacts,
                     RelatedDeliveryDetails = _RelatedDeliveryDetails,
+                    RelatedActivities = _RelatedActivities,
+                    IsAssigned = deliveryTicketModel.IsAssigned,
+                    AssignedTo = deliveryTicketModel.AssignedTo,
                     DocumentHistory = ResultsDocumentHistory
                 };
 
@@ -775,8 +784,12 @@ namespace MojCRM.Controllers
         // POST: AddDetail/1125768
         [HttpPost]
         public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
-                                      int? _TicketId, int Identifier)
+                                      int _TicketId, int Identifier)
         {
+            var InvoiceNumber = (from t in db.DeliveryTicketModels
+                                 where t.Id == _TicketId
+                                 select t.InvoiceNumber).First();
+
             if (_DetailTemplate == String.Empty && _DetailNote != String.Empty)
             {
                 try
@@ -853,8 +866,9 @@ namespace MojCRM.Controllers
                 case 1:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je obavio uspješan poziv za dostavu eDokumenata vezan uz karticu ID: " + _TicketId,
+                        Description = _Agent + " je obavio uspješan poziv za dostavu eDokumenata broj: " + InvoiceNumber,
                         User = _Agent,
+                        ReferenceId = _TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -864,8 +878,9 @@ namespace MojCRM.Controllers
                 case 2:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je obavio kraći informativni poziv vezano za dostavu eDokumenata. Veza na karticu ID: " + _TicketId,
+                        Description = _Agent + " je obavio kraći informativni poziv vezano za dostavu eDokumenata broj: " + InvoiceNumber,
                         User = _Agent,
+                        ReferenceId = _TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -875,8 +890,9 @@ namespace MojCRM.Controllers
                 case 3:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata. Veza na karticu ID: " + _TicketId,
+                        Description = _Agent + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata broj: " + InvoiceNumber,
                         User = _Agent,
+                        ReferenceId = _TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -984,12 +1000,14 @@ namespace MojCRM.Controllers
         // POST: Delivery/DeleteDetail/5
         [HttpPost, ActionName("DeleteDetail")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteDetail(int DetailId)
+        public ActionResult DeleteDetail(int DetailId, string TicketId, string ReceiverId)
         {
+            int TicketIdInt = Int32.Parse(TicketId);
+            int ReceiverIdInt = Int32.Parse(ReceiverId);
             DeliveryDetail deliveryDetail = db.DeliveryDetails.Find(DetailId);
             db.DeliveryDetails.Remove(deliveryDetail);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Delivery", new { id = TicketIdInt, receiverId = ReceiverIdInt, Name = User.Identity.Name });
         }
 
         // POST: Delivery/Contacts
@@ -1040,10 +1058,15 @@ namespace MojCRM.Controllers
 
         public void LogEmail(string _Agent, int _TicketId, string _Email)
         {
+            var InvoiceNumber = (from t in db.DeliveryTicketModels
+                                 where t.Id == _TicketId
+                                 select t.InvoiceNumber).First();
+
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = _Agent + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata. Veza na karticu ID: " + _TicketId,
+                Description = _Agent + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata broj: " + InvoiceNumber,
                 User = _Agent,
+                ReferenceId = _TicketId,
                 ActivityType = ActivityLog.ActivityTypeEnum.DELMAIL,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
@@ -1051,7 +1074,7 @@ namespace MojCRM.Controllers
             db.SaveChanges();
         }
 
-        public JsonResult Assign(int Id, string Agent)
+        public JsonResult Assing(int Id, string Agent)
         {
             var TicketForAssignement = (from t in db.DeliveryTicketModels
                                         where t.Id == Id
@@ -1063,11 +1086,22 @@ namespace MojCRM.Controllers
             return Json(new { Status = "OK" });
         }
 
-        public ActionResult Reassign(bool Unassign, string ReassignedTo)
+        public ActionResult Reassing(bool Unassign, string ReassignedTo, string TicketId)
         {
+            int TicketIdInt = Int32.Parse(TicketId);
+            var TicketForReassingement = (from t in db.DeliveryTicketModels
+                                          where t.Id == TicketIdInt
+                                          select t).First();
             if (Unassign == true)
             {
-
+                TicketForReassingement.IsAssigned = false;
+                TicketForReassingement.AssignedTo = String.Empty;
+                db.SaveChanges();
+            }
+            else
+            {
+                TicketForReassingement.AssignedTo = ReassignedTo;
+                db.SaveChanges();
             }
 
             return Redirect(Request.UrlReferrer.ToString());

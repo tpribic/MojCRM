@@ -428,6 +428,10 @@
     <Compile Include="Migrations\201705261736002_May26UpdateDeliveryAssign.Designer.cs">
       <DependentUpon>201705261736002_May26UpdateDeliveryAssign.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705281108171_May28UpdateActivities.cs" />
+    <Compile Include="Migrations\201705281108171_May28UpdateActivities.Designer.cs">
+      <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -737,6 +741,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705261736002_May26UpdateDeliveryAssign.resx">
       <DependentUpon>201705261736002_May26UpdateDeliveryAssign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705281108171_May28UpdateActivities.resx">
+      <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
