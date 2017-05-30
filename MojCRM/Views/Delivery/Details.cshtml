@@ -832,25 +832,26 @@
         });
 </script>
 <script>
-    function Assign() {
-        $("#assign").click(function (e) {
-            e.preventDefault();
-            if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
-                $.ajax({
-                    method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
-                    data: {
-                        Id: $(this).data("ticket-id"),
-                        Agent: $(this).data("agent")
-                    },
-                    success: function (data) {
-                        if (data.Status === 'OK')
-                            alert("Kartica Vam je dodijeljenja!");
-                        else
-                            alert("Greška!");
-                    },
-                    dataType: 'json'
-                });
-            window.location.reload(true)
-        });
+        function Assign() {
+            $("#assign").click(function (e) {
+                e.preventDefault();
+                if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
+                    $.ajax({
+                        method: 'POST',
+                        url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
+                        data: {
+                            Id: $(this).data("ticket-id"),
+                            Agent: $(this).data("agent")
+                        },
+                        success: function (data) {
+                            if (data.Status === 'OK')
+                                alert("Kartica Vam je dodijeljenja!");
+                            else
+                                alert("Greška!");
+                        },
+                        dataType: 'json'
+                    });
+                window.location.reload(true)
+            });
+        };
 </script>
