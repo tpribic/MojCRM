@@ -1074,7 +1074,7 @@ namespace MojCRM.Controllers
             db.SaveChanges();
         }
 
-        public JsonResult Assing(int Id, string Agent)
+        public JsonResult Assign(int Id, string Agent)
         {
             var TicketForAssignement = (from t in db.DeliveryTicketModels
                                         where t.Id == Id
