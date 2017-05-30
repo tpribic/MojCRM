@@ -86,6 +86,7 @@ namespace MojCRM.Helpers
                     case 1: return "eRačun";
                     case 3: return "Storno";
                     case 4: return "eOpomena";
+                    case 6: return "ePrimka - tip 6";
                     case 7: return "eOdgovor";
                     case 105: return "eNarudžba";
                     case 226: return "eOpoziv";
