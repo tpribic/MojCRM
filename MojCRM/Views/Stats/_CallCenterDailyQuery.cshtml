@@ -1,0 +1,17 @@
+﻿@using System.Web.Helpers;
+@using System.Data;
+@using WebMatrix.Data;
+
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+@{ 
+    var db = Database.Open("DefaultConnection");
+    //var data = db.Query("SELECT [User], [ActivityType] FROM dbo.ActivityLogs WHERE InsertDate >= CONCAT (DATEPART(year,GETDATE()), '-', DATEPART(month,GETDATE()), '-', DATEPART(day,GETDATE()), ' 00:00:00.000')");
+    var data = db.Query("SELECT [User], [ActivityType] FROM dbo.ActivityLogs");
+    var chart = new Chart(width: 600, height: 400)
+.AddTitle("Dnevna statistika")
+.DataBindTable(dataSource: data, xField: "User")
+.Write();
+}

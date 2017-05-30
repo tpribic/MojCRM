@@ -1,0 +1,85 @@
+﻿@model MojCRM.ViewModels.CallCenterDailyStatsViewModel
+@{
+    ViewBag.Title = "Dnevna statistika poziva pozivnog centra";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Statistike pozivnog centra</strong></h2>
+<h3 style="text-align:center"><strong>Dnevna statistika poziva</strong></h3>
+<body>
+    @using (Html.BeginForm("CallCenterDaily", "Stats", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="search-date">Datum pretrage</label>
+                    <div id="search-date">
+                        @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top:22px">
+                <div class="form-group">
+                    <div>
+                        <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                        <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <hr />
+    <h3 style="text-align:center"><strong>Skupna statistika</strong></h3>
+    <div>
+        <table class="table">
+            <tr>
+                <th>@Html.LabelFor(model => model.SumSuccessfulCalls)</th>
+                <th>@Html.LabelFor(model => model.SumUnsuccessfulCalls)</th>
+                <th>@Html.LabelFor(model => model.SumMailchange)</th>
+                <th>@Html.LabelFor(model => model.SumResend)</th>
+                <th>@Html.LabelFor(model => model.SumDeliveryMail)</th>
+            </tr>
+            <tr>
+                <td>@Model.SumSuccessfulCalls</td>
+                <td>@Model.SumUnsuccessfulCalls</td>
+                <td>@Model.SumMailchange</td>
+                <td>@Model.SumResend</td>
+                <td>@Model.SumDeliveryMail</td>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <h3 style="text-align:center"><strong>Statistika po agentima</strong></h3>
+    <div>
+        <table class="table">
+            <tr>
+                <th>Agent</th>
+                <th>Broj uspješnih poziva</th>
+                <th>Broj neuspješnih poziva</th>
+                <th>Broj ispravaka mailova</th>
+                <th>Broj ponovno poslanih obavijesti o dostavi</th>
+                <th>Broj poslanih e-mailova vezanih za dostavu</th>
+            </tr>
+            @foreach (var Activity in Model.Activities)
+            {
+                <tr>
+                    <td>@Activity.Agent</td>
+                    <td>@Activity.NumberSuccessfulCalls</td>
+                    <td>@Activity.NumberUnsuccessfulCalls</td>
+                    <td>@Activity.NumberMailchange</td>
+                    <td>@Activity.NumberResend</td>
+                    <td>@Activity.NumberDeliveryMail</td>
+                </tr>
+            }
+            <tr>
+            </tr>
+        </table>
+        @*<div class="col-md-6">
+            <div>
+                <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
+            </div>
+            <hr />
+        </div>*@
+    </div>
+</body>
+

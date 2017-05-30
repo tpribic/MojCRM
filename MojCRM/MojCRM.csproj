@@ -289,6 +289,9 @@
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -333,6 +336,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
     <Compile Include="Controllers\OrganizationsController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -408,8 +412,29 @@
     <Compile Include="Migrations\201704250902403_Apr25UpdateNewDelivery.Designer.cs">
       <DependentUpon>201704250902403_Apr25UpdateNewDelivery.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704281105014_Apr28Update.cs" />
+    <Compile Include="Migrations\201704281105014_Apr28Update.Designer.cs">
+      <DependentUpon>201704281105014_Apr28Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704281818408_Apr28ActivityLogUpdate.cs" />
+    <Compile Include="Migrations\201704281818408_Apr28ActivityLogUpdate.Designer.cs">
+      <DependentUpon>201704281818408_Apr28ActivityLogUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705121256308_May12UpdateContacts.cs" />
+    <Compile Include="Migrations\201705121256308_May12UpdateContacts.Designer.cs">
+      <DependentUpon>201705121256308_May12UpdateContacts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705261736002_May26UpdateDeliveryAssign.cs" />
+    <Compile Include="Migrations\201705261736002_May26UpdateDeliveryAssign.Designer.cs">
+      <DependentUpon>201705261736002_May26UpdateDeliveryAssign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705281108171_May28UpdateActivities.cs" />
+    <Compile Include="Migrations\201705281108171_May28UpdateActivities.Designer.cs">
+      <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Delivery.cs" />
     <Compile Include="Models\DeliveryDetail.cs" />
@@ -423,7 +448,9 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
+    <Compile Include="ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.SqlServer.sql" />
@@ -439,6 +466,8 @@
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Gridmvc.css" />
     <Content Include="Content\ikona-preglednik.ico" />
     <Content Include="Content\logo.png" />
@@ -486,6 +515,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -519,6 +549,11 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Grid.mvc.readme" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -616,6 +651,15 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Contact\Create.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
+    <Content Include="Views\Stats\Index.cshtml" />
+    <Content Include="Views\Stats\CallCenterDaily.cshtml" />
+    <Content Include="Views\Stats\_CallCenterDailyQuery.cshtml" />
+    <Content Include="Views\Stats\Delivery.cshtml" />
+    <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
+    <Content Include="Views\Delivery\Contacts.cshtml" />
+    <Content Include="Views\Contact\Details.cshtml" />
+    <Content Include="Views\Contact\Edit.cshtml" />
+    <Content Include="Views\Contact\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -685,6 +729,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704250902403_Apr25UpdateNewDelivery.resx">
       <DependentUpon>201704250902403_Apr25UpdateNewDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704281105014_Apr28Update.resx">
+      <DependentUpon>201704281105014_Apr28Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704281818408_Apr28ActivityLogUpdate.resx">
+      <DependentUpon>201704281818408_Apr28ActivityLogUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705121256308_May12UpdateContacts.resx">
+      <DependentUpon>201705121256308_May12UpdateContacts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705261736002_May26UpdateDeliveryAssign.resx">
+      <DependentUpon>201705261736002_May26UpdateDeliveryAssign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705281108171_May28UpdateActivities.resx">
+      <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

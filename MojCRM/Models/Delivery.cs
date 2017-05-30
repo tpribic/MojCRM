@@ -52,6 +52,12 @@ namespace MojCRM.Models
         [Display(Name = "Prvi račun")]
         public bool FirstInvoice { get; set; }
 
+        [Display(Name = "Dodijeljeno")]
+        public bool IsAssigned { get; set; }
+
+        [Display(Name = "Dodijeljeno agentu")]
+        public string AssignedTo { get; set; }
+
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
 
         [NotMapped]
@@ -86,6 +92,7 @@ namespace MojCRM.Models
                     case 1: return "eRačun";
                     case 3: return "Storno";
                     case 4: return "eOpomena";
+                    case 6: return "ePrimka - tip 6";
                     case 7: return "eOdgovor";
                     case 105: return "eNarudžba";
                     case 226: return "eOpoziv";

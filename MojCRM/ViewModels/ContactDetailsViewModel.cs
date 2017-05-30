@@ -1,20 +1,16 @@
-﻿using System;
+﻿using MojCRM.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using static MojCRM.Models.Contact;
 
-namespace MojCRM.Models
+namespace MojCRM.ViewModels
 {
-    public class Contact
+    public class ContactDetailsViewModel
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        [Key]
         public int ContactId { get; set; }
 
         public int OrganizationId { get; set; }
@@ -47,31 +43,6 @@ namespace MojCRM.Models
 
         [Display(Name = "Tip kontakta")]
         public ContactTypeEnum ContactType { get; set; }
-
-        public enum ContactTypeEnum
-        {
-            [Description("Općeniti")]
-            GENERAL,
-
-            [Description("Dostava")]
-            DELIVERY
-        }
-
-        [Display(Name = "Dodijeli novog agenta")]
-        [NotMapped]
-        public IList<SelectListItem> Agents
-        {
-            get
-            {
-                var agents = (from u in db.Users
-                              select new SelectListItem()
-                              {
-                                  Text = u.UserName,
-                                  Value = u.UserName
-                              }).ToList();
-                return agents;
-            }
-            set { }
-        }
+        public IEnumerable<DeliveryDetail> DeliveryDetails { get; set; }
     }
 }

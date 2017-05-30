@@ -1,8 +1,11 @@
 ﻿using MojCRM.Models;
+using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -59,12 +62,12 @@ namespace MojCRM.Controllers
                     Email = Email,
                     User = Agent,
                     InsertDate = DateTime.Now,
-                    ContactType = "Delivery",
+                    ContactType = Contact.ContactTypeEnum.DELIVERY,
                 });
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Delivery", new { id = DocumentIdInt, receiverId = ReceiverInt });
+                return RedirectToAction("Details", "Delivery", new { id = DocumentIdInt, receiverId = ReceiverInt, Name = User.Identity.Name });
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)
@@ -101,6 +104,109 @@ namespace MojCRM.Controllers
             }
         }
 
+        // GET: Contact/Details
+        public ActionResult Details(int ContactId)
+        {
+            if (ContactId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact contactModel = db.Contacts.Find(ContactId);
+            if (contactModel == null)
+            {
+                return HttpNotFound();
+            }
+
+            var _DeliveryDetails = (from d in db.DeliveryDetails
+                                    where d.Contact == (contactModel.ContactFirstName + " " + contactModel.ContactLastName)
+                                    select d).AsEnumerable();
+
+            var ContactDetails = new ContactDetailsViewModel
+            {
+                ContactId = contactModel.ContactId,
+                ContactFirstName = contactModel.ContactFirstName,
+                ContactLastName = contactModel.ContactLastName,
+                Title = contactModel.Title,
+                TelephoneNumber = contactModel.TelephoneNumber,
+                MobilePhoneNumber = contactModel.MobilePhoneNumber,
+                Email = contactModel.Email,
+                User = contactModel.User,
+                InsertDate = contactModel.InsertDate,
+                UpdateDate = contactModel.UpdateDate,
+                ContactType = contactModel.ContactType,
+                DeliveryDetails = _DeliveryDetails
+            };
+
+            return View(ContactDetails);
+        }
+
+        // GET: Coontact/Delete/5
+        public ActionResult Delete(int? ContactId)
+        {
+            if (ContactId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact contact = db.Contacts.Find(ContactId);
+            if (contact == null)
+            {
+                return HttpNotFound();
+            }
+            return View(contact);
+        }
+
+        // POST: Contact/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int ContactId)
+        {
+            Contact contact = db.Contacts.Find(ContactId);
+            db.Contacts.Remove(contact);
+            db.SaveChanges();
+            return View("Index");
+        }
+
+        // GET: Contact/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Contact Contact = db.Contacts.Find(id);
+            if (Contact == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Contact);
+        }
+
+        // POST: Contact/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ContactId,ContactFirstName,ContactLastName,Title,TelephoneNumber,MobilePhoneNumber,Email,User,Agent,ContactType")] Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                var editedContact = (from c in db.Contacts
+                                     where c.ContactId == contact.ContactId
+                                     select c).First();
+                editedContact.ContactFirstName = contact.ContactFirstName;
+                editedContact.ContactLastName = contact.ContactLastName;
+                editedContact.Title = contact.Title;
+                editedContact.TelephoneNumber = contact.TelephoneNumber;
+                editedContact.MobilePhoneNumber = contact.MobilePhoneNumber;
+                editedContact.Email = contact.Email;
+                editedContact.User = contact.User;
+                editedContact.UpdateDate = DateTime.Now;
+                db.SaveChanges();
+                return RedirectToAction("Contacts", "Delivery");
+            }
+            return View(contact);
+        }
+
         // POST: Contact/EditFromDelivery
         [HttpPost]
         public ActionResult EditFromDelivery(string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
@@ -109,7 +215,7 @@ namespace MojCRM.Controllers
             int _DocumentIdInt = Int32.Parse(_DocumentId);
 
             var ContactForUpdate = from c in db.Contacts
-                                   where c.ContactType == "Delivery" && c.OrganizationId == _ReceiverInt
+                                   where c.ContactType == Contact.ContactTypeEnum.DELIVERY && c.OrganizationId == _ReceiverInt
                                    select c;
 
             foreach (Contact c in ContactForUpdate)
@@ -124,7 +230,7 @@ namespace MojCRM.Controllers
             }
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt });
+            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
         }
 
         public JsonResult GetOrganization(string term = "")
