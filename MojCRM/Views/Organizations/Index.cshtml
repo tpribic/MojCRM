@@ -9,6 +9,26 @@
 <body>
     <h2 style="text-align:center"><strong>Popis tvrtki</strong></h2>
     <hr />
+    @using (Html.BeginForm("Index", "Organizations", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="organization-search">Naziv ili OIB tvrtke</label>
+                    <div id="organization-search">
+                        @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB tvrtke" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+            </div>
+        </div>
+    }
+    <hr />
     @Html.Grid(Model).Named("PopisSvihTvrtki").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
     columns.Add(m => m.VAT).Encoded(false).Sanitized(false).Titled("OIB tvrtke").Sortable(true);

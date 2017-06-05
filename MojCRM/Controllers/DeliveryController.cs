@@ -1119,6 +1119,8 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        //POST: Delivery/AssignManagement
+        [HttpPost]
         public void AssignManagement (List<AssigningTickets> forAssign)
         {
             foreach (var Assign in forAssign)

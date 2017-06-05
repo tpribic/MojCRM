@@ -17,11 +17,17 @@ namespace MojCRM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Organizations
-        public ActionResult Index()
+        public ActionResult Index(string Organization)
         {
             var Organizations = from o in db.Organizations
-                                where o.SubjectBusinessUnit == null
+                                where o.SubjectBusinessUnit == String.Empty
                                 select o;
+
+            if (!String.IsNullOrEmpty(Organization))
+            {
+                Organizations = Organizations.Where(o => o.SubjectName.Contains(Organization) || o.VAT.Contains(Organization));
+            }
+
             return View(Organizations.ToList().OrderBy(o => o.MerId));
         }
 

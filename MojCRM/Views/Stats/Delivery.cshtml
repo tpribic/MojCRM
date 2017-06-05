@@ -30,7 +30,7 @@
                     @foreach (var item in Model.Deliveries)
                     {
                         <tr>
-                            <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @date = item.ReferenceDate })</td>
+                            <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @Value = item.ReferenceDate })</td>
                             <td class="sent-date">@item.ReferenceDate.ToShortDateString()</td>
                             <td>@item.CreatedTicketsCount</td>
                             <td>@item.CreatedTicketsFirstTimeCount</td>
@@ -59,8 +59,8 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="search-date">Datum pretrage</label>
-                    <div id="search-date">
+                    <label>Datum pretrage</label>
+                    <div>
                         @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
                     </div>
                 </div>
@@ -120,7 +120,7 @@
         $('input.checked:checked').each(function () {
             forAssign.push({
                 ticketDate: document.getElementById('search-date').value,
-                sentDate: document.getElementsByClassName('sent-date').value,
+                sentDate: document.getElementById('checkbox').value,
                 agent: document.getElementById('agent').value
             })
         })
