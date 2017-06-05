@@ -4,30 +4,81 @@
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h2 style="text-align:center"><strong>Statistike odjela dostave</strong></h2>
-<h3 style="text-align:center"><strong>Statistika kreiranih kartica</strong></h3>
-
-@using (Html.BeginForm("Delivery", "Stats", FormMethod.Get))
+<!--Modal - Assigning-->
+@*@using (Html.BeginForm("AssignManagement", "Delivery", FormMethod.Post))
 {
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="search-date">Datum pretrage</label>
-                <div id="search-date">
-                    @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
-                </div>
+
+}*@
+
+<div class="modal fade" id="AssignManagement" tabindex="-1" role="dialog" aria-labelledby="AssignManagement">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="overflow:hidden">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Ostale otvorene kartice</h4>
             </div>
-        </div>
-        <div class="col-md-3" style="margin-top:22px">
-            <div class="form-group">
-                <div>
-                    <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
-                    <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
-                </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th></th>
+                        <th>Datum slanja dokumenta</th>
+                        <th>Broj kreiranih kartica</th>
+                        <th>Broj kreiranih kartica za prvi put</th>
+                        <th>Broj dodijeljenih kartica</th>
+                        <th>Dodijeli agentu</th>
+                    </tr>
+                    @foreach (var item in Model.Deliveries)
+                    {
+                        <tr>
+                            <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @date = item.ReferenceDate })</td>
+                            <td class="sent-date">@item.ReferenceDate.ToShortDateString()</td>
+                            <td>@item.CreatedTicketsCount</td>
+                            <td>@item.CreatedTicketsFirstTimeCount</td>
+                            <td>@item.AssignedToCount</td>
+                            <td>@Html.DropDownList("AssignTo", Model.Agents, new { @class = "form-control", @id = "agent" })</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="assign" type="submit" class="btn btn-primary" title="Dodijeli kartice po definiranom rasporedu" onclick="javascript: AssignManagement()">Dodijeli</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
             </div>
         </div>
     </div>
-}
+</div>
+
+
+
+<h2 style="text-align:center"><strong>Statistike odjela dostave</strong ></h2>
+<h3 style="text-align:center"><strong>Statistika kreiranih kartica</strong></h3>
+
+<div class="col-md-10">
+    @using (Html.BeginForm("Delivery", "Stats", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="search-date">Datum pretrage</label>
+                    <div id="search-date">
+                        @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top:22px">
+                <div class="form-group">
+                    <div>
+                        <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                        <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="col-md-2">
+    <button data-target="#AssignManagement" data-toggle="modal" title="Pokreni dodijeljivanje kartica" type="button" class="btn btn-sm btn-default" href="#AssignManagement"><i class="fa fa-mail-reply-all"></i></button>
+</div>
 
 
 <br />
@@ -44,6 +95,8 @@
         <th>Datum slanja dokumenta</th>
         <th>Broj kreiranih kartica</th>
         <th>Broj kreiranih kartica za prvi put</th>
+        <th>Broj dodijeljenih kartica</th>
+        <th>Kartice su dodijeljene</th>
     </tr>
     @foreach (var item in Model.Deliveries)
     {
@@ -51,7 +104,40 @@
             <td>@item.ReferenceDate.ToShortDateString()</td>
             <td>@item.CreatedTicketsCount</td>
             <td>@item.CreatedTicketsFirstTimeCount</td>
+            <td>@item.AssignedToCount</td>
+            <td>@foreach (var Agent in item.AssignedTo)
+            {
+               <p>@Agent</p>
+            }
+            </td>
         </tr>
     }
 </table>
+<script>
+    function AssignManagement() {
+        $(document).on("click", "#assign", function () {
+        var forAssign = [];
+        $('input.checked:checked').each(function () {
+            forAssign.push({
+                ticketDate: document.getElementById('search-date').value,
+                sentDate: document.getElementsByClassName('sent-date').value,
+                agent: document.getElementById('agent').value
+            })
+        })
+
+        things = JSON.stringify({ 'forAssign': forAssign });
+        if (window.confirm("Jeste li sigurni da želite pokrenuti dodijeljivanje kartica po rasporedu?"))
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: '@Url.RouteUrl(new { action = "AssignManagement", controller = "Delivery", area = "" })',
+            data: things,
+            success: function () {
+                alert('Uspješno ste dodijelili kartice');
+            },
+        });
+    });
+    };
+</script>
 

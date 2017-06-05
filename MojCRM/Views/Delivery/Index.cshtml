@@ -385,7 +385,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Assing", controller = "Delivery", area = ""})',
+                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
                     data: {
                         Id: $(this).data("ticket-id"),
                         Agent: $(this).data("agent")

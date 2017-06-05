@@ -15,12 +15,36 @@ namespace MojCRM.ViewModels
         public DateTime ReferenceDate { get; set; }
         public int CreatedTicketsCount { get; set; }
         public int CreatedTicketsFirstTimeCount { get; set; }
+        public int AssignedToCount { get; set; }
+        public string[] AssignedTo { get; set; }
     }
     public class DeliveryStatsViewModel
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         public int CreatedTicketsTodayCount { get; set; }
         public int CreatedTicketsTodayFirstTimeCount { get; set; }
         public IList<DailyDelivery> Deliveries { get; set; }
+        public IList<SelectListItem> Agents
+        {
+            get
+            {
+                var agents = (from u in db.Users
+                              select new SelectListItem()
+                              {
+                                  Text = u.UserName,
+                                  Value = u.UserName
+                              }).ToList();
+                return agents;
+            }
+            set { }
+        }
+    }
+    public class AssigningTickets
+    {
+        public DateTime? TicketDate { get; set; }
+        public DateTime SentDate { get; set; }
+        public string Agent { get; set; }
     }
 
     public class CallCenterDaily

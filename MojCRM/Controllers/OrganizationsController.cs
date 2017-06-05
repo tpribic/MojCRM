@@ -19,7 +19,10 @@ namespace MojCRM.Controllers
         // GET: Organizations
         public ActionResult Index()
         {
-            return View();
+            var Organizations = from o in db.Organizations
+                                where o.SubjectBusinessUnit == null
+                                select o;
+            return View(Organizations.ToList().OrderBy(o => o.MerId));
         }
 
         // POST: Organizations/GetOrganizations

@@ -483,18 +483,18 @@
                     </tr>
                     @foreach (var Document in Model.DocumentHistory)
                     {
-                        if (Document.DokumentTypeId != 10)
-                        {
-                            <tr>
-                                <td>@Document.DocumentTypeIdString</td>
-                                <td>@Document.DocumentStatusString</td>
-                                <td>@Document.PosiljateljNaziv</td>
-                                <td>@Document.EmailPrimatelja</td>
-                                <td>@Document.InterniBroj</td>
-                                <td>@Document.DatumOtpreme.ToShortDateString()</td>
-                                <td></td>
-                            </tr>
-                        }
+                        <tr>
+                            <td class="hidden">@Document.Id</td>
+                            <td>@Document.DocumentTypeIdString</td>
+                            <td>@Document.DocumentStatusString</td>
+                            <td>@Document.PosiljateljNaziv</td>
+                            <td>@Document.EmailPrimatelja</td>
+                            <td>@Document.InterniBroj</td>
+                            <td>@Document.DatumOtpreme.ToShortDateString()</td>
+                            <td>
+                                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Document.Id, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
+                            </td>
+                        </tr>
                     }
                 </table>
 
@@ -541,6 +541,133 @@
     </div>
 </div>
 
+<!--Modal - Delivery Details-->
+<div class="modal fade" id="DeliveryDetails" tabindex="-1" role="dialog" aria-labelledby="DeliveryDetails">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="overflow:hidden">
+            <div class="modal-header">
+                <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail"><i class="fa fa-plus"></i></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Napomene o dostavi eDokumenta</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDateTime)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDetail)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailContact)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Detail in Model.RelatedDeliveryDetails)
+                    {
+                        <tr>
+                            <td>@Detail.InsertDate</td>
+                            <td>@Detail.User</td>
+                            <td>@Detail.DetailNote</td>
+                            <td>@Detail.Contact</td>
+                            <td>
+                                <a href="#EditDetail" data-toggle="modal"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="#DeleteDetail" data-toggle="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal - Delivery Contacts-->
+<div class="modal fade" id="DeliveryContacts" tabindex="-1" role="dialog" aria-labelledby="DeliveryContacts">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="overflow:hidden">
+            <div class="modal-header">
+                <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact"><i class="fa fa-plus"></i></button>
+                <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu"><i class="fa fa-pencil"></i></a>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Kontakti za dostavu eRačuna</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactFirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactLastName)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactTelephone)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryEmailAddress)</th>
+                        <th>@Html.DisplayNameFor(model => model.DeliveryContactAgent)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Contact in Model.RelatedDeliveryContacts)
+                    {
+                        <tr>
+                            <td>@Contact.ContactFirstName</td>
+                            <td>@Contact.ContactLastName</td>
+                            <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
+                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td>@Contact.User</td>
+                            <td>
+                                <a href="#AddDetail" data-toggle="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal - Opened Tickets-->
+<div class="modal fade" id="OpenTickets" tabindex="-1" role="dialog" aria-labelledby="OpenTickets">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="overflow:hidden">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Ostale otvorene kartice</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.SenderName)</th>
+                        <th>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</th>
+                        <th>@Html.DisplayNameFor(model => model.ReceiverEmail)</th>
+                        <th>@Html.DisplayNameFor(model => model.InvoiceNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.SentDate)</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var Invoice in Model.RelatedInvoices)
+                    {
+                        <tr>
+                            <td>@Invoice.Sender.SubjectName</td>
+                            <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Model.DocumentStatusString</span></td>
+                            <td>@Invoice.BuyerEmail</td>
+                            <td>@Invoice.InvoiceNumber</td>
+                            <td>@Invoice.SentDate.ToShortDateString()</td>
+                            <td>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
+                                @*<a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
+                                <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @Model.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
 <br />
 @if (Model.IsAssigned == true)
@@ -558,6 +685,9 @@
             </div>
             <div class="btn-group" role="group">
                 <button type="button" title="Pregled aktivnosti vezanih uz ovaj dokument" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
+                <button type="button" title="Pregled napomena dostave vezanih uz ovaj dokument" class="btn btn-sm btn-default" data-toggle="modal" href="#DeliveryDetails"><i class="fa fa-sticky-note"></i></button>
+                <button type="button" title="Pregled kontakata za dostavu" class="btn btn-sm btn-default" data-toggle="modal" href="#DeliveryContacts"><i class="fa fa-address-book"></i></button>
+                <button type="button" title="Pregled ostalih otvorenih kartica" class="btn btn-sm btn-default" data-toggle="modal" href="#OpenTickets"><i class="fa fa-ticket"></i></button>
                 @if (Model.IsAssigned == false)
                 {
                     <a id="assign" method="post" title="Dodijeli karticu" class="btn btn-sm btn-default" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" onclick="javascript: Assign()"><i class="fa fa-check-circle-o"></i></a>
@@ -617,139 +747,6 @@
     </div>
 </div>
 <hr />
-
-<div class="row">
-    <div class="col-md-6">
-        <h4>Napomene dostave</h4>
-    </div>
-    <div class="col-md-6">
-        <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail"><i class="fa fa-plus"></i> @*Kreiraj napomenu*@</button>
-    </div>
-</div>
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <a role="button" data-toggle="collapse" href="#content-delivery-details" aria-expanded="false" aria-controls="content-contacts">Pregled napomena dostave</a>
-            </div>
-        </div>
-        <div id="content-delivery-details" class="collapse">
-            <div class="panel-body">
-                <table class="table">
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDateTime)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailDetail)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryDetailContact)</th>
-                        <th></th>
-                    </tr>
-                    @foreach (var Detail in Model.RelatedDeliveryDetails)
-                    {
-                        <tr>
-                            <td>@Detail.InsertDate</td>
-                            <td>@Detail.User</td>
-                            <td>@Detail.DetailNote</td>
-                            <td>@Detail.Contact</td>
-                            <td>
-                                <a href="#EditDetail" data-toggle="modal"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="#DeleteDetail" data-toggle="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <h4>Kontakt podaci</h4>
-    </div>
-    <div class="col-md-6">
-        <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact"><i class="fa fa-plus"></i> @*Kreiraj kontakt*@</button>
-        <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu"><i class="fa fa-pencil"></i> @*Izmjeni kontakt*@</a>
-    </div>
-</div>
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <a role="button" data-toggle="collapse" href="#content-contacts" aria-expanded="false" aria-controls="content-contacts">Pregled kontakata za dostavu eRačuna</a>
-            </div>
-        </div>
-        <div id="content-contacts" class="collapse">
-            <div class="panel-body">
-                <table class="table">
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryContactFirstName)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryContactLastName)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryContactTelephone)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryEmailAddress)</th>
-                        <th>@Html.DisplayNameFor(model => model.DeliveryContactAgent)</th>
-                        <th></th>
-                    </tr>
-                    @foreach (var Contact in Model.RelatedDeliveryContacts)
-                    {
-                        <tr>
-                            <td>@Contact.ContactFirstName</td>
-                            <td>@Contact.ContactLastName</td>
-                            <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
-                            <td>@Contact.User</td>
-                            <td>
-                                <a href="#AddDetail" data-toggle="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<hr />
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <a data-toggle="collapse" href="#content-undelivered" aria-expanded="false">Pregled ostalih nepreuzetih dokumenata</a>
-            </div>
-        </div>
-        <div id="content-undelivered" class="collapse">
-            <div class="">
-                <table class="table">
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.SenderName)</th>
-                        <th>@Html.DisplayNameFor(model => model.MerDocumentTypeIdString)</th>
-                        <th>@Html.DisplayNameFor(model => model.ReceiverEmail)</th>
-                        <th>@Html.DisplayNameFor(model => model.InvoiceNumber)</th>
-                        <th>@Html.DisplayNameFor(model => model.SentDate)</th>
-                        <th></th>
-                    </tr>
-                    @foreach (var Invoice in Model.RelatedInvoices)
-                    {
-                        <tr>
-                            <td>@Invoice.Sender.SubjectName</td>
-                            <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Model.DocumentStatusString</span></td>
-                            <td>@Invoice.BuyerEmail</td>
-                            <td>@Invoice.InvoiceNumber</td>
-                            <td>@Invoice.SentDate.ToShortDateString()</td>
-                            <td>
-                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.Id, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
-                                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>
-                                <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     $(document).on("click", "a.remove-from-list-ajax", function (e) {
         e.preventDefault();

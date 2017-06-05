@@ -180,13 +180,18 @@ namespace MojCRM.Controllers
                                      where (t.InsertDate > searchDate) && (t.InsertDate < searchDatePlus)
                                      group t by DbFunctions.TruncateTime(t.SentDate) into gt
                                      select gt).ToList();
+                var GroupedDeliveriesAssigned = (from t in db.DeliveryTicketModels
+                                                 where (t.InsertDate > searchDate) && (t.InsertDate < searchDatePlus)
+                                                 select t.AssignedTo).Distinct();
                 foreach (var Day in GroupedDeliveries)
                 {
                     var dailyDelivery = new DailyDelivery
                     {
                         ReferenceDate = (DateTime)Day.Key,
                         CreatedTicketsCount = Day.Count(),
-                        CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count()
+                        CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
+                        AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
+                        AssignedTo = GroupedDeliveriesAssigned.ToArray()
                     };
                     Deliveries.Add(dailyDelivery);
                 }
@@ -195,13 +200,18 @@ namespace MojCRM.Controllers
             {
                 CreatedTickets = CreatedTickets.Where(t => t.InsertDate >= DateTime.Today);
                 CreatedTicketsFirst = CreatedTicketsFirst.Where(t => t.InsertDate >= DateTime.Today);
+                var GroupedDeliveriesAssigned = (from t in db.DeliveryTicketModels
+                                                 where t.SentDate >= DateTime.Today
+                                                 select t.AssignedTo).Distinct();
                 foreach (var Day in GroupedDeliveries)
                 {
                     var dailyDelivery = new DailyDelivery
                     {
                         ReferenceDate = (DateTime)Day.Key,
                         CreatedTicketsCount = Day.Count(),
-                        CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count()
+                        CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
+                        AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
+                        AssignedTo = GroupedDeliveriesAssigned.ToArray()
                     };
                     Deliveries.Add(dailyDelivery);
                 }

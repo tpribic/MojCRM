@@ -541,7 +541,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Resend/12345
         [Authorize]
-        public ActionResult Resend(int TicketId, int MerElectronicId, int? ReceiverId, string Name)
+        public ActionResult Resend(int TicketId, int MerElectronicId, int ReceiverId, string Name)
         {
             var MerUser = (from u in db.Users
                            where u.UserName == Name
@@ -552,6 +552,9 @@ namespace MojCRM.Controllers
             var InvoiceNumber = (from t in db.DeliveryTicketModels
                                  where t.MerElectronicId == MerElectronicId
                                  select t.InvoiceNumber).First();
+            var Receiver = (from o in db.Organizations
+                            where o.MerId == ReceiverId && o.SubjectBusinessUnit == null
+                            select o.SubjectName).First();
 
             MerApiResend Request = new MerApiResend();
 
@@ -571,25 +574,34 @@ namespace MojCRM.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
-            db.ActivityLogs.Add(new ActivityLog
+            if (InvoiceNumber == null)
             {
-                Description = Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber,
-                User = Name,
-                ReferenceId = TicketId,
-                ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
-                Department = ActivityLog.DepartmentEnum.Delivery,
-                InsertDate = DateTime.Now,
-            });
-            db.SaveChanges();
-
-            if (TicketId == null)
-            {
-                return RedirectToAction("Index");
+                db.ActivityLogs.Add(new ActivityLog
+                {
+                    Description = Name + " je ponovno poslao obavijest za primatelja " + Receiver,
+                    User = Name,
+                    ReferenceId = TicketId,
+                    ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
+                    Department = ActivityLog.DepartmentEnum.Delivery,
+                    InsertDate = DateTime.Now,
+                });
+                db.SaveChanges();
             }
             else
             {
-                return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
+                db.ActivityLogs.Add(new ActivityLog
+                {
+                    Description = Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber,
+                    User = Name,
+                    ReferenceId = TicketId,
+                    ActivityType = ActivityLog.ActivityTypeEnum.RESEND,
+                    Department = ActivityLog.DepartmentEnum.Delivery,
+                    InsertDate = DateTime.Now,
+                });
+                db.SaveChanges();
             }
+
+            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
         }
 
         // GET Delivery/ChangeEmail
@@ -768,7 +780,7 @@ namespace MojCRM.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory
+                    DocumentHistory = ResultsDocumentHistory.Where(i => i.DokumentStatusId != 10).AsEnumerable()
                 };
 
                 return View(DeliveryDetails);
@@ -1105,6 +1117,37 @@ namespace MojCRM.Controllers
             }
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        public void AssignManagement (List<AssigningTickets> forAssign)
+        {
+            foreach (var Assign in forAssign)
+            {
+                if (Assign.TicketDate == null)
+                {
+                    var TicketsForAssing = (from t in db.DeliveryTicketModels
+                                            where (t.InsertDate == DateTime.Today) && (t.SentDate == Assign.SentDate)
+                                            select t).AsEnumerable();
+                    foreach (var Ticket in TicketsForAssing)
+                    {
+                        Ticket.IsAssigned = true;
+                        Ticket.AssignedTo = Assign.Agent;
+                    }
+                    db.SaveChanges();
+                }
+                else
+                {
+                    var TicketsForAssing = (from t in db.DeliveryTicketModels
+                                            where (t.InsertDate == Assign.TicketDate) && (t.SentDate == Assign.SentDate)
+                                            select t).AsEnumerable();
+                    foreach (var Ticket in TicketsForAssing)
+                    {
+                        Ticket.IsAssigned = true;
+                        Ticket.AssignedTo = Assign.Agent;
+                    }
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }

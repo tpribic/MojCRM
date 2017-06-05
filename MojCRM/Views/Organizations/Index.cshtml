@@ -1,0 +1,18 @@
+﻿@using GridMvc.Html
+
+@model IEnumerable<MojCRM.Models.Organizations>
+@{
+    ViewBag.Title = "Popis tvrtki";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<body>
+    <h2 style="text-align:center"><strong>Popis tvrtki</strong></h2>
+    <hr />
+    @Html.Grid(Model).Named("PopisSvihTvrtki").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+    columns.Add(m => m.VAT).Encoded(false).Sanitized(false).Titled("OIB tvrtke").Sortable(true);
+    columns.Add(m => m.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(true);
+}).WithPaging(20)
+</body>
+
