@@ -15,7 +15,7 @@
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Ostale otvorene kartice</h4>
+                <h4>Dodijeli kartice</h4>
             </div>
             <div class="modal-body">
                 <table class="table">
@@ -30,8 +30,8 @@
                     @foreach (var item in Model.Deliveries)
                     {
                         <tr>
-                            <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @Value = item.ReferenceDate })</td>
-                            <td class="sent-date">@item.ReferenceDate.ToShortDateString()</td>
+                            <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @Value = item.ReferenceDate.ToShortDateString() })</td>
+                            <td class="sent-date" date-value="@item.ReferenceDate.ToString("O")">@item.ReferenceDate.ToShortDateString()</td>
                             <td>@item.CreatedTicketsCount</td>
                             <td>@item.CreatedTicketsFirstTimeCount</td>
                             <td>@item.AssignedToCount</td>
@@ -96,7 +96,7 @@
         <th>Broj kreiranih kartica</th>
         <th>Broj kreiranih kartica za prvi put</th>
         <th>Broj dodijeljenih kartica</th>
-        <th>Kartice su dodijeljene</th>
+        <th>Kartice su dodijeljene agentu</th>
     </tr>
     @foreach (var item in Model.Deliveries)
     {
@@ -105,17 +105,13 @@
             <td>@item.CreatedTicketsCount</td>
             <td>@item.CreatedTicketsFirstTimeCount</td>
             <td>@item.AssignedToCount</td>
-            <td>@foreach (var Agent in item.AssignedTo)
-            {
-               <p>@Agent</p>
-            }
-            </td>
+            <td>@item.AssignedTo</td>
         </tr>
     }
 </table>
 <script>
     function AssignManagement() {
-        $(document).on("click", "#assign", function () {
+        $(document).on("click", "#assign", function (e) {
         var forAssign = [];
         $('input.checked:checked').each(function () {
             forAssign.push({
@@ -125,18 +121,22 @@
             })
         })
 
-        things = JSON.stringify({ 'forAssign': forAssign });
+        things = JSON.stringify({ /*forAssign: */forAssign });
         if (window.confirm("Jeste li sigurni da želite pokrenuti dodijeljivanje kartica po rasporedu?"))
         $.ajax({
             contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
             type: 'POST',
             url: '@Url.RouteUrl(new { action = "AssignManagement", controller = "Delivery", area = "" })',
             data: things,
             success: function () {
-                alert('Uspješno ste dodijelili kartice');
+                if (data.Status === 'OK')
+                    alert("Kartica Vam je dodijeljenja!");
+                else
+                    alert("Greška!");
             },
-        });
+            dataType: 'json'
+            });
+        window.location.reload(true)
     });
     };
 </script>

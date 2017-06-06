@@ -380,7 +380,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         });
     }
         function Assign() {
-            $(".assinged").click(function (e) {
+            $(document).on("click", ".assinged", function (e) {
             e.preventDefault();
             if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                 $.ajax({

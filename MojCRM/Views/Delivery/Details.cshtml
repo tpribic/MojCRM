@@ -546,7 +546,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
-                <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail"><i class="fa fa-plus"></i></button>
+                <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail" data-dismiss="modal"><i class="fa fa-plus"></i></button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Napomene o dostavi eDokumenta</h4>
             </div>
@@ -586,7 +586,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
-                <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact"><i class="fa fa-plus"></i></button>
+                <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
                 <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu"><i class="fa fa-pencil"></i></a>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Kontakti za dostavu eRačuna</h4>
@@ -668,6 +668,33 @@
     </div>
 </div>
 
+<!--Modal - Edit Important Comment-->
+@using (Html.BeginForm("EditImportantComment", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="EditImportantComment" tabindex="-1" role="dialog" aria-labelledby="EditImportantComment">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Uredi napomenu za dostavu za ovog primatelja</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        @Html.TextArea("Comment", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="hidden">
+                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Predaj izmjenu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @Model.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
 <br />
 @if (Model.IsAssigned == true)
@@ -731,6 +758,17 @@
         <div class="col-md-4">
             <strong>@Html.DisplayNameFor(model => model.SentDate)</strong>
             @Html.DisplayFor(model => model.SentDate)
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-10">
+            <strong>@Html.DisplayNameFor(model => model.ImportantComment)</strong>
+            @Model.ImportantComment
+        </div>
+        <div class="col-md-2">
+            <button type="button" data-toggle="modal" href="#EditImportantComment" data-target="#EditImportantComment" title="Uredi napomenu za dostavu za ovog primatelja" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i></button>
         </div>
     </div>
     <hr />
@@ -830,7 +868,7 @@
 </script>
 <script>
         function Assign() {
-            $("#assign").click(function (e) {
+            $(document).on("click", "#assign", function (e) {
                 e.preventDefault();
                 if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                     $.ajax({

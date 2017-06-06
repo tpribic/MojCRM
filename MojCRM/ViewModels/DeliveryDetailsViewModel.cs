@@ -46,6 +46,9 @@ namespace MojCRM.ViewModels
         [Display(Name = "Kontakt podaci:")]
         public string MerDeliveryDetailTelephone { get; set; }
 
+        [Display(Name = "Napomene za dostavu eRačuna ovom primatelju: ")]
+        public string ImportantComment { get; set; }
+
         [Display(Name = "Ime kontakta")]
         public string DeliveryContactFirstName { get; set; }
 

@@ -166,7 +166,7 @@ namespace MojCRM.Controllers
                                        select t);
             var GroupedDeliveries = (from t in db.DeliveryTicketModels
                                      where t.InsertDate >= DateTime.Today
-                                     group t by DbFunctions.TruncateTime(t.SentDate) into gt
+                                     group t by new { Date = DbFunctions.TruncateTime(t.SentDate), t.AssignedTo }  into gt
                                      select gt).ToList();
             var Deliveries = new List<DailyDelivery>();
 
@@ -178,7 +178,7 @@ namespace MojCRM.Controllers
                 CreatedTicketsFirst = CreatedTicketsFirst.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 GroupedDeliveries = (from t in db.DeliveryTicketModels
                                      where (t.InsertDate > searchDate) && (t.InsertDate < searchDatePlus)
-                                     group t by DbFunctions.TruncateTime(t.SentDate) into gt
+                                     group t by new { Date = DbFunctions.TruncateTime(t.SentDate), t.AssignedTo } into gt
                                      select gt).ToList();
                 var GroupedDeliveriesAssigned = (from t in db.DeliveryTicketModels
                                                  where (t.InsertDate > searchDate) && (t.InsertDate < searchDatePlus)
@@ -187,11 +187,11 @@ namespace MojCRM.Controllers
                 {
                     var dailyDelivery = new DailyDelivery
                     {
-                        ReferenceDate = (DateTime)Day.Key,
+                        ReferenceDate = (DateTime)Day.Key.Date,
                         CreatedTicketsCount = Day.Count(),
                         CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
                         AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
-                        AssignedTo = GroupedDeliveriesAssigned.ToArray()
+                        AssignedTo = Day.Key.AssignedTo
                     };
                     Deliveries.Add(dailyDelivery);
                 }
@@ -207,11 +207,11 @@ namespace MojCRM.Controllers
                 {
                     var dailyDelivery = new DailyDelivery
                     {
-                        ReferenceDate = (DateTime)Day.Key,
+                        ReferenceDate = (DateTime)Day.Key.Date,
                         CreatedTicketsCount = Day.Count(),
                         CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
                         AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
-                        AssignedTo = GroupedDeliveriesAssigned.ToArray()
+                        AssignedTo = Day.Key.AssignedTo
                     };
                     Deliveries.Add(dailyDelivery);
                 }

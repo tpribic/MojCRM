@@ -16,7 +16,7 @@ namespace MojCRM.ViewModels
         public int CreatedTicketsCount { get; set; }
         public int CreatedTicketsFirstTimeCount { get; set; }
         public int AssignedToCount { get; set; }
-        public string[] AssignedTo { get; set; }
+        public string AssignedTo { get; set; }
     }
     public class DeliveryStatsViewModel
     {

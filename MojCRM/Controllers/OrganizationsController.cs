@@ -85,6 +85,22 @@ namespace MojCRM.Controllers
             }
         }
 
+        // POST: Organizations/EditImportantComment
+        [HttpPost]
+        public ActionResult EditImportantComment(string Comment, string ReceiverId)
+        {
+            int ReceiverIdInt = Int32.Parse(ReceiverId);
+
+            var DetailForEdit = (from dd in db.MerDeliveryDetails
+                                   where dd.MerId == ReceiverIdInt
+                                   select dd).First();
+
+            DetailForEdit.ImportantComments = Comment;
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

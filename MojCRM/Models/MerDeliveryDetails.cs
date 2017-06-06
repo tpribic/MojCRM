@@ -15,10 +15,6 @@ namespace MojCRM.Models
         public virtual Organizations Organization { get; set; }
         public string Comments { get; set; }
         public string Telephone { get; set; }
-    }
-
-    public class DeliveryDetailsDbContext : ApplicationDbContext
-    {
-        public DbSet<MerDeliveryDetails> MerDeliveryDetails { get; set; }
+        public string ImportantComments { get; set; }
     }
 }

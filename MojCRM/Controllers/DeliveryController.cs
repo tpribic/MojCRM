@@ -33,7 +33,7 @@ namespace MojCRM.Controllers
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
 
             var ResultsNew = from t in db.DeliveryTicketModels
-                          where t.DocumentStatus == 30
+                          //where t.DocumentStatus == 30
                           select t;
             //var ResultsNew = db.DeliveryTicketModels.AsQueryable();
             var TicketsCreatedToday = from t in db.DeliveryTicketModels
@@ -528,7 +528,7 @@ namespace MojCRM.Controllers
                 MerDeliveryJsonResponse Result = ParseJson(MerString);
 
                 var TicketForUpdate = (from t in db.DeliveryTicketModels
-                                       where t.MerElectronicId == Link.MerElectronicId
+                                       where t.Id == Link.Id
                                        select t).First();
                 TicketForUpdate.DocumentStatus = Result.Status;
                 TicketForUpdate.BuyerEmail = Result.EmailPrimatelja;
@@ -727,6 +727,10 @@ namespace MojCRM.Controllers
                                            where t.Receiver.MerId == receiverId
                                            select t).AsEnumerable().OrderByDescending(t => t.Id);
 
+            var _ImportantComment = (from dd in db.MerDeliveryDetails
+                                     where dd.MerId == receiverId
+                                     select dd.ImportantComments).First();
+
             var _RelatedActivities = (from a in db.ActivityLogs
                                       where a.ReferenceId == id
                                       select a).AsEnumerable().OrderByDescending(a => a.Id);
@@ -770,6 +774,7 @@ namespace MojCRM.Controllers
                     ReceiverEmail = deliveryTicketModel.BuyerEmail,
                     MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                     MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
+                    ImportantComment = _ImportantComment,
                     MerElectronicId = deliveryTicketModel.MerElectronicId,
                     ReceiverId = deliveryTicketModel.ReceiverId,
                     ReceiverVAT = deliveryTicketModel.Receiver.VAT,
@@ -1120,15 +1125,16 @@ namespace MojCRM.Controllers
         }
 
         //POST: Delivery/AssignManagement
-        [HttpPost]
-        public void AssignManagement (List<AssigningTickets> forAssign)
+        [HttpPost, ActionName("AssignManagement")]
+        public JsonResult AssignManagement(AssigningTickets[] forAssign)
         {
             foreach (var Assign in forAssign)
             {
                 if (Assign.TicketDate == null)
                 {
+                    var _sentDate = Convert.ToDateTime(Assign.SentDate);
                     var TicketsForAssing = (from t in db.DeliveryTicketModels
-                                            where (t.InsertDate == DateTime.Today) && (t.SentDate == Assign.SentDate)
+                                            where (t.InsertDate == DateTime.Today) && (t.SentDate == _sentDate)
                                             select t).AsEnumerable();
                     foreach (var Ticket in TicketsForAssing)
                     {
@@ -1139,8 +1145,10 @@ namespace MojCRM.Controllers
                 }
                 else
                 {
+                    var _ticketDate = Convert.ToDateTime(Assign.TicketDate);
+                    var _sentDate = Convert.ToDateTime(Assign.SentDate);
                     var TicketsForAssing = (from t in db.DeliveryTicketModels
-                                            where (t.InsertDate == Assign.TicketDate) && (t.SentDate == Assign.SentDate)
+                                            where (t.InsertDate == _ticketDate) && (t.SentDate == _sentDate)
                                             select t).AsEnumerable();
                     foreach (var Ticket in TicketsForAssing)
                     {
@@ -1150,6 +1158,7 @@ namespace MojCRM.Controllers
                     db.SaveChanges();
                 }
             }
+            return Json(new { Status = "OK" });
         }
     }
 }
