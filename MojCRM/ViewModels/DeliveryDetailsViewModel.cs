@@ -139,6 +139,7 @@ namespace MojCRM.ViewModels
         public IEnumerable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
         public IEnumerable<ActivityLog> RelatedActivities { get; set; }
         public IEnumerable<MerGetSentDocumentsResponse> DocumentHistory { get; set; }
+        public MessagesOutboundOpenResponse PostmarkOpenings { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails
         {
             get

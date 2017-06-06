@@ -24,6 +24,7 @@ namespace MojCRM.Helpers
         public string Županija { get; set; }
     }
 
+    //CreateTickets
     public class MerGetNondeliveredDocumentsResponse
     {
         [JsonProperty]
@@ -42,6 +43,7 @@ namespace MojCRM.Helpers
         public int TotalReceived { get; set; } // No. of total documents with DocumentStatus = 40
     }
 
+    //DocumentHistory
     public class MerGetSentDocumentsResponse
     {
         [JsonProperty]
@@ -49,7 +51,7 @@ namespace MojCRM.Helpers
         public string InterniBroj { get; set; }
         public int DokumentTypeId { get; set; }
         public int DokumentStatusId { get; set; }
-        public DateTime DatumOtpreme { get; set; }
+        public DateTime? DatumOtpreme { get; set; }
         public DateTime? DatumZadnjePoruke { get; set; }
         public DateTime? DatumDostave { get; set; }
         public string EmailPrimatelja { get; set; }

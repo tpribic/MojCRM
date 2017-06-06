@@ -553,7 +553,7 @@ namespace MojCRM.Controllers
                                  where t.MerElectronicId == MerElectronicId
                                  select t.InvoiceNumber).First();
             var Receiver = (from o in db.Organizations
-                            where o.MerId == ReceiverId && o.SubjectBusinessUnit == null
+                            where o.MerId == ReceiverId && o.SubjectBusinessUnit == ""
                             select o.SubjectName).First();
 
             MerApiResend Request = new MerApiResend();
@@ -735,9 +735,19 @@ namespace MojCRM.Controllers
                                       where a.ReferenceId == id
                                       select a).AsEnumerable().OrderByDescending(a => a.Id);
 
-            var MerUser = (from u in db.Users
-                           where u.UserName == Name
-                           select u.MerUserUsername).First();
+            MessagesOutboundOpenResponse OpeningHistoryResponse;
+            string PostmarkLink = @"https://api.postmarkapp.com/messages/outbound/opens?count=20&offset=0&recipient=" + deliveryTicketModel.BuyerEmail;
+            using (var Postmark = new WebClient())
+            {
+                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                var OpeningHistoryRequest = Postmark.DownloadString(PostmarkLink);
+                OpeningHistoryResponse = JsonConvert.DeserializeObject<MessagesOutboundOpenResponse>(OpeningHistoryRequest);
+            }
+
+                var MerUser = (from u in db.Users
+                               where u.UserName == Name
+                               select u.MerUserUsername).First();
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
@@ -785,7 +795,8 @@ namespace MojCRM.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory.Where(i => i.DokumentStatusId != 10).AsEnumerable()
+                    DocumentHistory = ResultsDocumentHistory.Where(i => i.DokumentStatusId != 10).AsEnumerable(),
+                    PostmarkOpenings = OpeningHistoryResponse
                 };
 
                 return View(DeliveryDetails);

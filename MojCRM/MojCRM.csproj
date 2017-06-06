@@ -344,6 +344,7 @@
     <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
     <Compile Include="Helpers\MerDeliveryJsonResponse.cs" />
+    <Compile Include="Helpers\PostmarkApi.cs" />
     <Compile Include="Migrations\201702061631424_Init.cs" />
     <Compile Include="Migrations\201702061631424_Init.Designer.cs">
       <DependentUpon>201702061631424_Init.cs</DependentUpon>
