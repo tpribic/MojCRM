@@ -97,6 +97,9 @@
         <th>Broj kreiranih kartica za prvi put</th>
         <th>Broj dodijeljenih kartica</th>
         <th>Kartice su dodijeljene agentu</th>
+        <th>Status - POSLAN</th>
+        <th>Status - DOSTAVLJEN</th>
+        <th>Status - ostali</th>
     </tr>
     @foreach (var item in Model.Deliveries)
     {
@@ -106,6 +109,9 @@
             <td>@item.CreatedTicketsFirstTimeCount</td>
             <td>@item.AssignedToCount</td>
             <td>@item.AssignedTo</td>
+            <td>@item.SentCount</td>
+            <td>@item.DeliveredCount</td>
+            <td>@item.OtherCount</td>
         </tr>
     }
 </table>

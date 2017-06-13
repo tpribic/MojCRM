@@ -148,7 +148,7 @@ namespace MojCRM.ViewModels
                             select new SelectListItem()
                             {
                                 Text = t.ContactFirstName + " " + t.ContactLastName,
-                                Value = t.ContactFirstName + " " + t.ContactLastName
+                                Value = t.ContactId.ToString()
                             }).ToList();
                 return list;
             }

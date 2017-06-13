@@ -209,24 +209,39 @@ namespace MojCRM.Controllers
 
         // POST: Contact/EditFromDelivery
         [HttpPost]
-        public ActionResult EditFromDelivery(string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
+        public ActionResult EditFromDelivery(string _ContactId, string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
         {
+            int _ContactIdInt = Int32.Parse(_ContactId);
             int _ReceiverInt = Int32.Parse(_Receiver);
             int _DocumentIdInt = Int32.Parse(_DocumentId);
 
-            var ContactForUpdate = from c in db.Contacts
-                                   where c.ContactType == Contact.ContactTypeEnum.DELIVERY && c.OrganizationId == _ReceiverInt
-                                   select c;
+            var ContactForUpdate = (from c in db.Contacts
+                                    where c.ContactId == _ContactIdInt
+                                    select c).First();
 
-            foreach (Contact c in ContactForUpdate)
+            if (!String.IsNullOrEmpty(_FirstName))
             {
-                c.ContactFirstName = _FirstName;
-                c.ContactLastName = _LastName;
-                c.TelephoneNumber = _Telephone;
-                c.MobilePhoneNumber = _Mobile;
-                c.Email = _Email;
-                c.UpdateDate = DateTime.Now;
-                c.User = _Agent;
+                ContactForUpdate.ContactFirstName = _FirstName;
+            }
+            if (!String.IsNullOrEmpty(_LastName))
+            {
+                ContactForUpdate.ContactLastName = _LastName;
+            }
+            if (!String.IsNullOrEmpty(_Telephone))
+            {
+                ContactForUpdate.TelephoneNumber = _Telephone;
+            }
+            if (!String.IsNullOrEmpty(_Mobile))
+            {
+                ContactForUpdate.MobilePhoneNumber = _Mobile;
+            }
+            if (!String.IsNullOrEmpty(_Email))
+            {
+                ContactForUpdate.Email = _Email;
+            }
+            if (!String.IsNullOrEmpty(_Agent))
+            {
+                ContactForUpdate.User = _Agent;
             }
             db.SaveChanges();
 

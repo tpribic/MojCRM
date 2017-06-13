@@ -31,6 +31,7 @@
     var assigned = new List<ListItem>
         {
             new ListItem{ Value = "1", Text = "Moje"},
+            new ListItem{ Value = "2", Text = "Nedodijeljene"}
         };
     var documentStatusList = new List<ListItem>
         {
@@ -231,6 +232,9 @@ columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail ad
     if (m.DocumentStatus == 30 && m.IsAssigned == false)
         return @<div><span>@Html.Raw(m.BuyerEmail)</span></div>;
 
+    if (m.DocumentStatus != 30 && m.IsAssigned == false)
+        return @<div><span>@Html.Raw(m.BuyerEmail)</span></div>;
+
     return @<div><span>Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
 });
 columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
@@ -250,7 +254,19 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     if (m.DocumentStatus == 55 && m.IsAssigned == false)
         return @<div><span>@Html.Raw(m.MerDocumentTypeIdString)</span><br /><span class="label label-default">@Html.Raw(m.DocumentStatusString)</span></div>;
 
-        return @<div></div>;
+    if (m.DocumentStatus == 40 && m.IsAssigned == true)
+        return @<div><span class="label label-success">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 45 && m.IsAssigned == true)
+        return @<div><span class="label label-info">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 50 && m.IsAssigned == true)
+        return @<div><span class="label label-danger">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    if (m.DocumentStatus == 55 && m.IsAssigned == true)
+        return @<div><span class="label label-default">@Html.Raw(m.DocumentStatusString)</span></div>;
+
+    return @<div></div>;
     });
     columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kartice").Sortable(true).RenderValueAs(m =>
     {
@@ -262,6 +278,9 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             return @<span>
         <i class="fa fa-times-circle-o fa-2x text-danger" title="Kartica je već dodijeljena"></i>
     </span>;
+
+        if (m.DocumentStatus != 30 && m.IsAssigned == false)
+            return @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span></div>;
 
         return @<span></span>;
     });
@@ -277,6 +296,11 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     </span>;
 
         if (m.DocumentStatus == 30 && (m.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) || m.AssignedTo == User.Identity.Name))
+            return @<span>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="glyphicon glyphicon-edit"></i></a>
+    </span>;
+
+        if (m.DocumentStatus != 30)
             return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="glyphicon glyphicon-edit"></i></a>
     </span>;

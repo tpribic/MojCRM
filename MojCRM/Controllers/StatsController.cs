@@ -190,6 +190,9 @@ namespace MojCRM.Controllers
                         ReferenceDate = (DateTime)Day.Key.Date,
                         CreatedTicketsCount = Day.Count(),
                         CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
+                        SentCount = Day.Where(t => t.DocumentStatus == 30).Count(),
+                        DeliveredCount = Day.Where(t => t.DocumentStatus == 40).Count(),
+                        OtherCount = Day.Where(t => (t.DocumentStatus != 30 && t.DocumentStatus != 40)).Count(),
                         AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
                         AssignedTo = Day.Key.AssignedTo
                     };
@@ -210,6 +213,9 @@ namespace MojCRM.Controllers
                         ReferenceDate = (DateTime)Day.Key.Date,
                         CreatedTicketsCount = Day.Count(),
                         CreatedTicketsFirstTimeCount = Day.Where(t => t.FirstInvoice == true).Count(),
+                        SentCount = Day.Where(t => t.DocumentStatus == 30).Count(),
+                        DeliveredCount = Day.Where(t => t.DocumentStatus == 40).Count(),
+                        OtherCount = Day.Where(t => (t.DocumentStatus != 30 && t.DocumentStatus != 40)).Count(),
                         AssignedToCount = Day.Where(t => t.IsAssigned == true).Count(),
                         AssignedTo = Day.Key.AssignedTo
                     };

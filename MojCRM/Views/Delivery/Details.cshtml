@@ -165,7 +165,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Kreiraj kontakt</button>
+                    <button type="submit" class="btn btn-primary">Predaj izmjene</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
                 </div>
             </div>
@@ -486,7 +486,22 @@
                         <tr>
                             <td class="hidden">@Document.Id</td>
                             <td>@Document.DocumentTypeIdString</td>
-                            <td>@Document.DocumentStatusString</td>
+                            @if (Document.DocumentStatusString == "Poslan")
+	                        {
+		                        <td><span class="label label-warning">@Html.Raw(Document.DocumentStatusString)</span></td>
+	                        }
+                            @if (Document.DocumentStatusString == "Dostavljen")
+                            {
+                                <td><span class="label label-success">@Html.Raw(Document.DocumentStatusString)</span></td>
+                            }
+                            @if (Document.DocumentStatusString == "Ispisan")
+                            {
+                                <td><span class="label label-info">@Html.Raw(Document.DocumentStatusString)</span></td>
+                            }
+                            @if (Document.DocumentStatusString == "Neuspješan")
+                            {
+                                <td><span class="label label-danger">@Html.Raw(Document.DocumentStatusString)</span></td>
+                            }
                             <td>@Document.PosiljateljNaziv</td>
                             <td>@Document.EmailPrimatelja</td>
                             <td>@Document.InterniBroj</td>
@@ -494,9 +509,12 @@
                             {
                                 <td>@Document.DatumOtpreme</td>
                             }
-                            <td>
-                                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Document.Id, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
-                            </td>
+                            @if (Document.DatumOtpreme != null)
+                            {
+                                <td>
+                                    <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Document.Id, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
+                                </td>
+                            }
                         </tr>
                     }
                 </table>
@@ -526,7 +544,7 @@
                         <th>Datum aktivnosti</th>
                     </tr>
                     @foreach (var Activity in Model.RelatedActivities)
-                    {
+                                {
                         <tr>
                             <td>@Activity.ActivityTypeString</td>
                             <td>@Activity.Description</td>
@@ -563,15 +581,15 @@
                         <th></th>
                     </tr>
                     @foreach (var Detail in Model.RelatedDeliveryDetails)
-                    {
+                                {
                         <tr>
                             <td>@Detail.InsertDate</td>
                             <td>@Detail.User</td>
                             <td>@Detail.DetailNote</td>
                             <td>@Detail.Contact</td>
                             <td>
-                                <a href="#EditDetail" data-toggle="modal"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="#DeleteDetail" data-toggle="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
+                                <a href="#EditDetail" data-toggle="modal" data-dismiss="modal"><i class="glyphicon glyphicon-edit"></i></a>
+                                <a href="#DeleteDetail" data-toggle="modal" data-dismiss="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
                             </td>
                         </tr>
                     }
@@ -590,7 +608,7 @@
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu"><i class="fa fa-pencil"></i></a>
+                <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Kontakti za dostavu eRačuna</h4>
             </div>
@@ -605,7 +623,7 @@
                         <th></th>
                     </tr>
                     @foreach (var Contact in Model.RelatedDeliveryContacts)
-                    {
+                            {
                         <tr>
                             <td>@Contact.ContactFirstName</td>
                             <td>@Contact.ContactLastName</td>
@@ -613,9 +631,9 @@
                             <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td>@Contact.User</td>
                             <td>
-                                <a href="#AddDetail" data-toggle="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
                             </td>
                         </tr>
                     }
@@ -647,7 +665,7 @@
                         <th></th>
                     </tr>
                     @foreach (var Invoice in Model.RelatedInvoices)
-                    {
+                            {
                         <tr>
                             <td>@Invoice.Sender.SubjectName</td>
                             <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Model.DocumentStatusString</span></td>
@@ -708,6 +726,7 @@
             </div>
             <div class="modal-body">
                 <div class="row col-md-12">Ovaj je primatelj do sada ukupno otvorio <strong>@Model.PostmarkOpenings.TotalCount</strong> e-mailova!</div>
+                <br />
                 <table class="table">
                     <tr>
                         <th>E-mail klijent</th>
@@ -719,7 +738,7 @@
                         <th>E-mail primatelja</th>
                     </tr>
                     @foreach (var Opening in Model.PostmarkOpenings.Opens)
-                    {
+                            {
                         <tr>
                             <td>@Opening.Client.Name</td>
                             <td>@Opening.Client.Company</td>

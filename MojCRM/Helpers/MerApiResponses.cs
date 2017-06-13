@@ -22,6 +22,7 @@ namespace MojCRM.Helpers
         public string Adresa { get; set; }
         public string Mjesto { get; set; }
         public string Županija { get; set; }
+        public string IBAN { get; set; }
     }
 
     //CreateTickets

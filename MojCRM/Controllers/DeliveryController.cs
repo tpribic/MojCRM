@@ -36,6 +36,9 @@ namespace MojCRM.Controllers
                           //where t.DocumentStatus == 30
                           select t;
             //var ResultsNew = db.DeliveryTicketModels.AsQueryable();
+            var OpenTickets = from t in db.DeliveryTicketModels
+                              where t.DocumentStatus == 30
+                              select t;
             var TicketsCreatedToday = from t in db.DeliveryTicketModels
                                       where t.InsertDate > DateTime.Today.Date
                                       select t;
@@ -43,8 +46,8 @@ namespace MojCRM.Controllers
                                                where t.InsertDate > DateTime.Today.Date && t.FirstInvoice == true
                                                select t;
 
-            ViewBag.OpenTickets = ResultsNew.Count();
-            ViewBag.OpenTicketsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+            ViewBag.OpenTickets = OpenTickets.Count();
+            ViewBag.OpenTicketsAssigned = OpenTickets.Where(t => t.IsAssigned == true).Count();
             ViewBag.TicketsCreatedToday = TicketsCreatedToday.Count();
             ViewBag.TicketsCreatedTodayAssigned = TicketsCreatedToday.Where(t => t.IsAssigned == true).Count();
             ViewBag.TicketsCreatedTodayFirstTime = TicketsCreatedTodayFirstTime.Count();
@@ -139,9 +142,18 @@ namespace MojCRM.Controllers
 
             if (!String.IsNullOrEmpty(Assigned))
             {
-                ResultsNew = ResultsNew.Where(t => t.IsAssigned == true && t.AssignedTo == User.Identity.Name);
-                ViewBag.SearchResults = ResultsNew.Count();
-                ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+                if (Assigned == "1")
+                {
+                    ResultsNew = ResultsNew.Where(t => t.IsAssigned == true && t.AssignedTo == User.Identity.Name);
+                    ViewBag.SearchResults = ResultsNew.Count();
+                    ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+                }
+                if (Assigned == "2")
+                {
+                    ResultsNew = ResultsNew.Where(t => t.IsAssigned == false);
+                    ViewBag.SearchResults = ResultsNew.Count();
+                    ViewBag.SearchResultsAssigned = ResultsNew.Where(t => t.IsAssigned == true).Count();
+                }
             }
 
             if (!String.IsNullOrEmpty(AssignedTo))
@@ -745,9 +757,9 @@ namespace MojCRM.Controllers
                 OpeningHistoryResponse = JsonConvert.DeserializeObject<MessagesOutboundOpenResponse>(OpeningHistoryRequest);
             }
 
-                var MerUser = (from u in db.Users
-                               where u.UserName == Name
-                               select u.MerUserUsername).First();
+            var MerUser = (from u in db.Users
+                           where u.UserName == Name
+                           select u.MerUserUsername).First();
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
@@ -814,6 +826,10 @@ namespace MojCRM.Controllers
         public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
                                       int _TicketId, int Identifier)
         {
+            int _ContactIdInt = Int32.Parse(_ContactId);
+            var ContactName = (from c in db.Contacts
+                               where c.ContactId == _ContactIdInt
+                               select c).First();
             var InvoiceNumber = (from t in db.DeliveryTicketModels
                                  where t.Id == _TicketId
                                  select t.InvoiceNumber).First();
@@ -828,7 +844,7 @@ namespace MojCRM.Controllers
                         User = _Agent,
                         DetailNote = _DetailNote,
                         InsertDate = DateTime.Now,
-                        Contact = _ContactId,
+                        Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
                         TicketId = _TicketId
                     });
                     db.SaveChanges();
@@ -870,7 +886,7 @@ namespace MojCRM.Controllers
                     User = _Agent,
                     DetailNote = _DetailTemplate,
                     InsertDate = DateTime.Now,
-                    Contact = _ContactId,
+                    Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
                     TicketId = _TicketId
                 });
                 db.SaveChanges();
@@ -883,7 +899,7 @@ namespace MojCRM.Controllers
                     User = _Agent,
                     DetailNote = _DetailTemplate + " - " + _DetailNote,
                     InsertDate = DateTime.Now,
-                    Contact = _ContactId,
+                    Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
                     TicketId = _TicketId
                 });
                 db.SaveChanges();
