@@ -192,14 +192,15 @@ namespace MojCRM.Controllers
             var Organizations = (from o in db.Organizations
                                  select o).AsEnumerable();
 
-            MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments();
-
-            RequestFirstTime.Id = MerUser;
-            RequestFirstTime.Pass = MerPass;
-            RequestFirstTime.Oib = "99999999927";
-            RequestFirstTime.PJ = "";
-            RequestFirstTime.SoftwareId = "MojCRM-001";
-            RequestFirstTime.Type = 1;
+            MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments()
+            {
+                Id = MerUser,
+                Pass = MerPass,
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "Moj-CRM-001",
+                Type = 1
+            };
 
             string MerRequestFirstTime = JsonConvert.SerializeObject(RequestFirstTime);
 
@@ -220,7 +221,6 @@ namespace MojCRM.Controllers
                             SenderId = Result.PosiljateljId,
                             ReceiverId = Result.PrimateljId,
                             InvoiceNumber = Result.InterniBroj,
-                            //MerJson = Result,
                             MerElectronicId = Result.Id,
                             SentDate = Result.DatumOtpreme,
                             MerDocumentTypeId = Result.DokumentTypeId,
@@ -232,14 +232,15 @@ namespace MojCRM.Controllers
                     }
                     else
                     {
-                        MerApiGetSubjekt RequestGetNonexistingSubjekt = new MerApiGetSubjekt();
-
-                        RequestGetNonexistingSubjekt.Id = MerUser.ToString();
-                        RequestGetNonexistingSubjekt.Pass = MerPass.ToString();
-                        RequestGetNonexistingSubjekt.Oib = "99999999927";
-                        RequestGetNonexistingSubjekt.PJ = "";
-                        RequestGetNonexistingSubjekt.SoftwareId = "MojCRM-001";
-                        RequestGetNonexistingSubjekt.SubjektPJ = Result.PrimateljId.ToString();
+                        MerApiGetSubjekt RequestGetNonexistingSubjekt = new MerApiGetSubjekt()
+                        {
+                            Id = MerUser.ToString(),
+                            Pass = MerPass.ToString(),
+                            Oib = "99999999927",
+                            PJ = "",
+                            SoftwareId = "MojCRM-001",
+                            SubjektPJ = Result.PrimateljId.ToString()
+                        };
 
                         string MerRequest = JsonConvert.SerializeObject(RequestGetNonexistingSubjekt);
 
@@ -262,7 +263,6 @@ namespace MojCRM.Controllers
                             SenderId = Result.PosiljateljId,
                             ReceiverId = Result.PrimateljId,
                             InvoiceNumber = Result.InterniBroj,
-                            //MerJson = Result,
                             MerElectronicId = Result.Id,
                             SentDate = Result.DatumOtpreme,
                             MerDocumentTypeId = Result.DokumentTypeId,
@@ -288,14 +288,15 @@ namespace MojCRM.Controllers
                            where u.UserName == Name
                            select u.MerUserPassword).First();
 
-            MerApiGetNondeliveredDocuments RequestRegularDelivery = new MerApiGetNondeliveredDocuments();
-
-            RequestRegularDelivery.Id = MerUser;
-            RequestRegularDelivery.Pass = MerPass;
-            RequestRegularDelivery.Oib = "99999999927";
-            RequestRegularDelivery.PJ = "";
-            RequestRegularDelivery.SoftwareId = "MojCRM-001";
-            RequestRegularDelivery.Type = 2;
+            MerApiGetNondeliveredDocuments RequestRegularDelivery = new MerApiGetNondeliveredDocuments()
+            {
+                Id = MerUser,
+                Pass = MerPass,
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "MojCRM-001",
+                Type = 2
+            };
 
             string MerRequestFirstTime = JsonConvert.SerializeObject(RequestRegularDelivery);
 
@@ -313,7 +314,6 @@ namespace MojCRM.Controllers
                         SenderId = Result.PosiljateljId,
                         ReceiverId = Result.PrimateljId,
                         InvoiceNumber = Result.InterniBroj,
-                        //MerJson = Result,
                         MerElectronicId = Result.Id,
                         SentDate = Result.DatumOtpreme,
                         MerDocumentTypeId = Result.DokumentTypeId,
@@ -396,14 +396,15 @@ namespace MojCRM.Controllers
                                 }
                                 else
                                 {
-                                    MerApiGetSubjekt Request = new MerApiGetSubjekt();
-
-                                    Request.Id = MerUser.ToString();
-                                    Request.Pass = MerPass.ToString();
-                                    Request.Oib = "99999999927";
-                                    Request.PJ = "";
-                                    Request.SoftwareId = "MojCRM-001";
-                                    Request.SubjektPJ = Result.BuyerID;
+                                    MerApiGetSubjekt Request = new MerApiGetSubjekt()
+                                    {
+                                        Id = MerUser.ToString(),
+                                        Pass = MerPass.ToString(),
+                                        Oib = "99999999927",
+                                        PJ = "",
+                                        SoftwareId = "MojCRM-001",
+                                        SubjektPJ = Result.BuyerID
+                                    };
 
                                     string MerRequest = JsonConvert.SerializeObject(Request);
 
@@ -568,14 +569,15 @@ namespace MojCRM.Controllers
                             where o.MerId == ReceiverId && o.SubjectBusinessUnit == ""
                             select o.SubjectName).First();
 
-            MerApiResend Request = new MerApiResend();
-
-            Request.Id = MerUser.ToString();
-            Request.Pass = MerPass.ToString();
-            Request.Oib = "99999999927";
-            Request.PJ = "";
-            Request.SoftwareId = "MojCRM-001";
-            Request.DocumentId = MerElectronicId;
+            MerApiResend Request = new MerApiResend()
+            {
+                Id = MerUser.ToString(),
+                Pass = MerPass.ToString(),
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "MojCRM-001",
+                DocumentId = MerElectronicId
+            };
 
             string MerRequest = JsonConvert.SerializeObject(Request);
 
@@ -638,15 +640,16 @@ namespace MojCRM.Controllers
                                  where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
                                  select t.InvoiceNumber).First();
 
-            MerApiChangeEmail Request = new MerApiChangeEmail();
-
-            Request.Id = MerUser.ToString();
-            Request.Pass = MerPass.ToString();
-            Request.Oib = "99999999927";
-            Request.PJ = "";
-            Request.SoftwareId = "MojCRM-001";
-            Request.DocumentId = _IdInt;
-            Request.Email = _Email;
+            MerApiChangeEmail Request = new MerApiChangeEmail()
+            {
+                Id = MerUser.ToString(),
+                Pass = MerPass.ToString(),
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "MojCRM-001",
+                DocumentId = _IdInt,
+                Email = _Email
+            };
 
             string MerRequest = JsonConvert.SerializeObject(Request);
 
@@ -764,15 +767,16 @@ namespace MojCRM.Controllers
                            where u.UserName == Name
                            select u.MerUserPassword).First();
 
-            MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments();
-
-            RequestGetSentDocuments.Id = MerUser;
-            RequestGetSentDocuments.Pass = MerPass;
-            RequestGetSentDocuments.Oib = "99999999927";
-            RequestGetSentDocuments.PJ = "";
-            RequestGetSentDocuments.SoftwareId = "MojCRM-001";
-            RequestGetSentDocuments.SubjektPJ = receiverId.ToString();
-            RequestGetSentDocuments.Take = 20;
+            MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments()
+            {
+                Id = MerUser,
+                Pass = MerPass,
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "MojCRM-001",
+                SubjektPJ = receiverId.ToString(),
+                Take = 20
+            };
 
             string MerRequest = JsonConvert.SerializeObject(RequestGetSentDocuments);
 
