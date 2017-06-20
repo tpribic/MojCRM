@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using static MojCRM.Models.ActivityLog;
 
 namespace MojCRM.ViewModels
 {
@@ -65,9 +66,38 @@ namespace MojCRM.ViewModels
         [Display(Name = "Broj poslanih e-mailova vezanih za dostavu")]
         public int? NumberDeliveryMail { get; set; }
     }
+    public class CallCenterDailyByDepartment
+    {
+        [Display(Name = "Odjel")]
+        public DepartmentEnum Department { get; set; }
+        [Display(Name = "Zbroj uspješnih poziva")]
+        public int NumberSuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj neuspješnih poziva")]
+        public int NumberUnsuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj ispravaka mailova")]
+        public int? NumberMailchange { get; set; }
+        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi")]
+        public int? NumberResend { get; set; }
+        [Display(Name = "Zbroj poslanih e-mailova vezanih za dostavu")]
+        public int? NumberDeliveryMail { get; set; }
+
+        public string DepartmentString
+        {
+            get
+            {
+                switch (Department)
+                {
+                    case DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                }
+                return "Odjel";
+            }
+        }
+    }
     public class CallCenterDailyStatsViewModel
     {
         public IList<CallCenterDaily> Activities { get; set; }
+        public IList<CallCenterDailyByDepartment> ActivitiesByDepartment { get; set; }
         [Display(Name = "Zbroj uspješnih poziva")]
         public int SumSuccessfulCalls { get; set; }
         [Display(Name = "Zbroj neuspješnih poziva")]

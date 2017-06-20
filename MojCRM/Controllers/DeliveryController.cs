@@ -531,7 +531,7 @@ namespace MojCRM.Controllers
         public ActionResult UpdateAllStatuses()
         {
             var OpenTickets = from t in db.DeliveryTicketModels
-                              where t.DocumentStatus == 30
+                              //where t.DocumentStatus == 30
                               select t;
             var MerLinks = OpenTickets.AsEnumerable();
 
@@ -554,17 +554,26 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Resend/12345
         [Authorize]
-        public ActionResult Resend(int TicketId, int MerElectronicId, int ReceiverId, string Name)
+        public ActionResult Resend(int TicketId, int MerElectronicId, int ReceiverId, string Name, bool IsTicket = true)
         {
+            var InvoiceNumber = "";
             var MerUser = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserUsername).First();
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
-            var InvoiceNumber = (from t in db.DeliveryTicketModels
-                                 where t.MerElectronicId == MerElectronicId
-                                 select t.InvoiceNumber).First();
+
+            if (IsTicket == true)
+            {
+                InvoiceNumber = (from t in db.DeliveryTicketModels
+                                     where t.MerElectronicId == MerElectronicId
+                                     select t.InvoiceNumber).First();
+            }
+            else
+            {
+                InvoiceNumber = null;
+            }
             var Receiver = (from o in db.Organizations
                             where o.MerId == ReceiverId && o.SubjectBusinessUnit == ""
                             select o.SubjectName).First();

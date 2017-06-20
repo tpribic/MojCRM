@@ -77,6 +77,10 @@ namespace MojCRM.Controllers
                                    where a.InsertDate >= DateTime.Today
                                    group a by a.User into ga
                                    select ga).ToList();
+            var DepartmentActivities = (from a in db.ActivityLogs
+                                        where a.InsertDate >= DateTime.Today
+                                        group a by a.Department into ga
+                                        select ga).ToList();
             var SuccessfulCalls = (from a in db.ActivityLogs
                                    where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT
                                    select a);
@@ -93,6 +97,7 @@ namespace MojCRM.Controllers
                                 where a.ActivityType == ActivityLog.ActivityTypeEnum.DELMAIL
                                 select a);
             var Activities = new List<CallCenterDaily>();
+            var ActivitiesByDepartment = new List<CallCenterDailyByDepartment>();
 
             if (!String.IsNullOrEmpty(SearchDate))
             {
@@ -107,6 +112,10 @@ namespace MojCRM.Controllers
                                    where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
                                    group a by a.User into ga
                                    select ga).ToList();
+                DepartmentActivities = (from a in db.ActivityLogs
+                                        where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
+                                        group a by a.Department into ga
+                                        select ga).ToList();
                 foreach (var Day in AgentActivities)
                 {
                     var dailyActivities = new CallCenterDaily
@@ -119,6 +128,19 @@ namespace MojCRM.Controllers
                         NumberDeliveryMail = DeliveryMail.Where(a => a.User == Day.Key).Count()
                     };
                     Activities.Add(dailyActivities);
+                }
+                foreach (var Department in DepartmentActivities)
+                {
+                    var dailyActivitiesByDepartment = new CallCenterDailyByDepartment
+                    {
+                        Department = Department.Key,
+                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
+                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
+                        NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
+                        NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
+                        NumberDeliveryMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                    };
+                    ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
                 }
             }
             else
@@ -141,11 +163,25 @@ namespace MojCRM.Controllers
                     };
                     Activities.Add(dailyActivities);
                 }
+                foreach (var Department in DepartmentActivities)
+                {
+                    var dailyActivitiesByDepartment = new CallCenterDailyByDepartment
+                    {
+                        Department = Department.Key,
+                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
+                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
+                        NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
+                        NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
+                        NumberDeliveryMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                    };
+                    ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
+                }
             }
 
             var model = new CallCenterDailyStatsViewModel
             {
                 Activities = Activities,
+                ActivitiesByDepartment = ActivitiesByDepartment,
                 SumSuccessfulCalls = SuccessfulCalls.Count(),
                 SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
                 SumMailchange = MailChange.Count(),

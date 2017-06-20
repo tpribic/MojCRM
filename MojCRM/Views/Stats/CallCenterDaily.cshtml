@@ -48,38 +48,65 @@
             </tr>
         </table>
     </div>
+    <br />
     <hr />
-    <h3 style="text-align:center"><strong>Statistika po agentima</strong></h3>
+    <h3 style="text-align:center"><strong>Statistika po odjelima</strong></h3>
     <div>
         <table class="table">
             <tr>
-                <th>Agent</th>
+                <th>Odjel</th>
                 <th>Broj uspješnih poziva</th>
                 <th>Broj neuspješnih poziva</th>
                 <th>Broj ispravaka mailova</th>
                 <th>Broj ponovno poslanih obavijesti o dostavi</th>
                 <th>Broj poslanih e-mailova vezanih za dostavu</th>
             </tr>
-            @foreach (var Activity in Model.Activities)
+            @foreach (var Department in Model.ActivitiesByDepartment)
             {
                 <tr>
-                    <td>@Activity.Agent</td>
-                    <td>@Activity.NumberSuccessfulCalls</td>
-                    <td>@Activity.NumberUnsuccessfulCalls</td>
-                    <td>@Activity.NumberMailchange</td>
-                    <td>@Activity.NumberResend</td>
-                    <td>@Activity.NumberDeliveryMail</td>
+                    <td>@Department.DepartmentString</td>
+                    <td>@Department.NumberSuccessfulCalls</td>
+                    <td>@Department.NumberUnsuccessfulCalls</td>
+                    <td>@Department.NumberMailchange</td>
+                    <td>@Department.NumberResend</td>
+                    <td>@Department.NumberDeliveryMail</td>
                 </tr>
             }
-            <tr>
-            </tr>
+            <tr></tr>
         </table>
-        @*<div class="col-md-6">
-            <div>
-                <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
-            </div>
-            <hr />
-        </div>*@
     </div>
+    <br />
+        <hr />
+        <h3 style="text-align:center"><strong>Statistika po agentima</strong></h3>
+        <div>
+            <table class="table">
+                <tr>
+                    <th>Agent</th>
+                    <th>Broj uspješnih poziva</th>
+                    <th>Broj neuspješnih poziva</th>
+                    <th>Broj ispravaka mailova</th>
+                    <th>Broj ponovno poslanih obavijesti o dostavi</th>
+                    <th>Broj poslanih e-mailova vezanih za dostavu</th>
+                </tr>
+                @foreach (var Activity in Model.Activities)
+            {
+                    <tr>
+                        <td>@Activity.Agent</td>
+                        <td>@Activity.NumberSuccessfulCalls</td>
+                        <td>@Activity.NumberUnsuccessfulCalls</td>
+                        <td>@Activity.NumberMailchange</td>
+                        <td>@Activity.NumberResend</td>
+                        <td>@Activity.NumberDeliveryMail</td>
+                    </tr>
+                }
+                <tr></tr>
+            </table>
+            @*<div class="col-md-6">
+                    <div>
+                        <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
+                    </div>
+                    <hr />
+                </div>*@
+        </div>
 </body>
 
