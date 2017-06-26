@@ -89,15 +89,16 @@ namespace MojCRM.Helpers
                     case 1: return "eRačun";
                     case 3: return "Storno";
                     case 4: return "eOpomena";
-                    case 6: return "ePrimka - tip 6";
+                    case 6: return "ePrimka (tip 6)";
                     case 7: return "eOdgovor";
                     case 105: return "eNarudžba";
                     case 226: return "eOpoziv";
                     case 230: return "eIzmjena";
                     case 231: return "eOdgovorN";
-                    case 351: return "eOtpremnica";
+                    case 351: return "eOtrpemnica";
                     case 381: return "eOdobrenje";
                     case 383: return "eTerećenje";
+                    case 632: return "ePrimka";
                 }
                 return "Tip dokumenta";
             }

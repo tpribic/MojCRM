@@ -531,7 +531,7 @@ namespace MojCRM.Controllers
         public ActionResult UpdateAllStatuses()
         {
             var OpenTickets = from t in db.DeliveryTicketModels
-                              //where t.DocumentStatus == 30
+                              where t.DocumentStatus != 40
                               select t;
             var MerLinks = OpenTickets.AsEnumerable();
 
@@ -685,6 +685,28 @@ namespace MojCRM.Controllers
             return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
         }
 
+        // GET: Delivery/ChangeEmailNoTicket
+        [Authorize]
+        public ActionResult ChangeEmailNoTicket(int MerElectronicId, int ReceiverId, string OldEmail, int TicketId, string Agent)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var Model = new ChangeEmailNoTicket()
+                {
+                    MerElectronicId = MerElectronicId,
+                    ReceiverId = ReceiverId,
+                    OldEmail = OldEmail,
+                    TicketId = TicketId,
+                    Agent = Agent
+                };
+                return PartialView("_ChangeEmailPartial", Model);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         // POST Delivery/Remove/1125768
         [HttpPost]
         public JsonResult Remove(int MerElectronicId, int TicketId)
@@ -759,15 +781,28 @@ namespace MojCRM.Controllers
                                       where a.ReferenceId == id
                                       select a).AsEnumerable().OrderByDescending(a => a.Id);
 
+            #region Postmark API
             MessagesOutboundOpenResponse OpeningHistoryResponse;
-            string PostmarkLink = @"https://api.postmarkapp.com/messages/outbound/opens?count=20&offset=0&recipient=" + deliveryTicketModel.BuyerEmail;
+            BouncesResponse Bounces;
+            string PostmarkLinkOpeningHistory = @"https://api.postmarkapp.com/messages/outbound/opens?count=20&offset=0&recipient=" + deliveryTicketModel.BuyerEmail;
+            string PostmarkBounces = @"https://api.postmarkapp.com/bounces?count=20&offset=0&emailFilter=" + deliveryTicketModel.BuyerEmail;
             using (var Postmark = new WebClient())
             {
-                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
                 Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
-                var OpeningHistoryRequest = Postmark.DownloadString(PostmarkLink);
+                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var OpeningHistoryRequest = Postmark.DownloadString(PostmarkLinkOpeningHistory);
                 OpeningHistoryResponse = JsonConvert.DeserializeObject<MessagesOutboundOpenResponse>(OpeningHistoryRequest);
             }
+
+            using (var Postmark = new WebClient())
+            {
+                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var BouncesRequest = Postmark.DownloadString(PostmarkBounces);
+                Bounces = JsonConvert.DeserializeObject<BouncesResponse>(BouncesRequest);
+            }
+            #endregion
+
 
             var MerUser = (from u in db.Users
                            where u.UserName == Name
@@ -820,8 +855,9 @@ namespace MojCRM.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory.Where(i => i.DokumentStatusId != 10).AsEnumerable(),
-                    PostmarkOpenings = OpeningHistoryResponse
+                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (i.DokumentTypeId != 6 && i.DokumentTypeId != 632)).AsEnumerable(),
+                    PostmarkOpenings = OpeningHistoryResponse,
+                    PostmarkBounces = Bounces
                 };
 
                 return View(DeliveryDetails);
@@ -1198,6 +1234,35 @@ namespace MojCRM.Controllers
                     db.SaveChanges();
                 }
             }
+            return Json(new { Status = "OK" });
+        }
+
+        // POST: Delivery/PostmarkActivateBounce
+        [HttpPost]
+        public JsonResult PostmarkActivateBounce(int BounceId, int TicketId, string Agent)
+        {
+            ActivateBounceResponse ActivateResponse;
+            string ActivateLink = String.Format(@"https://api.postmarkapp.com/bounces/" + BounceId + "/activate");
+
+            using (var Postmark = new WebClient())
+            {
+                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var Response = Postmark.UploadString(ActivateLink, "PUT", ActivateLink);
+                ActivateResponse = JsonConvert.DeserializeObject<ActivateBounceResponse>(Response);
+
+                db.ActivityLogs.Add(new ActivityLog
+                {
+                    Description = Agent + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
+                    User = Agent,
+                    ReferenceId = TicketId,
+                    ActivityType = ActivityLog.ActivityTypeEnum.POSTMARKACTIVATEBOUNCE,
+                    Department = ActivityLog.DepartmentEnum.Delivery,
+                    InsertDate = DateTime.Now,
+                });
+                db.SaveChanges();
+            }
+
             return Json(new { Status = "OK" });
         }
     }

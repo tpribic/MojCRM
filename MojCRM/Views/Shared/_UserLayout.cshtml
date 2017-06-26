@@ -43,12 +43,12 @@
             <form class="form-inline">
                 <div class="row" style="padding-top:6px; margin-top:6px">
                     <div class="col-md-12">
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-default btn-sm">
                             <i class="fa fa-home"></i>
                             Početna
                         </a>
                         <div class="btn-group dropdown">
-                            <a data-target="listsDropdownMenu" class="btn btn-default dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#listsDropdownMenu"><i class="fa fa-list"></i> Popisi <span class="caret"></span></a>
+                            <a data-target="listsDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#listsDropdownMenu"><i class="fa fa-list"></i> Popisi <span class="caret"></span></a>
                             <ul id="listsDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="listsDropdownMenu">
                                 <li><a href="@Url.Action("Index", "Organizations")"><i class="fa fa-industry"></i> Tvrtke</a></li>
                                 <li><a href="@Url.Action("Index", "Contacts")"><i class="fa fa-vcard"></i> Kontakti</a></li>
@@ -57,7 +57,7 @@
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <div class="btn-group dropdown">
-                                <a data-target="deliveryDropdownMenu" class="btn btn-default dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#deliveryDropdownMenu"><i class="fa fa-wrench"></i> Podrška <span class="caret"></span></a>
+                                <a data-target="deliveryDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#deliveryDropdownMenu"><i class="fa fa-wrench"></i> Podrška <span class="caret"></span></a>
                                 <ul id="deliveryDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="deliveryDropdown">
                                     <li class="dropdown-header" style="color:cornflowerblue"><strong>Dostava eRačuna</strong></li>
                                     <li><a href="@Url.Action("Index", "Delivery")"><i class="fa fa-ticket"></i> Kartice</a></li>
@@ -69,13 +69,13 @@
                                 </ul>
                             </div>
                         }
-                        <a href="@Url.Action("Index", "Stats")" class="btn btn-default">
+                        <a href="@Url.Action("Index", "Stats")" class="btn btn-default btn-sm">
                             <i class="fa fa-book"></i>
                             Izvještaji
                         </a>
                         @if (User.IsInRole("Superadmin"))
                         {
-                            <a href="@Url.Action("Index", "Administration")" class="btn btn-default">
+                            <a href="@Url.Action("Index", "Administration")" class="btn btn-default btn-sm">
                                 <i class="fa fa-cogs"></i>
                                 Administracija sustava
                             </a>
