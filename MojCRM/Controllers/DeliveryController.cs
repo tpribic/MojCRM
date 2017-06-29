@@ -181,6 +181,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/CreateTicketsFirstTime
         // Kreiranje kartica za prvo preuzimanje
+        [Authorize(Roles = "Superadmin")]
         public void CreateTicketsFirstTime(string Name)
         {
             var MerUser = (from u in db.Users
@@ -198,7 +199,7 @@ namespace MojCRM.Controllers
                 Pass = MerPass,
                 Oib = "99999999927",
                 PJ = "",
-                SoftwareId = "Moj-CRM-001",
+                SoftwareId = "MojCRM-001",
                 Type = 1
             };
 
@@ -279,6 +280,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/CreateTickets
         // Kreiranje kartica za redovito preuzimanje
+        [Authorize(Roles = "Superadmin")]
         public void CreateTickets(string Name)
         {
             var MerUser = (from u in db.Users
@@ -531,7 +533,7 @@ namespace MojCRM.Controllers
         public ActionResult UpdateAllStatuses()
         {
             var OpenTickets = from t in db.DeliveryTicketModels
-                              where t.DocumentStatus != 40
+                              where (t.DocumentStatus != 40 || t.DocumentStatus != 55)
                               select t;
             var MerLinks = OpenTickets.AsEnumerable();
 
@@ -687,24 +689,47 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/ChangeEmailNoTicket
         [Authorize]
-        public ActionResult ChangeEmailNoTicket(int MerElectronicId, int ReceiverId, string OldEmail, int TicketId, string Agent)
+        public ActionResult ChangeEmailNoTicket(int MerElectronicId, int ReceiverId, string Email, string OldEmail, int TicketId, string Agent, string InvoiceNumber)
         {
-            if (Request.IsAjaxRequest())
+            var MerUser = (from u in db.Users
+                           where u.UserName == Agent
+                           select u.MerUserUsername).First();
+            var MerPass = (from u in db.Users
+                           where u.UserName == Agent
+                           select u.MerUserPassword).First();
+
+            MerApiChangeEmail Request = new MerApiChangeEmail()
             {
-                var Model = new ChangeEmailNoTicket()
-                {
-                    MerElectronicId = MerElectronicId,
-                    ReceiverId = ReceiverId,
-                    OldEmail = OldEmail,
-                    TicketId = TicketId,
-                    Agent = Agent
-                };
-                return PartialView("_ChangeEmailPartial", Model);
-            }
-            else
+                Id = MerUser.ToString(),
+                Pass = MerPass.ToString(),
+                Oib = "99999999927",
+                PJ = "",
+                SoftwareId = "MojCRM-001",
+                DocumentId = MerElectronicId,
+                Email = Email
+            };
+
+            string MerRequest = JsonConvert.SerializeObject(Request);
+
+            using (var Mer = new WebClient())
             {
-                return View();
+                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
+
+            db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + Email + " i ponovno poslao obavijest za dokument broj: " + InvoiceNumber,
+                User = Agent,
+                ReferenceId = TicketId,
+                ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
+                Department = ActivityLog.DepartmentEnum.Delivery,
+                InsertDate = DateTime.Now,
+            });
+            db.SaveChanges();
+
+            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
         }
 
         // POST Delivery/Remove/1125768

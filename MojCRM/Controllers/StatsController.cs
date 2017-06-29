@@ -28,27 +28,33 @@ namespace MojCRM.Controllers
                            select u).AsEnumerable();
             var _Activities = (from a in db.ActivityLogs
                                select a).ToList();
+            var searchDate = Convert.ToDateTime(SearchDate);
+            var searchDatePlus = searchDate.AddDays(1);
+
+            _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)).ToList();
+            var _DistinctDepartments = (from a in db.ActivityLogs
+                                        where (a.User == Name) && (a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)
+                                        select a.Department).Distinct().Count();
+            ViewBag.DistinctDepartments = _DistinctDepartments;
+            ViewBag.Date = ReferenceDate.ToShortDateString();
 
             if (!String.IsNullOrEmpty(SearchDate))
             {
-                var searchDate = Convert.ToDateTime(SearchDate);
-                var searchDatePlus = searchDate.AddDays(1);
-                _Activities = _Activities.Where(a => ((a.User == Name) || (a.User == Agent)) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
-                var _DistinctDepartments = (from a in db.ActivityLogs
-                                            where ((a.User == Name) || (a.User == Agent)) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
-                                            select a.Department).Distinct().Count();
+                _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
+                _DistinctDepartments = (from a in db.ActivityLogs
+                                        where (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
+                                        select a.Department).Distinct().Count();
                 ViewBag.Date = searchDate.ToShortDateString();
                 ViewBag.DistinctDepartments = _DistinctDepartments;
             }
-            else
+            if (!String.IsNullOrEmpty(SearchDate) && !String.IsNullOrEmpty(Agent))
             {
-                _Activities = _Activities.Where(a => ((a.User == Name) || (a.User == Agent)) && (a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)).ToList();
-                var _DistinctDepartments = (from a in db.ActivityLogs
-                                            where ((a.User == Name) || (a.User == Agent)) && (a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)
-                                            select a.Department).Distinct().Count();
+                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
+                _DistinctDepartments = (from a in db.ActivityLogs
+                                        where (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
+                                        select a.Department).Distinct().Count();
                 ViewBag.DistinctDepartments = _DistinctDepartments;
                 ViewBag.Date = ReferenceDate.ToShortDateString();
-                
             }
 
             if (!String.IsNullOrEmpty(Agent))

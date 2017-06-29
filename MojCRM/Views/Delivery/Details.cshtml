@@ -349,9 +349,12 @@
                             <div class="col-md-12">
                                 <div id="delivery-email">
                                     <label for="delivery-email">@Html.DisplayNameFor(model => model.ReceiverEmail)</label>
-                                    @Html.DisplayFor(model => model.ReceiverEmail)
+                                    <div id="old-email">
+                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverEmail, @disabled = "disabled" })
+                                    </div>
                                 </div>
                             </div>
+                            <br />
                             <br />
                             <div class="col-md-12">
                                 <div id="delivery-new-email">
@@ -515,7 +518,7 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, MerElectronicId = Document.Id, Model.ReceiverId, User.Identity.Name, IsTicket = false, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i></a>
-                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" data-receiver-id="@Html.Raw(Model.ReceiverId)" onclick="javascript: ChangeEmailNoTicket()"><i class="glyphicon glyphicon-envelope"></i></a>
+                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
                                     </div>
                                 </td>
                             }
@@ -808,6 +811,69 @@
     </div>
 </div>
 
+<!--Modal - ChangeEmailNoTicket-->
+@using (Html.BeginForm("ChangeEmailNoTicket", "Delivery", FormMethod.Post))
+{
+    <div class="modal fade" id="ChangeEmailNoTicket" tabindex="-1" role="dialog" aria-labelledby="ChangeEmailNoTicket">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni e-mail adresu za dostavu dokumenta</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row hidden">
+                            <div>
+                                <div id="delivery-detail-receiver">
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = "" })
+                                </div>
+                            </div>
+                            <div>
+                                <div id="delivery-detail-user">
+                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="delivery-email">
+                                    <label for="old-email">E-mail adresa primatelja:</label>
+                                    <div id="old-email">
+                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = "", @id = "delivery-email", @disabled = "disabled" })
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-md-12">
+                                <div id="delivery-new-email">
+                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-ticketid">
+                                    @Html.TextBox("MerElectronicId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Id", @Value = "" })
+                                </div>
+                                <div id="delivery-detail-ticketid">
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_TicketId", @Value = "" })
+                                </div>
+                                <div id="invoice-number">
+                                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "InvoiceNumber", @Value = "" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Izmijeni adresu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <h2 style="text-align:center"><strong>Detalji za preuzimanje dokumenta: @Html.DisplayFor(model => model.MerDocumentTypeIdString) @Model.InvoiceNumber (@Model.DocumentStatusString)</strong></h2>
 <br />
 @if (Model.IsAssigned == true)
@@ -901,8 +967,7 @@
         </div>
     </div>
 </div>
-<div>
-    @Html.Partial("_ChangeEmailPartial", new ChangeEmailNoTicket());
+<div id="change-email-noticket">    
 </div>
 <hr />
 <script>
@@ -1031,27 +1096,20 @@
                 window.location.reload(true)
             });
         };
-        function ChangeEmailNoTicket() {
-            $(document).on("click", "#changeEmailNoTicket", function (e) {
+
+    function ChangeEmailNoTicket() {
+        $(document).on("click", "#changeEmailNoTicket", function (e) {
                 e.preventDefault();
-                $.ajax({
-                    method: 'GET',
-                    url: '@Url.RouteUrl(new { action = "ChangeEmailNoTicket", controller = "Delivery", area = "" })',
-                    data: {
-                        MerElectronicId: $(this).data("mer-id"),
-                        ReceiverId: $(this).data("receiver-id"),
-                        OldEmail: $(this).data("old-email"),
-                        TicketId: $(this).data("ticket-id"),
-                        Agent: $(this).data("agent")
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.Status === 'OK')
-                            $("#_ChangeEmailPartial.cshtml").modal('show');
-                        else
-                            alert("Greška!");
-                    }
-                });
+                var MerElectronicId = $(this).data("mer-id");
+                var ReceiverId = $(this).data("receiver-id");
+                var OldEmail = $(this).data("old-email");
+                var TicketId = $(this).data("ticket-id");
+                var InvoiceNumber = $(this).data("invoice-number");
+                $(".changeEmail #_Receiver").val(ReceiverId);
+                $(".changeEmail #delivery-email").val(OldEmail);
+                $(".changeEmail #_Id").val(MerElectronicId);
+                $(".changeEmail #_TicketId").val(TicketId);
+                $(".changeEmail #InvoiceNumber").val(InvoiceNumber);
             });
         };
 </script>
