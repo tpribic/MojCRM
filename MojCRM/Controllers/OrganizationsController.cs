@@ -44,10 +44,15 @@ namespace MojCRM.Controllers
             var ReferencedId = (from o in db.Organizations
                                orderby o.MerId descending
                                select o.MerId).First();
+            var Response = new MerGetSubjektDataResponse()
+            {
+                Id = 238,
+                Naziv = "Test Klising d.o.o."
+            };
             ReferencedId++;
             try
             {
-                while (ReferencedId > 0)
+                while (Response != null)
                 {
                     MerApiGetSubjekt Request = new MerApiGetSubjekt();
 
@@ -64,24 +69,35 @@ namespace MojCRM.Controllers
                     {
                         Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
                         Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
-                        var Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
-                        //Response = Response.Replace("[", "").Replace("]", "");
-                        MerGetSubjektDataResponse [] Result = JsonConvert.DeserializeObject<MerGetSubjektDataResponse[]>(Response);
+                        var _Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
+                        _Response = _Response.Replace("[", "").Replace("]", "");
+                        MerGetSubjektDataResponse Result = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(_Response);
                         db.Organizations.Add(new Organizations
                         {
-                            MerId = Result[0].Id,
-                            SubjectName = Result[0].Naziv,
-                            SubjectBusinessUnit = Result[0].PoslovnaJedinica,
-                            VAT = Result[0].Oib
+                            MerId = Result.Id,
+                            SubjectName = Result.Naziv,
+                            SubjectBusinessUnit = Result.PoslovnaJedinica,
+                            VAT = Result.Oib
                         });
                         db.SaveChanges();
+                        Result = Response;
                     }
                     ReferencedId++;
                 }
             }
-            catch (Exception)
+            catch (NullReferenceException e)
             {
-                throw;
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Organizations - GetOrganizations",
+                    Parameters = ReferencedId.ToString(),
+                    Message = @"Greška kod preuzimanja podataka o tvrtki",
+                    InnerException = e.InnerException.ToString(),
+                    Request = e.Source,
+                    User = Name,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
             }
         }
 

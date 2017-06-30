@@ -190,8 +190,6 @@ namespace MojCRM.Controllers
             var MerPass = (from u in db.Users
                            where u.UserName == Name
                            select u.MerUserPassword).First();
-            var Organizations = (from o in db.Organizations
-                                 select o).AsEnumerable();
 
             MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments()
             {
@@ -214,67 +212,21 @@ namespace MojCRM.Controllers
                 MerGetNondeliveredDocumentsResponse[] ResultsFirstTime = JsonConvert.DeserializeObject<MerGetNondeliveredDocumentsResponse[]>(ResponseFirstTime);
                 foreach (var Result in ResultsFirstTime)
                 {
-                    bool ExistingOrganization = Organizations.Any(o => o.MerId == Result.PrimateljId);
-                    if (ExistingOrganization)
+                    db.DeliveryTicketModels.Add(new Delivery
                     {
-                        db.DeliveryTicketModels.Add(new Delivery
-                        {
-                            SenderId = Result.PosiljateljId,
-                            ReceiverId = Result.PrimateljId,
-                            InvoiceNumber = Result.InterniBroj,
-                            MerElectronicId = Result.Id,
-                            SentDate = Result.DatumOtpreme,
-                            MerDocumentTypeId = Result.DokumentTypeId,
-                            DocumentStatus = 30,
-                            InsertDate = DateTime.Now,
-                            BuyerEmail = Result.EmailPrimatelja,
-                            FirstInvoice = true,
-                        });
-                    }
-                    else
-                    {
-                        MerApiGetSubjekt RequestGetNonexistingSubjekt = new MerApiGetSubjekt()
-                        {
-                            Id = MerUser.ToString(),
-                            Pass = MerPass.ToString(),
-                            Oib = "99999999927",
-                            PJ = "",
-                            SoftwareId = "MojCRM-001",
-                            SubjektPJ = Result.PrimateljId.ToString()
-                        };
-
-                        string MerRequest = JsonConvert.SerializeObject(RequestGetNonexistingSubjekt);
-
-                        Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                        Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
-                        var ResponseNonExistingSubjekt = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
-                        ResponseNonExistingSubjekt = ResponseNonExistingSubjekt.Replace("[", "").Replace("]", "");
-                        MerGetSubjektDataResponse ResultNonExistingSubjekt = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(ResponseNonExistingSubjekt);
-                        db.Organizations.Add(new Organizations
-                        {
-                            MerId = ResultNonExistingSubjekt.Id,
-                            SubjectName = ResultNonExistingSubjekt.Naziv,
-                            SubjectBusinessUnit = ResultNonExistingSubjekt.PoslovnaJedinica,
-                            VAT = ResultNonExistingSubjekt.Oib
-                        });
-                        db.SaveChanges();
-
-                        db.DeliveryTicketModels.Add(new Delivery
-                        {
-                            SenderId = Result.PosiljateljId,
-                            ReceiverId = Result.PrimateljId,
-                            InvoiceNumber = Result.InterniBroj,
-                            MerElectronicId = Result.Id,
-                            SentDate = Result.DatumOtpreme,
-                            MerDocumentTypeId = Result.DokumentTypeId,
-                            DocumentStatus = 30,
-                            InsertDate = DateTime.Now,
-                            BuyerEmail = Result.EmailPrimatelja,
-                            FirstInvoice = true,
-                        });
-                    }
-                    db.SaveChanges();
+                        SenderId = Result.PosiljateljId,
+                        ReceiverId = Result.PrimateljId,
+                        InvoiceNumber = Result.InterniBroj,
+                        MerElectronicId = Result.Id,
+                        SentDate = Result.DatumOtpreme,
+                        MerDocumentTypeId = Result.DokumentTypeId,
+                        DocumentStatus = 30,
+                        InsertDate = DateTime.Now,
+                        BuyerEmail = Result.EmailPrimatelja,
+                        FirstInvoice = true,
+                    });
                 }
+                db.SaveChanges();
             }
         }
 

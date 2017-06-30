@@ -23,6 +23,15 @@ namespace MojCRM.Models
         [Display(Name = "Poslovna jedinica")]
         public string SubjectBusinessUnit { get; set; }
 
+        [Display(Name = "Prvi primljeni dokument")]
+        public DateTime? FirstReceived { get; set; }
+
+        [Display(Name = "Broj zaposlenih")]
+        public int? Employees { get; set; }
+
+        [Display(Name = "Ukupan godišnji prihod")]
+        public decimal? Income { get; set; }
+
         public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual MerDeliveryDetails MerDeliveryDetail { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }

@@ -54,7 +54,7 @@ namespace MojCRM.Controllers
                                         where (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
                                         select a.Department).Distinct().Count();
                 ViewBag.DistinctDepartments = _DistinctDepartments;
-                ViewBag.Date = ReferenceDate.ToShortDateString();
+                ViewBag.Date = searchDate.ToShortDateString();
             }
 
             if (!String.IsNullOrEmpty(Agent))
