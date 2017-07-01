@@ -26,11 +26,20 @@ namespace MojCRM.Models
         [Display(Name = "Prvi primljeni dokument")]
         public DateTime? FirstReceived { get; set; }
 
+        [Display(Name = "Prvi poslani dokument")]
+        public DateTime? FirstSent { get; set; }
+
         [Display(Name = "Broj zaposlenih")]
         public int? Employees { get; set; }
 
         [Display(Name = "Ukupan godišnji prihod")]
         public decimal? Income { get; set; }
+
+        [Display(Name = "Datum unosa")]
+        public DateTime? InsertDate { get; set; }
+
+        [Display(Name = "Datum izmijene")]
+        public DateTime? UpdateDate { get; set; }
 
         public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual MerDeliveryDetails MerDeliveryDetail { get; set; }

@@ -115,6 +115,37 @@
         </tr>
     }
 </table>
+<!--Test-->
+@*<div class="panel">
+    <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>Datum slanja dokumenta</th>
+                <th>Broj kreiranih kartica</th>
+                <th>Broj kreiranih kartica za prvi put</th>
+                <th>Broj dodijeljenih kartica</th>
+                <th>Dodijeli agentu</th>
+            </tr>
+            @foreach (var item in Model.Deliveries)
+            {
+                <tr>
+                    <td>@Html.CheckBox("checkbox", true, new { item.ReferenceDate, @class = "checked", @id = "checkbox", @Value = item.ReferenceDate.ToShortDateString() })</td>
+                    <td id="sent-date" date-value="@item.ReferenceDate.ToString("O")">@item.ReferenceDate.ToShortDateString()</td>
+                    <td>@item.CreatedTicketsCount</td>
+                    <td>@item.CreatedTicketsFirstTimeCount</td>
+                    <td>@item.AssignedToCount</td>
+                    <td>@Html.DropDownList("AssignTo", Model.Agents, new { @class = "form-control", @id = "agent" })</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="panel-footer">
+        <button id="assign" type="submit" class="btn btn-primary" title="Dodijeli kartice po definiranom rasporedu" onclick="javascript: AssignManagement()">Dodijeli</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Isključi pregled</button>
+    </div>
+</div>*@
+<!--Test-->
 <script>
     function AssignManagement() {
         $(document).on("click", "#assign", function (e) {
@@ -136,7 +167,7 @@
             data: things,
             success: function () {
                 if (data.Status === 'OK')
-                    alert("Kartica Vam je dodijeljenja!");
+                    alert("Kartica su dodijeljene po rasporedu!");
                 else
                     alert("Greška!");
             },

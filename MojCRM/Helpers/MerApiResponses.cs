@@ -23,6 +23,11 @@ namespace MojCRM.Helpers
         public string Mjesto { get; set; }
         public string Županija { get; set; }
         public string IBAN { get; set; }
+        public int? TotalReceived { get; set; }
+        public int? TotalSent { get; set; }
+        public DateTime? FirstReceived { get; set; }
+        public DateTime? FirstSent { get; set; }
+        public int ServiceProviderId { get; set; }
     }
 
     //CreateTickets

@@ -1187,7 +1187,7 @@ namespace MojCRM.Controllers
                 {
                     var _sentDate = Convert.ToDateTime(Assign.SentDate);
                     var TicketsForAssing = (from t in db.DeliveryTicketModels
-                                            where (t.InsertDate == DateTime.Today) && (t.SentDate == _sentDate)
+                                            where (t.InsertDate >= DateTime.Today) && (t.SentDate >= _sentDate)
                                             select t).AsEnumerable();
                     foreach (var Ticket in TicketsForAssing)
                     {
