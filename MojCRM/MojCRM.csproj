@@ -300,6 +300,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Campaigns\CampaignsAreaRegistration.cs" />
+    <Compile Include="Areas\Campaigns\Controllers\CampaignsController.cs" />
+    <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
+    <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -446,6 +450,10 @@
     <Compile Include="Migrations\201707012140368_Jul1OrganizationsUpdate.Designer.cs">
       <DependentUpon>201707012140368_Jul1OrganizationsUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.cs" />
+    <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.Designer.cs">
+      <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -568,6 +576,12 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Areas\Campaigns\Views\web.config" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Create.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Delete.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Details.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Edit.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Index.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -679,9 +693,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Support\Controllers\" />
-    <Folder Include="Areas\Support\Models\" />
-    <Folder Include="Areas\Support\Views\" />
+    <Folder Include="Areas\Campaigns\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -768,6 +780,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707012140368_Jul1OrganizationsUpdate.resx">
       <DependentUpon>201707012140368_Jul1OrganizationsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707021939062_Jul2UpdateCampaigns.resx">
+      <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
