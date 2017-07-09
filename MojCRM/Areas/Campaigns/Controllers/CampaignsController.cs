@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Models;
+using MojCRM.Areas.Campaigns.ViewModels;
 
 namespace MojCRM.Areas.Campaigns.Controllers
 {
@@ -19,7 +20,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
         public ActionResult Index()
         {
             var campaigns = db.Campaigns.Include(c => c.RelatedCompany);
-            return View(campaigns.ToList());
+            return View(campaigns.ToList().OrderByDescending(c => c.InsertDate));
         }
 
         // GET: Campaigns/Campaigns/Details/5
@@ -40,7 +41,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
         // GET: Campaigns/Campaigns/Create
         public ActionResult Create()
         {
-            ViewBag.RelatedCompanyId = new SelectList(db.Organizations, "MerId", "VAT");
+            //ViewBag.RelatedCompanyId = new SelectList(db.Organizations.Where(o => o.SubjectBusinessUnit == ""), "MerId", "SubjectName");
             return View();
         }
 
@@ -49,7 +50,8 @@ namespace MojCRM.Areas.Campaigns.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CampaignId,CampaignName,CampaignDescription,CampaignInitiatior,RelatedCompanyId,CampaignType,CampaignStatus,CampaignStartDate,CampaignPlannedEndDate,CampaignEndDate,InsertDate,UpdateDate")] Campaign campaign)
+        [Obsolete]
+        public ActionResult CreateOld([Bind(Include = "CampaignId,CampaignName,CampaignDescription,CampaignInitiatior,RelatedCompanyId,CampaignType,CampaignStatus,CampaignStartDate,CampaignPlannedEndDate,CampaignEndDate,InsertDate,UpdateDate")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {
@@ -60,6 +62,28 @@ namespace MojCRM.Areas.Campaigns.Controllers
 
             ViewBag.RelatedCompanyId = new SelectList(db.Organizations, "MerId", "VAT", campaign.RelatedCompanyId);
             return View(campaign);
+        }
+
+        // POST: Campaigns/Campaigns/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CreateCampaign Model)
+        {
+            db.Campaigns.Add(new Campaign
+            {
+                CampaignName = Model.CampaignName,
+                CampaignDescription = Model.CampaignDescription,
+                CampaignInitiatior = User.Identity.Name,
+                RelatedCompanyId = 111955,
+                CampaignType = Model.CampaignType,
+                CampaignStatus = Campaign.CampaignStatusEnum.START,
+                CampaignStartDate = Model.CampaignStartDate,
+                CampaignPlannedEndDate = Model.CampaignPlannedEndDate,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Campaigns/Campaigns/Edit/5
@@ -74,7 +98,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RelatedCompanyId = new SelectList(db.Organizations, "MerId", "VAT", campaign.RelatedCompanyId);
+            //ViewBag.RelatedCompanyId = new SelectList(db.Organizations, "MerId", "VAT", campaign.RelatedCompanyId);
             return View(campaign);
         }
 

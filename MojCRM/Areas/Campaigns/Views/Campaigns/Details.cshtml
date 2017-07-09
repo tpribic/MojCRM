@@ -1,14 +1,14 @@
 ﻿@model MojCRM.Areas.Campaigns.Models.Campaign
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalji kampanje";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h2>Details</h2>
+<h2 style="text-align:center"><strong>Detalji kampanje</strong></h2>
 
 <div>
-    <h4>Campaign</h4>
+    <h4 style="text-align:center">Kampanja - @Html.Raw(Model.CampaignName)</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -102,6 +102,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CampaignId }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a href="@Url.RouteUrl(new { action = "Edit", controller = "Campaigns", area = "Campaigns", id=Model.CampaignId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
+    <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
 </p>

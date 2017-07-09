@@ -304,6 +304,7 @@
     <Compile Include="Areas\Campaigns\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
     <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CreateCampaign.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -453,6 +454,14 @@
     <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.cs" />
     <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.Designer.cs">
       <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707031710095_Jul3UpdateCampaigns.cs" />
+    <Compile Include="Migrations\201707031710095_Jul3UpdateCampaigns.Designer.cs">
+      <DependentUpon>201707031710095_Jul3UpdateCampaigns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707091841048_Jul9Update.cs" />
+    <Compile Include="Migrations\201707091841048_Jul9Update.Designer.cs">
+      <DependentUpon>201707091841048_Jul9Update.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -783,6 +792,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707021939062_Jul2UpdateCampaigns.resx">
       <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707031710095_Jul3UpdateCampaigns.resx">
+      <DependentUpon>201707031710095_Jul3UpdateCampaigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707091841048_Jul9Update.resx">
+      <DependentUpon>201707091841048_Jul9Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

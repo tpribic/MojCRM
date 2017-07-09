@@ -54,6 +54,10 @@
                                 <li><a href="@Url.Action("Index", "Contacts")"><i class="fa fa-vcard"></i> Kontakti</a></li>
                             </ul>
                         </div>
+                        <a href="@Url.Action("Index", "Campaigns")" class="btn btn-default btn-sm">
+                            <i class="fa fa-phone"></i>
+                            Kampanje
+                        </a>
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <div class="btn-group dropdown">
