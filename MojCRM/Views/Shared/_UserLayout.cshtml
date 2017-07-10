@@ -54,10 +54,25 @@
                                 <li><a href="@Url.Action("Index", "Contacts")"><i class="fa fa-vcard"></i> Kontakti</a></li>
                             </ul>
                         </div>
-                        <a href="@Url.Action("Index", "Campaigns")" class="btn btn-default btn-sm">
-                            <i class="fa fa-phone"></i>
-                            Kampanje
-                        </a>
+                        @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+                        {
+                            <a href="@Url.Action("Index", "Campaigns")" class="btn btn-default btn-sm">
+                                <i class="fa fa-phone"></i>
+                                Kampanje
+                            </a>
+                        }
+                        @if (true)
+                        {
+                            <div class="btn-group dropdown">
+                                <a data-target="salesDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="salesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#salesDropdownMenu"><i class="fa fa-money"></i> Prodaja <span class="caret"></span></a>
+                                <ul id="salesDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="salesDropdown">
+                                    <li class="dropdown-header" style="color:cornflowerblue"><strong>Prodajne prilike</strong></li>
+                                    <li><a href="@Url.Action("Index", "Opportunities")"><i class="fa fa-list"></i> Pregled</a></li>
+                                    <li class="dropdown-header" style="color:cornflowerblue"><strong>Leadovi</strong></li>
+                                    <li><a href="@Url.Action("Index", "Leads")"><i class="fa fa-list"></i> Pregled</a></li>
+                                </ul>
+                            </div>
+                        }
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <div class="btn-group dropdown">

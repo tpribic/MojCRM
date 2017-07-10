@@ -98,7 +98,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
             {
                 return HttpNotFound();
             }
-            //ViewBag.RelatedCompanyId = new SelectList(db.Organizations, "MerId", "VAT", campaign.RelatedCompanyId);
+            ViewBag.RelatedCompanyId = new SelectList(db.Organizations.Where(o => o.MerId == 111955), "MerId", "VAT", campaign.RelatedCompanyId);
             return View(campaign);
         }
 
@@ -112,6 +112,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(campaign).State = EntityState.Modified;
+                db.Entry(campaign).Entity.UpdateDate = DateTime.Now;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -55,5 +55,9 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Areas.Campaigns.Models.Campaign> Campaigns { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Areas.Campaigns.Models.CampaignMember> CampaignMembers { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.Opportunity> Opportunities { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.Lead> Leads { get; set; }
     }
 }
