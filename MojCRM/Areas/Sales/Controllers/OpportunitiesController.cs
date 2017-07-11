@@ -23,7 +23,17 @@ namespace MojCRM.Areas.Sales.Controllers
         // GET: Sales/Opportunities
         public ActionResult Index()
         {
-            var opportunities = db.Opportunities;
+            var opportunities = from o in db.Opportunities
+                                select o;
+            if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
+            {
+                
+            }
+            else
+            {
+                opportunities = opportunities.Where(op => op.AssignedTo == User.Identity.Name);
+            }
+
             return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
         }
 
@@ -49,23 +59,32 @@ namespace MojCRM.Areas.Sales.Controllers
             var _RelatedOpportunityActivities = (from a in db.ActivityLogs
                                                  where a.ReferenceId == id
                                                  select a).AsEnumerable();
+            var _RelatedOrganization = (from o in db.Organizations
+                                        where o.MerId == opportunity.RelatedOrganizationId
+                                        select o).First();
+            var _RelatedCampaign = (from c in db.Campaigns
+                                    where c.CampaignId == opportunity.RelatedCampaignId
+                                    select c).First();
+            var _Users = (from u in db.Users
+                          select u).AsEnumerable();
 
-            var OpportunityDetails = new OpportunityDetailViewModel
+            var OpportunityDetails = new OpportunityDetailViewModel()
             {
                 OpportunityId = id,
-                OrganizationName = opportunity.RelatedOrganization.SubjectName,
-                OrganizationVAT = opportunity.RelatedOrganization.VAT,
-                TelephoneNumber = opportunity.RelatedOrganization.OrganizationDetail.TelephoneNumber,
-                MobilePhoneNumber = opportunity.RelatedOrganization.OrganizationDetail.MobilePhoneNumber,
-                Email = opportunity.RelatedOrganization.OrganizationDetail.EmailAddress,
-                ERP = opportunity.RelatedOrganization.OrganizationDetail.ERP,
-                NumberOfInvoices = opportunity.RelatedOrganization.OrganizationDetail.NumberOfInvoices,
-                RelatedCampaignName = opportunity.RelatedCampaign.CampaignName,
+                OrganizationName = _RelatedOrganization.SubjectName,
+                OrganizationVAT = _RelatedOrganization.VAT,
+                TelephoneNumber = _RelatedOrganization.OrganizationDetail.TelephoneNumber,
+                MobilePhoneNumber = _RelatedOrganization.OrganizationDetail.MobilePhoneNumber,
+                Email = _RelatedOrganization.OrganizationDetail.EmailAddress,
+                ERP = _RelatedOrganization.OrganizationDetail.ERP,
+                NumberOfInvoices = _RelatedOrganization.OrganizationDetail.NumberOfInvoices,
+                RelatedCampaignName = _RelatedCampaign.CampaignName,
                 IsAssigned = opportunity.IsAssigned,
                 AssignedTo = opportunity.AssignedTo,
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedOpportunityNotes = _RelatedOpportunityNotes,
-                RelatedOpportunityActivities = _RelatedOpportunityActivities
+                RelatedOpportunityActivities = _RelatedOpportunityActivities,
+                Users = _Users
             };
 
             return View(OpportunityDetails);
@@ -194,7 +213,7 @@ namespace MojCRM.Areas.Sales.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        public ActionResult Reassing(OpportunityAssignHelper Model)
+        public ActionResult Reassign(OpportunityAssignHelper Model)
         {
             var opportunity = (from o in db.Opportunities
                                where o.OpportunityId == Model.RelatedOpportunityId
@@ -212,6 +231,38 @@ namespace MojCRM.Areas.Sales.Controllers
             }
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // GET: Sales/Opportunities/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Opportunity opportunity = db.Opportunities.Find(id);
+            if (opportunity == null)
+            {
+                return HttpNotFound();
+            }
+            return View(opportunity);
+        }
+
+        // POST: Sales/Opportunities/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Opportunity opportunity)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(opportunity).State = EntityState.Modified;
+                db.Entry(opportunity).Entity.UpdateDate = DateTime.Now;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(opportunity);
         }
 
         public void ImportOpportunities()

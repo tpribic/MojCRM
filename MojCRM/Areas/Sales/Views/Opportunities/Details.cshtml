@@ -162,19 +162,19 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="sales-contact-first-name">@Html.DisplayNameFor(model => model.SalesContact.ContactFirstName)</label>
+                                <label for="sales-contact-first-name">Ime kontakta</label>
                                 <div id="sales-contact-first-name">
                                     @Html.TextBox("FirstName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Ime kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-last-name">@Html.DisplayNameFor(model => model.SalesContact.ContactLastName)</label>
+                                <label for="sales-contact-last-name">Prezime kontakta</label>
                                 <div id="sales-contact-last-name">
                                     @Html.TextBox("LastName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Prezime kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-telephone">@Html.DisplayNameFor(model => model.SalesContact.TelephoneNumber)</label>
+                                <label for="sales-contact-telephone">Broj telefona kontakta</label>
                                 <div id="sales-contact-telephone">
                                     @Html.TextBox("Telephone", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj telefona kontakta" })
                                 </div>
@@ -183,19 +183,19 @@
                         <br />
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="sales-contact-mobile">@Html.DisplayNameFor(model => model.SalesContact.MobilePhoneNumber)</label>
+                                <label for="sales-contact-mobile">Broj mobitela kontakta</label>
                                 <div id="sales-contact-mobile">
                                     @Html.TextBox("Mobile", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj mobitela kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-email">@Html.DisplayNameFor(model => model.SalesContact.Email)</label>
+                                <label for="sales-contact-email">E-mail adresa kontakta</label>
                                 <div id="sales-contact-email">
                                     @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-user">@Html.DisplayNameFor(model => model.SalesContact.User)</label>
+                                <label for="sales-contact-user">Agent</label>
                                 <div id="sales-contact-agent">
                                     @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disabled = true })
                                 </div>
@@ -239,19 +239,19 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="sales-contact-first-name">@Html.DisplayNameFor(model => model.SalesContact.ContactFirstName)</label>
+                                <label for="sales-contact-first-name">Ime kontakta</label>
                                 <div id="sales-contact-first-name">
                                     @Html.TextBox("FirstName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Ime kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-last-name">@Html.DisplayNameFor(model => model.SalesContact.ContactLastName)</label>
+                                <label for="sales-contact-last-name">Prezime kontakta</label>
                                 <div id="sales-contact-last-name">
                                     @Html.TextBox("LastName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Prezime kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-telephone">@Html.DisplayNameFor(model => model.SalesContact.TelephoneNumber)</label>
+                                <label for="sales-contact-telephone">Broj telefona</label>
                                 <div id="sales-contact-telephone">
                                     @Html.TextBox("Telephone", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj telefona kontakta" })
                                 </div>
@@ -260,19 +260,19 @@
                         <br />
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="sales-contact-mobile">@Html.DisplayNameFor(model => model.SalesContact.MobilePhoneNumber)</label>
+                                <label for="sales-contact-mobile">Broj mobitela kontakta</label>
                                 <div id="sales-contact-mobile">
                                     @Html.TextBox("Mobile", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj mobitela kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-email">@Html.DisplayNameFor(model => model.SalesContact.Email)</label>
+                                <label for="sales-contact-email">E-mail adresa kontakta</label>
                                 <div id="sales-contact-email">
                                     @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-user">@Html.DisplayNameFor(model => model.SalesContact.User)</label>
+                                <label for="sales-contact-user">Agent</label>
                                 <div id="sales-contact-agent">
                                     @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disabled = true })
                                 </div>
@@ -295,9 +295,9 @@
 }
 
 <!--Modal - Assing-->
-@using (Html.BeginForm("Assing", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("Assign", "Opportunities", FormMethod.Post))
 {
-    <div class="modal fade" id="Assing" tabindex="-1" role="dialog" aria-labelledby="Assing">
+    <div class="modal fade" id="Assign" tabindex="-1" role="dialog" aria-labelledby="Assign">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
@@ -331,9 +331,9 @@
 }
 
 <!--Modal - Reassign-->
-@using (Html.BeginForm("Reassing", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("Reassign", "Opportunities", FormMethod.Post))
 {
-    <div class="modal fade" id="Reassing" tabindex="-1" role="dialog" aria-labelledby="Reassing">
+    <div class="modal fade" id="Reassign" tabindex="-1" role="dialog" aria-labelledby="Reassign">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
@@ -520,10 +520,67 @@
                 }
                 @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
-                    <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassing" href="#Reassing"><i class="fa fa-mail-reply-all"></i></button>
+                    <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassing" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                 }
+                <a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id=Model.OpportunityId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>
                 <a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i></a>
             </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div>
+    <div class="row col-md-12">
+        <h5><strong>Opći i kontakt podaci</strong></h5>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <strong>Naziv (OIB) tvrtke:</strong>
+            @Model.OrganizationName (@Model.OrganizationVAT)
+        </div>
+        <div class="col-md-4">
+            <strong>Kontakt brojevi:</strong>
+            @Model.TelephoneNumber;@Model.MobilePhoneNumber
+        </div>
+        <div class="col-md-4">
+            <strong>Kontakt e-mail adresa:</strong>
+            @Model.Email
+        </div>
+    </div>
+    <hr />
+    <div class="row col-md-12">
+        <h5><strong>Informativni ključni pokazatelji</strong></h5>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <strong>ERP program</strong>
+            @Model.ERP
+        </div>
+        <div class="col-md-4">
+            <strong>Broj računa</strong>
+            @Model.NumberOfInvoices
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+    <hr />
+    <div class="row col-md-12">
+        <h5><strong>Dodatni podaci o prodajnoj prilici</strong></h5>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <strong>Naziv kampanje</strong>
+            @Model.RelatedCampaignName
+        </div>
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+
         </div>
     </div>
 </div>

@@ -47,7 +47,7 @@ namespace MojCRM.Areas.Sales.ViewModels
         public IEnumerable<OpportunityNote> RelatedOpportunityNotes { get; set; }
         public IEnumerable<ActivityLog> RelatedOpportunityActivities { get; set; }
 
-        public virtual Contact SalesContact { get; set; }
+        //public virtual Contact SalesContact { get; set; }
         public virtual IEnumerable<ApplicationUser> Users { get; set; }
 
         public IList<SelectListItem> RelatedSalesContactsForDetails

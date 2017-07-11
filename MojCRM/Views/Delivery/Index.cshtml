@@ -289,21 +289,19 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     {
         if (m.DocumentStatus == 30 && m.IsAssigned == false)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="glyphicon glyphicon-edit"></i></a>
-        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.MerElectronicId, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
-        @*<a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", m.MerElectronicId, User.Identity.Name, returnUrl = Request.Url })" title="Ponovno pošalji obavijest o dostavi"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
-        @*<a data-mer-id="@Html.Raw(m.MerElectronicId)" href="#" class="resend-document-ajax"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
-        <a data-mer-id="@Html.Raw(m.MerElectronicId)" data-ticket-id="@Html.Raw(m.Id)" href="#" class="remove-from-list-ajax" title="Ukloni s popisa za dostavu"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.MerElectronicId, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+        <a data-mer-id="@Html.Raw(m.MerElectronicId)" data-ticket-id="@Html.Raw(m.Id)" href="#" class="remove-from-list-ajax" title="Ukloni s popisa za dostavu"><i style="color: red" class="fa fa-remove"></i></a>
     </span>;
 
         if (m.DocumentStatus == 30 && (m.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) || m.AssignedTo == User.Identity.Name))
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         if (m.DocumentStatus != 30)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         return @<span>
@@ -351,12 +349,12 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         });
     $("#send-report").click(function (e) {
         e.preventDefault();
-        var email = "matej@moj-eracun.hr; alen.jedud@moj-eracun.hr; blanka.grginovic@moj-eracun.hr";
+        var email = "matej@moj-eracun.hr; alen.jedud@moj-eracun.hr";
         var subject = "Moj-CRM -- Dnevni izvještaj -- Odjel dostave";
         var body = "Poštovani," + "%0D%0A" + "%0D%0A" + "danas je kreirano @ViewBag.TicketsCreatedToday kartica, od toga @ViewBag.TicketsCreatedTodayFirstTime za prvi puta. Zbog toga će raspored na dostavi biti:" + "%0D%0A" + "%0D%0A"
-            + "Darko Glatki: " + "%0D%0A" + "Tomislav Ptiček: " + "%0D%0A" + "Filip Troskot: " + "%0D%0A" + "Filip Karmazen: " + "%0D%0A" + "Katarina Ceković: " + "%0D%0A" + "%0D%0A" + "Lijep pozdrav,";
+            + "Darko Glatki: " + "%0D%0A" + "Tomislav Ptiček: " + "%0D%0A" + "Filip Troskot: " + "%0D%0A" + "Filip Karmazen: " + "%0D%0A" + "Katarina Ceković: " + "%0D%0A" + "Viktor Jajtić: " + "%0D%0A" + "%0D%0A" + "Lijep pozdrav,";
         window.location = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
-    }); 
+    });
     function Resend() {
             $(document).on("click", "a.resend-document-ajax", function (e) {
         e.preventDefault();

@@ -22,9 +22,8 @@
             </div>
         </div>
     </div>
+    <hr />
 }
-
-<hr />
 
 <table class="table">
     <tr>
@@ -57,9 +56,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.InsertDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
         </th>
         <th></th>
     </tr>
@@ -94,15 +90,15 @@
             @Html.DisplayFor(modelItem => item.IsAssigned)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.InsertDate)
+            @Html.Raw(item.InsertDate.ToShortDateString())
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UpdateDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.OpportunityId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.OpportunityId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.OpportunityId })
+            <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
+            <a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url})" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+            {
+                <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url})" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+            }
         </td>
     </tr>
 }

@@ -616,6 +616,7 @@
     <Content Include="Areas\Sales\Views\web.config" />
     <Content Include="Areas\Sales\Views\Opportunities\Index.cshtml" />
     <Content Include="Areas\Sales\Views\Opportunities\Details.cshtml" />
+    <Content Include="Areas\Sales\Views\Opportunities\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

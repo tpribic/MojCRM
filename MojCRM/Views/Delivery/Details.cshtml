@@ -681,10 +681,9 @@
                             <td>@Invoice.InvoiceNumber</td>
                             <td>@Invoice.SentDate.ToShortDateString()</td>
                             <td>
-                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="glyphicon glyphicon-refresh"></i></a>
-                                @*<a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i style="color: gold" class="glyphicon glyphicon-share-alt"></i></a>*@
-                                <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="glyphicon glyphicon-remove"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+                                <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="fa fa-remove"></i></a>
                             </td>
                         </tr>
                     }
