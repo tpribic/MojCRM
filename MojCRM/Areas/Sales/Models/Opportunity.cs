@@ -11,15 +11,31 @@ namespace MojCRM.Areas.Sales.Models
     {
         [Key]
         public int OpportunityId { get; set; }
+
+        [Display(Name = "Naziv prodajne prilike")]
         public string OpportunityTitle { get; set; }
         public int? RelatedCampaignId { get; set; }
         public int? RelatedOrganizationId { get; set; }
+
+        [Display(Name = "Status")]
         public OpportunityStatusEnum OpportunityStatus { get; set; }
+
+        [Display(Name = "Razlog odbijanja")]
         public OpportunityRejectReasonEnum? RejectReason { get; set; }
+
+        [Display(Name = "Kreirao")]
         public string CreatedBy { get; set; }
+
+        [Display(Name = "Dodijeljeno agentu")]
         public string AssignedTo { get; set; }
+
+        [Display(Name = "Zadnje mijenjao")]
         public string LastUpdatedBy { get; set; }
+
+        [Display(Name = "Dodijeljeno")]
         public bool IsAssigned { get; set; }
+
+        [Display(Name = "Datum kreiranja")]
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 

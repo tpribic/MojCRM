@@ -63,21 +63,21 @@
         <div class="row" style="text-align:center">
             <div class="col-md-12">
                 <div class="btn btn-group" role="group">
-                    <a href="@Url.Action("UpdateAllStatuses", "Delivery")" class="btn btn-primary btn-sm" title="Provjera statusa svih dokumenata">
-                        <i class="fa fa-question-circle"></i>
-                        @*Provjeri sve statuse*@
+                    <a href="@Url.Action("UpdateAllStatusesSent", "Delivery")" class="btn btn-primary btn-sm" title="Provjera statusa dokumenata u statusu poslano">
+                        <i class="fa fa-question-circle" style="color:gold"></i>
+                    </a>
+                    <a href="@Url.Action("UpdateAllStatusesOther", "Delivery")" class="btn btn-primary btn-sm" title="Provjera statusa dokumenata u ostalim statusima">
+                        <i class="fa fa-question-circle" style="color:red"></i>
                     </a>
                 </div>
                 <div class="btn btn-group" role="group">
                     <a id="remove-all" method="post" class="btn btn-default btn-sm" onclick="javascript: RemoveAll()" title="Ukloni sve odabrane dokumenta">
                         <i class="fa fa-times text-danger"></i>
-                        @*Ukloni sve odabrane dokumente*@
                     </a>
                     @if (User.IsInRole("Management") || User.IsInRole("Admin") || User.IsInRole("Superadmin"))
                     {
                         <a id="send-report" method="post" class="btn btn-default btn-sm" onclick="javascript: SendReport()" title="Pošalji jutarnji report upravi">
                             <i class="fa fa-send"></i>
-                            @*Pošalji jutarnji report*@
                         </a>
                     }
                 </div>

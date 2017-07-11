@@ -482,10 +482,35 @@ namespace MojCRM.Controllers
         }
 
         // GET: Delivery/UpdateAllStatuses
-        public ActionResult UpdateAllStatuses()
+        public ActionResult UpdateAllStatusesSent()
         {
             var OpenTickets = from t in db.DeliveryTicketModels
-                              where (t.DocumentStatus != 40 || t.DocumentStatus != 55)
+                              where (t.DocumentStatus == 30)
+                              select t;
+            var MerLinks = OpenTickets.AsEnumerable();
+
+            foreach (var Link in MerLinks)
+            {
+                var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Link.MerElectronicId + "&ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
+                MerDeliveryJsonResponse Result = ParseJson(MerString);
+
+                var TicketForUpdate = (from t in db.DeliveryTicketModels
+                                       where t.Id == Link.Id
+                                       select t).First();
+                TicketForUpdate.DocumentStatus = Result.Status;
+                TicketForUpdate.BuyerEmail = Result.EmailPrimatelja;
+                TicketForUpdate.UpdateDate = DateTime.Now;
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: Delivery/UpdateAllStatuses
+        public ActionResult UpdateAllStatusesOther()
+        {
+            var OpenTickets = from t in db.DeliveryTicketModels
+                              where (t.DocumentStatus != 30 || t.DocumentStatus != 40 || t.DocumentStatus != 55)
                               select t;
             var MerLinks = OpenTickets.AsEnumerable();
 

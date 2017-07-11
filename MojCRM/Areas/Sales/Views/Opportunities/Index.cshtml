@@ -1,0 +1,110 @@
+﻿@model IEnumerable<MojCRM.Areas.Sales.Models.Opportunity>
+
+@{
+    ViewBag.Title = "Pregled prodajnih prilika";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Pregled prodajnih prilika</strong></h2>
+
+<hr />
+
+@if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+{
+    <div>
+        <div class="row" style="text-align:center">
+            <div class="col-md-12">
+                <div class="btn btn-group" role="group">
+                    <a href="@Url.Action("Create", "Opportunities")" class="btn btn-default btn-sm" title="Dodaj prodajnu priliku">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<hr />
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RelatedCampaign.CampaignName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RelatedOrganization.VAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpportunityTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpportunityStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RejectReason)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssignedTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastUpdatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAssigned)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InsertDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RelatedCampaign.CampaignName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RelatedOrganization.VAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpportunityTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpportunityStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RejectReason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AssignedTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastUpdatedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAssigned)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InsertDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.OpportunityId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.OpportunityId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.OpportunityId })
+        </td>
+    </tr>
+}
+
+</table>
