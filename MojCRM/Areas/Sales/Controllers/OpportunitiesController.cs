@@ -1,10 +1,18 @@
-﻿using MojCRM.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MojCRM.Areas.Campaigns.Models;
+using MojCRM.Models;
+using MojCRM.Areas.Campaigns.ViewModels;
+using MojCRM.Areas.Sales.Models;
 using Excel = Microsoft.Office.Interop.Excel;
+using MojCRM.Areas.Sales.ViewModels;
+using MojCRM.Areas.Sales.Helpers;
 
 namespace MojCRM.Areas.Sales.Controllers
 {
@@ -17,6 +25,193 @@ namespace MojCRM.Areas.Sales.Controllers
         {
             var opportunities = db.Opportunities;
             return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
+        }
+
+        // GET: Sales/Opportunities/Details/5
+        public ActionResult Details(int id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Opportunity opportunity = db.Opportunities.Find(id);
+            if (opportunity == null)
+            {
+                return HttpNotFound();
+            }
+
+            var _RelatedSalesContacts = (from c in db.Contacts
+                                         where c.Organization.MerId == opportunity.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
+                                         select c).AsEnumerable();
+            var _RelatedOpportunityNotes = (from n in db.OpportunityNotes
+                                            where n.RelatedOpportunityId == opportunity.RelatedOrganizationId
+                                            select n).AsEnumerable();
+            var _RelatedOpportunityActivities = (from a in db.ActivityLogs
+                                                 where a.ReferenceId == id
+                                                 select a).AsEnumerable();
+
+            var OpportunityDetails = new OpportunityDetailViewModel
+            {
+                OpportunityId = id,
+                OrganizationName = opportunity.RelatedOrganization.SubjectName,
+                OrganizationVAT = opportunity.RelatedOrganization.VAT,
+                TelephoneNumber = opportunity.RelatedOrganization.OrganizationDetail.TelephoneNumber,
+                MobilePhoneNumber = opportunity.RelatedOrganization.OrganizationDetail.MobilePhoneNumber,
+                Email = opportunity.RelatedOrganization.OrganizationDetail.EmailAddress,
+                ERP = opportunity.RelatedOrganization.OrganizationDetail.ERP,
+                NumberOfInvoices = opportunity.RelatedOrganization.OrganizationDetail.NumberOfInvoices,
+                RelatedCampaignName = opportunity.RelatedCampaign.CampaignName,
+                IsAssigned = opportunity.IsAssigned,
+                AssignedTo = opportunity.AssignedTo,
+                RelatedSalesContacts = _RelatedSalesContacts,
+                RelatedOpportunityNotes = _RelatedOpportunityNotes,
+                RelatedOpportunityActivities = _RelatedOpportunityActivities
+            };
+
+            return View(OpportunityDetails);
+        }
+
+        // POST: Sales/Opportunities/AddNote
+        [HttpPost]
+        public ActionResult AddNote(OpportunityNoteHelper Model)
+        {
+            var _RelatedOpportunity = (from o in db.Opportunities
+                                       where o.OpportunityId == Model.RelatedOpportunityId
+                                       select o).First();
+
+            _RelatedOpportunity.LastContactDate = DateTime.Now;
+            _RelatedOpportunity.LastContactedBy = Model.User;
+            db.OpportunityNotes.Add(new OpportunityNote
+            {
+                RelatedOpportunityId = Model.RelatedOpportunityId,
+                User = Model.User,
+                Note = Model.Note,
+                InsertDate = DateTime.Now,
+                Contact = Model.Contact
+            });
+            db.SaveChanges();
+
+            switch (Model.Identifier)
+            {
+                case 1:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = Model.User + " je obavio uspješan poziv vezan za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                        User = Model.User,
+                        ReferenceId = Model.RelatedOpportunityId,
+                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
+                        Department = ActivityLog.DepartmentEnum.Sales,
+                        InsertDate = DateTime.Now
+                    });
+                    db.SaveChanges();
+                    break;
+                case 2:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = Model.User + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                        User = Model.User,
+                        ReferenceId = Model.RelatedOpportunityId,
+                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
+                        Department = ActivityLog.DepartmentEnum.Sales,
+                        InsertDate = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                    break;
+                case 3:
+                    db.ActivityLogs.Add(new ActivityLog
+                    {
+                        Description = Model.User + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                        User = Model.User,
+                        ReferenceId = Model.RelatedOpportunityId,
+                        ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
+                        Department = ActivityLog.DepartmentEnum.Sales,
+                        InsertDate = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                    break;
+            }
+
+            return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
+        }
+
+        // POST: Sales/Opportunities/EditNote
+        [HttpPost]
+        [Authorize]
+        public ActionResult EditNote(OpportunityNoteHelper Model)
+        {
+            var NoteForEdit = (from n in db.OpportunityNotes
+                               where n.Id == Model.NoteId
+                               select n).First();
+
+            NoteForEdit.Note = Model.Note;
+            NoteForEdit.Contact = Model.Contact;
+            NoteForEdit.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
+        }
+
+        // POST: Sales/Opportunities/DeleteNote
+        [HttpPost, ActionName("DeleteNote")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteNote(OpportunityNoteHelper Model)
+        {
+            OpportunityNote opportunityNote = db.OpportunityNotes.Find(Model.NoteId);
+            db.OpportunityNotes.Remove(opportunityNote);
+            db.SaveChanges();
+            return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
+        }
+
+        public void LogEmail(OpportunityNoteHelper Model)
+        {
+            var _RelatedOpportunity = (from o in db.Opportunities
+                                       where o.OpportunityId == Model.RelatedOpportunityId
+                                       select o).First();
+
+            _RelatedOpportunity.LastContactDate = DateTime.Now;
+            _RelatedOpportunity.LastContactedBy = Model.User;
+            db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = Model.User + " je poslao e-mail na adresu: " + Model.Email + " na temu prezentacije usluge u sklopu prodajne prilike: " + _RelatedOpportunity.OpportunityTitle,
+                User = Model.User,
+                ReferenceId = Model.RelatedOpportunityId,
+                ActivityType = ActivityLog.ActivityTypeEnum.EMAIL,
+                Department = ActivityLog.DepartmentEnum.Sales,
+                InsertDate = DateTime.Now,
+            });
+            db.SaveChanges();
+        }
+
+        public ActionResult Assign(OpportunityAssignHelper Model)
+        {
+            var opportunity = (from o in db.Opportunities
+                               where o.OpportunityId == Model.RelatedOpportunityId
+                               select o).First();
+            opportunity.IsAssigned = true;
+            opportunity.AssignedTo = Model.AssignedTo;
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        public ActionResult Reassing(OpportunityAssignHelper Model)
+        {
+            var opportunity = (from o in db.Opportunities
+                               where o.OpportunityId == Model.RelatedOpportunityId
+                               select o).First();
+            if (Model.Unassign == true)
+            {
+                opportunity.IsAssigned = false;
+                opportunity.AssignedTo = String.Empty;
+                db.SaveChanges();
+            }
+            else
+            {
+                opportunity.AssignedTo = Model.AssignedTo;
+                db.SaveChanges();
+            }
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public void ImportOpportunities()

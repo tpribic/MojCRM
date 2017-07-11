@@ -1162,7 +1162,7 @@ namespace MojCRM.Controllers
                 Description = _Agent + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata broj: " + InvoiceNumber,
                 User = _Agent,
                 ReferenceId = _TicketId,
-                ActivityType = ActivityLog.ActivityTypeEnum.DELMAIL,
+                ActivityType = ActivityLog.ActivityTypeEnum.EMAIL,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
             });

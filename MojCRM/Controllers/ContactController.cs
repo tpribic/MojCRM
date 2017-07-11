@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Areas.Sales.Helpers;
+using MojCRM.Models;
 using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -102,6 +103,33 @@ namespace MojCRM.Controllers
                 }
                 throw;
             }
+        }
+
+        // POST: Contact/CreateFromDelivery
+        [HttpPost]
+        public ActionResult CreateFromSales(OpportunityContactHelper Model)
+        {
+            var _OrganizationId = (from o in db.Opportunities
+                                   where o.OpportunityId == Model.RelatedOpportunityId
+                                   select o.RelatedOrganizationId).First().ToString();
+
+            db.Contacts.Add(new Contact
+            {
+                OrganizationId = Int32.Parse(_OrganizationId),
+                ContactFirstName = Model.FirstName,
+                ContactLastName = Model.LastName,
+                Title = "N/A",
+                TelephoneNumber = Model.Telephone,
+                MobilePhoneNumber = Model.Mobile,
+                Email = Model.Email,
+                User = Model.Agent,
+                InsertDate = DateTime.Now,
+                ContactType = Contact.ContactTypeEnum.SALES,
+            });
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         // GET: Contact/Details
@@ -246,6 +274,43 @@ namespace MojCRM.Controllers
             db.SaveChanges();
 
             return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
+        }
+
+        // POST: Contact/EditFromSales
+        [HttpPost]
+        public ActionResult EditFromSales(OpportunityContactHelper Model)
+        {
+            var ContactForUpdate = (from c in db.Contacts
+                                    where c.ContactId == Model.ContactId
+                                    select c).First();
+
+            if (!String.IsNullOrEmpty(Model.FirstName))
+            {
+                ContactForUpdate.ContactFirstName = Model.FirstName;
+            }
+            if (!String.IsNullOrEmpty(Model.LastName))
+            {
+                ContactForUpdate.ContactLastName = Model.LastName;
+            }
+            if (!String.IsNullOrEmpty(Model.Telephone))
+            {
+                ContactForUpdate.TelephoneNumber = Model.Telephone;
+            }
+            if (!String.IsNullOrEmpty(Model.Mobile))
+            {
+                ContactForUpdate.MobilePhoneNumber = Model.Mobile;
+            }
+            if (!String.IsNullOrEmpty(Model.Email))
+            {
+                ContactForUpdate.Email = Model.Email;
+            }
+            if (!String.IsNullOrEmpty(Model.Agent))
+            {
+                ContactForUpdate.User = Model.Agent;
+            }
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public JsonResult GetOrganization(string term = "")

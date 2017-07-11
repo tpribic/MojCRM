@@ -100,7 +100,7 @@ namespace MojCRM.Controllers
                           where a.ActivityType == ActivityLog.ActivityTypeEnum.RESEND
                           select a);
             var DeliveryMail = (from a in db.ActivityLogs
-                                where a.ActivityType == ActivityLog.ActivityTypeEnum.DELMAIL
+                                where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
                                 select a);
             var Activities = new List<CallCenterDaily>();
             var ActivitiesByDepartment = new List<CallCenterDailyByDepartment>();

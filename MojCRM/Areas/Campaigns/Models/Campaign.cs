@@ -38,7 +38,11 @@ namespace MojCRM.Areas.Campaigns.Models
 
         [Display(Name = "Završetak")]
         public DateTime? CampaignEndDate { get; set; }
+
+        [Display(Name = "Datum kreiranja")]
         public DateTime InsertDate { get; set; }
+
+        [Display(Name = "Datum promjene")]
         public DateTime? UpdateDate { get; set; }
 
         public enum CampaignTypeEnum

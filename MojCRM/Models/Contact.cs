@@ -54,7 +54,10 @@ namespace MojCRM.Models
             GENERAL,
 
             [Description("Dostava")]
-            DELIVERY
+            DELIVERY,
+
+            [Description("Prodaja")]
+            SALES
         }
 
         [Display(Name = "Dodijeli novog agenta")]

@@ -340,9 +340,12 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\Sales\Controllers\LeadsController.cs" />
     <Compile Include="Areas\Sales\Controllers\OpportunitiesController.cs" />
+    <Compile Include="Areas\Sales\Helpers\OpportunityHelpers.cs" />
     <Compile Include="Areas\Sales\Models\Lead.cs" />
     <Compile Include="Areas\Sales\Models\Opportunity.cs" />
+    <Compile Include="Areas\Sales\Models\OpportunityNote.cs" />
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
+    <Compile Include="Areas\Sales\ViewModels\OpportunityDetailViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -477,6 +480,10 @@
     <Compile Include="Migrations\201707101706186_Jul10UpdateOpportunityLead.Designer.cs">
       <DependentUpon>201707101706186_Jul10UpdateOpportunityLead.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707111556344_Jul11Update.cs" />
+    <Compile Include="Migrations\201707111556344_Jul11Update.Designer.cs">
+      <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -488,6 +495,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MerDeliveryDetails.cs" />
     <Compile Include="Models\MeViewModels.cs" />
+    <Compile Include="Models\OrganizationDetail.cs" />
     <Compile Include="Models\Organizations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -607,6 +615,7 @@
     <Content Include="Areas\Campaigns\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\Sales\Views\web.config" />
     <Content Include="Areas\Sales\Views\Opportunities\Index.cshtml" />
+    <Content Include="Areas\Sales\Views\Opportunities\Details.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -819,6 +828,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707101706186_Jul10UpdateOpportunityLead.resx">
       <DependentUpon>201707101706186_Jul10UpdateOpportunityLead.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707111556344_Jul11Update.resx">
+      <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

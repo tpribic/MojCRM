@@ -14,6 +14,7 @@ namespace MojCRM.Areas.Sales.Models
 
         [Display(Name = "Naziv prodajne prilike")]
         public string OpportunityTitle { get; set; }
+        public string OpportunityDescription { get; set; }
         public int? RelatedCampaignId { get; set; }
         public int? RelatedOrganizationId { get; set; }
 
@@ -29,6 +30,9 @@ namespace MojCRM.Areas.Sales.Models
         [Display(Name = "Dodijeljeno agentu")]
         public string AssignedTo { get; set; }
 
+        [Display(Name = "Zadnje kontaktirao")]
+        public string LastContactedBy { get; set; }
+
         [Display(Name = "Zadnje mijenjao")]
         public string LastUpdatedBy { get; set; }
 
@@ -38,6 +42,9 @@ namespace MojCRM.Areas.Sales.Models
         [Display(Name = "Datum kreiranja")]
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        [Display(Name = "Datum zadnjeg kontakta")]
+        public DateTime? LastContactDate { get; set; }
 
         [ForeignKey("RelatedCampaignId")]
         public virtual Campaign RelatedCampaign { get; set; }

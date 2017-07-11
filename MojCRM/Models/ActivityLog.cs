@@ -37,8 +37,8 @@ namespace MojCRM.Models
             [Description("Ponovno slanje obavijesti o dostavi")]
             RESEND,
 
-            [Description("Slanje e-mailova prema kontaktima dostave")]
-            DELMAIL,
+            [Description("Poslanih e-mailova")]
+            EMAIL,
 
             [Description("Rektivacija e-mail adrese u Postmarku")]
             POSTMARKACTIVATEBOUNCE
@@ -50,6 +50,9 @@ namespace MojCRM.Models
 
             [Description("Dostava")]
             Delivery,
+
+            [Description("Prodaja")]
+            Sales
         }
 
         public string ActivityTypeString
@@ -64,7 +67,7 @@ namespace MojCRM.Models
                     case ActivityTypeEnum.UNSUCCAL: return "Neuspješan poziv";
                     case ActivityTypeEnum.MAILCHANGE: return "Izmjena e-mail obavijesti";
                     case ActivityTypeEnum.RESEND: return "Ponovno slanje obavijesti o dostavi";
-                    case ActivityTypeEnum.DELMAIL: return "Slanje e-mailova prema kontaktima dostave";
+                    case ActivityTypeEnum.EMAIL: return "Slanje e-mailova";
                     case ActivityTypeEnum.POSTMARKACTIVATEBOUNCE: return "Rektivacija e-mail adrese u Postmarku";
                 }
                 return "Tip aktivnosti";
@@ -79,6 +82,7 @@ namespace MojCRM.Models
                 {
                     case DepartmentEnum.MojCRM: return "Moj-CRM";
                     case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                    case DepartmentEnum.Sales: return "Odjel prodaje";
                 }
                 return "Odjel";
             }

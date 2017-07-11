@@ -10,13 +10,14 @@
 <div>
     <h4 style="text-align:center">Kampanja - @Html.Raw(Model.CampaignName)</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <hr />
+    <dl class="dl-horizontal" style="text-align:center">
         <dt>
-            @Html.DisplayNameFor(model => model.RelatedCompany.VAT)
+            @Html.DisplayNameFor(model => model.RelatedCompany.SubjectName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RelatedCompany.VAT)
+            @Html.DisplayFor(model => model.RelatedCompany.SubjectName) (@Html.DisplayFor(model => model.RelatedCompany.VAT))
         </dd>
 
         <dt>
@@ -89,14 +90,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.InsertDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDate)
         </dd>
 
     </dl>

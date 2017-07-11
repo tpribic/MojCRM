@@ -33,6 +33,7 @@
 {
     columns.Add(m => m.VAT).Encoded(false).Sanitized(false).Titled("OIB tvrtke").Sortable(true);
     columns.Add(m => m.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(true);
+    columns.Add(m => m.Income).Encoded(false).Sanitized(false).Titled("Godišnji prihod").Sortable(true);
 }).WithPaging(20)
 </body>
 
