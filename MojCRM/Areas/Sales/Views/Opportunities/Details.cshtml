@@ -603,6 +603,27 @@
             @Model.LastContactedBy
         </div>
     </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <strong>Status prodajne prilike:</strong>
+            @Model.OpportunityStatus
+        </div>
+        <div class="col-md-4">
+            <strong>Razlog odbijanja prodajne prilike:</strong>
+            @Model.RejectReasson
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <strong>Detalji prodajne prilike:</strong>
+            @Model.OpportunityDescription
+        </div>
+    </div>
 </div>
 <script>
     $(document).on("click", "a.add-successfull-call-short", function (e) {

@@ -877,9 +877,8 @@ namespace MojCRM.Controllers
         public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
                                       int _TicketId, int Identifier)
         {
-            int _ContactIdInt = Int32.Parse(_ContactId);
             var ContactName = (from c in db.Contacts
-                               where c.ContactId == _ContactIdInt
+                               where c.ContactFirstName + " " + c.ContactLastName == _ContactId
                                select c).First();
             var InvoiceNumber = (from t in db.DeliveryTicketModels
                                  where t.Id == _TicketId

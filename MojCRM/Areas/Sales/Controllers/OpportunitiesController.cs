@@ -21,18 +21,78 @@ namespace MojCRM.Areas.Sales.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Sales/Opportunities
-        public ActionResult Index()
+        public ActionResult Index(OpportunitySearchHelper Model)
         {
             var opportunities = from o in db.Opportunities
                                 select o;
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
-                
+                //Search Engine
+                if (!String.IsNullOrEmpty(Model.Campaign))
+                {
+                    opportunities = opportunities.Where(op => op.RelatedCampaign.CampaignName == Model.Campaign);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Opportunity))
+                {
+                    opportunities = opportunities.Where(op => op.OpportunityTitle == Model.Organization);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Organization))
+                {
+                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName == Model.Organization);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.OpportunityStatus.ToString()))
+                {
+                    opportunities = opportunities.Where(op => op.OpportunityStatus == Model.OpportunityStatus);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.RejectReason.ToString()))
+                {
+                    opportunities = opportunities.Where(op => op.RejectReason == Model.RejectReason);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Assigned))
+                {
+                    if (Model.Assigned == "1")
+                    {
+                        opportunities = opportunities.Where(op => op.IsAssigned == false);
+                        ViewBag.SearchResults = opportunities.Count();
+                        ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                    }
+                    if (Model.Assigned == "2")
+                    {
+                        opportunities = opportunities.Where(op => op.IsAssigned == true);
+                        ViewBag.SearchResults = opportunities.Count();
+                        ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                    }
+                }
+                if (!String.IsNullOrEmpty(Model.AssignedTo))
+                {
+                    opportunities = opportunities.Where(op => op.AssignedTo == Model.AssignedTo);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
             }
             else
             {
                 opportunities = opportunities.Where(op => op.AssignedTo == User.Identity.Name);
             }
+
+            ViewBag.SearchResults = opportunities.Count();
+            ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+
+            ViewBag.UsersAssigned = opportunities.Where(op => op.AssignedTo == User.Identity.Name).Count();
+            ViewBag.UsersCreated = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.START).Count();
+            ViewBag.UsersInContact = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.INCONTACT).Count();
+            ViewBag.UsersLead = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD).Count();
+            ViewBag.UsersRejected = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.REJECTED).Count();
 
             return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
         }
@@ -74,6 +134,9 @@ namespace MojCRM.Areas.Sales.Controllers
             var OpportunityDetails = new OpportunityDetailViewModel()
             {
                 OpportunityId = id,
+                OpportunityDescription = opportunity.OpportunityDescription,
+                OpportunityStatus = opportunity.OpportunityStatusString,
+                RejectReasson = opportunity.OpportunityRejectReasonString,
                 OrganizationName = _RelatedOrganization.SubjectName,
                 OrganizationVAT = _RelatedOrganization.VAT,
                 TelephoneNumber = _RelatedOrganizationDetail.TelephoneNumber,
@@ -178,6 +241,7 @@ namespace MojCRM.Areas.Sales.Controllers
         // POST: Sales/Opportunities/DeleteNote
         [HttpPost, ActionName("DeleteNote")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Superadmin")]
         public ActionResult DeleteNote(OpportunityNoteHelper Model)
         {
             OpportunityNote opportunityNote = db.OpportunityNotes.Find(Model.NoteId);
@@ -258,16 +322,27 @@ namespace MojCRM.Areas.Sales.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Opportunity opportunity)
+        public ActionResult Edit(Opportunity _Opportunity)
         {
+            var Model = new OpportunityEditHelper()
+            {
+                OpportunityId = _Opportunity.OpportunityId,
+                OpportunityDescription = _Opportunity.OpportunityDescription,
+                OpportunityStatus = _Opportunity.OpportunityStatus,
+                RejectReason = _Opportunity.RejectReason
+            };
             if (ModelState.IsValid)
             {
-                db.Entry(opportunity).State = EntityState.Modified;
-                db.Entry(opportunity).Entity.UpdateDate = DateTime.Now;
+                var opportunity = db.Opportunities.Find(Model.OpportunityId);
+                opportunity.OpportunityDescription = Model.OpportunityDescription;
+                opportunity.OpportunityStatus = Model.OpportunityStatus;
+                opportunity.RejectReason = Model.RejectReason;
+                opportunity.UpdateDate = DateTime.Now;
+                opportunity.LastUpdatedBy = User.Identity.Name;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(opportunity);
+            return View(Model);
         }
 
         public void ImportOpportunities()

@@ -13,6 +13,15 @@ namespace MojCRM.Areas.Sales.ViewModels
     {
         public int OpportunityId { get; set; }
 
+        [Display(Name = "Detalji prodajne prilike")]
+        public string OpportunityDescription { get; set; }
+
+        [Display(Name = "Status prodajne prilike")]
+        public string OpportunityStatus { get; set; }
+
+        [Display(Name = "Razlog odbijanja prodajne prilike")]
+        public string RejectReasson { get; set; }
+
         [Display(Name = "Naziv tvrtke")]
         public string OrganizationName { get; set; }
 

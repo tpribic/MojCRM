@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static MojCRM.Areas.Sales.Models.Opportunity;
 
 namespace MojCRM.Areas.Sales.Helpers
 {
@@ -33,5 +34,29 @@ namespace MojCRM.Areas.Sales.Helpers
         public string AssignedTo { get; set; }
         public int? RelatedOpportunityId { get; set; }
         public bool Unassign { get; set; }
+    }
+
+    public class OpportunitySearchHelper
+    {
+        public string Campaign { get; set; }
+        public string Opportunity { get; set; }
+        public string Organization { get; set; }
+        public OpportunityStatusEnum? OpportunityStatus { get; set; }
+        public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public string Assigned { get; set; }
+        public string AssignedTo { get; set; }
+    }
+
+    public class OpportunityEditHelper
+    {
+        public int OpportunityId { get; set; }
+        public string OpportunityTitle { get; set; }
+        public string OpportunityDescription { get; set; }
+        public OpportunityStatusEnum OpportunityStatus { get; set; }
+        public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public string CreatedBy { get; set; }
+        public string AssignedTo { get; set; }
+        public string LastContactedBy { get; set; }
+        public string LastUpdatedBy { get; set; }
     }
 }

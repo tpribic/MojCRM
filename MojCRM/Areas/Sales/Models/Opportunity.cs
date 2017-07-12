@@ -14,6 +14,8 @@ namespace MojCRM.Areas.Sales.Models
 
         [Display(Name = "Naziv prodajne prilike")]
         public string OpportunityTitle { get; set; }
+
+        [Display(Name = "Opis prodajne prilike")]
         public string OpportunityDescription { get; set; }
         public int? RelatedCampaignId { get; set; }
         public int? RelatedOrganizationId { get; set; }
@@ -111,7 +113,7 @@ namespace MojCRM.Areas.Sales.Models
                     case OpportunityRejectReasonEnum.QUOTE: return "Neadekvatna ponuda";
                     case OpportunityRejectReasonEnum.SERVICEPROVIDER: return "Koristi drugog posrednika";
                 }
-                return "Razlog odbijanja";
+                return "Nije odbijeno";
             }
         }
     }

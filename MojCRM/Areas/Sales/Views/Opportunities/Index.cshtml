@@ -1,9 +1,44 @@
 ﻿@using GridMvc.Html
+@using System.Web.UI.WebControls
 @model IEnumerable<MojCRM.Areas.Sales.Models.Opportunity>
 
 @{
     ViewBag.Title = "Pregled prodajnih prilika";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+@{ 
+    var opportunityStatusList = new List<ListItem>
+        {
+            new ListItem{ Value= "0", Text = "Kreirano"},
+            new ListItem{ Value= "1", Text = "U kontaktu"},
+            new ListItem{ Value= "2", Text = "Kreiran lead"},
+            new ListItem{ Value= "3", Text = "Odbijeno"}
+        };
+    var opportunityRejectReasonList = new List<ListItem>
+        {
+            new ListItem{ Value= "0", Text = "Ne želi navesti"},
+            new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
+            new ListItem{ Value= "2", Text = "Previsoka cijena"},
+            new ListItem{ Value= "3", Text = "Neadekvatna ponuda"},
+            new ListItem{ Value= "4", Text = "Koristi drugog posrednika"}
+        };
+    var assigned = new List<ListItem>
+        {
+            new ListItem{ Value = "1", Text = "Nedodijeljene"},
+            new ListItem{ Value = "2", Text = "Dodijeljene"}
+        };
+    var salesAgents = new List<ListItem>
+        {
+            new ListItem{ Value = "Josip Kovačec", Text = "Josip Kovačec"},
+            new ListItem{ Value = "Dominik Antonio Turudić", Text = "Dominik Antonio Turudić"},
+            new ListItem{ Value = "Ivan Tomljenović", Text = "Ivan Tomljenović"},
+            new ListItem{ Value = "Marin Štimac", Text = "Marin Štimac"},
+            new ListItem{ Value = "Karlo Vuljanko", Text = "Karlo Vuljanko"},
+            new ListItem{ Value = "Davor Hruban", Text = "Davor Hruban"},
+            new ListItem{ Value = "Diana Dragija", Text = "Diana Dragija"},
+            new ListItem{ Value = "Sonja Frančić", Text = "Sonja Frančić"}
+        };
 }
 
 <h2 style="text-align:center"><strong>Pregled prodajnih prilika</strong></h2>
@@ -24,7 +59,91 @@
         </div>
     </div>
     <hr />
+    using (Html.BeginForm("Index", "Opportunities", new { area = "Sales" }, FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="campaign-search">Naziv kampanje</label>
+                    <div id="campaign-search">
+                        @Html.TextBox("Campaign", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv kampanje" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="opportunity-search">Naziv prilike</label>
+                    <div id="opportunity-search">
+                        @Html.TextBox("Opportunity", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv prilike" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="organization-search">Naziv tvrtke</label>
+                    <div id="organization-search">
+                        @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv tvrtke" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="opportunity-status-search">Status prilike</label>
+                    <div id="opportunity-detail-contact">
+                        @Html.DropDownList("OpportunityStatus", new SelectList(opportunityStatusList, "Value", "Text"), "Odaberi status prilike", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="reject-reason-search">Razlog odbijanja</label>
+                    <div>
+                        @Html.DropDownList("RejectReason", new SelectList(opportunityRejectReasonList, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="assigned-search">Dodijeljeno</label>
+                    <div>
+                        @Html.DropDownList("Assigned", new SelectList(assigned, "Value", "Text"), "Odaberi", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="assigned-to-search">Dodijeljeno agentu</label>
+                    <div>
+                        @Html.DropDownList("AssignedTo", new SelectList(salesAgents, "Value", "Text"), "Dodijeljeno agentu", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="alert alert-info">
+                    Broj rezultata pretrage: <strong title="Ukupan broj rezultata pretrage">@ViewBag.SearchResults</strong> <strong style="color:green" title="Broj rezultata pretrage koji su dodijeljeni">(@ViewBag.SearchResultsAssigned)</strong>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="col-md-12">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+            </div>
+        </div>
+    }
+    <hr />
 }
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            Vaše brojno stanje: Trenutno imate <strong>@ViewBag.UsersAssigned</strong> dodijeljenih prilika. Od toga <strong>@ViewBag.UsersCreated</strong> kreiranih, <strong>@ViewBag.UsersInContact</strong> s kojima ste u kontaktu, <strong>@ViewBag.UsersLead</strong> gdje ste ostvarili lead te <strong>@ViewBag.UsersRejected</strong> gdje su odbili daljnji kontakt.
+        </div>
+    </div>
+</div>
+
+<hr />
 
 @Html.Grid(Model).Named("PopisProdajnihPrilika").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
@@ -52,23 +171,26 @@
     {
         if (m.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
         {
-            return @<div><i title="Dodijeli priliku" class="fa fa-check-circle-o fa-2x text-success assinged"></i></div>;
+            return @<div><i title="Prilika je slobodna za dodijeljivanje" class="fa fa-check-circle-o fa-2x text-success assinged"></i></div>;
         }
-        return @<div><span><i class="fa fa-times-circle-o fa-2x text-danger" title="Kartica je već dodijeljena"></i> Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
+        return @<div><span><i class="fa fa-times-circle-o fa-2x text-danger" title="Prilika je već dodijeljena"></i> Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
     });
     columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
     {
         if ((User.Identity.Name == m.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
-            return @<span>
-                 <a href = "@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title = "Detalji prodajne prilike" ><i class="fa fa-list"></i></a>
-            <a href = "@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title = "Uređivanje prodajne prilike" ><i class="fa fa-edit"></i></a>
-            </span>;
+        {
+            return @<div><span>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>
+                             <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+    </span></div>;
+        }
         if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
-            return @<span>
-           <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
-    </span>;
-
-        return @<span>
-    </span>;
+        {
+            return @<div><span>
+        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+    </span></div>;
+        }
+            return @<span></span>;
 });
 }).WithPaging(20)
