@@ -22,6 +22,9 @@
                                 <div id="related-id">
                                     @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
                                 </div>
+                                <div id="identifier">
+                                    @Html.TextBox("Identifier", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = 1})
+                                </div>
                             </div>
                             <div class="col-md-12">
                                 <label for="delivery-detail-user">@Html.DisplayNameFor(model => model.AssignedTo)</label>
@@ -30,6 +33,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
@@ -131,12 +135,21 @@
                     <h4>Brisanje bilješke</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Odabirom niže bilješke, uklonit ćete bilješku iz sustava!</p>
+                    <div class="form-group">
+                        <p>Odabirom niže bilješke, uklonit ćete bilješku iz sustava!</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="note-id">Odaberi bilješku za brisanje</label>
+                                <div id="note-id">
+                                    @Html.DropDownList("NoteId", Model.NoteIds, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label for="note-id">Odaberi bilješku za brisanje</label>
-                    <div id="note-id">
-                        @Html.DropDownList("NoteId", Model.NoteIds, new { @class = "form-control" })
+                <div class="hidden">
+                    <div id="opportunity-id">
+                        @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -149,7 +162,7 @@
 }
 
 <!--Modal - Create Contact-->
-@using (Html.BeginForm("CreateFromSales", "Contact", FormMethod.Post))
+@using (Html.BeginForm("CreateFromSales", "Contact", new { area = ""}, FormMethod.Post))
 {
     <div class="modal fade" id="CreateContact" tabindex="-1" role="dialog" aria-labelledby="CreateContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -218,7 +231,7 @@
 }
 
 <!--Modal - Edit Contact-->
-@using (Html.BeginForm("EditFromSales", "Contact", FormMethod.Post))
+@using (Html.BeginForm("EditFromSales", "Contact", new { area = ""}, FormMethod.Post))
 {
     <div class="modal fade" id="EditContact" tabindex="-1" role="dialog" aria-labelledby="EditContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -347,6 +360,7 @@
                                 Prodajna prilika je trenutno dodijeljena. Možete ju ili otključati ili dodijeliti drugom agentu.
                             </div>
                         </div>
+                        <hr />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="unassign">Otključaj priliku</label>
@@ -358,7 +372,7 @@
                         <hr />
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="reassign">Dodijeli karticu drugom agentu</label>
+                                <label for="reassign">Dodijeli priliku drugom agentu</label>
                                 <div id="unassign">
                                     @Html.DropDownList("AssignedTo", Model.SalesAgents, new { @class = "form-control" })
                                 </div>
@@ -420,10 +434,13 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
-                <button type="button" title="Kreiranje bilješke" class="btn btn-default btn-sm" data-toggle="modal" href="#AddNote" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Bilješke o prodajnoj prilici</h4>
-            </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Kreiranje bilješke" class="btn btn-default btn-sm" data-toggle="modal" href="#AddNote" data-dismiss="modal"><i class="fa fa-plus"></i></button>
+                    <a href="#DeleteNote" title="Brisanje bilješke" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Bilješke o prodajnoj prilici</h4>
+                </div>
             <div class="modal-body">
                 <table class="table">
                     <tr>
@@ -442,7 +459,6 @@
                             <td>@Note.Contact</td>
                             <td>
                                 <a href="#EditNote" data-toggle="modal" data-dismiss="modal"><i class="fa fa-edit"></i></a>
-                                <a href="#DeleteNote" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash" style="color:gray"></i></a>
                             </td>
                         </tr>
                     }
@@ -460,11 +476,13 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
-                <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Kontakti za prodaju</h4>
-            </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
+                    <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
+                </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Kontakti za prodaju</h4>
+                </div>
             <div class="modal-body">
                 <table class="table">
                     <tr>
@@ -520,7 +538,7 @@
                 }
                 @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
-                    <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassing" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
+                    <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                 }
                 <a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id=Model.OpportunityId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>
                 <a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i></a>
@@ -555,11 +573,11 @@
     <br />
     <div class="row">
         <div class="col-md-4">
-            <strong>ERP program</strong>
+            <strong>ERP program:</strong>
             @Model.ERP
         </div>
         <div class="col-md-4">
-            <strong>Broj računa</strong>
+            <strong>Broj računa:</strong>
             @Model.NumberOfInvoices
         </div>
         <div class="col-md-4">
@@ -573,14 +591,16 @@
     <br />
     <div class="row">
         <div class="col-md-4">
-            <strong>Naziv kampanje</strong>
+            <strong>Naziv kampanje:</strong>
             @Model.RelatedCampaignName
         </div>
         <div class="col-md-4">
-
+            <strong>Datum i vrijeme zadnjeg kontakta:</strong>
+            @Model.LastContactedDate
         </div>
         <div class="col-md-4">
-
+            <strong>Zadnje kontaktirao:</strong>
+            @Model.LastContactedBy
         </div>
     </div>
 </div>
@@ -627,7 +647,7 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Opportunities", area = "Sales" })',
             data: {
                 User: $(this).data("agent"),
                 Email: $(this).data("email"),

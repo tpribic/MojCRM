@@ -210,6 +210,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
@@ -218,6 +219,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-template">Napomena</label>
@@ -394,13 +396,19 @@
                     <h4>Brisanje napomene dostave</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Odabirom niže napomene, uklonit ćete napomenu iz sustava!</p>
+                    <div class="form-group">
+                        <p>Odabirom niže napomene, uklonit ćete napomenu iz sustava!</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="delivery-detail-id">Odaberi napomenu za brisanje</label>
+                                <div id="delivery-detail-contact">
+                                    @Html.DropDownList("DetailId", Model.DeliveryDetailsIds, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="hidden">
-                    <label for="delivery-detail-id">Odaberi napomenu za brisanje</label>
-                    <div id="delivery-detail-contact">
-                        @Html.DropDownList("DetailId", Model.DeliveryDetailsIds, new { @class = "form-control" })
-                    </div>
                     <div id="ticket-id">
                         @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                     </div>
@@ -434,6 +442,7 @@
                                 Kartica je trenutno dodijeljena. Možete ju ili otključati ili dodijeliti drugom agentu.
                             </div>
                         </div>
+                        <hr />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="unassign">Otključaj karticu</label>
@@ -575,7 +584,10 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
-                <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail" data-dismiss="modal"><i class="fa fa-plus"></i></button>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail" data-dismiss="modal"><i class="fa fa-plus"></i></button>
+                    <a href="#DeleteDetail" title="Brisanje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Napomene o dostavi eDokumenta</h4>
             </div>
@@ -596,8 +608,7 @@
                             <td>@Detail.DetailNote</td>
                             <td>@Detail.Contact</td>
                             <td>
-                                <a href="#EditDetail" data-toggle="modal" data-dismiss="modal"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="#DeleteDetail" data-toggle="modal" data-dismiss="modal"><i class="glyphicon glyphicon-trash" style="color:gray"></i></a>
+                                <a href="#EditDetail" data-toggle="modal" data-dismiss="modal"><i class="fa fa-edit"></i></a>
                             </td>
                         </tr>
                     }
@@ -639,9 +650,9 @@
                             <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td>@Contact.User</td>
                             <td>
-                                <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="glyphicon glyphicon-phone-alt"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="glyphicon glyphicon-phone-alt"></i></a>
+                                <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
                             </td>
                         </tr>
                     }

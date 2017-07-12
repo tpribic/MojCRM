@@ -83,5 +83,36 @@ namespace MojCRM.Areas.Sales.Models
             [Description("Drugi pružatelj usluga")]
             SERVICEPROVIDER
         }
+
+        public string OpportunityStatusString
+        {
+            get
+            {
+                switch(OpportunityStatus)
+                {
+                    case OpportunityStatusEnum.START: return "Kreirano";
+                    case OpportunityStatusEnum.INCONTACT: return "U kontaktu";
+                    case OpportunityStatusEnum.LEAD: return "Kreiran lead";
+                    case OpportunityStatusEnum.REJECTED: return "Odbijeno";
+                }
+                return "Status prodajne prilike";
+            }
+        }
+
+        public string OpportunityRejectReasonString
+        {
+            get
+            {
+                switch(RejectReason)
+                {
+                    case OpportunityRejectReasonEnum.NOINFO: return "Ne želi navesti";
+                    case OpportunityRejectReasonEnum.NOINTEREST: return "Nema interesa za uslugu";
+                    case OpportunityRejectReasonEnum.PRICE: return "Previsoka cijena";
+                    case OpportunityRejectReasonEnum.QUOTE: return "Neadekvatna ponuda";
+                    case OpportunityRejectReasonEnum.SERVICEPROVIDER: return "Koristi drugog posrednika";
+                }
+                return "Razlog odbijanja";
+            }
+        }
     }
 }

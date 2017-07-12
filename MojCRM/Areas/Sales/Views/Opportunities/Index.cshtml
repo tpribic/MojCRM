@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MojCRM.Areas.Sales.Models.Opportunity>
+﻿@using GridMvc.Html
+@model IEnumerable<MojCRM.Areas.Sales.Models.Opportunity>
 
 @{
     ViewBag.Title = "Pregled prodajnih prilika";
@@ -25,82 +26,49 @@
     <hr />
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.RelatedCampaign.CampaignName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RelatedOrganization.VAT)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OpportunityTitle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OpportunityStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RejectReason)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AssignedTo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastUpdatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsAssigned)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.InsertDate)
-        </th>
-        <th></th>
-    </tr>
+@Html.Grid(Model).Named("PopisProdajnihPrilika").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+    columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
+    columns.Add(m => m.OpportunityTitle).Encoded(false).Sanitized(false).Titled("Naziv prilike").Sortable(false);
+    columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false);
+    columns.Add(m => m.OpportunityStatus).Encoded(false).Sanitized(false).Titled("Status prilike").Sortable(true).RenderValueAs(m =>
+    {
+    if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.START)
+    {
+        return @<div><span class="label label-default">@Html.Raw(m.OpportunityStatusString)</span></div>;
+        }
+        if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.INCONTACT)
+        {
+            return @<div><span class="label label-primary">@Html.Raw(m.OpportunityStatusString)</span></div>;
+        }
+        if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD)
+        {
+            return @<div><span class="label label-success">@Html.Raw(m.OpportunityStatusString)</span></div>;
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.RelatedCampaign.CampaignName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RelatedOrganization.VAT)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OpportunityTitle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OpportunityStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RejectReason)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AssignedTo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastUpdatedBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsAssigned)
-        </td>
-        <td>
-            @Html.Raw(item.InsertDate.ToShortDateString())
-        </td>
-        <td>
-            <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
-            <a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url})" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>
-            @if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
-            {
-                <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id=item.OpportunityId, returnUrl = Request.Url})" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
-            }
-        </td>
-    </tr>
-}
+        return @<div><span class="label label-danger">@Html.Raw(m.OpportunityStatusString)</span><br /><span style="color:red">@Html.Raw(m.OpportunityRejectReasonString)</span></div>;
+    });
+    columns.Add(m => m.OpportunityDescription).Encoded(false).Sanitized(false).Titled("Opis prilike").Sortable(false).RenderValueAs(m =>
+    {
+        if (m.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+        {
+            return @<div><i title="Dodijeli priliku" class="fa fa-check-circle-o fa-2x text-success assinged"></i></div>;
+        }
+        return @<div><span><i class="fa fa-times-circle-o fa-2x text-danger" title="Kartica je već dodijeljena"></i> Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
+    });
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        if ((User.Identity.Name == m.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+            return @<span>
+                 <a href = "@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title = "Detalji prodajne prilike" ><i class="fa fa-list"></i></a>
+            <a href = "@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title = "Uređivanje prodajne prilike" ><i class="fa fa-edit"></i></a>
+            </span>;
+        if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+            return @<span>
+           <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+    </span>;
 
-</table>
+        return @<span>
+    </span>;
+});
+}).WithPaging(20)

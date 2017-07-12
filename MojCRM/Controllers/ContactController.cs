@@ -281,7 +281,7 @@ namespace MojCRM.Controllers
         public ActionResult EditFromSales(OpportunityContactHelper Model)
         {
             var ContactForUpdate = (from c in db.Contacts
-                                    where c.ContactId == Model.ContactId
+                                    where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
                                     select c).First();
 
             if (!String.IsNullOrEmpty(Model.FirstName))

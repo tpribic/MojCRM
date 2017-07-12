@@ -54,14 +54,17 @@ namespace MojCRM.Areas.Sales.Controllers
                                          where c.Organization.MerId == opportunity.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
                                          select c).AsEnumerable();
             var _RelatedOpportunityNotes = (from n in db.OpportunityNotes
-                                            where n.RelatedOpportunityId == opportunity.RelatedOrganizationId
-                                            select n).AsEnumerable();
+                                            where n.RelatedOpportunityId == opportunity.OpportunityId
+                                            select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
             var _RelatedOpportunityActivities = (from a in db.ActivityLogs
                                                  where a.ReferenceId == id
-                                                 select a).AsEnumerable();
+                                                 select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
             var _RelatedOrganization = (from o in db.Organizations
                                         where o.MerId == opportunity.RelatedOrganizationId
                                         select o).First();
+            var _RelatedOrganizationDetail = (from od in db.OrganizationDetails
+                                              where od.MerId == opportunity.RelatedOrganizationId
+                                              select od).First();
             var _RelatedCampaign = (from c in db.Campaigns
                                     where c.CampaignId == opportunity.RelatedCampaignId
                                     select c).First();
@@ -73,14 +76,16 @@ namespace MojCRM.Areas.Sales.Controllers
                 OpportunityId = id,
                 OrganizationName = _RelatedOrganization.SubjectName,
                 OrganizationVAT = _RelatedOrganization.VAT,
-                TelephoneNumber = _RelatedOrganization.OrganizationDetail.TelephoneNumber,
-                MobilePhoneNumber = _RelatedOrganization.OrganizationDetail.MobilePhoneNumber,
-                Email = _RelatedOrganization.OrganizationDetail.EmailAddress,
-                ERP = _RelatedOrganization.OrganizationDetail.ERP,
-                NumberOfInvoices = _RelatedOrganization.OrganizationDetail.NumberOfInvoices,
+                TelephoneNumber = _RelatedOrganizationDetail.TelephoneNumber,
+                MobilePhoneNumber = _RelatedOrganizationDetail.MobilePhoneNumber,
+                Email = _RelatedOrganizationDetail.EmailAddress,
+                ERP = _RelatedOrganizationDetail.ERP,
+                NumberOfInvoices = _RelatedOrganizationDetail.NumberOfInvoices,
                 RelatedCampaignName = _RelatedCampaign.CampaignName,
                 IsAssigned = opportunity.IsAssigned,
                 AssignedTo = opportunity.AssignedTo,
+                LastContactedDate = opportunity.LastContactDate,
+                LastContactedBy = opportunity.LastContactedBy,
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedOpportunityNotes = _RelatedOpportunityNotes,
                 RelatedOpportunityActivities = _RelatedOpportunityActivities,
@@ -99,11 +104,11 @@ namespace MojCRM.Areas.Sales.Controllers
                                        select o).First();
 
             _RelatedOpportunity.LastContactDate = DateTime.Now;
-            _RelatedOpportunity.LastContactedBy = Model.User;
+            _RelatedOpportunity.LastContactedBy = User.Identity.Name;
             db.OpportunityNotes.Add(new OpportunityNote
             {
                 RelatedOpportunityId = Model.RelatedOpportunityId,
-                User = Model.User,
+                User = User.Identity.Name,
                 Note = Model.Note,
                 InsertDate = DateTime.Now,
                 Contact = Model.Contact
@@ -115,8 +120,8 @@ namespace MojCRM.Areas.Sales.Controllers
                 case 1:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = Model.User + " je obavio uspješan poziv vezan za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
-                        User = Model.User,
+                        Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                        User = User.Identity.Name,
                         ReferenceId = Model.RelatedOpportunityId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                         Department = ActivityLog.DepartmentEnum.Sales,

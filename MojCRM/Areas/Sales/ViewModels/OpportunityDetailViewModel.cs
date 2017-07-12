@@ -43,6 +43,12 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "Dodijeljeno agentu")]
         public string AssignedTo { get; set; }
 
+        [Display(Name = "Datum i vrijeme zadnjeg kontakta")]
+        public DateTime? LastContactedDate { get; set; }
+
+        [Display(Name = "Zadnje kontaktirao")]
+        public string LastContactedBy { get; set; }
+
         public IEnumerable<Contact> RelatedSalesContacts { get; set; }
         public IEnumerable<OpportunityNote> RelatedOpportunityNotes { get; set; }
         public IEnumerable<ActivityLog> RelatedOpportunityActivities { get; set; }
@@ -58,7 +64,7 @@ namespace MojCRM.Areas.Sales.ViewModels
                             select new SelectListItem()
                             {
                                 Text = t.ContactFirstName + " " + t.ContactLastName,
-                                Value = t.ContactId.ToString()
+                                Value = t.ContactFirstName + " " + t.ContactLastName
                             }).ToList();
                 return list;
             }

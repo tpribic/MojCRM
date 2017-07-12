@@ -89,6 +89,7 @@ namespace MojCRM.ViewModels
                 {
                     case DepartmentEnum.MojCRM: return "Moj-CRM";
                     case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                    case DepartmentEnum.Sales: return "Odjel prodaje";
                 }
                 return "Odjel";
             }
