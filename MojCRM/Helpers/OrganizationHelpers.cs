@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace MojCRM.Models
+namespace MojCRM.Helpers
 {
-    public class OrganizationDetail
+    public class EditOrganizationDetails
     {
-        [Key, ForeignKey("Organization")]
         public int MerId { get; set; }
         public string TelephoneNumber { get; set; }
         public string MobilePhoneNumber { get; set; }
@@ -17,7 +14,5 @@ namespace MojCRM.Models
         public string ERP { get; set; }
         public int? NumberOfInvoicesSent { get; set; }
         public int? NumberOfInvoicesReceived { get; set; }
-
-        public virtual Organizations Organization { get; set; }
     }
 }

@@ -36,16 +36,16 @@
             <tr>
                 <th>@Html.LabelFor(model => model.SumSuccessfulCalls)</th>
                 <th>@Html.LabelFor(model => model.SumUnsuccessfulCalls)</th>
+                <th>@Html.LabelFor(model => model.SumSentMail)</th>
                 <th>@Html.LabelFor(model => model.SumMailchange)</th>
                 <th>@Html.LabelFor(model => model.SumResend)</th>
-                <th>@Html.LabelFor(model => model.SumDeliveryMail)</th>
             </tr>
             <tr>
                 <td>@Model.SumSuccessfulCalls</td>
                 <td>@Model.SumUnsuccessfulCalls</td>
+                <td>@Model.SumSentMail</td>
                 <td>@Model.SumMailchange</td>
                 <td>@Model.SumResend</td>
-                <td>@Model.SumDeliveryMail</td>
             </tr>
         </table>
     </div>
@@ -58,9 +58,9 @@
                 <th>Odjel</th>
                 <th>Broj uspješnih poziva</th>
                 <th>Broj neuspješnih poziva</th>
+                <th>Broj poslanih e-mailova korisnicima</th>
                 <th>Broj ispravaka mailova</th>
                 <th>Broj ponovno poslanih obavijesti o dostavi</th>
-                <th>Broj poslanih e-mailova vezanih za dostavu</th>
             </tr>
             @foreach (var Department in Model.ActivitiesByDepartment)
             {
@@ -68,9 +68,9 @@
                     <td>@Department.DepartmentString</td>
                     <td>@Department.NumberSuccessfulCalls</td>
                     <td>@Department.NumberUnsuccessfulCalls</td>
+                    <td>@Department.NumberMail</td>
                     <td>@Department.NumberMailchange</td>
                     <td>@Department.NumberResend</td>
-                    <td>@Department.NumberDeliveryMail</td>
                 </tr>
             }
             <tr></tr>

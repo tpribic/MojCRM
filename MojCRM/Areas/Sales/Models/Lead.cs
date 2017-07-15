@@ -12,11 +12,14 @@ namespace MojCRM.Areas.Sales.Models
         [Key]
         public int LeadId { get; set; }
         public string LeadTitle { get; set; }
+        public string LeadDescription { get; set; }
         public int? RelatedCampaignId { get; set; }
-        public int? RelatedOpportunityId { get; set; }
+        [ForeignKey("RelatedOpportunity")]
+        public int RelatedOpportunityId { get; set; }
+
         public int? RelatedOrganizationId { get; set; }
         public LeadStatusEnum LeadStatus { get; set; }
-        public LeadRejectReasonEnum RejectReason { get; set; }
+        public LeadRejectReasonEnum? RejectReason { get; set; }
         public QuoteTypeEnum? QuoteType { get; set; }
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }
@@ -27,7 +30,7 @@ namespace MojCRM.Areas.Sales.Models
 
         [ForeignKey("RelatedCampaignId")]
         public virtual Campaign RelatedCampaign { get; set; }
-        [ForeignKey("RelatedOpportunityId")]
+        //[ForeignKey("RelatedOpportunityId")]
         public virtual Opportunity RelatedOpportunity { get; set; }
         [ForeignKey("RelatedOrganizationId")]
         public virtual Organizations RelatedOrganization { get; set; }
@@ -94,6 +97,38 @@ namespace MojCRM.Areas.Sales.Models
             [Description("Bundle paket (Moj-eRačun + Moj-DMS + Moj-eArhiv")]
             BUNDLE
 
+        }
+
+        public string LeadStatusString
+        {
+            get
+            {
+                switch(LeadStatus)
+                {
+                    case LeadStatusEnum.START: return "Kreirano";
+                    case LeadStatusEnum.INCONTACT: return "U kontaktu";
+                    case LeadStatusEnum.REJECTED: return "Odbijeno";
+                    case LeadStatusEnum.QOUTESENT: return "Poslana ponuda";
+                    case LeadStatusEnum.ACCEPTED: return "Ponuda prihvaćena";
+                }
+                return "Status leada";
+            }
+        }
+
+        public string LeadRejectReasonString
+        {
+            get
+            {
+                switch (RejectReason)
+                {
+                    case LeadRejectReasonEnum.NOINFO: return "Ne želi navesti";
+                    case LeadRejectReasonEnum.NOINTEREST: return "Nema interesa za uslugu";
+                    case LeadRejectReasonEnum.PRICE: return "Previsoka cijena";
+                    case LeadRejectReasonEnum.QUOTE: return "Neadekvatna ponuda";
+                    case LeadRejectReasonEnum.SERVICEPROVIDER: return "Koristi drugog posrednika";
+                }
+                return "Nije odbijeno";
+            }
         }
     }
 }

@@ -137,13 +137,16 @@ namespace MojCRM.Areas.Sales.Controllers
                 OpportunityDescription = opportunity.OpportunityDescription,
                 OpportunityStatus = opportunity.OpportunityStatusString,
                 RejectReasson = opportunity.OpportunityRejectReasonString,
+                OrganizationId = opportunity.RelatedOrganizationId,
                 OrganizationName = _RelatedOrganization.SubjectName,
                 OrganizationVAT = _RelatedOrganization.VAT,
                 TelephoneNumber = _RelatedOrganizationDetail.TelephoneNumber,
                 MobilePhoneNumber = _RelatedOrganizationDetail.MobilePhoneNumber,
                 Email = _RelatedOrganizationDetail.EmailAddress,
                 ERP = _RelatedOrganizationDetail.ERP,
-                NumberOfInvoices = _RelatedOrganizationDetail.NumberOfInvoices,
+                NumberOfInvoicesSent = _RelatedOrganizationDetail.NumberOfInvoicesSent,
+                NumberOfInvoicesReceived = _RelatedOrganizationDetail.NumberOfInvoicesReceived,
+                RelatedCampaignId = opportunity.RelatedCampaignId,
                 RelatedCampaignName = _RelatedCampaign.CampaignName,
                 IsAssigned = opportunity.IsAssigned,
                 AssignedTo = opportunity.AssignedTo,
@@ -195,8 +198,8 @@ namespace MojCRM.Areas.Sales.Controllers
                 case 2:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = Model.User + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
-                        User = Model.User,
+                        Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                        User = User.Identity.Name,
                         ReferenceId = Model.RelatedOpportunityId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
                         Department = ActivityLog.DepartmentEnum.Sales,
@@ -343,6 +346,57 @@ namespace MojCRM.Areas.Sales.Controllers
                 return RedirectToAction("Index");
             }
             return View(Model);
+        }
+
+        public ActionResult ConvertToLead(OpportunityDetailViewModel Model)
+        {
+            db.Leads.Add(new Lead()
+            {
+                LeadTitle = Model.OrganizationName,
+                LeadDescription = Model.OpportunityDescription,
+                RelatedCampaignId = Model.RelatedCampaignId,
+                RelatedOpportunityId = Model.OpportunityId,
+                RelatedOrganizationId = Model.OrganizationId,
+                LeadStatus = Lead.LeadStatusEnum.START,
+                CreatedBy = User.Identity.Name,
+                AssignedTo = Model.AssignedTo,
+                IsAssigned = Model.IsAssigned,
+                InsertDate = DateTime.Now
+            });
+            db.ActivityLogs.Add(new ActivityLog()
+            {
+                Description = User.Identity.Name + " je kreirao lead za tvrtku: " + Model.OrganizationName + " (Kampanja: " + Model.RelatedCampaignName + ")",
+                User = User.Identity.Name,
+                ReferenceId = Model.OpportunityId,
+                ActivityType = ActivityLog.ActivityTypeEnum.CREATEDLEAD,
+                Department = ActivityLog.DepartmentEnum.Sales,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+            return View("Index");
+        }
+
+        public ActionResult ChangeStatus(OpportunityChangeStatusHelper Model)
+        {
+            var opportunity = db.Opportunities.Find(Model.RelatedOpportunityId);
+            opportunity.OpportunityStatus = Model.NewStatus;
+            opportunity.UpdateDate = DateTime.Now;
+            opportunity.LastUpdatedBy = User.Identity.Name;
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        public ActionResult MarkRejected(OpportunityMarkRejectedHelper Model)
+        {
+            var opportunity = db.Opportunities.Find(Model.RelatedOpportunityId);
+            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.REJECTED;
+            opportunity.RejectReason = Model.RejectReason;
+            opportunity.UpdateDate = DateTime.Now;
+            opportunity.LastUpdatedBy = User.Identity.Name;
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public void ImportOpportunities()

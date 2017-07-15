@@ -63,5 +63,7 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Models.OrganizationDetail> OrganizationDetails { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.OpportunityNote> OpportunityNotes { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.LeadNote> LeadNotes { get; set; }
     }
 }

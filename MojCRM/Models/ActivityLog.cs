@@ -41,7 +41,10 @@ namespace MojCRM.Models
             EMAIL,
 
             [Description("Rektivacija e-mail adrese u Postmarku")]
-            POSTMARKACTIVATEBOUNCE
+            POSTMARKACTIVATEBOUNCE,
+
+            [Description("Kreiran lead")]
+            CREATEDLEAD
         }
         public enum DepartmentEnum
         {
@@ -69,6 +72,7 @@ namespace MojCRM.Models
                     case ActivityTypeEnum.RESEND: return "Ponovno slanje obavijesti o dostavi";
                     case ActivityTypeEnum.EMAIL: return "Slanje e-mailova";
                     case ActivityTypeEnum.POSTMARKACTIVATEBOUNCE: return "Rektivacija e-mail adrese u Postmarku";
+                    case ActivityTypeEnum.CREATEDLEAD: return "Kreiran lead";
                 }
                 return "Tip aktivnosti";
             }

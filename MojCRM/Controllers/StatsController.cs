@@ -144,7 +144,7 @@ namespace MojCRM.Controllers
                         NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
                         NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
                         NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
-                        NumberDeliveryMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                        NumberMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
                     };
                     ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
                 }
@@ -178,7 +178,7 @@ namespace MojCRM.Controllers
                         NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
                         NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
                         NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
-                        NumberDeliveryMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                        NumberMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
                     };
                     ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
                 }
@@ -192,7 +192,7 @@ namespace MojCRM.Controllers
                 SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
                 SumMailchange = MailChange.Count(),
                 SumResend = Resend.Count(),
-                SumDeliveryMail = DeliveryMail.Count()
+                SumSentMail = DeliveryMail.Count()
             };
 
             return View(model);

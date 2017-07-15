@@ -22,6 +22,9 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "Razlog odbijanja prodajne prilike")]
         public string RejectReasson { get; set; }
 
+        [Display(Name = "Id tvrtke")]
+        public int? OrganizationId { get; set; }
+
         [Display(Name = "Naziv tvrtke")]
         public string OrganizationName { get; set; }
 
@@ -40,8 +43,14 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "ERP program")]
         public string ERP { get; set; }
 
-        [Display(Name = "Broj računa mjesečno")]
-        public int? NumberOfInvoices { get; set; }
+        [Display(Name = "Broj IRA mjesečno")]
+        public int? NumberOfInvoicesSent { get; set; }
+
+        [Display(Name = "Broj URA mjesečno")]
+        public int? NumberOfInvoicesReceived { get; set; }
+
+        [Display(Name = "Id kampanje")]
+        public int? RelatedCampaignId { get; set; }
 
         [Display(Name = "Naziv kampanje")]
         public string RelatedCampaignName { get; set; }
@@ -62,7 +71,6 @@ namespace MojCRM.Areas.Sales.ViewModels
         public IEnumerable<OpportunityNote> RelatedOpportunityNotes { get; set; }
         public IEnumerable<ActivityLog> RelatedOpportunityActivities { get; set; }
 
-        //public virtual Contact SalesContact { get; set; }
         public virtual IEnumerable<ApplicationUser> Users { get; set; }
 
         public IList<SelectListItem> RelatedSalesContactsForDetails

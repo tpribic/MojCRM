@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using static MojCRM.Areas.Sales.Models.Opportunity;
+using static MojCRM.Areas.Sales.Models.Lead;
 
 namespace MojCRM.Areas.Sales.Helpers
 {
-    public class OpportunityNoteHelper
+    public class LeadNoteHelper
     {
-        public int? RelatedOpportunityId { get; set; }
+        public int? RelatedLeadId { get; set; }
         public string User { get; set; }
         public string Contact { get; set; }
         public string Note { get; set; }
@@ -17,7 +17,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public int Identifier { get; set; }
     }
 
-    public class OpportunityContactHelper
+    public class LeadContactHelper
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -25,50 +25,50 @@ namespace MojCRM.Areas.Sales.Helpers
         public string Mobile { get; set; }
         public string Email { get; set; }
         public string Agent { get; set; }
-        public int? RelatedOpportunityId { get; set; }
+        public int? RelatedLeadId { get; set; }
         public string ContactId { get; set; }
     }
 
-    public class OpportunityAssignHelper
+    public class LeadAssignHelper
     {
         public string AssignedTo { get; set; }
-        public int? RelatedOpportunityId { get; set; }
+        public int? RelatedLeadId { get; set; }
         public bool Unassign { get; set; }
     }
 
-    public class OpportunitySearchHelper
+    public class LeadSearchHelper
     {
         public string Campaign { get; set; }
-        public string Opportunity { get; set; }
+        public string Lead { get; set; }
         public string Organization { get; set; }
-        public OpportunityStatusEnum? OpportunityStatus { get; set; }
-        public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public LeadStatusEnum? LeadStatus { get; set; }
+        public LeadRejectReasonEnum? RejectReason { get; set; }
         public string Assigned { get; set; }
         public string AssignedTo { get; set; }
     }
 
-    public class OpportunityEditHelper
+    public class LeadEditHelper
     {
-        public int OpportunityId { get; set; }
-        public string OpportunityTitle { get; set; }
-        public string OpportunityDescription { get; set; }
-        public OpportunityStatusEnum OpportunityStatus { get; set; }
-        public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public int LeadId { get; set; }
+        public string LeadTitle { get; set; }
+        public string LeadDescription { get; set; }
+        public LeadStatusEnum OpportunityStatus { get; set; }
+        public LeadRejectReasonEnum? RejectReason { get; set; }
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }
         public string LastContactedBy { get; set; }
         public string LastUpdatedBy { get; set; }
     }
 
-    public class OpportunityChangeStatusHelper
+    public class LeadChangeStatusHelper
     {
-        public OpportunityStatusEnum NewStatus { get; set; }
-        public int RelatedOpportunityId { get; set; }
+        public LeadStatusEnum NewStatus { get; set; }
+        public int RelatedLeadId { get; set; }
     }
 
-    public class OpportunityMarkRejectedHelper
+    public class LeadMarkRejectedHelper
     {
-        public OpportunityRejectReasonEnum RejectReason { get; set; }
-        public int RelatedOpportunityId { get; set; }
+        public LeadRejectReasonEnum RejectReason { get; set; }
+        public int RelatedLeadId { get; set; }
     }
 }

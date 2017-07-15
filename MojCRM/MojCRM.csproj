@@ -340,8 +340,10 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\Sales\Controllers\LeadsController.cs" />
     <Compile Include="Areas\Sales\Controllers\OpportunitiesController.cs" />
+    <Compile Include="Areas\Sales\Helpers\LeadHelpers.cs" />
     <Compile Include="Areas\Sales\Helpers\OpportunityHelpers.cs" />
     <Compile Include="Areas\Sales\Models\Lead.cs" />
+    <Compile Include="Areas\Sales\Models\LeadNote.cs" />
     <Compile Include="Areas\Sales\Models\Opportunity.cs" />
     <Compile Include="Areas\Sales\Models\OpportunityNote.cs" />
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
@@ -363,6 +365,7 @@
     <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
     <Compile Include="Helpers\MerDeliveryJsonResponse.cs" />
+    <Compile Include="Helpers\OrganizationHelpers.cs" />
     <Compile Include="Helpers\PostmarkApi.cs" />
     <Compile Include="Migrations\201702061631424_Init.cs" />
     <Compile Include="Migrations\201702061631424_Init.Designer.cs">
@@ -483,6 +486,14 @@
     <Compile Include="Migrations\201707111556344_Jul11Update.cs" />
     <Compile Include="Migrations\201707111556344_Jul11Update.Designer.cs">
       <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707131828531_Jul13UpdateLeads.cs" />
+    <Compile Include="Migrations\201707131828531_Jul13UpdateLeads.Designer.cs">
+      <DependentUpon>201707131828531_Jul13UpdateLeads.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707131908026_Jul13UpdateLeadsv2.cs" />
+    <Compile Include="Migrations\201707131908026_Jul13UpdateLeadsv2.Designer.cs">
+      <DependentUpon>201707131908026_Jul13UpdateLeadsv2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -617,6 +628,7 @@
     <Content Include="Areas\Sales\Views\Opportunities\Index.cshtml" />
     <Content Include="Areas\Sales\Views\Opportunities\Details.cshtml" />
     <Content Include="Areas\Sales\Views\Opportunities\Edit.cshtml" />
+    <Content Include="Areas\Sales\Views\Leads\Index.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -729,7 +741,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Campaigns\Views\Shared\" />
-    <Folder Include="Areas\Sales\Views\Leads\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
@@ -832,6 +843,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707111556344_Jul11Update.resx">
       <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707131828531_Jul13UpdateLeads.resx">
+      <DependentUpon>201707131828531_Jul13UpdateLeads.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707131908026_Jul13UpdateLeadsv2.resx">
+      <DependentUpon>201707131908026_Jul13UpdateLeadsv2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

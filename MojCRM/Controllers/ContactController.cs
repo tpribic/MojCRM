@@ -239,12 +239,11 @@ namespace MojCRM.Controllers
         [HttpPost]
         public ActionResult EditFromDelivery(string _ContactId, string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
         {
-            int _ContactIdInt = Int32.Parse(_ContactId);
             int _ReceiverInt = Int32.Parse(_Receiver);
             int _DocumentIdInt = Int32.Parse(_DocumentId);
 
             var ContactForUpdate = (from c in db.Contacts
-                                    where c.ContactId == _ContactIdInt
+                                    where c.ContactFirstName + " " + c.ContactLastName == _ContactId
                                     select c).First();
 
             if (!String.IsNullOrEmpty(_FirstName))

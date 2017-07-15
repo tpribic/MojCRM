@@ -222,6 +222,36 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        // POST: Organizations/EditOrganizationDetails
+        public ActionResult EditOrganizationDetails(EditOrganizationDetails Model)
+        {
+            var organization = db.OrganizationDetails.Find(Model.MerId);
+
+            if (!String.IsNullOrEmpty(Model.TelephoneNumber))
+            {
+                organization.TelephoneNumber = Model.TelephoneNumber;
+            }
+            if (!String.IsNullOrEmpty(Model.MobilePhoneNumber))
+            {
+                organization.MobilePhoneNumber = Model.MobilePhoneNumber;
+            }
+            if (!String.IsNullOrEmpty(Model.ERP))
+            {
+                organization.ERP = Model.ERP;
+            }
+            if (Model.NumberOfInvoicesSent != null)
+            {
+                organization.NumberOfInvoicesSent = Model.NumberOfInvoicesSent;
+            }
+            if (Model.NumberOfInvoicesReceived != null)
+            {
+                organization.NumberOfInvoicesReceived = Model.NumberOfInvoicesReceived;
+            }
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

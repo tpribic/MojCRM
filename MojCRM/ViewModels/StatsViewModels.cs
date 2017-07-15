@@ -74,12 +74,13 @@ namespace MojCRM.ViewModels
         public int NumberSuccessfulCalls { get; set; }
         [Display(Name = "Zbroj neuspješnih poziva")]
         public int NumberUnsuccessfulCalls { get; set; }
-        [Display(Name = "Zbroj ispravaka mailova")]
+        [Display(Name = "Zbroj poslanih e-mailova korisnicima")]
+        public int? NumberMail { get; set; }
+        [Display(Name = "Zbroj ispravaka mailova (DOSTAVA)")]
         public int? NumberMailchange { get; set; }
-        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi")]
+        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi (DOSTAVA)")]
         public int? NumberResend { get; set; }
-        [Display(Name = "Zbroj poslanih e-mailova vezanih za dostavu")]
-        public int? NumberDeliveryMail { get; set; }
+        
 
         public string DepartmentString
         {
@@ -103,12 +104,12 @@ namespace MojCRM.ViewModels
         public int SumSuccessfulCalls { get; set; }
         [Display(Name = "Zbroj neuspješnih poziva")]
         public int SumUnsuccessfulCalls { get; set; }
-        [Display(Name = "Zbroj ispravaka mailova")]
-        public int? SumMailchange { get; set; }
-        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi")]
-        public int? SumResend { get; set; }
         [Display(Name = "Zbroj poslanih e-mailova vezanih za dostavu")]
-        public int? SumDeliveryMail { get; set; }
+        public int? SumSentMail { get; set; }
+        [Display(Name = "Zbroj ispravaka mailova (DOSTAVA)")]
+        public int? SumMailchange { get; set; }
+        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi (DOSTAVA)")]
+        public int? SumResend { get; set; }
     }
 
     public class PersonalDailyActivitiesViewModel
