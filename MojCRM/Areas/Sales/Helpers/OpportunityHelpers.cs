@@ -8,6 +8,7 @@ namespace MojCRM.Areas.Sales.Helpers
 {
     public class OpportunityNoteHelper
     {
+        public string[] NoteTemplates { get; set; }
         public int? RelatedOpportunityId { get; set; }
         public string User { get; set; }
         public string Contact { get; set; }
@@ -24,7 +25,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public string Telephone { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
-        public string Agent { get; set; }
+        public string Title { get; set; }
         public int? RelatedOpportunityId { get; set; }
         public string ContactId { get; set; }
     }
@@ -70,5 +71,17 @@ namespace MojCRM.Areas.Sales.Helpers
     {
         public OpportunityRejectReasonEnum RejectReason { get; set; }
         public int RelatedOpportunityId { get; set; }
+    }
+
+    public class ConvertToLeadHelper
+    {
+        public string OrganizationName { get; set; }
+        public string OpportunityDescription { get; set; }
+        public int? RelatedCampaignId { get; set; }
+        public string RelatedCampaignName { get; set; }
+        public int OpportunityId { get; set; }
+        public int? OrganizationId { get; set; }
+        public string AssignedTo { get; set; }
+        public bool IsAssigned { get; set; }
     }
 }

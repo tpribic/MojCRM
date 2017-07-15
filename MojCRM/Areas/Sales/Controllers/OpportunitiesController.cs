@@ -13,6 +13,7 @@ using MojCRM.Areas.Sales.Models;
 using Excel = Microsoft.Office.Interop.Excel;
 using MojCRM.Areas.Sales.ViewModels;
 using MojCRM.Areas.Sales.Helpers;
+using System.Text;
 
 namespace MojCRM.Areas.Sales.Controllers
 {
@@ -168,18 +169,41 @@ namespace MojCRM.Areas.Sales.Controllers
             var _RelatedOpportunity = (from o in db.Opportunities
                                        where o.OpportunityId == Model.RelatedOpportunityId
                                        select o).First();
+            var _NoteString = new StringBuilder();
+
+            foreach (var Template in Model.NoteTemplates)
+            {
+                _NoteString.AppendLine(Template);
+            }
 
             _RelatedOpportunity.LastContactDate = DateTime.Now;
             _RelatedOpportunity.LastContactedBy = User.Identity.Name;
-            db.OpportunityNotes.Add(new OpportunityNote
+
+            if (Model.NoteTemplates.Length == 0)
             {
-                RelatedOpportunityId = Model.RelatedOpportunityId,
-                User = User.Identity.Name,
-                Note = Model.Note,
-                InsertDate = DateTime.Now,
-                Contact = Model.Contact
-            });
-            db.SaveChanges();
+                db.OpportunityNotes.Add(new OpportunityNote
+                {
+                    RelatedOpportunityId = Model.RelatedOpportunityId,
+                    User = User.Identity.Name,
+                    Note = Model.Note,
+                    InsertDate = DateTime.Now,
+                    Contact = Model.Contact
+                });
+                db.SaveChanges();
+            }
+            else
+            {
+                db.OpportunityNotes.Add(new OpportunityNote
+                {
+                    RelatedOpportunityId = Model.RelatedOpportunityId,
+                    User = User.Identity.Name,
+                    Note = _NoteString + ";" + Model.Note,
+                    InsertDate = DateTime.Now,
+                    Contact = Model.Contact
+                });
+                db.SaveChanges();
+            }
+            
 
             switch (Model.Identifier)
             {
@@ -348,7 +372,7 @@ namespace MojCRM.Areas.Sales.Controllers
             return View(Model);
         }
 
-        public ActionResult ConvertToLead(OpportunityDetailViewModel Model)
+        public ActionResult ConvertToLead(ConvertToLeadHelper Model)
         {
             db.Leads.Add(new Lead()
             {

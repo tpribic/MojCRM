@@ -118,11 +118,11 @@ namespace MojCRM.Controllers
                 OrganizationId = Int32.Parse(_OrganizationId),
                 ContactFirstName = Model.FirstName,
                 ContactLastName = Model.LastName,
-                Title = "N/A",
+                Title = Model.Title,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
                 Email = Model.Email,
-                User = Model.Agent,
+                User = User.Identity.Name,
                 InsertDate = DateTime.Now,
                 ContactType = Contact.ContactTypeEnum.SALES,
             });
@@ -303,10 +303,7 @@ namespace MojCRM.Controllers
             {
                 ContactForUpdate.Email = Model.Email;
             }
-            if (!String.IsNullOrEmpty(Model.Agent))
-            {
-                ContactForUpdate.User = Model.Agent;
-            }
+            ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();
 
             return Redirect(Request.UrlReferrer.ToString());
