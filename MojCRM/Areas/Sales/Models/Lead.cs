@@ -23,10 +23,17 @@ namespace MojCRM.Areas.Sales.Models
         public QuoteTypeEnum? QuoteType { get; set; }
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }
+
+        [Display(Name = "Zadnje kontaktirao")]
+        public string LastContactedBy { get; set; }
+
         public string LastUpdatedBy { get; set; }
         public bool IsAssigned { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        [Display(Name = "Datum zadnjeg kontakta")]
+        public DateTime? LastContactDate { get; set; }
 
         [ForeignKey("RelatedCampaignId")]
         public virtual Campaign RelatedCampaign { get; set; }

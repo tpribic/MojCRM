@@ -132,6 +132,33 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        // POST: Contact/CreateFromDelivery
+        [HttpPost]
+        public ActionResult CreateFromSales(LeadContactHelper Model)
+        {
+            var _OrganizationId = (from o in db.Leads
+                                   where o.LeadId == Model.RelatedLeadId
+                                   select o.RelatedOrganizationId).First().ToString();
+
+            db.Contacts.Add(new Contact
+            {
+                OrganizationId = Int32.Parse(_OrganizationId),
+                ContactFirstName = Model.FirstName,
+                ContactLastName = Model.LastName,
+                Title = Model.Title,
+                TelephoneNumber = Model.Telephone,
+                MobilePhoneNumber = Model.Mobile,
+                Email = Model.Email,
+                User = User.Identity.Name,
+                InsertDate = DateTime.Now,
+                ContactType = Contact.ContactTypeEnum.SALES,
+            });
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
         // GET: Contact/Details
         public ActionResult Details(int ContactId)
         {
@@ -302,6 +329,48 @@ namespace MojCRM.Controllers
             if (!String.IsNullOrEmpty(Model.Email))
             {
                 ContactForUpdate.Email = Model.Email;
+            }
+            if (!String.IsNullOrEmpty(Model.Title))
+            {
+                ContactForUpdate.Title = Model.Title;
+            }
+            ContactForUpdate.User = User.Identity.Name;
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // POST: Contact/EditFromSales
+        [HttpPost]
+        public ActionResult EditFromSales(LeadContactHelper Model)
+        {
+            var ContactForUpdate = (from c in db.Contacts
+                                    where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
+                                    select c).First();
+
+            if (!String.IsNullOrEmpty(Model.FirstName))
+            {
+                ContactForUpdate.ContactFirstName = Model.FirstName;
+            }
+            if (!String.IsNullOrEmpty(Model.LastName))
+            {
+                ContactForUpdate.ContactLastName = Model.LastName;
+            }
+            if (!String.IsNullOrEmpty(Model.Telephone))
+            {
+                ContactForUpdate.TelephoneNumber = Model.Telephone;
+            }
+            if (!String.IsNullOrEmpty(Model.Mobile))
+            {
+                ContactForUpdate.MobilePhoneNumber = Model.Mobile;
+            }
+            if (!String.IsNullOrEmpty(Model.Email))
+            {
+                ContactForUpdate.Email = Model.Email;
+            }
+            if (!String.IsNullOrEmpty(Model.Title))
+            {
+                ContactForUpdate.Title = Model.Title;
             }
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();

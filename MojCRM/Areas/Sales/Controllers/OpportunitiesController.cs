@@ -171,15 +171,10 @@ namespace MojCRM.Areas.Sales.Controllers
                                        select o).First();
             var _NoteString = new StringBuilder();
 
-            foreach (var Template in Model.NoteTemplates)
-            {
-                _NoteString.AppendLine(Template);
-            }
-
             _RelatedOpportunity.LastContactDate = DateTime.Now;
             _RelatedOpportunity.LastContactedBy = User.Identity.Name;
 
-            if (Model.NoteTemplates.Length == 0)
+            if (Model.NoteTemplates == null)
             {
                 db.OpportunityNotes.Add(new OpportunityNote
                 {
@@ -193,6 +188,11 @@ namespace MojCRM.Areas.Sales.Controllers
             }
             else
             {
+                foreach (var Template in Model.NoteTemplates)
+                {
+                    _NoteString.AppendLine(Template);
+                }
+
                 db.OpportunityNotes.Add(new OpportunityNote
                 {
                     RelatedOpportunityId = Model.RelatedOpportunityId,
@@ -396,8 +396,12 @@ namespace MojCRM.Areas.Sales.Controllers
                 Department = ActivityLog.DepartmentEnum.Sales,
                 InsertDate = DateTime.Now
             });
+            var opportunity = db.Opportunities.Find(Model.OpportunityId);
+            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.LEAD;
+            opportunity.UpdateDate = DateTime.Now;
+            opportunity.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();
-            return View("Index");
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public ActionResult ChangeStatus(OpportunityChangeStatusHelper Model)

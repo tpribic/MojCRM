@@ -8,6 +8,7 @@ namespace MojCRM.Areas.Sales.Helpers
 {
     public class LeadNoteHelper
     {
+        public string[] NoteTemplates { get; set; }
         public int? RelatedLeadId { get; set; }
         public string User { get; set; }
         public string Contact { get; set; }
@@ -24,6 +25,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public string Telephone { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
+        public string Title { get; set; }
         public string Agent { get; set; }
         public int? RelatedLeadId { get; set; }
         public string ContactId { get; set; }
@@ -52,7 +54,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public int LeadId { get; set; }
         public string LeadTitle { get; set; }
         public string LeadDescription { get; set; }
-        public LeadStatusEnum OpportunityStatus { get; set; }
+        public LeadStatusEnum LeadStatus { get; set; }
         public LeadRejectReasonEnum? RejectReason { get; set; }
         public string CreatedBy { get; set; }
         public string AssignedTo { get; set; }

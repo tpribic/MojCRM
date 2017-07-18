@@ -272,6 +272,11 @@ namespace MojCRM.Controllers
                 Deliveries = Deliveries
             };
 
+            var _date = new DateTime(2017, 7, 1);
+            ViewBag.TotalOpenedTickets = (from t in db.DeliveryTicketModels
+                                          where t.IsAssigned == false && t.InsertDate >= _date
+                                          select t).Count();
+
             return View(model);
         }
     }

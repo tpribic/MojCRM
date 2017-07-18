@@ -1,19 +1,20 @@
 ﻿@using System.Web.UI.WebControls
-@model MojCRM.Areas.Sales.ViewModels.OpportunityDetailViewModel
+@model MojCRM.Areas.Sales.ViewModels.LeadDetailViewModel
 
 @{
     ViewBag.Title = "Detalji";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 @{ 
-    var opportunityStatusList = new List<ListItem>
+    var leadStatusList = new List<ListItem>
         {
             new ListItem{ Value= "0", Text = "Kreirano"},
             new ListItem{ Value= "1", Text = "U kontaktu"},
-            new ListItem{ Value= "2", Text = "Kreiran lead"},
-            new ListItem{ Value= "3", Text = "Odbijeno"}
+            new ListItem{ Value= "2", Text = "Odbijeno"},
+            new ListItem{ Value= "3", Text = "Poslana ponuda"},
+            new ListItem{ Value= "4", Text = "Prihvaćena ponuda"}
         };
-    var opportunityRejectReasonList = new List<ListItem>
+    var leadRejectReasonList = new List<ListItem>
         {
             new ListItem{ Value= "0", Text = "Ne želi navesti"},
             new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
@@ -41,7 +42,7 @@
     };
 }
 
-<!-- Modal - Add Note New-->
+<!-- Modal - Add Note-->
 <div class="modal fade" id="AddNote" tabindex="-1" role="dialog" aria-labelledby="AddNote">
     <div class="modal-dialog modal-lg" role="document" style="overflow-y:initial">
         <div class="modal-content" style="overflow:hidden">
@@ -52,8 +53,8 @@
             <div class="modal-body" style="overflow-y:auto; max-height:400px">
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="delivery-detail-contact">Kontakt osoba</label>
-                        <div id="contact">
+                        <label for="note-contact">Kontakt osoba</label>
+                        <div id="note-contact">
                             @Html.DropDownList("Contact", Model.RelatedSalesContactsForDetails, new { @class = "form-control", @id = "contact-for-note" })
                         </div>
                     </div>
@@ -61,9 +62,9 @@
                 <br />
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="delivery-detail">Osobna napomena</label>
+                        <label for="note">Osobna napomena</label>
                         <div id="note">
-                            @Html.TextArea("Note", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave", @id = "note-for-note" })
+                            @Html.TextArea("Note", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena", @id = "note-for-note" })
                         </div>
                     </div>
                 </div>
@@ -84,7 +85,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="add-note" onclick="javascript: AddNote()" data-opportunity-id="@Html.Raw(Model.OpportunityId)">Kreiraj bilješku</button>
+                <button type="submit" class="btn btn-primary" id="add-note" onclick="javascript: AddNote()" data-lead-id="@Html.Raw(Model.LeadId)">Kreiraj bilješku</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
             </div>
         </div>
@@ -92,7 +93,7 @@
 </div>
 
 <!--Modal - Edit Note-->
-@using (Html.BeginForm("EditNote", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("EditNote", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="EditNote" tabindex="-1" role="dialog" aria-labelledby="EditNote">
         <div class="modal-dialog modal-sm" role="document">
@@ -106,7 +107,7 @@
                         <div class="row">
                             <div class="hidden">
                                 <div id="opportunity-id">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -137,7 +138,7 @@
                             <div class="col-md-12">
                                 <label for="note">Nova bilješka</label>
                                 <div id="note">
-                                    @Html.TextArea("Note", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
+                                    @Html.TextArea("Note", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena" })
                                 </div>
                             </div>
                         </div>
@@ -153,7 +154,7 @@
 }
 
 <!--Modal - Delete Note-->
-@using (Html.BeginForm("DeleteNote", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("DeleteNote", "Leads", FormMethod.Post))
 {
     @Html.AntiForgeryToken();
     <div class="modal fade" id="DeleteNote" tabindex="-1" role="dialog" aria-labelledby="DeleteNote">
@@ -178,7 +179,7 @@
                 </div>
                 <div class="hidden">
                     <div id="opportunity-id">
-                        @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                        @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -244,7 +245,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -321,7 +322,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -337,7 +338,7 @@
 }
 
 <!--Modal - Assing-->
-@using (Html.BeginForm("Assign", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("Assign", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="Assign" tabindex="-1" role="dialog" aria-labelledby="Assign">
         <div class="modal-dialog modal-sm" role="document">
@@ -357,7 +358,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="ticketid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -373,7 +374,7 @@
 }
 
 <!--Modal - Reassign-->
-@using (Html.BeginForm("Reassign", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("Reassign", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="Reassign" tabindex="-1" role="dialog" aria-labelledby="Reassign">
         <div class="modal-dialog modal-sm" role="document">
@@ -386,7 +387,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
-                                Prodajna prilika je trenutno dodijeljena. Možete ju ili otključati ili dodijeliti drugom agentu.
+                                Lead je trenutno dodijeljen. Možete ga ili otključati ili dodijeliti drugom agentu.
                             </div>
                         </div>
                         <hr />
@@ -408,7 +409,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="ticketid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -424,20 +425,20 @@
 }
 
 <!--Modal - Change Status-->
-@using (Html.BeginForm("ChangeStatus", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("ChangeStatus", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="ChangeStatus" tabindex="-1" role="dialog" aria-labelledby="ChangeStatus">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Promijeni status prodajne prilike</h4>
+                    <h4>Promijeni status leada</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
-                                Molimo odaberite status u koji želite staviti prodajnu priliku.
+                                Molimo odaberite status u koji želite staviti lead.
                             </div>
                         </div>
                         <hr />
@@ -445,12 +446,12 @@
                             <div class="col-md-12">
                                 <label for="status">Status</label>
                                 <div id="status">
-                                    @Html.DropDownList("NewStatus", new SelectList(opportunityStatusList, "Value", "Text"), "Odaberi novi status prilike", new { @class = "form-control" })
+                                    @Html.DropDownList("NewStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi novi status prilike", new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="ticketid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -466,14 +467,14 @@
 }
 
 <!-- Modal - Mark Rejected-->
-@using (Html.BeginForm("MarkRejected", "Opportunities", FormMethod.Post))
+@using (Html.BeginForm("MarkRejected", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="MarkRejected" tabindex="-1" role="dialog" aria-labelledby="MarkRejected">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Označavanje prilike odbijenom</h4>
+                    <h4>Označavanje odbijanja leada</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -487,12 +488,12 @@
                             <div class="col-md-12">
                                 <label for="status">Status</label>
                                 <div id="status">
-                                    @Html.DropDownList("RejectReason", new SelectList(opportunityRejectReasonList, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
+                                    @Html.DropDownList("RejectReason", new SelectList(leadRejectReasonList, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="ticketid">
-                                    @Html.TextBox("RelatedOpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
+                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -555,80 +556,13 @@
     </div>
 }
 
-<!-- Modal - Create Lead-->
-@using (Html.BeginForm("ConvertToLead", "Opportunities", FormMethod.Post))
-{
-    <div class="modal fade" id="CreateLead" tabindex="-1" role="dialog" aria-labelledby="CreateLead">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="overflow:hidden">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Kreiranje leada</h4>
-                </div>
-                <div class="modal-body">
-                    <h5>Potvrđivanjem ove akcije kreirat ćete lead za niže navedene podatke.</h5>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="organization-name">Naziv tvrtke</label>
-                                <div id="organization-name">
-                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName, @disabled = true })
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label for="opportunity-description">Opis prodajne prilike</label>
-                                <div id="opportunity-description">
-                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription, @disabled = true })
-                                </div>
-                            </div>
-                            </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="campaign-name">Naziv povezane kampanje</label>
-                                <div id="campaign-name">
-                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName, @disabled = true })
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="campaign-name">Dodijeljeno agentu</label>
-                                <div id="campaign-name">
-                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.AssignedTo, @disabled = true })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hidden">
-                            <div id="campaign-id">
-                                @Html.TextBox("RelatedCampaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignId })
-                            </div>
-                            <div id="oportunity-id">
-                                @Html.TextBox("OpportunityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityId })
-                            </div>
-                            <div id="organization-id">
-                                @Html.TextBox("OrganizationId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationId })
-                            </div>
-                            <div id="is-assigned">
-                                @Html.TextBox("IsAssigned", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.IsAssigned })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Kreiraj lead</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
 <!--Modal - Related Activities-->
 <div class="modal fade" id="RelatedActivities" tabindex="-1" role="dialog" aria-labelledby="RelatedActivities">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4>Povijest aktivnosti agenata vezanih za ovu prodajnu priliku</h4>
+                <h4>Povijest aktivnosti agenata vezanih za ovaj lead</h4>
             </div>
             <div class="modal-body">
                 <table class="table">
@@ -638,7 +572,7 @@
                         <th>Agent</th>
                         <th>Datum aktivnosti</th>
                     </tr>
-                    @foreach (var Activity in Model.RelatedOpportunityActivities)
+                    @foreach (var Activity in Model.RelatedLeadActivities)
                     {
                         <tr>
                             <td>@Activity.ActivityTypeString</td>
@@ -656,8 +590,8 @@
     </div>
 </div>
 
-<!--Modal - Opportunity Notes-->
-<div class="modal fade" id="OpportunityNotes" tabindex="-1" role="dialog" aria-labelledby="OpportunityNotes">
+<!--Modal - Lead Notes-->
+<div class="modal fade" id="LeadNotes" tabindex="-1" role="dialog" aria-labelledby="LeadNotes">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
@@ -666,7 +600,7 @@
                     <a href="#DeleteNote" title="Brisanje bilješke" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
                 </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Bilješke o prodajnoj prilici</h4>
+                    <h4>Bilješke o leadu</h4>
                 </div>
             <div class="modal-body">
                 <table class="table">
@@ -677,7 +611,7 @@
                         <th>Povezani kontakt</th>
                         <th></th>
                     </tr>
-                    @foreach (var Note in Model.RelatedOpportunityNotes)
+                    @foreach (var Note in Model.RelatedLeadNotes)
                     {
                         <tr>
                             <td>@Note.InsertDate</td>
@@ -727,13 +661,13 @@
                             <td>@Contact.ContactFirstName</td>
                             <td>@Contact.ContactLastName</td>
                             <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-opportunity-id="@Html.Raw(Model.OpportunityId)" name="contact-email" class="opportunity-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-opportunity-id="@Html.Raw(Model.LeadId)" name="contact-email" class="opportunity-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td>@Contact.Title</td>
                             <td>@Contact.User</td>
                             <td>
                                 <a href="#AddNote" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-opportunity-id="@Html.Raw(Model.OpportunityId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-opportunity-id="@Html.Raw(Model.OpportunityId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-lead-id="@Html.Raw(Model.LeadId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-lead-id="@Html.Raw(Model.LeadId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
                             </td>
                         </tr>
                     }
@@ -748,31 +682,30 @@
 
 
 
-<h2 style="text-align:center"><strong>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
+<h2 style="text-align:center"><strong>Detalji leda: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
 <br />
 @if (Model.IsAssigned == true)
 {
-    <h4 style="text-align:center; color:red">Ova prodajna prilika je dodijeljena agentu: <strong>@Model.AssignedTo</strong></h4>
+    <h4 style="text-align:center; color:red">Ovaj lead je dodijeljen agentu: <strong>@Model.AssignedTo</strong></h4>
 }
 <div>
     <div class="row" style="text-align:center">
         <div class="col-md-12">
             <div class="btn-group" role="group">
-                <button type="button" title="Pregled aktivnosti vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
-                <button type="button" title="Pregled bilješki vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#OpportunityNotes"><i class="fa fa-sticky-note"></i></button>
+                <button type="button" title="Pregled aktivnosti vezanih uz ovaj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
+                <button type="button" title="Pregled bilješki vezanih uz ovaj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#LeadNotes"><i class="fa fa-sticky-note"></i></button>
                 <button type="button" title="Pregled kontakata za prodaju" class="btn btn-sm btn-default" data-toggle="modal" href="#SalesContacts"><i class="fa fa-address-book"></i></button>
                 @if (Model.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
-                    <button type="button" title="Dodijeli prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
+                    <button type="button" title="Dodijeli lead" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                 }
                 @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
                     <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                 }
-                <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
-                <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
+                <button type="button" title="Promijeni status leada" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                 <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
-                <a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis prodajnih prilika"><i class="fa fa-arrow-left"></i></a>
+                <a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis leadova"><i class="fa fa-arrow-left"></i></a>
             </div>
         </div>
     </div>
@@ -818,7 +751,7 @@
     </div>
     <hr />
     <div class="row col-md-12">
-        <h5><strong>Dodatni podaci o prodajnoj prilici</strong></h5>
+        <h5><strong>Dodatni podaci o leadu</strong></h5>
     </div>
     <br />
     <div class="row">
@@ -838,11 +771,11 @@
     <br />
     <div class="row">
         <div class="col-md-4">
-            <strong>Status prodajne prilike:</strong>
-            @Model.OpportunityStatus
+            <strong>Status leada:</strong>
+            @Model.LeadStatus
         </div>
         <div class="col-md-4">
-            <strong>Razlog odbijanja prodajne prilike:</strong>
+            <strong>Razlog odbijanja leada:</strong>
             @Model.RejectReasson
         </div>
         <div class="col-md-4">
@@ -851,9 +784,9 @@
     </div>
     <br />
     <div class="row">
-        <div class="col-md-12" id="opportunity-description">
-            <strong>Detalji prodajne prilike:</strong>
-            @Model.OpportunityDescription
+        <div class="col-md-12" id="lead-description">
+            <strong>Detalji leada:</strong>
+            @Model.LeadDescription
         </div>
     </div>
 </div>
@@ -862,10 +795,9 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Opportunities", area = "Sales" })',
+            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
             data: {
-                RelatedOpportunityId: $(this).data("opportunity-id"),
-                User: $(this).data("agent"),
+                RelatedLeadId: $(this).data("lead-id"),
                 Contact: $(this).data("contact"),
                 Identifier: $(this).data("identifier-short")
             },
@@ -881,10 +813,9 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Opportunities", area = "Sales" })',
+            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
             data: {
-                RelatedOpportunityId: $(this).data("opportunity-id"),
-                User: $(this).data("agent"),
+                RelatedLeadId: $(this).data("lead-id"),
                 Contact: $(this).data("contact"),
                 Identifier: $(this).data("identifier")
             },
@@ -900,11 +831,11 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Opportunities", area = "Sales" })',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Leads", area = "Sales" })',
             data: {
                 User: $(this).data("agent"),
                 Email: $(this).data("email"),
-                RelatedOpportunityId: $(this).data("opportunity-id"),
+                RelatedLeadId: $(this).data("lead-id"),
             },
             dataType: 'json'
         });
@@ -919,10 +850,10 @@
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "AddNote", controller = "Opportunities", area = "Sales" })',
+                    url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
                     data: {
                         NoteTemplates: selectedItems,
-                        RelatedOpportunityId: $(this).data("opportunity-id"),
+                        RelatedLeadId: $(this).data("lead-id"),
                         Contact: $("#contact-for-note").val(),
                         Note: $("#note-for-note").val(),
                         Identifier: 1
