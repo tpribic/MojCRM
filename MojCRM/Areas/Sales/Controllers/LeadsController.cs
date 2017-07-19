@@ -26,19 +26,19 @@ namespace MojCRM.Areas.Sales.Controllers
                 //Search Engine
                 if (!String.IsNullOrEmpty(Model.Campaign))
                 {
-                    leads = leads.Where(l => l.RelatedCampaign.CampaignName == Model.Campaign);
+                    leads = leads.Where(l => l.RelatedCampaign.CampaignName.Contains(Model.Campaign));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }
                 if (!String.IsNullOrEmpty(Model.Lead))
                 {
-                    leads = leads.Where(l => l.LeadTitle == Model.Organization);
+                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    leads = leads.Where(l => l.RelatedOrganization.SubjectName == Model.Organization);
+                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }

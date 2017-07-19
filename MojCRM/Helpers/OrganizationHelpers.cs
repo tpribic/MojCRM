@@ -12,7 +12,7 @@ namespace MojCRM.Helpers
         public string MobilePhoneNumber { get; set; }
         public string EmailAddress { get; set; }
         public string ERP { get; set; }
-        public int? NumberOfInvoicesSent { get; set; }
-        public int? NumberOfInvoicesReceived { get; set; }
+        public string NumberOfInvoicesSent { get; set; }
+        public string NumberOfInvoicesReceived { get; set; }
     }
 }

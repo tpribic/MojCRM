@@ -44,10 +44,10 @@ namespace MojCRM.Areas.Sales.ViewModels
         public string ERP { get; set; }
 
         [Display(Name = "Broj IRA mjesečno")]
-        public int? NumberOfInvoicesSent { get; set; }
+        public string NumberOfInvoicesSent { get; set; }
 
         [Display(Name = "Broj URA mjesečno")]
-        public int? NumberOfInvoicesReceived { get; set; }
+        public string NumberOfInvoicesReceived { get; set; }
 
         [Display(Name = "Id kampanje")]
         public int? RelatedCampaignId { get; set; }

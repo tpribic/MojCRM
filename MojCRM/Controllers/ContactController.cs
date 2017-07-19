@@ -134,7 +134,7 @@ namespace MojCRM.Controllers
 
         // POST: Contact/CreateFromDelivery
         [HttpPost]
-        public ActionResult CreateFromSales(LeadContactHelper Model)
+        public ActionResult CreateFromSalesLead(LeadContactHelper Model)
         {
             var _OrganizationId = (from o in db.Leads
                                    where o.LeadId == Model.RelatedLeadId

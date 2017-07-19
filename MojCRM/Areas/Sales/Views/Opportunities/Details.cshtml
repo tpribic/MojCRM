@@ -26,7 +26,7 @@
         new ListItem{ Value = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)", Text = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)" },
         new ListItem{ Value = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)", Text = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)" },
         new ListItem{ Value = "objašnjena tehnička pozadina s ERPom", Text = "objašnjena tehnička pozadina s ERPom" },
-        new ListItem{ Value = "objašnjena tehnička pozadina s eRa aplikacijom, Text = objašnjena tehnička pozadina s eRa aplikacijom" },
+        new ListItem{ Value = "objašnjena tehnička pozadina s eRa aplikacijom", Text = "objašnjena tehnička pozadina s eRa aplikacijom" },
         new ListItem{ Value = "razložena potvrda primitka, pretraživanje i arhiviranje", Text = "razložena potvrda primitka, pretraživanje i arhiviranje" },
         new ListItem{ Value = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)", Text = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)" },
         new ListItem{ Value = "osvježen kontakt i iznesene novosti", Text = "osvježen kontakt i iznesene novosti" },
@@ -141,6 +141,21 @@
                                 </div>
                             </div>
                         </div>
+                        <hr />
+                        <h5>Označite koju tipiziranu napomenu želite dodati</h5>
+                        <table class="table">
+                            <tr>
+                                <th></th>
+                                <th>Napomena</th>
+                            </tr>
+                            @foreach (var Template in salesNoteTemplates)
+                            {
+                                <tr>
+                                    <td>@Html.CheckBox("checked", false, new { Template.Value, @class = "checked", @id = "checkbox", @template = Template.Value })</td>
+                                    <td>@Template.Text</td>
+                                </tr>
+                            }
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -237,7 +252,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-user">Agent</label>
+                                <label for="sales-contact-user">Titula / Funkcija</label>
                                 <div id="sales-contact-agent">
                                     @Html.TextBox("Title", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
                                 </div>
@@ -593,7 +608,7 @@
                             <div class="col-md-4">
                                 <label for="campaign-name">Dodijeljeno agentu</label>
                                 <div id="campaign-name">
-                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.AssignedTo, @disabled = true })
+                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name, @disabled = true })
                                 </div>
                             </div>
                         </div>
@@ -867,6 +882,7 @@
                 RelatedOpportunityId: $(this).data("opportunity-id"),
                 User: $(this).data("agent"),
                 Contact: $(this).data("contact"),
+                Note: $(this).data('detail-template'),
                 Identifier: $(this).data("identifier-short")
             },
             success: function (data) {
@@ -886,6 +902,7 @@
                 RelatedOpportunityId: $(this).data("opportunity-id"),
                 User: $(this).data("agent"),
                 Contact: $(this).data("contact"),
+                Note: $(this).data('detail-template'),
                 Identifier: $(this).data("identifier")
             },
             success: function (data) {

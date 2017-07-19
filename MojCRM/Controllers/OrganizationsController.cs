@@ -239,11 +239,11 @@ namespace MojCRM.Controllers
             {
                 organization.ERP = Model.ERP;
             }
-            if (Model.NumberOfInvoicesSent != null)
+            if (!String.IsNullOrEmpty(Model.NumberOfInvoicesSent))
             {
                 organization.NumberOfInvoicesSent = Model.NumberOfInvoicesSent;
             }
-            if (Model.NumberOfInvoicesReceived != null)
+            if (!String.IsNullOrEmpty(Model.NumberOfInvoicesReceived))
             {
                 organization.NumberOfInvoicesReceived = Model.NumberOfInvoicesReceived;
             }

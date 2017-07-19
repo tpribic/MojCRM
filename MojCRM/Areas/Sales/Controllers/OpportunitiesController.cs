@@ -31,19 +31,19 @@ namespace MojCRM.Areas.Sales.Controllers
                 //Search Engine
                 if (!String.IsNullOrEmpty(Model.Campaign))
                 {
-                    opportunities = opportunities.Where(op => op.RelatedCampaign.CampaignName == Model.Campaign);
+                    opportunities = opportunities.Where(op => op.RelatedCampaign.CampaignName.Contains(Model.Campaign));
                     ViewBag.SearchResults = opportunities.Count();
                     ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
                 }
                 if (!String.IsNullOrEmpty(Model.Opportunity))
                 {
-                    opportunities = opportunities.Where(op => op.OpportunityTitle == Model.Organization);
+                    opportunities = opportunities.Where(op => op.OpportunityTitle.Contains(Model.Opportunity));
                     ViewBag.SearchResults = opportunities.Count();
                     ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName == Model.Organization);
+                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization));
                     ViewBag.SearchResults = opportunities.Count();
                     ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
                 }

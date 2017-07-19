@@ -54,7 +54,7 @@ namespace MojCRM.Controllers
             ViewBag.TicketsCreatedTodayFirstTimeAssigned = TicketsCreatedTodayFirstTime.Where(t => t.IsAssigned == true).Count();
             var _date = new DateTime(2017, 7, 1);
             ViewBag.TotalOpenedTickets = (from t in db.DeliveryTicketModels
-                                          where t.IsAssigned == false && t.InsertDate >= _date
+                                          where t.IsAssigned == false && t.InsertDate >= _date && t.DocumentStatus == 30
                                           select t).Count();
 
             int DocumentStatusInt;
