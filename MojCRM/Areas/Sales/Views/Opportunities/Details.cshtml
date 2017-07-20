@@ -95,13 +95,13 @@
 @using (Html.BeginForm("EditNote", "Opportunities", FormMethod.Post))
 {
     <div class="modal fade" id="EditNote" tabindex="-1" role="dialog" aria-labelledby="EditNote">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-lg" role="document" style="overflow-y:initial">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4>Izmijeni bilješku</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y:auto; max-height:400px">
                     <div class="form-group">
                         <div class="row">
                             <div class="hidden">
@@ -116,6 +116,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
@@ -124,6 +125,7 @@
                                 </div>
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="note-id">Odaberi staru bilješku za izmjenu</label>

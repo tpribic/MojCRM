@@ -96,13 +96,13 @@
 @using (Html.BeginForm("EditNote", "Leads", FormMethod.Post))
 {
     <div class="modal fade" id="EditNote" tabindex="-1" role="dialog" aria-labelledby="EditNote">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-sm" role="document" style="overflow-y:initial">
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4>Izmijeni bilješku</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y:auto; max-height:400px">
                     <div class="form-group">
                         <div class="row">
                             <div class="hidden">
@@ -261,7 +261,7 @@
 }
 
 <!--Modal - Edit Contact-->
-@using (Html.BeginForm("EditFromSales", "Contact", new { area = ""}, FormMethod.Post))
+@using (Html.BeginForm("EditFromSalesLead", "Contact", new { area = ""}, FormMethod.Post))
 {
     <div class="modal fade" id="EditContact" tabindex="-1" role="dialog" aria-labelledby="EditContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -315,9 +315,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-user">Agent</label>
-                                <div id="sales-contact-agent">
-                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disabled = true })
+                                <label for="sales-contact-title">Titula / Funkcija</label>
+                                <div id="sales-contact-title">
+                                    @Html.TextBox("Title", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
                                 </div>
                             </div>
                             <div class="hidden">
@@ -705,7 +705,7 @@
                 }
                 <button type="button" title="Promijeni status leada" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                 <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
-                <a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis leadova"><i class="fa fa-arrow-left"></i></a>
+                <a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis leadova"><i class="fa fa-arrow-left"></i></a>
             </div>
         </div>
     </div>

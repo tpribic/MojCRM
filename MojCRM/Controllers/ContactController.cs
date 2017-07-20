@@ -342,7 +342,7 @@ namespace MojCRM.Controllers
 
         // POST: Contact/EditFromSales
         [HttpPost]
-        public ActionResult EditFromSales(LeadContactHelper Model)
+        public ActionResult EditFromSalesLead(LeadContactHelper Model)
         {
             var ContactForUpdate = (from c in db.Contacts
                                     where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()

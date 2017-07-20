@@ -383,7 +383,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 RelatedOrganizationId = Model.OrganizationId,
                 LeadStatus = Lead.LeadStatusEnum.START,
                 CreatedBy = User.Identity.Name,
-                AssignedTo = Model.AssignedTo,
+                AssignedTo = User.Identity.Name,
                 IsAssigned = Model.IsAssigned,
                 InsertDate = DateTime.Now
             });
