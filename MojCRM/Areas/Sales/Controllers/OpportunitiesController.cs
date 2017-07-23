@@ -28,7 +28,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                 select o;
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
-                //Search Engine
+                //Search Engine -- Admin
                 if (!String.IsNullOrEmpty(Model.Campaign))
                 {
                     opportunities = opportunities.Where(op => op.RelatedCampaign.CampaignName.Contains(Model.Campaign));
@@ -84,6 +84,37 @@ namespace MojCRM.Areas.Sales.Controllers
             else
             {
                 opportunities = opportunities.Where(op => op.AssignedTo == User.Identity.Name);
+                //Search Engine -- User
+                if (!String.IsNullOrEmpty(Model.Campaign))
+                {
+                    opportunities = opportunities.Where(op => op.RelatedCampaign.CampaignName.Contains(Model.Campaign));
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Opportunity))
+                {
+                    opportunities = opportunities.Where(op => op.OpportunityTitle.Contains(Model.Opportunity));
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Organization))
+                {
+                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.OpportunityStatus.ToString()))
+                {
+                    opportunities = opportunities.Where(op => op.OpportunityStatus == Model.OpportunityStatus);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.RejectReason.ToString()))
+                {
+                    opportunities = opportunities.Where(op => op.RejectReason == Model.RejectReason);
+                    ViewBag.SearchResults = opportunities.Count();
+                    ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
+                }
             }
 
             ViewBag.SearchResults = opportunities.Count();
@@ -95,7 +126,14 @@ namespace MojCRM.Areas.Sales.Controllers
             ViewBag.UsersLead = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD).Count();
             ViewBag.UsersRejected = opportunities.Where(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.REJECTED).Count();
 
-            return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
+            if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
+            {
+                return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
+            }
+            else
+            {
+                return View(opportunities.Where(op => op.OpportunityStatus != Opportunity.OpportunityStatusEnum.LEAD || op.OpportunityStatus != Opportunity.OpportunityStatusEnum.REJECTED).ToList().OrderByDescending(op => op.InsertDate));
+            }
         }
 
         // GET: Sales/Opportunities/Details/5

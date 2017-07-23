@@ -23,7 +23,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                 select l;
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
-                //Search Engine
+                //Search Engine -- Admin
                 if (!String.IsNullOrEmpty(Model.Campaign))
                 {
                     leads = leads.Where(l => l.RelatedCampaign.CampaignName.Contains(Model.Campaign));
@@ -79,6 +79,37 @@ namespace MojCRM.Areas.Sales.Controllers
             else
             {
                 leads = leads.Where(op => op.AssignedTo == User.Identity.Name);
+                //Search Engine -- User
+                if (!String.IsNullOrEmpty(Model.Campaign))
+                {
+                    leads = leads.Where(l => l.RelatedCampaign.CampaignName.Contains(Model.Campaign));
+                    ViewBag.SearchResults = leads.Count();
+                    ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Lead))
+                {
+                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization));
+                    ViewBag.SearchResults = leads.Count();
+                    ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.Organization))
+                {
+                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    ViewBag.SearchResults = leads.Count();
+                    ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.LeadStatus.ToString()))
+                {
+                    leads = leads.Where(l => l.LeadStatus == Model.LeadStatus);
+                    ViewBag.SearchResults = leads.Count();
+                    ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
+                }
+                if (!String.IsNullOrEmpty(Model.RejectReason.ToString()))
+                {
+                    leads = leads.Where(l => l.RejectReason == Model.RejectReason);
+                    ViewBag.SearchResults = leads.Count();
+                    ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
+                }
             }
 
             ViewBag.SearchResults = leads.Count();
@@ -91,7 +122,14 @@ namespace MojCRM.Areas.Sales.Controllers
             ViewBag.QuoteSent = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.QOUTESENT).Count();
             ViewBag.QuoteAccepted = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.ACCEPTED).Count();
 
-            return View(leads.ToList().OrderByDescending(op => op.InsertDate));
+            if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
+            {
+                return View(leads.ToList().OrderByDescending(l => l.InsertDate));
+            }
+            else
+            {
+                return View(leads.Where(l => l.LeadStatus != Lead.LeadStatusEnum.REJECTED || l.LeadStatus != Lead.LeadStatusEnum.ACCEPTED).ToList().OrderByDescending(l => l.InsertDate));
+            }
         }
 
         // GET: Sales/Leads/Details/5
