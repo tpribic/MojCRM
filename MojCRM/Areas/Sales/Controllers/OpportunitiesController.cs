@@ -14,6 +14,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using MojCRM.Areas.Sales.ViewModels;
 using MojCRM.Areas.Sales.Helpers;
 using System.Text;
+using System.Web.UI.WebControls;
 
 namespace MojCRM.Areas.Sales.Controllers
 {
@@ -170,6 +171,39 @@ namespace MojCRM.Areas.Sales.Controllers
             var _Users = (from u in db.Users
                           select u).AsEnumerable();
 
+            var salesNoteTemplates = new List<ListItem>
+                {
+                    new ListItem{ Value = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)", Text = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)" },
+                    new ListItem{ Value = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)", Text = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)" },
+                    new ListItem{ Value = "objašnjena tehnička pozadina s ERPom", Text = "objašnjena tehnička pozadina s ERPom" },
+                    new ListItem{ Value = "objašnjena tehnička pozadina s eRa aplikacijom", Text = "objašnjena tehnička pozadina s eRa aplikacijom" },
+                    new ListItem{ Value = "razložena potvrda primitka, pretraživanje i arhiviranje", Text = "razložena potvrda primitka, pretraživanje i arhiviranje" },
+                    new ListItem{ Value = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)", Text = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)" },
+                    new ListItem{ Value = "osvježen kontakt i iznesene novosti", Text = "osvježen kontakt i iznesene novosti" },
+                    new ListItem{ Value = "izvršen kvalitetan presing", Text = "izvršen kvalitetan presing" },
+                    new ListItem{ Value = "izvršen salesforce (isticanje benefita uz forzu)", Text = "izvršen salesforce (isticanje benefita uz forzu)" },
+                    new ListItem{ Value = "poslan mail ps (prijedlog suradnje)", Text = "poslan mail ps (prijedlog suradnje)" },
+                    new ListItem{ Value = "kreirati i odaslati PND", Text = "kreirati i odaslati PND" },
+                    new ListItem{ Value = "kreirati i odaslati UO", Text = "kreirati i odaslati UO" },
+                    new ListItem{ Value = "održan sastanak, poslan FU", Text = "održan sastanak, poslan FU" },
+                    new ListItem{ Value = "objašnjena zakonska pozadina i pravovaljanost eRačuna", Text = "objašnjena zakonska pozadina i pravovaljanost eRačuna" },
+                    new ListItem{ Value = "kontaktirani za uvođenje zaprimanja", Text = "kontaktirani za uvođenje zaprimanja" },
+                    new ListItem{ Value = "obrazložio slanje privitaka", Text = "obrazložio slanje privitaka" },
+                    new ListItem{ Value = "obrazložio procesnu pokrivenost primatelja te odagnao brige i strahove u vezi preuzimanja od strane njihovih kupaca", Text = "obrazložio procesnu pokrivenost primatelja te odagnao brige i strahove u vezi preuzimanja od strane njihovih kupaca" }
+                };
+
+            var rejectReasonList = new List<ListItem>
+            {
+                new ListItem{ Value= "0", Text = "Ne želi navesti"},
+                new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
+                new ListItem{ Value= "2", Text = "Previsoka cijena"},
+                new ListItem{ Value= "3", Text = "Neadekvatna ponuda"},
+                new ListItem{ Value= "4", Text = "Koristi drugog posrednika"},
+                new ListItem{ Value= "5", Text = "Nedostatak vremena za pokretanje projekta"},
+                new ListItem{ Value= "6", Text = "Dio strane grupacije / Strano vlasništvo"},
+                new ListItem{ Value= "7", Text = "Drugo / Ostalo"},
+            };
+
             var OpportunityDetails = new OpportunityDetailViewModel()
             {
                 OpportunityId = id,
@@ -194,7 +228,9 @@ namespace MojCRM.Areas.Sales.Controllers
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedOpportunityNotes = _RelatedOpportunityNotes,
                 RelatedOpportunityActivities = _RelatedOpportunityActivities,
-                Users = _Users
+                Users = _Users,
+                SalesNoteTemplates = salesNoteTemplates,
+                RejectReasons = rejectReasonList
             };
 
             return View(OpportunityDetails);

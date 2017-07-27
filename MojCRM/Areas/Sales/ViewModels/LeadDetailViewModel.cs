@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace MojCRM.Areas.Sales.ViewModels
 {
@@ -117,5 +118,8 @@ namespace MojCRM.Areas.Sales.ViewModels
             }
             set { }
         }
+
+        public IList<ListItem> SalesNoteTemplates { get; set; }
+        public IList<ListItem> RejectReasons { get; set; }
     }
 }

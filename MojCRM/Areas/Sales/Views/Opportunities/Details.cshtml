@@ -13,32 +13,6 @@
             new ListItem{ Value= "2", Text = "Kreiran lead"},
             new ListItem{ Value= "3", Text = "Odbijeno"}
         };
-    var opportunityRejectReasonList = new List<ListItem>
-        {
-            new ListItem{ Value= "0", Text = "Ne želi navesti"},
-            new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
-            new ListItem{ Value= "2", Text = "Previsoka cijena"},
-            new ListItem{ Value= "3", Text = "Neadekvatna ponuda"},
-            new ListItem{ Value= "4", Text = "Koristi drugog posrednika"}
-        };
-    var salesNoteTemplates = new List<ListItem>
-    {
-        new ListItem{ Value = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)", Text = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)" },
-        new ListItem{ Value = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)", Text = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)" },
-        new ListItem{ Value = "objašnjena tehnička pozadina s ERPom", Text = "objašnjena tehnička pozadina s ERPom" },
-        new ListItem{ Value = "objašnjena tehnička pozadina s eRa aplikacijom", Text = "objašnjena tehnička pozadina s eRa aplikacijom" },
-        new ListItem{ Value = "razložena potvrda primitka, pretraživanje i arhiviranje", Text = "razložena potvrda primitka, pretraživanje i arhiviranje" },
-        new ListItem{ Value = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)", Text = "istaknuta jednostavnost uvođenja (kod izgovora nemamo vremena, prostora, u restrukturiranju smo)" },
-        new ListItem{ Value = "osvježen kontakt i iznesene novosti", Text = "osvježen kontakt i iznesene novosti" },
-        new ListItem{ Value = "izvršen kvalitetan presing", Text = "izvršen kvalitetan presing" },
-        new ListItem{ Value = "izvršen salesforce (isticanje benefita uz forzu)", Text = "izvršen salesforce (isticanje benefita uz forzu)" },
-        new ListItem{ Value = "poslan mail ps (prijedlog suradnje)", Text = "poslan mail ps (prijedlog suradnje)" },
-        new ListItem{ Value = "kreirati i odaslati PND", Text = "kreirati i odaslati PND" },
-        new ListItem{ Value = "kreirati i odaslati UO", Text = "kreirati i odaslati UO" },
-        new ListItem{ Value = "održan sastanak, poslan FU", Text = "održan sastanak, poslan FU" },
-        new ListItem{ Value = "objašnjena zakonska pozadina i pravovaljanost eRačuna", Text = "objašnjena zakonska pozadina i pravovaljanost eRačuna" },
-        new ListItem{ Value = "kontaktirani za uvođenje zaprimanja", Text = "kontaktirani za uvođenje zaprimanja" }
-    };
 }
 
 <!-- Modal - Add Note New-->
@@ -74,7 +48,7 @@
                         <th></th>
                         <th>Napomena</th>
                     </tr>
-                    @foreach (var Template in salesNoteTemplates)
+                    @foreach (var Template in Model.SalesNoteTemplates)
                     {
                         <tr>
                             <td>@Html.CheckBox("checked", false, new { Template.Value, @class = "checked", @id = "checkbox", @template = Template.Value })</td>
@@ -150,7 +124,7 @@
                                 <th></th>
                                 <th>Napomena</th>
                             </tr>
-                            @foreach (var Template in salesNoteTemplates)
+                            @foreach (var Template in Model.SalesNoteTemplates)
                             {
                                 <tr>
                                     <td>@Html.CheckBox("checked", false, new { Template.Value, @class = "checked", @id = "checkbox", @template = Template.Value })</td>
@@ -504,7 +478,7 @@
                             <div class="col-md-12">
                                 <label for="status">Status</label>
                                 <div id="status">
-                                    @Html.DropDownList("RejectReason", new SelectList(opportunityRejectReasonList, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
+                                    @Html.DropDownList("RejectReason", new SelectList(Model.RejectReasons, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="hidden">
