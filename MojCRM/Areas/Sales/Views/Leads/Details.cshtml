@@ -680,7 +680,7 @@
                 }
                 <button type="button" title="Promijeni status leada" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                 <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
-                <a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis leadova"><i class="fa fa-arrow-left"></i></a>
+                <a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales" })" class="btn btn-sm btn-default" title="Povratak na inicijalni popis leadova"><i class="fa fa-arrow-left"></i></a>
             </div>
         </div>
     </div>
@@ -741,6 +741,13 @@
         <div class="col-md-4">
             <strong>Zadnje kontaktirao:</strong>
             @Model.LastContactedBy
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <strong>@Html.DisplayNameFor(model => model.LastLeadNote):</strong>
+            @Model.LastLeadNote
         </div>
     </div>
     <br />

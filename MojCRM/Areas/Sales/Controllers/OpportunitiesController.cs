@@ -23,6 +23,7 @@ namespace MojCRM.Areas.Sales.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Sales/Opportunities
+        [Authorize]
         public ActionResult Index(OpportunitySearchHelper Model)
         {
             var opportunities = from o in db.Opportunities
@@ -170,6 +171,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                     select c).First();
             var _Users = (from u in db.Users
                           select u).AsEnumerable();
+            var _LastOpportunityNote = _RelatedOpportunityNotes.First().ToString();
 
             var salesNoteTemplates = new List<ListItem>
                 {
@@ -225,6 +227,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 AssignedTo = opportunity.AssignedTo,
                 LastContactedDate = opportunity.LastContactDate,
                 LastContactedBy = opportunity.LastContactedBy,
+                LastOpportunityNote = _LastOpportunityNote,
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedOpportunityNotes = _RelatedOpportunityNotes,
                 RelatedOpportunityActivities = _RelatedOpportunityActivities,

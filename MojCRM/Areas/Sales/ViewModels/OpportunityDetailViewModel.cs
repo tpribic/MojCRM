@@ -68,6 +68,9 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "Zadnje kontaktirao")]
         public string LastContactedBy { get; set; }
 
+        [Display(Name = "Zadnja bilješka")]
+        public string LastOpportunityNote { get; set; }
+
         public IEnumerable<Contact> RelatedSalesContacts { get; set; }
         public IEnumerable<OpportunityNote> RelatedOpportunityNotes { get; set; }
         public IEnumerable<ActivityLog> RelatedOpportunityActivities { get; set; }

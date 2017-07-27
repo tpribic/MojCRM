@@ -18,6 +18,7 @@ namespace MojCRM.Areas.Sales.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Sales/Leads
+        [Authorize]
         public ActionResult Index(LeadSearchHelper Model)
         {
             var leads = from l in db.Leads
@@ -166,6 +167,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                     select c).First();
             var _Users = (from u in db.Users
                           select u).AsEnumerable();
+            var _LastLeadNote = _RelatedLeadNotes.First().ToString();
 
             var salesNoteTemplates = new List<ListItem>
                 {
@@ -221,6 +223,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 AssignedTo = lead.AssignedTo,
                 LastContactedDate = lead.LastContactDate,
                 LastContactedBy = lead.LastContactedBy,
+                LastLeadNote = _LastLeadNote,
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedLeadNotes = _RelatedLeadNotes,
                 RelatedLeadActivities = _RelatedLeadActivities,
