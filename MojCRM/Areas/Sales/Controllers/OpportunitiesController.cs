@@ -281,49 +281,55 @@ namespace MojCRM.Areas.Sales.Controllers
                 });
                 db.SaveChanges();
             }
-            
 
-            switch (Model.Identifier)
+            if (Model.IsActivity == false)
             {
-                case 1:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
-                        User = User.Identity.Name,
-                        ReferenceId = Model.RelatedOpportunityId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now
-                    });
-                    db.SaveChanges();
-                    break;
-                case 2:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
-                        User = User.Identity.Name,
-                        ReferenceId = Model.RelatedOpportunityId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now,
-                    });
-                    db.SaveChanges();
-                    break;
-                case 3:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = Model.User + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
-                        User = Model.User,
-                        ReferenceId = Model.RelatedOpportunityId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now,
-                    });
-                    db.SaveChanges();
-                    break;
+                return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
             }
+            else
+            {
+                switch (Model.Identifier)
+                {
+                    case 1:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                            User = User.Identity.Name,
+                            ReferenceId = Model.RelatedOpportunityId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now
+                        });
+                        db.SaveChanges();
+                        break;
+                    case 2:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                            User = User.Identity.Name,
+                            ReferenceId = Model.RelatedOpportunityId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now,
+                        });
+                        db.SaveChanges();
+                        break;
+                    case 3:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = Model.User + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + _RelatedOpportunity.OpportunityTitle,
+                            User = Model.User,
+                            ReferenceId = Model.RelatedOpportunityId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now,
+                        });
+                        db.SaveChanges();
+                        break;
+                }
 
-            return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
+                return RedirectToAction("Details", new { id = Model.RelatedOpportunityId });
+            }
         }
 
         // POST: Sales/Opportunities/EditNote

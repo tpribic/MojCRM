@@ -27,10 +27,15 @@
             </div>
             <div class="modal-body" style="overflow-y:auto; max-height:400px">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-10">
                         <label for="note-contact">Kontakt osoba</label>
                         <div id="note-contact">
-                            @Html.DropDownList("Contact", Model.RelatedSalesContactsForDetails, new { @class = "form-control", @id = "contact-for-note" })
+                            @Html.DropDownList("Contact", Model.RelatedSalesContactsForDetails, new { @class = "form-control col-md-10", @id = "contact-for-note" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div>
+                            @Html.CheckBox("IsActivity", true)
                         </div>
                     </div>
                 </div>
@@ -856,6 +861,7 @@
                         RelatedLeadId: $(this).data("lead-id"),
                         Contact: $("#contact-for-note").val(),
                         Note: $("#note-for-note").val(),
+                        IsActivity: $("#IsActivity").val(),
                         Identifier: 1
                     },
                     dataType: 'json'

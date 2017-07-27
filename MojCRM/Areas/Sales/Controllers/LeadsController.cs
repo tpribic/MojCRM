@@ -278,48 +278,53 @@ namespace MojCRM.Areas.Sales.Controllers
                 db.SaveChanges();
             }
 
-
-            switch (Model.Identifier)
+            if (Model.IsActivity == false)
             {
-                case 1:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + lead.LeadTitle,
-                        User = User.Identity.Name,
-                        ReferenceId = Model.RelatedLeadId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now
-                    });
-                    db.SaveChanges();
-                    break;
-                case 2:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + lead.LeadTitle,
-                        User = User.Identity.Name,
-                        ReferenceId = Model.RelatedLeadId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now,
-                    });
-                    db.SaveChanges();
-                    break;
-                case 3:
-                    db.ActivityLogs.Add(new ActivityLog
-                    {
-                        Description = User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + lead.LeadTitle,
-                        User = User.Identity.Name,
-                        ReferenceId = Model.RelatedLeadId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
-                        Department = ActivityLog.DepartmentEnum.Sales,
-                        InsertDate = DateTime.Now,
-                    });
-                    db.SaveChanges();
-                    break;
+                return RedirectToAction("Details", new { id = Model.RelatedLeadId });
             }
-
-            return RedirectToAction("Details", new { id = Model.RelatedLeadId });
+            else
+            {
+                switch (Model.Identifier)
+                {
+                    case 1:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + lead.LeadTitle,
+                            User = User.Identity.Name,
+                            ReferenceId = Model.RelatedLeadId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now
+                        });
+                        db.SaveChanges();
+                        break;
+                    case 2:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + lead.LeadTitle,
+                            User = User.Identity.Name,
+                            ReferenceId = Model.RelatedLeadId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now,
+                        });
+                        db.SaveChanges();
+                        break;
+                    case 3:
+                        db.ActivityLogs.Add(new ActivityLog
+                        {
+                            Description = User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + lead.LeadTitle,
+                            User = User.Identity.Name,
+                            ReferenceId = Model.RelatedLeadId,
+                            ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
+                            Department = ActivityLog.DepartmentEnum.Sales,
+                            InsertDate = DateTime.Now,
+                        });
+                        db.SaveChanges();
+                        break;
+                }
+                return RedirectToAction("Details", new { id = Model.RelatedLeadId });
+            }
         }
 
         // POST: Sales/Leads/EditNote
