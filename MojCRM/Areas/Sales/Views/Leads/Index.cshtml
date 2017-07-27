@@ -190,14 +190,14 @@
         if ((User.Identity.Name == m.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
         {
             return @<div><span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = m.LeadId, returnUrl = Request.Url })" title="Detalji leada"><i class="fa fa-list"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = m.LeadId })" title="Detalji leada"><i class="fa fa-list"></i></a>
         @*<a href="@Url.RouteUrl(new { action = "Edit", controller = "Leads", area = "Sales", id = m.LeadId, returnUrl = Request.Url })" title="Uređivanje leada"><i class="fa fa-edit"></i></a>*@
     </span></div>;
         }
         if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
         {
             return @<div><span>
-        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Leads", area = "Sales", id = m.LeadId, returnUrl = Request.Url })" title="Brisanje leada"><i class="fa fa-trash"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Leads", area = "Sales", id = m.LeadId })" title="Brisanje leada"><i class="fa fa-trash"></i></a>
     </span></div>;
         }
             return @<span></span>;

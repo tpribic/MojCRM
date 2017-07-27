@@ -19,7 +19,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public int Identifier { get; set; }
     }
 
-    public class OpportunityContactHelper
+    public class SalesContactHelper
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -27,7 +27,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public string Mobile { get; set; }
         public string Email { get; set; }
         public string Title { get; set; }
-        public int? RelatedOpportunityId { get; set; }
+        public int? RelatedEntityId { get; set; }
         public string ContactId { get; set; }
     }
 

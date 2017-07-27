@@ -185,14 +185,14 @@
         if ((User.Identity.Name == m.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
         {
             return @<div><span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = m.OpportunityId })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
         @*<a href="@Url.RouteUrl(new { action = "Edit", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Uređivanje prodajne prilike"><i class="fa fa-edit"></i></a>*@
     </span></div>;
         }
         if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
         {
             return @<div><span>
-        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Opportunities", area = "Sales", id = m.OpportunityId })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
     </span></div>;
         }
             return @<span></span>;

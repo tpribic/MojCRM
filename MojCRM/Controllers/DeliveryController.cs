@@ -787,8 +787,6 @@ namespace MojCRM.Controllers
                                       where a.ReferenceId == id
                                       select a).AsEnumerable().OrderByDescending(a => a.Id);
 
-            var _LastDeliveryDetail = _RelatedDeliveryDetails.First().ToString();
-
             #region Postmark API
             MessagesOutboundOpenResponse OpeningHistoryResponse;
             BouncesResponse Bounces;
@@ -863,7 +861,6 @@ namespace MojCRM.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    LastDeliveryDetail = _LastDeliveryDetail,
                     DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (i.DokumentTypeId != 6 && i.DokumentTypeId != 632)).AsEnumerable(),
                     PostmarkOpenings = OpeningHistoryResponse,
                     PostmarkBounces = Bounces

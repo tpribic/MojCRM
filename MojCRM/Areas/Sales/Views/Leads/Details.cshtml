@@ -67,6 +67,41 @@
     </div>
 </div>
 
+<!-- Modal - Add NoteInfo-->
+<div class="modal fade" id="AddNoteInfo" tabindex="-1" role="dialog" aria-labelledby="AddNoteInfo">
+    <div class="modal-dialog modal-sm" role="document" style="overflow-y:initial">
+        <div class="modal-content" style="overflow:hidden">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Kreiraj bilješku</h4>
+            </div>
+            <div class="modal-body" style="overflow-y:auto; max-height:400px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="note-contact">Kontakt osoba</label>
+                        <div id="note-contact">
+                            @Html.DropDownList("Contact", Model.RelatedSalesContactsForDetails, new { @class = "form-control", @id = "contact-for-note" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="note">Osobna napomena</label>
+                        <div id="note">
+                            @Html.TextArea("Note", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena", @id = "info-note" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="add-note-info" onclick="javascript: AddNoteInfo()" data-lead-id="@Html.Raw(Model.LeadId)">Kreiraj bilješku</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Modal - Edit Note-->
 @using (Html.BeginForm("EditNote", "Leads", FormMethod.Post))
 {
@@ -220,7 +255,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
+                                    @Html.TextBox("RelatedEntityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -236,7 +271,7 @@
 }
 
 <!--Modal - Edit Contact-->
-@using (Html.BeginForm("EditFromSalesLead", "Contact", new { area = ""}, FormMethod.Post))
+@using (Html.BeginForm("EditFromSales", "Contact", new { area = ""}, FormMethod.Post))
 {
     <div class="modal fade" id="EditContact" tabindex="-1" role="dialog" aria-labelledby="EditContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -297,7 +332,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("RelatedLeadId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
+                                    @Html.TextBox("RelatedEntityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.LeadId })
                                 </div>
                             </div>
                         </div>
@@ -640,8 +675,8 @@
                             <td>@Contact.Title</td>
                             <td>@Contact.User</td>
                             <td>
-                                <a href="#AddNote" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-lead-id="@Html.Raw(Model.LeadId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
+                                <a href="#AddNote" data-toggle="modal" data-dismiss="modal" title="Dodaj bilješku i zabilježi uspješni poziv"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" href="#AddNoteInfo" data-toggle="modal" title="Dodaj bilješku i zabilježi informativni poziv"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
                                 <a data-dismiss="modal" data-lead-id="@Html.Raw(Model.LeadId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
                             </td>
                         </tr>
@@ -773,25 +808,6 @@
     </div>
 </div>
 <script>
-    $(document).on("click", "a.add-successfull-call-short", function (e) {
-        e.preventDefault();
-        $.ajax({
-            method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
-            data: {
-                RelatedLeadId: $(this).data("lead-id"),
-                Contact: $(this).data("contact"),
-                Note: $(this).data('detail-template'),
-                Identifier: $(this).data("identifier-short")
-            },
-            success: function (data) {
-                if (data.Status === 'OK')
-                    alert("Uspješno ste zabilježili informativni poziv!");
-            },
-            dataType: 'json'
-        });
-        window.location.reload(true)
-    });
         $(document).on("click", "a.add-unsuccessfull-call", function (e) {
         e.preventDefault();
         $.ajax({
@@ -846,6 +862,23 @@
                 });
             window.location.reload(true)
         });
+        }
+    function AddNoteInfo() {
+        $(document).on("click", "#add-note-info", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
+            data: {
+                RelatedLeadId: $(this).data("lead-id"),
+                Contact: $("#contact-for-note").val(),
+                Note: $("#info-note").val(),
+                Identifier: 2
+            },
+            dataType: 'json'
+        });
+        window.location.reload(true)
+    });
     }
 </script>
 

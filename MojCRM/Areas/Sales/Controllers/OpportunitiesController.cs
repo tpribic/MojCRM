@@ -171,7 +171,9 @@ namespace MojCRM.Areas.Sales.Controllers
                                     select c).First();
             var _Users = (from u in db.Users
                           select u).AsEnumerable();
-            var _LastOpportunityNote = _RelatedOpportunityNotes.First().ToString();
+            //var _LastOpportunityNote = (from n in db.OpportunityNotes
+            //                            where n.RelatedOpportunityId == opportunity.OpportunityId
+            //                            select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();
 
             var salesNoteTemplates = new List<ListItem>
                 {
@@ -227,7 +229,6 @@ namespace MojCRM.Areas.Sales.Controllers
                 AssignedTo = opportunity.AssignedTo,
                 LastContactedDate = opportunity.LastContactDate,
                 LastContactedBy = opportunity.LastContactedBy,
-                LastOpportunityNote = _LastOpportunityNote,
                 RelatedSalesContacts = _RelatedSalesContacts,
                 RelatedOpportunityNotes = _RelatedOpportunityNotes,
                 RelatedOpportunityActivities = _RelatedOpportunityActivities,
