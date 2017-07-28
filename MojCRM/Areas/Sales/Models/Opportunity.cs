@@ -1,9 +1,12 @@
 ﻿using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace MojCRM.Areas.Sales.Models
 {
@@ -83,7 +86,16 @@ namespace MojCRM.Areas.Sales.Models
             QUOTE,
 
             [Description("Drugi pružatelj usluga")]
-            SERVICEPROVIDER
+            SERVICEPROVIDER,
+
+            [Description("Nedostatak vremena za pokretanje projekta")]
+            NOTIME,
+
+            [Description("Dio strane grupacije / Strano vlasništvo")]
+            FOREIGNCOMPANY,
+
+            [Description("Drugo / Ostalo")]
+            OTHER
         }
 
         public string OpportunityStatusString
@@ -112,6 +124,9 @@ namespace MojCRM.Areas.Sales.Models
                     case OpportunityRejectReasonEnum.PRICE: return "Previsoka cijena";
                     case OpportunityRejectReasonEnum.QUOTE: return "Neadekvatna ponuda";
                     case OpportunityRejectReasonEnum.SERVICEPROVIDER: return "Koristi drugog posrednika";
+                    case OpportunityRejectReasonEnum.NOTIME: return "Nedostatak vremena za pokretanje projekta";
+                    case OpportunityRejectReasonEnum.FOREIGNCOMPANY: return "Dio strane grupacije / Strano vlasništvo";
+                    case OpportunityRejectReasonEnum.OTHER: return "Drugo / Ostalo";
                 }
                 return "Nije odbijeno";
             }

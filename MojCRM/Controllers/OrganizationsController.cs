@@ -94,6 +94,11 @@ namespace MojCRM.Controllers
                                 MerId = Result.Id,
                                 TotalReceived = Result.TotalReceived
                             });
+                            db.OrganizationDetails.Add(new OrganizationDetail
+                            {
+                                MerId = Result.Id,
+                                OrganizationGroup = OrganizationGroupEnum.Nema
+                            });
                             db.SaveChanges();
                             Result = Response;
                         }

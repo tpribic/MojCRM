@@ -107,10 +107,10 @@ namespace MojCRM.Controllers
 
         // POST: Contact/CreateFromDelivery
         [HttpPost]
-        public ActionResult CreateFromSales(OpportunityContactHelper Model)
+        public ActionResult CreateFromSales(SalesContactHelper Model)
         {
             var _OrganizationId = (from o in db.Opportunities
-                                   where o.OpportunityId == Model.RelatedOpportunityId
+                                   where o.OpportunityId == Model.RelatedEntityId
                                    select o.RelatedOrganizationId).First().ToString();
 
             db.Contacts.Add(new Contact
@@ -304,7 +304,7 @@ namespace MojCRM.Controllers
 
         // POST: Contact/EditFromSales
         [HttpPost]
-        public ActionResult EditFromSales(OpportunityContactHelper Model)
+        public ActionResult EditFromSales(SalesContactHelper Model)
         {
             var ContactForUpdate = (from c in db.Contacts
                                     where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
@@ -340,43 +340,43 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        // POST: Contact/EditFromSales
-        [HttpPost]
-        public ActionResult EditFromSalesLead(LeadContactHelper Model)
-        {
-            var ContactForUpdate = (from c in db.Contacts
-                                    where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
-                                    select c).First();
+        //// POST: Contact/EditFromSales
+        //[HttpPost]
+        //public ActionResult EditFromSalesLead(LeadContactHelper Model)
+        //{
+        //    var ContactForUpdate = (from c in db.Contacts
+        //                            where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
+        //                            select c).First();
 
-            if (!String.IsNullOrEmpty(Model.FirstName))
-            {
-                ContactForUpdate.ContactFirstName = Model.FirstName;
-            }
-            if (!String.IsNullOrEmpty(Model.LastName))
-            {
-                ContactForUpdate.ContactLastName = Model.LastName;
-            }
-            if (!String.IsNullOrEmpty(Model.Telephone))
-            {
-                ContactForUpdate.TelephoneNumber = Model.Telephone;
-            }
-            if (!String.IsNullOrEmpty(Model.Mobile))
-            {
-                ContactForUpdate.MobilePhoneNumber = Model.Mobile;
-            }
-            if (!String.IsNullOrEmpty(Model.Email))
-            {
-                ContactForUpdate.Email = Model.Email;
-            }
-            if (!String.IsNullOrEmpty(Model.Title))
-            {
-                ContactForUpdate.Title = Model.Title;
-            }
-            ContactForUpdate.User = User.Identity.Name;
-            db.SaveChanges();
+        //    if (!String.IsNullOrEmpty(Model.FirstName))
+        //    {
+        //        ContactForUpdate.ContactFirstName = Model.FirstName;
+        //    }
+        //    if (!String.IsNullOrEmpty(Model.LastName))
+        //    {
+        //        ContactForUpdate.ContactLastName = Model.LastName;
+        //    }
+        //    if (!String.IsNullOrEmpty(Model.Telephone))
+        //    {
+        //        ContactForUpdate.TelephoneNumber = Model.Telephone;
+        //    }
+        //    if (!String.IsNullOrEmpty(Model.Mobile))
+        //    {
+        //        ContactForUpdate.MobilePhoneNumber = Model.Mobile;
+        //    }
+        //    if (!String.IsNullOrEmpty(Model.Email))
+        //    {
+        //        ContactForUpdate.Email = Model.Email;
+        //    }
+        //    if (!String.IsNullOrEmpty(Model.Title))
+        //    {
+        //        ContactForUpdate.Title = Model.Title;
+        //    }
+        //    ContactForUpdate.User = User.Identity.Name;
+        //    db.SaveChanges();
 
-            return Redirect(Request.UrlReferrer.ToString());
-        }
+        //    return Redirect(Request.UrlReferrer.ToString());
+        //}
 
         public JsonResult GetOrganization(string term = "")
         {
