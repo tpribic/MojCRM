@@ -25,9 +25,7 @@
             <div class="container">
                 <div class="clearfix">
                     <a href="#" class="pull-left toggle-sidebar-collapse"><i class="fa fa-bars"></i></a>
-                    <div class="pull-left left logo">
-                        <a href="index.html"><img alt="Moj-CRM logo" src="@Url.Content("~/Content/CRM_logo_source-krivulje.tekst.svg")" height="37" /></a>
-                    </div>
+                    @*<img class="pull-left left logo" alt="Moj-CRM logo" src="@Url.Content("~/Content/CRM_logo_source-krivulje.tekst.svg")" height="37" />*@
                     <div class="pull-right right">
                         <!--Logged user-->
                         <div class="logged-user">
@@ -51,6 +49,7 @@
                                     <li>
                                         @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
                                         {
+                                            @Html.AntiForgeryToken()
                                             <a href="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">
                                                 <i class="fa fa-power-off"></i>
                                                 <span class="text">Odjavi se</span>
@@ -70,10 +69,13 @@
             <div class="sidebar-scroll">
                 <nav class="main-nav">
                     <ul class="main-menu">
-                        <li class="active">
-                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Home", area = ""})" class="js-sub-menu-toggle"><i class="fa fa-home"></i><span class="text">Početna</span></a>
+                        <li>
+                            <img alt="Moj-CRM logo" src="@Url.Content("~/Content/CRM_logo_source-krivulje.tekst.svg")" />
                         </li>
                         <li class="active">
+                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Home", area = ""})"><i class="fa fa-home"></i><span class="text">Početna</span></a>
+                        </li>
+                        <li>
                             <a href="#" class="js-sub-menu-toggle">
                                 <i class="fa fa-list"></i><span class="text">Popisi</span>
                                 <i class="toggle-icon fa fa-angle-left"></i>
@@ -86,23 +88,44 @@
                         @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <li>
-                                <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns"})" class="js-sub-menu-toggle"><i class="fa fa-phone"></i><span class="text">Kampanje</span></a>
+                                <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns"})"><i class="fa fa-phone"></i><span class="text">Kampanje</span></a>
                             </li>
                         }
-                        <li class="active">
+                        <li>
                             <a href="#" class="js-sub-menu-toggle">
-                                <i class="fa fa-dashboard fa-fw"></i><span class="text">Dashboard</span>
-                                <i class="toggle-icon fa fa-angle-down"></i>
+                                <i class="fa fa-money"></i><span class="text">Prodaja</span>
+                                <i class="toggle-icon fa fa-angle-left"></i>
                             </a>
-                            <ul class="sub-menu open">
-                                <li class="active"><a href="index.html"><span class="text">Dashboard v1</span></a></li>
-                                <li><a href="index-transparent.html"><span class="text">Dashboard v1 Transp.</span></a></li>
-                                <li><a href="index-dashboard-v2.html"><span class="text">Dashboard v2</span></a></li>
-                                <li><a href="index-dashboard-v2-transparent.html"><span class="text">Dashboard v2 Trans.</span></a></li>
-                                <li><a href="index-dashboard-v3.html"><span class="text">Dashboard v3</span></a></li>
-                                <li><a href="index-dashboard-v4.html"><span class="text">Dashboard v4 <span class="badge element-bg-color-blue">New</span></span></a></li>
+                            <ul class="sub-menu">
+                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
+                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
                             </ul>
                         </li>
+                        @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-wrench"></i><span class="text">Podrška</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = ""})"><span class="text">Popis kartica za dostavu</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = ""})"><span class="text">Popis kontakata za dostavu</span></a></li>
+                                    @if (User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+                                    {
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        <li>
+                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Stats", area = ""})"><i class="fa fa-book"></i><span class="text">Izvještaji</span></a>
+                        </li>
+                        @if (User.IsInRole("Superadmin"))
+                        {
+                            <li>
+                                <a href="@Url.RouteUrl(new { action = "Index", controller = "Administration", area = ""})"><i class="fa fa-cogs"></i><span class="text">Administracija sustava</span></a>
+                            </li>
+                        }
                     </ul>
                 </nav>
             </div>

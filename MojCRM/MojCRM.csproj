@@ -596,7 +596,9 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\lato-bol-webfont.svg" />
     <Content Include="fonts\lato-lig-webfont.svg" />
+    <Content Include="fonts\lato-reg-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
@@ -650,6 +652,12 @@
     <Content Include="fonts\lato-lig-webfont.eot" />
     <Content Include="fonts\lato-lig-webfont.ttf" />
     <Content Include="fonts\lato-lig-webfont.woff" />
+    <Content Include="fonts\lato-bol-webfont.eot" />
+    <Content Include="fonts\lato-bol-webfont.ttf" />
+    <Content Include="fonts\lato-bol-webfont.woff" />
+    <Content Include="fonts\lato-reg-webfont.eot" />
+    <Content Include="fonts\lato-reg-webfont.ttf" />
+    <Content Include="fonts\lato-reg-webfont.woff" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
