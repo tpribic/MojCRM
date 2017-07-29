@@ -20,7 +20,9 @@ namespace MojCRM.Controllers
         // GET: Contact
         public ActionResult Index()
         {
-            return View();
+            var contacts = from c in db.Contacts
+                           select c;
+            return View(contacts.ToList());
         }
 
         // GET: Contact/Create

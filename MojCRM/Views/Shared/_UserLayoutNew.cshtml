@@ -82,7 +82,7 @@
                             </a>
                             <ul class="sub-menu ">
                                 <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><span class="text">Tvrtke</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contacts", area = ""})"><span class="text">Kontakti</span></a></li>
+                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contact", area = ""})"><span class="text">Kontakti</span></a></li>
                             </ul> 
                         </li>
                         @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
