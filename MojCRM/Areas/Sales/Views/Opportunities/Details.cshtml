@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-2">
                         <div>
-                            @Html.CheckBox("IsActivity", true)
+                            @Html.CheckBox("IsActivity", true, new { @class = "checked", @id = "IsActivity"})
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <hr />
-                <h5>Označite koju tipiziranu napomenu želite dodati uz ovaj poziv</h5>
+                <h5>Označite koju tipiziranu napomenu želite dodati</h5>
                 <table class="table">
                     <tr>
                         <th></th>
@@ -303,7 +303,7 @@
                         <div class="col-md-6">
                             <label for="sales-detail-contact">Kontakt osoba</label>
                             <div id="sales-detail-contact">
-                                @Html.DropDownList("ContactId", Model.RelatedSalesContactsForDetails, new { @class = "form-control" })
+                                @Html.DropDownList("ContactId", Model.RelatedSalesContactsId, new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -347,7 +347,7 @@
                             <div class="col-md-4">
                                 <label for="sales-contact-title">Titula / Funkcija</label>
                                 <div id="sales-contact-title">
-                                    @Html.TextBox("Title", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
+                                    @Html.TextBox("TitleFunction", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
                                 </div>
                             </div>
                             <div class="hidden">
@@ -731,7 +731,7 @@
 
 <!--Modal - Sales Contacts-->
 <div class="modal fade" id="SalesContacts" tabindex="-1" role="dialog" aria-labelledby="SalesContacts">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="width: 650px">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <div class="btn-group" role="group">
@@ -963,6 +963,7 @@
                 RelatedLeadId: $(this).data("opportunity-id"),
                 Contact: $("#info-note").val(),
                 Note: $("#note-for-note").val(),
+                IsActivity: true,
                 Identifier: 2
             },
             dataType: 'json'

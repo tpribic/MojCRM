@@ -10,6 +10,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using static MojCRM.Models.ActivityLog;
 
 namespace MojCRM.Areas.Sales.Controllers
 {
@@ -40,7 +41,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization) || l.RelatedOrganization.VAT.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }
@@ -90,7 +91,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 }
                 if (!String.IsNullOrEmpty(Model.Lead))
                 {
-                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization));
+                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization) || l.RelatedOrganization.VAT.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }
@@ -154,7 +155,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                      where n.RelatedLeadId == lead.LeadId
                                      select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
             var _RelatedLeadActivities = (from a in db.ActivityLogs
-                                          where a.ReferenceId == lead.LeadId
+                                          where a.ReferenceId == lead.LeadId && a.Module == ModuleEnum.Leads
                                           select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
             var _RelatedOrganization = (from o in db.Organizations
                                         where o.MerId == lead.RelatedOrganizationId
@@ -209,7 +210,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 LeadId = id,
                 LeadDescription = lead.LeadDescription,
                 LeadStatus = lead.LeadStatusString,
-                RejectReasson = lead.LeadRejectReasonString,
+                RejectReason = lead.LeadRejectReasonString,
                 OrganizationId = lead.RelatedOrganizationId,
                 OrganizationName = _RelatedOrganization.SubjectName,
                 OrganizationVAT = _RelatedOrganization.VAT,
@@ -294,6 +295,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Leads,
                             InsertDate = DateTime.Now
                         });
                         db.SaveChanges();
@@ -306,6 +308,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Leads,
                             InsertDate = DateTime.Now,
                         });
                         db.SaveChanges();
@@ -318,6 +321,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Leads,
                             InsertDate = DateTime.Now,
                         });
                         db.SaveChanges();
@@ -371,6 +375,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 ReferenceId = Model.RelatedLeadId,
                 ActivityType = ActivityLog.ActivityTypeEnum.EMAIL,
                 Department = ActivityLog.DepartmentEnum.Sales,
+                Module = ModuleEnum.Leads,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();

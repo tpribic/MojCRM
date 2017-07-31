@@ -15,6 +15,7 @@ using MojCRM.Areas.Sales.ViewModels;
 using MojCRM.Areas.Sales.Helpers;
 using System.Text;
 using System.Web.UI.WebControls;
+using static MojCRM.Models.ActivityLog;
 
 namespace MojCRM.Areas.Sales.Controllers
 {
@@ -45,7 +46,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization) || op.RelatedOrganization.VAT.Contains(Model.Organization));
                     ViewBag.SearchResults = opportunities.Count();
                     ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
                 }
@@ -101,7 +102,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    opportunities = opportunities.Where(op => op.RelatedOrganization.SubjectName.Contains(Model.Organization) || op.RelatedOrganization.VAT.Contains(Model.Organization));
                     ViewBag.SearchResults = opportunities.Count();
                     ViewBag.SearchResultsAssigned = opportunities.Where(op => op.IsAssigned == true).Count();
                 }
@@ -158,7 +159,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                             where n.RelatedOpportunityId == opportunity.OpportunityId
                                             select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
             var _RelatedOpportunityActivities = (from a in db.ActivityLogs
-                                                 where a.ReferenceId == id
+                                                 where a.ReferenceId == id && a.Module == ModuleEnum.Opportunities
                                                  select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
             var _RelatedOrganization = (from o in db.Organizations
                                         where o.MerId == opportunity.RelatedOrganizationId
@@ -298,6 +299,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedOpportunityId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Opportunities,
                             InsertDate = DateTime.Now
                         });
                         db.SaveChanges();
@@ -310,6 +312,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedOpportunityId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Opportunities,
                             InsertDate = DateTime.Now,
                         });
                         db.SaveChanges();
@@ -322,6 +325,7 @@ namespace MojCRM.Areas.Sales.Controllers
                             ReferenceId = Model.RelatedOpportunityId,
                             ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
                             Department = ActivityLog.DepartmentEnum.Sales,
+                            Module = ModuleEnum.Opportunities,
                             InsertDate = DateTime.Now,
                         });
                         db.SaveChanges();
@@ -376,6 +380,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 ReferenceId = Model.RelatedOpportunityId,
                 ActivityType = ActivityLog.ActivityTypeEnum.EMAIL,
                 Department = ActivityLog.DepartmentEnum.Sales,
+                Module = ModuleEnum.Opportunities,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
@@ -478,6 +483,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 ReferenceId = Model.OpportunityId,
                 ActivityType = ActivityLog.ActivityTypeEnum.CREATEDLEAD,
                 Department = ActivityLog.DepartmentEnum.Sales,
+                Module = ModuleEnum.Opportunities,
                 InsertDate = DateTime.Now
             });
             var opportunity = db.Opportunities.Find(Model.OpportunityId);

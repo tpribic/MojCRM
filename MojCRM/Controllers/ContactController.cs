@@ -120,7 +120,7 @@ namespace MojCRM.Controllers
                 OrganizationId = Int32.Parse(_OrganizationId),
                 ContactFirstName = Model.FirstName,
                 ContactLastName = Model.LastName,
-                Title = Model.Title,
+                Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
                 Email = Model.Email,
@@ -308,9 +308,8 @@ namespace MojCRM.Controllers
         [HttpPost]
         public ActionResult EditFromSales(SalesContactHelper Model)
         {
-            var ContactForUpdate = (from c in db.Contacts
-                                    where (c.ContactFirstName + " " + c.ContactLastName) == Model.ContactId.ToString()
-                                    select c).First();
+            var contactId = Int32.Parse(Model.ContactId);
+            var ContactForUpdate = db.Contacts.Find(contactId);
 
             if (!String.IsNullOrEmpty(Model.FirstName))
             {
@@ -332,9 +331,9 @@ namespace MojCRM.Controllers
             {
                 ContactForUpdate.Email = Model.Email;
             }
-            if (!String.IsNullOrEmpty(Model.Title))
+            if (!String.IsNullOrEmpty(Model.TitleFunction))
             {
-                ContactForUpdate.Title = Model.Title;
+                ContactForUpdate.Title = Model.TitleFunction;
             }
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();

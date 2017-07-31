@@ -25,9 +25,11 @@ namespace MojCRM.Areas.Sales.Models
 
         [Display(Name = "Status")]
         public OpportunityStatusEnum OpportunityStatus { get; set; }
+        public string StatusDescription { get; set; }
 
         [Display(Name = "Razlog odbijanja")]
         public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public string RejectReasonDescription { get; set; }
 
         [Display(Name = "Kreirao")]
         public string CreatedBy { get; set; }
