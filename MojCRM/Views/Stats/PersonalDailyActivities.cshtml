@@ -62,7 +62,7 @@
             {
                 <table id="SuccessfulCallsTable" class="personal-table table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
                         <td><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
@@ -71,7 +71,7 @@
                     {
                             <tr>
 
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
@@ -92,7 +92,7 @@
             {
                 <table id="ShortSuccessfulCallsTable" class="table personal-table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
                         <td><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
@@ -101,7 +101,7 @@
                     {
                             <tr>
 
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
@@ -121,7 +121,7 @@
             {
                 <table id="UnsuccessfulCallsTable" class="table personal-table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
                         <td><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
@@ -129,7 +129,7 @@
                     if (Activity.ActivityTypeString.Equals("Neuspješan poziv"))
                     {
                             <tr>
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
@@ -148,19 +148,19 @@
             </label>
         </div>
         <div id="wrapTableSentMail" style="display:none;">
-            @if (Model.SumUnsuccessfulCalls > 0)
+            @if (Model.SumSentMail > 0)
             {
                 <table id="SentMailTable" class="table personal-table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
-                        <td><strong>Odjel</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
+                        <td ><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
                 {
                     if (Activity.ActivityTypeString.Equals("Poslanih e-mailova"))
                     {
                             <tr>
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
@@ -178,11 +178,11 @@
             </label>
         </div>
         <div id="wrapTableMailchange" style="display:none;">
-            @if (Model.SumUnsuccessfulCalls > 0)
+            @if (Model.SumMailchange > 0)
             {
                 <table id="MailchangeTable" class="table personal-table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
                         <td><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
@@ -190,7 +190,7 @@
                     if (Activity.ActivityTypeString.Equals("Izmjena e-mail obavijesti"))
                     {
                             <tr>
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
@@ -208,11 +208,11 @@
             </label>
         </div>
         <div id="wrapTableResend" style="display:none;">
-            @if (Model.SumUnsuccessfulCalls > 0)
+            @if (Model.SumResend > 0)
             {
                 <table id="ResendTable" class="table personal-table" style="margin-bottom:0;">
                     <tr>
-                        <td><strong>Opis aktivnosti</strong></td>
+                        <td class="description-td"><strong>Opis aktivnosti</strong></td>
                         <td><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
@@ -220,7 +220,7 @@
                     if (Activity.ActivityTypeString.Equals("Ponovno slanje obavijesti o dostavi"))
                     {
                             <tr>
-                                <td>@Activity.Description</td>
+                                <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
                             </tr>
                         }
