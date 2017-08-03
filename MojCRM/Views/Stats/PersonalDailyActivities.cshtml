@@ -1,7 +1,7 @@
 ﻿@model MojCRM.ViewModels.PersonalDailyActivitiesViewModel
 @{
     ViewBag.Title = "Dnevnik osobnih aktivnosti";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
 <h2 style="text-align:center"><strong>Osobni dnevnik</strong></h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="hidden">
-            @Html.TextBox("Name", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name})
+            @Html.TextBox("Name", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name })
         </div>
         if (User.IsInRole("Superadmin") || User.IsInRole("Management") || User.IsInRole("Administrator"))
         {
@@ -51,43 +51,188 @@
 </div>
 
 <hr />
-<div class="jumbotron">
-    @if (User.IsInRole("Superadmin") ||  User.IsInRole("Administrator")|| User.IsInRole("Delivery"))
-    {
-    <table class="table">
-        <tr>
-            <th>@Html.LabelFor(model => model.SumSuccessfulCalls)</th>
-            <th>@Html.LabelFor(model => model.SumUnsuccessfulCalls)</th>
-            <th>@Html.LabelFor(model => model.SumSentMail)</th>
-            <th>@Html.LabelFor(model => model.SumMailchange)</th>
-            <th>@Html.LabelFor(model => model.SumResend)</th>
-        </tr>
-        <tr>
-            <td>@Model.SumSuccessfulCalls</td>
-            <td>@Model.SumUnsuccessfulCalls</td>
-            <td>@Model.SumSentMail</td>
-            <td>@Model.SumMailchange</td>
-            <td>@Model.SumResend</td>
-        </tr>
-    </table>
-    }
-    <table class="table">
-        <tr>
-            <td><strong>Aktivnost</strong></td>
-            <td><strong>Opis aktivnosti</strong></td>
-            <td><strong>Odjel</strong></td>
-        </tr>
-        @foreach (var Activity in @Model.PersonalActivities)
-        {
-            <tr>
-                <td>@Activity.ActivityTypeString</td>
-                <td>@Activity.Description</td>
-                <td>@Activity.DepartmentString</td>
-            </tr>
-        }
-    </table>
-</div>
+<div class="jumbotron" style="padding-top:0;">
 
+    <div id="SuccessfulCallsDiv" class="personal-div">
+        <div id="SuccessfulCallsLabelDiv">
+            <label for="SuccessfulCallsTable" class="personal-label">@Html.DisplayNameFor(model => model.SumSuccessfulCalls): @Model.SumSuccessfulCalls</label>
+        </div>
+        <div id="wrapTableSuccCall" style="display:none;">
+            @if (Model.SumSuccessfulCalls > 0)
+            {
+                <table id="SuccessfulCallsTable" class="personal-table table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Uspješan poziv"))
+                    {
+                            <tr>
+
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+    </div>
+
+    <div id="ShortSuccessfulCallsDiv" class="personal-div">
+
+        <div id="ShortSuccessfulCallsLabelDiv">
+            <label for="ShortSuccessfulCallsTable" class="personal-label">@Html.DisplayNameFor(model => model.SumShortSuccessfulCalls): @Model.SumShortSuccessfulCalls</label>
+        </div>
+        <div id="wrapTableShortSuccCall" style="display:none;">
+            @if (Model.SumShortSuccessfulCalls > 0)
+            {
+                <table id="ShortSuccessfulCallsTable" class="table personal-table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Uspješan poziv (nekonkretni)"))
+                    {
+                            <tr>
+
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+    </div>
+
+    <div id="UnsuccessfulCallsDiv" class="personal-div">
+        <div id="UnsuccessfulCallsDivLabelDiv">
+            <label class="personal-label" for="UnsuccessfulCallsTable"> @Html.DisplayNameFor(model => model.SumUnsuccessfulCalls): @Model.SumUnsuccessfulCalls</label>
+        </div>
+        <div id="wrapTableUnsuccCall" style="display:none;">
+            @if (Model.SumUnsuccessfulCalls > 0)
+            {
+                <table id="UnsuccessfulCallsTable" class="table personal-table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Neuspješan poziv"))
+                    {
+                            <tr>
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+
+    </div>
+
+    <div id="SentMailDiv" class="personal-div">
+        <div id="SentMailLabelDiv">
+            <label class="personal-label" for="SentMailTable">
+                @Html.DisplayNameFor(model => model.SumSentMail): @Model.SumSentMail
+            </label>
+        </div>
+        <div id="wrapTableSentMail" style="display:none;">
+            @if (Model.SumUnsuccessfulCalls > 0)
+            {
+                <table id="SentMailTable" class="table personal-table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Poslanih e-mailova"))
+                    {
+                            <tr>
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+
+    </div>
+    <div id="MailchangeDiv" class="personal-div">
+        <div id="MailchangeLabelDiv">
+            <label class="personal-label" for="MailchangeTable">
+                @Html.DisplayNameFor(model => model.SumMailchange): @Model.SumMailchange
+            </label>
+        </div>
+        <div id="wrapTableMailchange" style="display:none;">
+            @if (Model.SumUnsuccessfulCalls > 0)
+            {
+                <table id="MailchangeTable" class="table personal-table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Izmjena e-mail obavijesti"))
+                    {
+                            <tr>
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+
+    </div>
+    <div id="ResendDiv" class="personal-div">
+        <div id="ResendLabelDiv">
+            <label class="personal-label" for="ResendTable">
+                @Html.DisplayNameFor(model => model.SumResend): @Model.SumResend
+            </label>
+        </div>
+        <div id="wrapTableResend" style="display:none;">
+            @if (Model.SumUnsuccessfulCalls > 0)
+            {
+                <table id="ResendTable" class="table personal-table" style="margin-bottom:0;">
+                    <tr>
+                        <td><strong>Opis aktivnosti</strong></td>
+                        <td><strong>Odjel</strong></td>
+                    </tr>
+                    @foreach (var Activity in @Model.PersonalActivities)
+                {
+                    if (Activity.ActivityTypeString.Equals("Ponovno slanje obavijesti o dostavi"))
+                    {
+                            <tr>
+                                <td>@Activity.Description</td>
+                                <td>@Activity.DepartmentString</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+
+
+    </div>
+
+</div>
 <script>
     $(function () {
         $(".date-picker").datepicker({
@@ -101,6 +246,27 @@
             $(document).find('input[type=text]').attr('value', '');
             $(document).find("select option").attr('selected', false);
         });
+
+
+        $("div#SuccessfulCallsLabelDiv").click(function () {
+            $("div#wrapTableSuccCall").slideToggle("slow");
+        });
+        $("div#ShortSuccessfulCallsLabelDiv").click(function () {
+            $("div#wrapTableShortSuccCall").slideToggle("slow");
+        });
+        $("div#UnsuccessfulCallsLabelDiv").click(function () {
+            $("div#wrapTableUnsuccCall").slideToggle("slow");
+        });
+        $("div#SentMailLabelDiv").click(function () {
+            $("div#wrapTableSentMail").slideToggle("slow");
+        });
+        $("div#MailchangeLabelDiv").click(function () {
+            $("div#wrapTableMailchange").slideToggle("slow");
+        });
+        $("div#ResendLabelDiv").click(function () {
+            $("div#wrapTableResend").slideToggle("slow");
+        });
+
     })
 </script>
 

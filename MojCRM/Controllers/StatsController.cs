@@ -26,7 +26,10 @@ namespace MojCRM.Controllers
 
 
             var SuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL 
+                                   select a);
+            var ShortSuccessfulCalls = (from a in db.ActivityLogs
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT 
                                    select a);
             var UnsuccessfulCalls = (from a in db.ActivityLogs
                                      where a.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL
@@ -41,6 +44,8 @@ namespace MojCRM.Controllers
                                 where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
                                 select a);
 
+            
+
             var ReferenceDate = DateTime.Today.AddDays(-1);
            
             var _Agents = (from u in db.Users
@@ -48,8 +53,8 @@ namespace MojCRM.Controllers
            
             var _Activities = (from a in db.ActivityLogs
                                select a).ToList();
-           
-         
+
+          
             var searchDate = Convert.ToDateTime(SearchDate);
            
             var searchDatePlus = searchDate.AddDays(1);
@@ -62,8 +67,12 @@ namespace MojCRM.Controllers
             {
                 _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate>= DateTime.Today)).ToList();
 
+                
 
-                SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
+               
+                    SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
+                ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
+
                 UnsuccessfulCalls = UnsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today && t.User == Name);
                 MailChange = MailChange.Where(t => t.InsertDate >= DateTime.Today && t.User == Name);
                 Resend = Resend.Where(t => t.InsertDate >= DateTime.Today && t.User == Name);
@@ -78,6 +87,8 @@ namespace MojCRM.Controllers
             {
 
                 SuccessfulCalls = SuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Name);
+                ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Name);
+
                 UnsuccessfulCalls = UnsuccessfulCalls.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 MailChange = MailChange.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
@@ -94,6 +105,8 @@ namespace MojCRM.Controllers
             {
 
                 SuccessfulCalls = SuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Agent);
+                ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Agent);
+
                 UnsuccessfulCalls = UnsuccessfulCalls.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
                 MailChange = MailChange.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
@@ -121,11 +134,12 @@ namespace MojCRM.Controllers
                 PersonalActivities = _Activities,
                 Agents = _Agents,
                 SumSuccessfulCalls = SuccessfulCalls.Count(),
+                SumShortSuccessfulCalls = ShortSuccessfulCalls.Count(),
                 SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
                 SumMailchange = MailChange.Count(),
                 SumResend = Resend.Count(),
                 SumSentMail = DeliveryMail.Count(),
-
+               
             };
 
             return View(PersonalActivities);

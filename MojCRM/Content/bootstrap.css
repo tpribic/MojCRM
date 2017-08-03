@@ -6760,3 +6760,24 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+
+.hidden{
+    display:none;
+}
+
+.personal-div {
+    border-width:1px;
+    border-color:gainsboro;
+    border-style:solid;
+    margin-bottom:10px;
+}
+.personal-label{
+    margin-left:1%;
+    margin-bottom:1%;
+    margin-top:1%;
+}
+
+.personal-table td{
+    width:50%;
+
+}
