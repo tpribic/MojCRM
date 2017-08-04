@@ -290,7 +290,7 @@ namespace MojCRM.Areas.Sales.Controllers
                     case 1:
                         db.ActivityLogs.Add(new ActivityLog
                         {
-                            Description = User.Identity.Name + " je obavio uspješan poziv vezan za prodajnu priliku: " + lead.LeadTitle,
+                            Description = User.Identity.Name + " je obavio uspješan poziv vezan uz lead: " + lead.LeadTitle,
                             User = User.Identity.Name,
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
@@ -303,7 +303,7 @@ namespace MojCRM.Areas.Sales.Controllers
                     case 2:
                         db.ActivityLogs.Add(new ActivityLog
                         {
-                            Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za prodajnu priliku: " + lead.LeadTitle,
+                            Description = User.Identity.Name + " je obavio kraći informativni poziv vezan uz lead: " + lead.LeadTitle,
                             User = User.Identity.Name,
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
@@ -316,7 +316,7 @@ namespace MojCRM.Areas.Sales.Controllers
                     case 3:
                         db.ActivityLogs.Add(new ActivityLog
                         {
-                            Description = User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za prodajnu priliku: " + lead.LeadTitle,
+                            Description = User.Identity.Name + " je pokušao obaviti telefonski poziv vezanvezan uz lead: " + lead.LeadTitle,
                             User = User.Identity.Name,
                             ReferenceId = Model.RelatedLeadId,
                             ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
