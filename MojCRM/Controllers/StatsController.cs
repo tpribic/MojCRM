@@ -332,7 +332,7 @@ namespace MojCRM.Controllers
                         AssignedTo = Day.Key.AssignedTo
                     };
                     Deliveries.Add(dailyDelivery);
-                }
+                }  
             }
 
             var model = new DeliveryStatsViewModel

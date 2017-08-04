@@ -54,7 +54,7 @@
 <div class="jumbotron" style="padding-top:0;">
 
     <div id="SuccessfulCallsDiv" class="personal-div">
-        <div id="SuccessfulCallsLabelDiv">
+        <div id="SuccessfulCallsLablelWrap">
             <label for="SuccessfulCallsTable" class="personal-label">@Html.DisplayNameFor(model => model.SumSuccessfulCalls): @Model.SumSuccessfulCalls</label>
         </div>
         <div id="wrapTableSuccCall" style="display:none;">
@@ -84,7 +84,7 @@
 
     <div id="ShortSuccessfulCallsDiv" class="personal-div">
 
-        <div id="ShortSuccessfulCallsLabelDiv">
+        <div id="ShortSuccessfulCallsLablelWrap">
             <label for="ShortSuccessfulCallsTable" class="personal-label">@Html.DisplayNameFor(model => model.SumShortSuccessfulCalls): @Model.SumShortSuccessfulCalls</label>
         </div>
         <div id="wrapTableShortSuccCall" style="display:none;">
@@ -113,7 +113,7 @@
     </div>
 
     <div id="UnsuccessfulCallsDiv" class="personal-div">
-        <div id="UnsuccessfulCallsDivLabelDiv">
+        <div id="UnsuccessfulCallsDivLablelWrap">
             <label class="personal-label" for="UnsuccessfulCallsTable"> @Html.DisplayNameFor(model => model.SumUnsuccessfulCalls): @Model.SumUnsuccessfulCalls</label>
         </div>
         <div id="wrapTableUnsuccCall" style="display:none;">
@@ -142,7 +142,7 @@
     </div>
 
     <div id="SentMailDiv" class="personal-div">
-        <div id="SentMailLabelDiv">
+        <div id="SentMailLablelWrap">
             <label class="personal-label" for="SentMailTable">
                 @Html.DisplayNameFor(model => model.SumSentMail): @Model.SumSentMail
             </label>
@@ -172,7 +172,7 @@
 
     </div>
     <div id="MailchangeDiv" class="personal-div">
-        <div id="MailchangeLabelDiv">
+        <div id="MailchangeLablelWrap">
             <label class="personal-label" for="MailchangeTable">
                 @Html.DisplayNameFor(model => model.SumMailchange): @Model.SumMailchange
             </label>
@@ -202,7 +202,7 @@
 
     </div>
     <div id="ResendDiv" class="personal-div">
-        <div id="ResendLabelDiv">
+        <div id="ResendLablelWrap">
             <label class="personal-label" for="ResendTable">
                 @Html.DisplayNameFor(model => model.SumResend): @Model.SumResend
             </label>
@@ -248,22 +248,22 @@
         });
 
 
-        $("div#SuccessfulCallsLabelDiv").click(function () {
+        $("div#SuccessfulCallsLablelWrap").click(function () {
             $("div#wrapTableSuccCall").slideToggle("slow");
         });
-        $("div#ShortSuccessfulCallsLabelDiv").click(function () {
+        $("div#ShortSuccessfulCallsLablelWrap").click(function () {
             $("div#wrapTableShortSuccCall").slideToggle("slow");
         });
-        $("div#UnsuccessfulCallsLabelDiv").click(function () {
+        $("div#UnsuccessfulCallsLablelWrap").click(function () {
             $("div#wrapTableUnsuccCall").slideToggle("slow");
         });
-        $("div#SentMailLabelDiv").click(function () {
+        $("div#SentMailLablelWrap").click(function () {
             $("div#wrapTableSentMail").slideToggle("slow");
         });
-        $("div#MailchangeLabelDiv").click(function () {
+        $("div#MailchangeLablelWrap").click(function () {
             $("div#wrapTableMailchange").slideToggle("slow");
         });
-        $("div#ResendLabelDiv").click(function () {
+        $("div#ResendLablelWrap").click(function () {
             $("div#wrapTableResend").slideToggle("slow");
         });
 
