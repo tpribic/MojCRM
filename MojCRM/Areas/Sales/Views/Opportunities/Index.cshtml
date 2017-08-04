@@ -4,7 +4,7 @@
 
 @{
     ViewBag.Title = "Pregled prodajnih prilika";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
 @{ 
@@ -82,9 +82,9 @@
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label for="organization-search">Naziv tvrtke</label>
+            <label for="organization-search">Naziv ili OIB tvrtke</label>
             <div id="organization-search">
-                @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv tvrtke" })
+                @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB tvrtke" })
             </div>
         </div>
     </div>

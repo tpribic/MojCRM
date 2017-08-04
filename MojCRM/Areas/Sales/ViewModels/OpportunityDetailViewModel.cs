@@ -92,6 +92,21 @@ namespace MojCRM.Areas.Sales.ViewModels
             set { }
         }
 
+        public IList<SelectListItem> RelatedSalesContactsId
+        {
+            get
+            {
+                var list = (from t in RelatedSalesContacts
+                            select new SelectListItem()
+                            {
+                                Text = t.ContactFirstName + " " + t.ContactLastName,
+                                Value = t.ContactId.ToString()
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
+
         public IList<SelectListItem> NoteIds
         {
             get
