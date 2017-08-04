@@ -643,7 +643,6 @@
     <Content Include="Areas\Sales\Views\Opportunities\Edit.cshtml" />
     <Content Include="Areas\Sales\Views\Leads\Index.cshtml" />
     <Content Include="Areas\Sales\Views\Leads\Details.cshtml" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
