@@ -115,7 +115,7 @@ namespace MojCRM.Controllers
              
 
                 _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
-
+                 
                
 
                 _DistinctDepartments = (from a in db.ActivityLogs
