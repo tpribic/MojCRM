@@ -156,9 +156,10 @@
                         <td ><strong>Odjel</strong></td>
                     </tr>
                     @foreach (var Activity in @Model.PersonalActivities)
-                {
-                    if (Activity.ActivityTypeString.Equals("Poslanih e-mailova"))
-                    {
+                                {
+                                   
+                                    if (Activity.ActivityTypeString.Equals("Slanje e-mailova"))
+                                    {
                             <tr>
                                 <td class="description-td">@Activity.Description</td>
                                 <td>@Activity.DepartmentString</td>
