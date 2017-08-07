@@ -503,6 +503,10 @@
     <Compile Include="Migrations\201707270638161_Jul27QuickUpdate.Designer.cs">
       <DependentUpon>201707270638161_Jul27QuickUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707311439532_Jul31Update.cs" />
+    <Compile Include="Migrations\201707311439532_Jul31Update.Designer.cs">
+      <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -639,7 +643,6 @@
     <Content Include="Areas\Sales\Views\Opportunities\Edit.cshtml" />
     <Content Include="Areas\Sales\Views\Leads\Index.cshtml" />
     <Content Include="Areas\Sales\Views\Leads\Details.cshtml" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -869,6 +872,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707270638161_Jul27QuickUpdate.resx">
       <DependentUpon>201707270638161_Jul27QuickUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707311439532_Jul31Update.resx">
+      <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

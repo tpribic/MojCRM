@@ -21,7 +21,7 @@ namespace MojCRM.Areas.Sales.ViewModels
         public string LeadStatus { get; set; }
 
         [Display(Name = "Razlog odbijanja leada")]
-        public string RejectReasson { get; set; }
+        public string RejectReason { get; set; }
 
         [Display(Name = "Id tvrtke")]
         public int? OrganizationId { get; set; }
@@ -86,6 +86,21 @@ namespace MojCRM.Areas.Sales.ViewModels
                             {
                                 Text = t.ContactFirstName + " " + t.ContactLastName,
                                 Value = t.ContactFirstName + " " + t.ContactLastName
+                            }).ToList();
+                return list;
+            }
+            set { }
+        }
+
+        public IList<SelectListItem> RelatedSalesContactsId
+        {
+            get
+            {
+                var list = (from t in RelatedSalesContacts
+                            select new SelectListItem()
+                            {
+                                Text = t.ContactFirstName + " " + t.ContactLastName,
+                                Value = t.ContactId.ToString()
                             }).ToList();
                 return list;
             }

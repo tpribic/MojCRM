@@ -25,9 +25,11 @@ namespace MojCRM.Areas.Sales.Models
 
         [Display(Name = "Status")]
         public OpportunityStatusEnum OpportunityStatus { get; set; }
+        public string StatusDescription { get; set; }
 
         [Display(Name = "Razlog odbijanja")]
         public OpportunityRejectReasonEnum? RejectReason { get; set; }
+        public string RejectReasonDescription { get; set; }
 
         [Display(Name = "Kreirao")]
         public string CreatedBy { get; set; }
@@ -68,7 +70,10 @@ namespace MojCRM.Areas.Sales.Models
             LEAD,
 
             [Description("Odbijeno")]
-            REJECTED
+            REJECTED,
+
+            [Description("Potrebno dogovoriti sastanak")]
+            ARRANGEMEETING
         }
 
         public enum OpportunityRejectReasonEnum
@@ -108,6 +113,7 @@ namespace MojCRM.Areas.Sales.Models
                     case OpportunityStatusEnum.INCONTACT: return "U kontaktu";
                     case OpportunityStatusEnum.LEAD: return "Kreiran lead";
                     case OpportunityStatusEnum.REJECTED: return "Odbijeno";
+                    case OpportunityStatusEnum.ARRANGEMEETING: return "Potrebno dogovoriti sastanak";
                 }
                 return "Status prodajne prilike";
             }
