@@ -81,7 +81,7 @@ namespace MojCRM.Controllers
 
 
                 ViewBag.DistinctDepartments = _DistinctDepartments;
-                ViewBag.Date = ReferenceDate.ToShortDateString();
+                ViewBag.Date = DateTime.Today.ToShortDateString();
             }
             if (!String.IsNullOrEmpty(SearchDate) && String.IsNullOrEmpty(Agent))
             {
