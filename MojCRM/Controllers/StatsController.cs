@@ -112,12 +112,11 @@ namespace MojCRM.Controllers
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
                 DeliveryMail = DeliveryMail.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
 
-                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
+             
 
-                foreach(var Activity in _Activities)
-                {
-                    System.Diagnostics.Debug.WriteLine(Activity.User);
-                }
+                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
+                 
+               
 
                 _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
