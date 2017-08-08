@@ -213,7 +213,8 @@ namespace MojCRM.Areas.Sales.Controllers
             {
                 OpportunityId = id,
                 OpportunityDescription = opportunity.OpportunityDescription,
-                OpportunityStatus = opportunity.OpportunityStatusString,
+                OpportunityStatus = opportunity.OpportunityStatus,
+                OpportunityStatusString = opportunity.OpportunityStatusString,
                 RejectReasson = opportunity.OpportunityRejectReasonString,
                 OrganizationId = opportunity.RelatedOrganizationId,
                 OrganizationName = _RelatedOrganization.SubjectName,
@@ -498,6 +499,7 @@ namespace MojCRM.Areas.Sales.Controllers
         {
             var opportunity = db.Opportunities.Find(Model.RelatedOpportunityId);
             opportunity.OpportunityStatus = Model.NewStatus;
+            opportunity.StatusDescription = Model.StatusDescription;
             opportunity.UpdateDate = DateTime.Now;
             opportunity.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();
@@ -510,6 +512,7 @@ namespace MojCRM.Areas.Sales.Controllers
             var opportunity = db.Opportunities.Find(Model.RelatedOpportunityId);
             opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.REJECTED;
             opportunity.RejectReason = Model.RejectReason;
+            opportunity.RejectReasonDescription = Model.RejectReasonDescription;
             opportunity.UpdateDate = DateTime.Now;
             opportunity.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();

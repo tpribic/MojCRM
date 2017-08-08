@@ -67,12 +67,14 @@ namespace MojCRM.Areas.Sales.Helpers
     {
         public OpportunityStatusEnum NewStatus { get; set; }
         public int RelatedOpportunityId { get; set; }
+        public string StatusDescription { get; set; }
     }
 
     public class OpportunityMarkRejectedHelper
     {
         public OpportunityRejectReasonEnum RejectReason { get; set; }
         public int RelatedOpportunityId { get; set; }
+        public string RejectReasonDescription { get; set; }
     }
 
     public class ConvertToLeadHelper
