@@ -143,4 +143,41 @@ namespace MojCRM.ViewModels
             set { }
         }
     }
+
+    public class GeneralCampaignStatusViewModel
+    {
+        public int RelatedCampaignId { get; set; }
+        public string RelatedCampaignName { get; set; }
+        public int NumberOfOpportunitiesCreated { get; set; }
+        public int NumberOfOpportunitiesInProgress { get; set; }
+        public decimal NumberOfOpportunitiesInProgressPercent { get; set; }
+        public int NumberOfOpportunitiesToLead { get; set; }
+        public decimal NumberOfOpportunitiesToLeadPercent { get; set; }
+        public int NumberOfOpportunitiesRejected { get; set; }
+        public decimal NumberOfOpportunitiesRejectedPercent { get; set; }
+        public int NumberOfLeadsCreated { get; set; }
+        public int NumberOfLeadsInProgress { get; set; }
+        public decimal NumberOfLeadsInProgressPercent { get; set; }
+        public int NumberOfLeadsMeetings { get; set; }
+        public decimal NumberOfLeadsMeetingsPercent { get; set; }
+        public int NumberOfLeadsQuotes { get; set; }
+        public decimal NumberOfLeadsQuotesPercent { get; set; }
+        public int NumberOfLeadsRejected { get; set; }
+        public decimal NumberOfLeadsRejectedPercent { get; set; }
+        public int NumberOfLeadsAccepted { get; set; }
+        public decimal NumberOfLeadsAcceptedPercent { get; set; }
+    }
+    public class GeneralCampaignStatusViewModelCount
+    {
+        public int NumberOfOpportunitiesCreated { get; set; }
+        public int NumberOfOpportunitiesInProgress { get; set; }
+        public int NumberOfOpportunitiesToLead { get; set; }
+        public int NumberOfOpportunitiesRejected { get; set; }
+        public int NumberOfLeadsCreated { get; set; }
+        public int NumberOfLeadsInProgress { get; set; }
+        public int NumberOfLeadsMeetings { get; set; }
+        public int NumberOfLeadsQuotes { get; set; }
+        public int NumberOfLeadsRejected { get; set; }
+        public int NumberOfLeadsAccepted { get; set; }
+    }
 }
