@@ -32,22 +32,26 @@ namespace MojCRM.Controllers
         }
 
         // GET: Organizations/GetOrganizations
-        public void GetOrganizations()
+        public JsonResult GetOrganizations(string user)
         {
-            //var MerUser = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserUsername).First();
-            //var MerPass = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserPassword).First();
-
-            var Credentials = (from u in db.Users
+            var Credentials = new { MerUser = "", MerPass = "" };
+            if (String.IsNullOrEmpty(user))
+            {
+                Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
+            else
+            {
+                Credentials = (from u in db.Users
+                               where u.Id == user
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
 
             var ReferencedId = (from o in db.Organizations
                                orderby o.MerId descending
                                select o.MerId).First();
+            int CreatedCompanies = 0;
             var Response = new MerGetSubjektDataResponse()
             {
                 Id = 238,
@@ -108,6 +112,7 @@ namespace MojCRM.Controllers
                         }
                     }
                     ReferencedId++;
+                    CreatedCompanies++;
                 }
             }
             catch (NullReferenceException e)
@@ -124,6 +129,8 @@ namespace MojCRM.Controllers
                 });
                 db.SaveChanges();
             }
+
+            return Json(new { Status = "OK", CreatedCompanies = CreatedCompanies }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Organization/UpdateOrganization/1
