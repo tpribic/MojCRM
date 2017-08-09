@@ -527,6 +527,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>

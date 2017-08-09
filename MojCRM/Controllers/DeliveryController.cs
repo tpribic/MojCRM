@@ -185,20 +185,24 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/CreateTicketsFirstTime
         // Kreiranje kartica za prvo preuzimanje
-        [Authorize(Roles = "Superadmin")]
-        public void CreateTicketsFirstTime()
+        //[Authorize(Roles = "Superadmin")]
+        public JsonResult CreateTicketsFirstTime(string user)
         {
-            //var MerUser = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserUsername).First();
-            //var MerPass = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserPassword).First();
-
-            var Credentials = (from u in db.Users
+            var Credentials = new { MerUser = "", MerPass = "" };
+            if (String.IsNullOrEmpty(user))
+            {
+                Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
+            else
+            {
+                Credentials = (from u in db.Users
+                               where u.Id == user
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
 
+            int CreatedTickets = 0;
             MerApiGetNondeliveredDocuments RequestFirstTime = new MerApiGetNondeliveredDocuments()
             {
                 Id = Credentials.MerUser,
@@ -235,25 +239,32 @@ namespace MojCRM.Controllers
                     });
                 }
                 db.SaveChanges();
+                CreatedTickets = ResultsFirstTime.Count();
             }
+
+            return Json(new { Status = "OK", CreatedTickets = CreatedTickets }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Delivery/CreateTickets
         // Kreiranje kartica za redovito preuzimanje
-        [Authorize(Roles = "Superadmin")]
-        public void CreateTickets()
+        //[Authorize(Roles = "Superadmin")]
+        public JsonResult CreateTickets(string user)
         {
-            //var MerUser = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserUsername).First();
-            //var MerPass = (from u in db.Users
-            //               where u.UserName == Name
-            //               select u.MerUserPassword).First();
-
-            var Credentials = (from u in db.Users
+            var Credentials = new { MerUser = "", MerPass = ""};
+            if (String.IsNullOrEmpty(user))
+            {
+                Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
+            else
+            {
+                Credentials = (from u in db.Users
+                               where u.Id == user
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
+            }
 
+            int CreatedTickets = 0;
             MerApiGetNondeliveredDocuments RequestRegularDelivery = new MerApiGetNondeliveredDocuments()
             {
                 Id = Credentials.MerUser,
@@ -290,7 +301,10 @@ namespace MojCRM.Controllers
                     });
                 }
                 db.SaveChanges();
+                CreatedTickets = ResultsRegularDelivery.Count();
             }
+
+            return Json(new { Status = "OK", CreatedTickets = CreatedTickets }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Delivery/CreateTicketsOld
