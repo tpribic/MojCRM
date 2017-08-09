@@ -38,22 +38,24 @@ textarea {
     max-height:103px;
     height:103px;
 }
-.info-left{
-    float:left;
-    width:50%;
-   // background-color:#d3e1e4;
+.info-left {
+    float: left;
+    width: 50%;
+    /* background-color:#d3e1e4;
 }
 .info-right{
     float:left;
     width:50%;
-    //background-color:#d3e1e4;
+     /*background-color:#d3e1e4;*/
 }
 .ticket-body{
     overflow:auto;
 }
-.info{overflow:auto;
-      //background-color:#d3e1e4;
-      width:100%;}
+.info {
+    overflow: auto;
+    /*background-color:#d3e1e4;*/
+    width: 100%;
+}
 
 .number-list {
 list-style:none;
