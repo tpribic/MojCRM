@@ -26,19 +26,19 @@
                                     <p class="text-center"><strong>@Model.NumberOfLeadsCreated</strong></p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfOpportunitiesInProgressPercent">
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfOpportunitiesInProgressPercent" title="@Model.NumberOfOpportunitiesInProgress">
                                         <span class="percent">@Model.NumberOfOpportunitiesInProgressPercent</span>
                                     </div>
                                     <p class="text-center">Broj prodajnih prilika u obradi</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart green" data-percent="@Model.NumberOfOpportunitiesToLeadPercent">
+                                    <div class="easy-pie-chart green" data-percent="@Model.NumberOfOpportunitiesToLeadPercent" title="@Model.NumberOfOpportunitiesToLead">
                                         <span class="percent">@Model.NumberOfOpportunitiesToLeadPercent</span>
                                     </div>
                                     <p class="text-center">Broj kreiranih leadova</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfOpportunitiesRejectedPercent">
+                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfOpportunitiesRejectedPercent" title="@Model.NumberOfOpportunitiesRejected">
                                         <span class="percent">@Model.NumberOfOpportunitiesRejectedPercent</span>
                                     </div>
                                     <p class="text-center">Broj odbijenih prodajnih prilika</p>
@@ -46,25 +46,25 @@
                             </div>
                             <div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsInProgressPercent">
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsInProgressPercent" title="@Model.NumberOfLeadsInProgress">
                                         <span class="percent">@Model.NumberOfLeadsInProgressPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova u obradi</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsMeetingsPercent">
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsMeetingsPercent" title="@Model.NumberOfLeadsMeetings">
                                         <span class="percent">@Model.NumberOfLeadsMeetingsPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova sa dogovorenim sastankom</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsQuotesPercent">
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsQuotesPercent" title="@Model.NumberOfLeadsQuotes">
                                         <span class="percent">@Model.NumberOfLeadsQuotesPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova sa poslanom ponudom</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfLeadsRejectedPercent">
+                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfLeadsRejectedPercent" title="@Model.NumberOfLeadsRejected">
                                         <span class="percent">@Model.NumberOfLeadsRejectedPercent</span>
                                     </div>
                                     <p class="text-center">Broj odbijenih leadova</p>

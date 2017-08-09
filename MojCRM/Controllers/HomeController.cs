@@ -15,13 +15,13 @@ namespace MojCRM.Controllers
         public ActionResult Index()
         {
             var campaign = (from c in db.Campaigns
-                            where c.CampaignId == 6
+                            where c.CampaignId == 1
                             select c).First();
             var opportunities = (from o in db.Opportunities
-                                 where o.RelatedCampaignId == 6
+                                 where o.RelatedCampaignId == 1
                                  select o);
             var leads = (from l in db.Leads
-                         where l.RelatedCampaignId == 6
+                         where l.RelatedCampaignId == 1
                          select l);
 
             var countModel = new GeneralCampaignStatusViewModelCount()
@@ -31,7 +31,7 @@ namespace MojCRM.Controllers
                 NumberOfOpportunitiesToLead = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD).Count(),
                 NumberOfOpportunitiesRejected = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED).Count(),
                 NumberOfLeadsCreated = leads.Count(),
-                NumberOfLeadsInProgress = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.INCONTACT || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.MEETING || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.QOUTESENT || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.START).Count(),
+                NumberOfLeadsInProgress = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.INCONTACT || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.MEETING || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.START).Count(),
                 NumberOfLeadsMeetings = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.MEETING).Count(),
                 NumberOfLeadsQuotes = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.QOUTESENT).Count(),
                 NumberOfLeadsRejected = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.REJECTED).Count(),
