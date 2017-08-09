@@ -553,6 +553,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
+    <Content Include="Content\CustomPTISheet.css" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
     <Content Include="Content\font-awesome.css" />

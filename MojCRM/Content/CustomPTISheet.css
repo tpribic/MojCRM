@@ -1,0 +1,33 @@
+﻿
+.hidden {
+    display: none;
+}
+
+.personal-div {
+    border-width: 1px;
+    border-color: gainsboro;
+    border-style: solid;
+    margin-bottom: 10px;
+}
+
+.personal-label {
+    margin-left: 1%;
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+
+/*.personal-table td {
+        width: 50%;
+    }
+
+     */
+
+.description-td {
+    width: 80%;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: gainsboro;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+     
