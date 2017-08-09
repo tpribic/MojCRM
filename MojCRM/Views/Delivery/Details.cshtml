@@ -485,8 +485,8 @@
                 <h4>Povijest razmjene eDokumenata putem servisa Moj-eRačun</h4>
                 <h6>Pregled zadnjih 20 dokumenata</h6>
             </div>
-            <div class="modal-body" style="max-width: 500px">
-                <table class="table" wi>
+            <div class="modal-body" style="">
+                <table class="table" style="word-break:break-word;">
                     <tr>
                         <th>Tip dokumenta</th>
                         <th>Status dokumenta</th>
@@ -500,36 +500,36 @@
                     {
                         <tr>
                             <td class="hidden">@Document.Id</td>
-                            <td>@Document.DocumentTypeIdString</td>
+                            <td style="width:10%;">@Document.DocumentTypeIdString</td>
                             @if (Document.DocumentStatusString == "Poslan")
 	                        {
-		                        <td><span class="label label-warning">@Html.Raw(Document.DocumentStatusString)</span></td>
+		                        <td style="width:10%;"><span class="label label-warning">@Html.Raw(Document.DocumentStatusString)</span></td>
 	                        }
                             @if (Document.DocumentStatusString == "Dostavljen")
                             {
-                                <td><span class="label label-success">@Html.Raw(Document.DocumentStatusString)</span></td>
+                                <td style="width:10%;"><span class="label label-success">@Html.Raw(Document.DocumentStatusString)</span></td>
                             }
                             @if (Document.DocumentStatusString == "Ispisan")
                             {
-                                <td><span class="label label-info">@Html.Raw(Document.DocumentStatusString)</span></td>
+                                <td style="width:10%;"><span class="label label-info">@Html.Raw(Document.DocumentStatusString)</span></td>
                             }
                             @if (Document.DocumentStatusString == "Neuspješan")
                             {
-                                <td><span class="label label-danger">@Html.Raw(Document.DocumentStatusString)</span></td>
+                                <td style="width:10%;"><span class="label label-danger">@Html.Raw(Document.DocumentStatusString)</span></td>
                             }
-                            <td>@Document.PosiljateljNaziv</td>
-                            <td>@Document.EmailPrimatelja</td>
-                            <td>@Document.InterniBroj</td>
+                            <td style="width:25%;">@Document.PosiljateljNaziv</td>
+                            <td style="width:20%;">@Document.EmailPrimatelja</td>
+                            <td style="width:15%;">@Document.InterniBroj</td>
                             @if (Document.DatumOtpreme != null)
                             {
-                                <td>@Document.DatumOtpreme</td>
+                                <td style="width:15%;">@Document.DatumOtpreme</td>
                             }
                             @if (Document.DatumOtpreme != null)
                             {
-                                <td>
-                                    <div class="btn-group" role="group">
+                                <td style="width:5%;">
+                                    <div class="btn-group" style="display:inline-grid;" role="group">
                                         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, MerElectronicId = Document.Id, Model.ReceiverId, User.Identity.Name, IsTicket = false, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i></a>
-                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
+                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" style="margin:0px;" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
                                     </div>
                                 </td>
                             }
@@ -645,12 +645,12 @@
                     @foreach (var Contact in Model.RelatedDeliveryContacts)
                             {
                         <tr>
-                            <td>@Contact.ContactFirstName</td>
-                            <td>@Contact.ContactLastName</td>
-                            <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
-                            <td>@Contact.User</td>
-                            <td>
+                            <td style="width:15%;">@Contact.ContactFirstName</td>
+                            <td style="width:15%;">@Contact.ContactLastName</td>
+                            <td style="width:15%;">@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
+                            <td style="width:35%;"><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td style="width:15%;">@Contact.User</td>
+                            <td style="width:55%;">
                                 <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
                                 <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
                                 <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>

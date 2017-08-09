@@ -7155,7 +7155,7 @@
         overflow: hidden;
     }
 
-    .modal {
+/*  .modal {
         position: fixed;
         top: 0;
         right: 0;
@@ -7168,7 +7168,7 @@
         outline: 0;
         display: block !important;
     }
-
+      
         .modal.fade .modal-dialog {
             -webkit-transition: -webkit-transform .3s ease-out;
             -o-transition: -o-transform .3s ease-out;
@@ -7295,7 +7295,7 @@
             width: 300px;
         }
     }
-
+    */
     @media (min-width: 992px) {
         .modal-lg {
             width: 900px;

@@ -60,9 +60,9 @@ namespace MojCRM.Controllers
             var searchDatePlus = searchDate.AddDays(1);
 
             var _DistinctDepartments = (from a in db.ActivityLogs
-                                        where (a.User == Name) && (a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)
+                                        where (a.User == Name) && (a.InsertDate >= DateTime.Today)
                                         select a.Department).Distinct().Count();
-
+            
             if (String.IsNullOrEmpty(SearchDate))
             {
                 _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate>= DateTime.Today)).ToList();
