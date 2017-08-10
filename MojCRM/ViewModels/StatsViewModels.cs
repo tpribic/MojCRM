@@ -64,7 +64,9 @@ namespace MojCRM.ViewModels
         [Display(Name = "Broj ponovno poslanih obavijesti o dostavi")]
         public int? NumberResend { get; set; }
         [Display(Name = "Broj poslanih e-mailova vezanih za dostavu")]
-        public int? NumberDeliveryMail { get; set; }
+        public int? NumberMail { get; set; }
+        [Display(Name = "Broj zaključanih kartica (Odjel dostave)")]
+        public int? NumberTicketsAssigned { get; set; }
     }
     public class CallCenterDailyByDepartment
     {
@@ -100,16 +102,18 @@ namespace MojCRM.ViewModels
     {
         public IList<CallCenterDaily> Activities { get; set; }
         public IList<CallCenterDailyByDepartment> ActivitiesByDepartment { get; set; }
-        [Display(Name = "Zbroj uspješnih poziva")]
+        [Display(Name = "Uspješni pozivi")]
         public int SumSuccessfulCalls { get; set; }
-        [Display(Name = "Zbroj neuspješnih poziva")]
+        [Display(Name = "Neuspješni pozivi")]
         public int SumUnsuccessfulCalls { get; set; }
-        [Display(Name = "Zbroj poslanih e-mailova vezanih za dostavu")]
+        [Display(Name = "Poslani e-mailovi vezani za dostavu")]
         public int? SumSentMail { get; set; }
-        [Display(Name = "Zbroj ispravaka mailova (DOSTAVA)")]
+        [Display(Name = "Ispravci e-mailova (Odjel dostave)")]
         public int? SumMailchange { get; set; }
-        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi (DOSTAVA)")]
+        [Display(Name = "Ponovno poslane obavijesti o dostavi (Odjel dostave)")]
         public int? SumResend { get; set; }
+        [Display(Name = "Zaključane kartice (Odjel dostave)")]
+        public int? SumTicketsAssigned { get; set; }
     }
 
     public class PersonalDailyActivitiesViewModel

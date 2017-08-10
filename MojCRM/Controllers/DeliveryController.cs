@@ -768,6 +768,32 @@ namespace MojCRM.Controllers
             return Json(new { Status = "OK" });
         }
 
+        // POST Delivery/AssignAll
+        [HttpPost]
+        public JsonResult AssignAll(int[] TicketIds)
+        {
+            foreach (var Id in TicketIds)
+            {
+                var TicketForAssign = db.DeliveryTicketModels.Find(Id);
+                TicketForAssign.IsAssigned = true;
+                TicketForAssign.AssignedTo = User.Identity.Name;
+
+                db.ActivityLogs.Add(new ActivityLog()
+                {
+                    Description = "Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssign.Receiver.SubjectName + ", za eDokument: " + TicketForAssign.InvoiceNumber,
+                    User = User.Identity.Name,
+                    ReferenceId = Id,
+                    ActivityType = ActivityLog.ActivityTypeEnum.TICKETASSIGN,
+                    Department = ActivityLog.DepartmentEnum.Delivery,
+                    Module = ActivityLog.ModuleEnum.Delivery,
+                    InsertDate = DateTime.Now
+                });
+            }
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
+        }
+
         // GET: Delivery/Details/5
         [Authorize]
         public ActionResult Details(int id, int? receiverId, string Name)
@@ -1196,11 +1222,19 @@ namespace MojCRM.Controllers
 
         public JsonResult Assign(int Id, string Agent)
         {
-            var TicketForAssignement = (from t in db.DeliveryTicketModels
-                                        where t.Id == Id
-                                        select t).First();
+            var TicketForAssignement = db.DeliveryTicketModels.Find(Id);
             TicketForAssignement.IsAssigned = true;
             TicketForAssignement.AssignedTo = Agent;
+            db.ActivityLogs.Add(new ActivityLog()
+            {
+                Description = "Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssignement.Receiver.SubjectName + ", za eDokument: " + TicketForAssignement.InvoiceNumber,
+                User = User.Identity.Name,
+                ReferenceId = Id,
+                ActivityType = ActivityLog.ActivityTypeEnum.TICKETASSIGN,
+                Department = ActivityLog.DepartmentEnum.Delivery,
+                Module = ActivityLog.ModuleEnum.Delivery,
+                InsertDate = DateTime.Now
+            });
             db.SaveChanges();
 
             return Json(new { Status = "OK" });

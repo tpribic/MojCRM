@@ -11,6 +11,7 @@
     var opportunityStatusList = new List<ListItem>
         {
             new ListItem{ Value= "0", Text = "Kreirano"},
+            new ListItem{ Value= "6", Text = "Postojeći Moj-eRačun korisnik"},
             new ListItem{ Value= "1", Text = "U kontaktu"},
             new ListItem{ Value= "4", Text = "Potrebno dogovoriti sastanak"},
             new ListItem{ Value= "5", Text = "Procesne poteškoće"},
@@ -168,6 +169,10 @@
             return @<div><span class="label label-primary">@Html.Raw(m.OpportunityStatusString)</span></div>;
         }
         if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD)
+        {
+            return @<div><span class="label label-success">@Html.Raw(m.OpportunityStatusString)</span></div>;
+        }
+        if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.MERUSER)
         {
             return @<div><span class="label label-success">@Html.Raw(m.OpportunityStatusString)</span></div>;
         }

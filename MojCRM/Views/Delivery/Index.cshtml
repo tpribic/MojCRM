@@ -73,7 +73,10 @@
                     </a>
                 </div>
                 <div class="btn btn-group" role="group">
-                    <a id="remove-all" method="post" class="btn btn-default btn-sm" onclick="javascript: RemoveAll()" title="Ukloni sve odabrane dokumenta">
+                    <a id="assign-all" method="post" class="btn btn-default btn-sm" onclick="javascript: AssignAll()" title="Dodijeli sve odabrane dokumente">
+                        <i class="fa fa-check-circle-o"></i>
+                    </a>
+                    <a id="remove-all" method="post" class="btn btn-default btn-sm" onclick="javascript: RemoveAll()" title="Ukloni sve odabrane dokumente">
                         <i class="fa fa-times text-danger"></i>
                     </a>
                     @if (User.IsInRole("Management") || User.IsInRole("Admin") || User.IsInRole("Superadmin"))
@@ -418,6 +421,28 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
                     success: function (data) {
                         if (data.Status === 'OK')
                             alert("Kartica Vam je dodijeljenja!");
+                        else
+                            alert("Greška!");
+                    },
+                    dataType: 'json'
+                });
+            window.location.reload(true)
+        });
+    }
+    function AssignAll() {
+        $(document).on("click", "#assign-all", function (e) {
+            e.preventDefault();
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('idVal'); }).get();
+            if (window.confirm("Jeste li sigurni da želite dodijeliti označene dokumente iz popisa za dostavu?"))
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "AssignAll", controller = "Delivery", area = "" })',
+                    data: {
+                        TicketIds: selectedItems
+                    },
+                    success: function (data) {
+                        if (data.Status === 'OK')
+                            alert("Uspješno ste dodijelili dokumente iz popisa za dostavu!");
                         else
                             alert("Greška!");
                     },
