@@ -76,7 +76,10 @@ namespace MojCRM.Areas.Sales.Models
             ARRANGEMEETING,
 
             [Description("Procesne poteškoće")]
-            PROCESSDIFFICULTIES
+            PROCESSDIFFICULTIES,
+
+            [Description("Postojeći korisnik")]
+            MERUSER
         }
 
         public enum OpportunityRejectReasonEnum
@@ -118,6 +121,7 @@ namespace MojCRM.Areas.Sales.Models
                     case OpportunityStatusEnum.REJECTED: return "Odbijeno";
                     case OpportunityStatusEnum.ARRANGEMEETING: return "Potrebno dogovoriti sastanak";
                     case OpportunityStatusEnum.PROCESSDIFFICULTIES: return "Procesne poteškoće";
+                    case OpportunityStatusEnum.MERUSER: return "Postojeći korisnik";
                 }
                 return "Status prodajne prilike";
             }

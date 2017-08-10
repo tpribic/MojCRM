@@ -151,6 +151,8 @@ namespace MojCRM.ViewModels
         public int NumberOfOpportunitiesCreated { get; set; }
         public int NumberOfOpportunitiesInProgress { get; set; }
         public decimal NumberOfOpportunitiesInProgressPercent { get; set; }
+        public int NumberOfOpportunitesUser { get; set; }
+        public decimal NumberOfOpportunitiesUserPercent { get; set; }
         public int NumberOfOpportunitiesToLead { get; set; }
         public decimal NumberOfOpportunitiesToLeadPercent { get; set; }
         public int NumberOfOpportunitiesRejected { get; set; }
@@ -171,6 +173,7 @@ namespace MojCRM.ViewModels
     {
         public int NumberOfOpportunitiesCreated { get; set; }
         public int NumberOfOpportunitiesInProgress { get; set; }
+        public int NumberOfOpportunitiesUser { get; set; }
         public int NumberOfOpportunitiesToLead { get; set; }
         public int NumberOfOpportunitiesRejected { get; set; }
         public int NumberOfLeadsCreated { get; set; }

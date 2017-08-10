@@ -207,7 +207,7 @@
                             <div class="col-md-12">
                                 <label for="delivery-detail-user">@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</label>
                                 <div id="delivery-detail-user">
-                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disalbed = true })
                                 </div>
                             </div>
                         </div>
