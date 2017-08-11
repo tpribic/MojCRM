@@ -100,6 +100,7 @@
                             <ul class="sub-menu">
                                 <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
                                 <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
+                                <li><a href="@Url.RouteUrl(new { action = "SalesStat", controller = "Stats", area = ""})"><span class="text">Podaci agenata prodaje</span></a></li>
                             </ul>
                         </li>
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))

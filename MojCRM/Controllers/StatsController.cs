@@ -26,11 +26,11 @@ namespace MojCRM.Controllers
 
 
             var SuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL 
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL
                                    select a);
             var ShortSuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT 
-                                   select a);
+                                        where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT
+                                        select a);
             var UnsuccessfulCalls = (from a in db.ActivityLogs
                                      where a.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL
                                      select a);
@@ -44,33 +44,33 @@ namespace MojCRM.Controllers
                                 where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
                                 select a);
 
-            
+
 
             var ReferenceDate = DateTime.Today.AddDays(-1);
-           
+
             var _Agents = (from u in db.Users
                            select u).AsEnumerable();
-           
+
             var _Activities = (from a in db.ActivityLogs
                                select a).ToList();
 
-          
+
             var searchDate = Convert.ToDateTime(SearchDate);
-           
+
             var searchDatePlus = searchDate.AddDays(1);
 
             var _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Name) && (a.InsertDate >= DateTime.Today)
                                         select a.Department).Distinct().Count();
-            
+
             if (String.IsNullOrEmpty(SearchDate))
             {
-                _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate>= DateTime.Today)).ToList();
+                _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate >= DateTime.Today)).ToList();
 
-                
 
-               
-                    SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
+
+
+                SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
                 ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
 
                 UnsuccessfulCalls = UnsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today && t.User == Name);
@@ -94,7 +94,7 @@ namespace MojCRM.Controllers
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 DeliveryMail = DeliveryMail.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
-                
+
                 _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
                                         select a.Department).Distinct().Count();
@@ -103,7 +103,7 @@ namespace MojCRM.Controllers
             }
             if (!String.IsNullOrEmpty(SearchDate) && !String.IsNullOrEmpty(Agent))
             {
-                
+
                 SuccessfulCalls = SuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Agent);
                 ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => ((a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)) && a.User == Agent);
 
@@ -112,11 +112,11 @@ namespace MojCRM.Controllers
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
                 DeliveryMail = DeliveryMail.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
 
-             
+
 
                 _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
-                 
-               
+
+
 
                 _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
@@ -144,7 +144,7 @@ namespace MojCRM.Controllers
                 SumMailchange = MailChange.Count(),
                 SumResend = Resend.Count(),
                 SumSentMail = DeliveryMail.Count(),
-               
+
             };
 
             return View(PersonalActivities);
@@ -283,7 +283,7 @@ namespace MojCRM.Controllers
                                        select t);
             var GroupedDeliveries = (from t in db.DeliveryTicketModels
                                      where t.InsertDate >= DateTime.Today
-                                     group t by new { Date = DbFunctions.TruncateTime(t.SentDate), t.AssignedTo }  into gt
+                                     group t by new { Date = DbFunctions.TruncateTime(t.SentDate), t.AssignedTo } into gt
                                      select gt).ToList();
             var Deliveries = new List<DailyDelivery>();
 
@@ -337,7 +337,7 @@ namespace MojCRM.Controllers
                         AssignedTo = Day.Key.AssignedTo
                     };
                     Deliveries.Add(dailyDelivery);
-                }  
+                }
             }
 
             var model = new DeliveryStatsViewModel
@@ -354,5 +354,72 @@ namespace MojCRM.Controllers
 
             return View(model);
         }
+        // GET: Stats/Sales
+        public ActionResult SalesStat(string Agent, string SearchDateStart, string SearchDateEnd)
+        {
+
+
+            var _Agents = (from u in db.Users
+                           select u).AsEnumerable();
+
+            var _Leads = (from u in db.Leads where u.IsAssigned==true select u).ToList();
+            var _Opportunities = (from u in db.Opportunities where u.IsAssigned == true  select u).ToList();
+
+            var assignedOpportunities = db.Opportunities.Where(s => s.IsAssigned == true).GroupBy(d => d.AssignedTo)
+                .Select(d => new SaleAgentGrouping
+                {
+                    Name = d.Key,
+                    Count = d.Count()
+                }).ToList();
+
+            var assignedLeads = db.Leads.Where(s => s.IsAssigned == true).GroupBy(d => d.AssignedTo)
+               .Select(d => new SaleAgentGrouping
+               {
+                   Name = d.Key,
+                   Count = d.Count()
+               }).ToList();
+
+
+            if(!String.IsNullOrEmpty(SearchDateStart) && !String.IsNullOrEmpty(SearchDateEnd))
+            {
+              /* 
+             
+              _Leads = _Leads.Where(t => t.InsertDate=>)
+                 _Opportunities = 
+
+                 assignedOpportunities = 
+
+                 assignedLeads =
+                 
+             */
+            }
+            if (String.IsNullOrEmpty(SearchDateStart) && String.IsNullOrEmpty(SearchDateEnd))
+            {
+
+            }
+            if (!String.IsNullOrEmpty(SearchDateStart) && String.IsNullOrEmpty(SearchDateEnd))
+            {
+
+            }
+            if (String.IsNullOrEmpty(SearchDateStart) && !String.IsNullOrEmpty(SearchDateEnd))
+            {
+
+            }
+
+            var SalesStat = new SalesStatsViewModel
+            {
+                Leads = _Leads,
+                Opportunities = _Opportunities,
+                SumAssignedOpportunities = assignedOpportunities,
+                SumAssignedLeads=assignedLeads,
+                Agents = _Agents,
+
+
+            };
+
+            return View(SalesStat);
+
+        }
     }
 }
+

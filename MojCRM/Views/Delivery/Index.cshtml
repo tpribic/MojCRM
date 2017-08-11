@@ -230,15 +230,15 @@ columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanj
 
     return @<div><span>@Html.Raw(m.SentDate.ToShortDateString())</span></div>;
 });
-columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).RenderValueAs(m =>
+columns.Add(m => m.BuyerEmail).Encoded(false).Sanitized(false).Titled("E-mail adresa").Sortable(false).SetWidth("15%").RenderValueAs(m =>
 {
     if (m.DocumentStatus == 30 && m.IsAssigned == false)
-        return @<div><span>@Html.Raw(m.BuyerEmail)</span></div>;
+        return @<div><span style="word-break:break-word;">@Html.Raw(m.BuyerEmail)</span></div>;
 
     if (m.DocumentStatus != 30 && m.IsAssigned == false)
-        return @<div><span>@Html.Raw(m.BuyerEmail)</span></div>;
+        return @<div><span style="word-break:break-word;">@Html.Raw(m.BuyerEmail)</span></div>;
 
-    return @<div><span>Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
+    return @<div><span style="word-break:break-word;">Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
 });
 columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titled("Tip dokumenta").Sortable(true).RenderValueAs(m =>
 {

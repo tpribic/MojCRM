@@ -31,9 +31,14 @@ namespace MojCRM.Controllers
                                                string DocumentType, string TicketType, string Assigned, string AssignedTo)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
+            DateTime refDate = DateTime.Today.AddDays(1 - DateTime.Today.Day).AddMonths(-2);
+            //int refMonth = Int32.Parse(DateTime.Now.AddMonths(-2).ToString());
+            //DateTime refDate = new DateTime(2017, refMonth, 1);
+            
 
             var ResultsNew = from t in db.DeliveryTicketModels
-                          //where t.DocumentStatus == 30
+                                 //where t.DocumentStatus == 30
+                             where t.InsertDate >= refDate
                           select t;
             //var ResultsNew = db.DeliveryTicketModels.AsQueryable();
             var OpenTickets = from t in db.DeliveryTicketModels
