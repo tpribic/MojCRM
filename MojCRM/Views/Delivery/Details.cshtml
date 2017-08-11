@@ -648,7 +648,7 @@
                             <td style="width:15%;">@Contact.ContactFirstName</td>
                             <td style="width:15%;">@Contact.ContactLastName</td>
                             <td style="width:15%;">@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td style="width:35%;"><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td style="width:35%;"><a data-email="@Contact.Email" data-ticket-id="@Html.Raw(Model.TicketId)" name="contact-email" class="delivery-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
                             <td style="width:15%;">@Contact.User</td>
                             <td style="width:55%;">
                                 <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
@@ -896,8 +896,8 @@
     <div class="row" style="text-align:center">
         <div class="col-md-12">
             <div class="btn-group" role="group">
-                <a href="@Url.RouteUrl(new { action = "UpdateStatusDetails", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> @*Osvježi status*@</a>
-                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
+                <a href="@Url.RouteUrl(new { action = "UpdateStatusDetails", controller = "Delivery", area = "", Model.TicketId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> @*Osvježi status*@</a>
+                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
                 <button type="button" title="Promjena e-mail adrese za dostavu eRačuna" class="btn btn-primary btn-sm" data-toggle="modal" href="#ChangeEmail"><i class="glyphicon glyphicon-envelope"></i></button>
                 <button type="button" title="Pregled povijesti razmjene eDokumenata putem servisa Moj-eRačun" class="btn btn-primary btn-sm" data-toggle="modal" href="#DocumentHistory"><i class="fa fa-history"></i></button>
             </div>
@@ -1057,7 +1057,6 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
             data: {
-                _Agent: $(this).data("agent"),
                 _Email: $(this).data("email"),
                 _TicketId: $(this).data("ticket-id"),
             },

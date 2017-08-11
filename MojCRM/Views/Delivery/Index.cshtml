@@ -278,7 +278,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     {
         if (m.DocumentStatus == 30 && m.IsAssigned == false)
             return
-            @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" data-agent="@User.Identity.Name" onclick="javascript: Assign()"></a></div>;
+            @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" onclick="javascript: Assign()"></a></div>;
 
         if (m.DocumentStatus == 30 && m.IsAssigned == true)
             return @<span>
@@ -295,7 +295,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         if (m.DocumentStatus == 30 && m.IsAssigned == false)
             return @<span>
         <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
-        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.MerElectronicId, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
         <a data-mer-id="@Html.Raw(m.MerElectronicId)" data-ticket-id="@Html.Raw(m.Id)" href="#" class="remove-from-list-ajax" title="Ukloni s popisa za dostavu"><i style="color: red" class="fa fa-remove"></i></a>
     </span>;
 
@@ -415,8 +415,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
                     method: 'POST',
                     url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
                     data: {
-                        Id: $(this).data("ticket-id"),
-                        Agent: $(this).data("agent")
+                        Id: $(this).data("ticket-id")
                     },
                     success: function (data) {
                         if (data.Status === 'OK')
