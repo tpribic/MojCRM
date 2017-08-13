@@ -19,4 +19,26 @@ namespace MojCRM.Helpers
         public string Assigned { get; set; }
         public string AssignedTo { get; set; }
     }
+
+    public class ChangeEmailHelper
+    {
+        public int MerElectronicId { get; set; }
+        public int ReceiverId { get; set; }
+        public int TicketId { get; set; }
+        public string OldEmail { get; set; }
+        public string NewEmail { get; set; }
+        public string InvoiceNumber { get; set; }
+    }
+
+    public class DeliveryDetailHelper
+    {
+        public int ReceiverId { get; set; }
+        public int TicketId { get; set; }
+        public string Contact { get; set; }
+        public string DetailTemplate { get; set; }
+        public string DetailNote { get; set; }
+        public string InvoiceNumber { get; set; }
+        public int? DetailNoteId { get; set; }
+        public int? Identifier { get; set; }
+    }
 }

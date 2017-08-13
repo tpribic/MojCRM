@@ -201,22 +201,22 @@
                         <div class="row">
                             <div class="hidden">
                                 <div id="delivery-detail-receiver">
-                                    @Html.TextBox("_ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            @*<div class="col-md-12">
                                 <label for="delivery-detail-user">@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</label>
                                 <div id="delivery-detail-user">
-                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disalbed = true })
+                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name, @disabled = true })
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                         <br />
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
                                 <div id="delivery-detail-contact">
-                                    @Html.DropDownList("_ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
+                                    @Html.DropDownList("Contact", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
@@ -225,7 +225,7 @@
                             <div class="col-md-12">
                                 <label for="delivery-detail-template">Napomena</label>
                                 <div id="delivery-detail-contact">
-                                    @Html.DropDownList("_DetailTemplate", new SelectList(deliveryTemplates, "Value", "Text"), "Odaberi napomenu",new { @class = "form-control" })
+                                    @Html.DropDownList("DetailTemplate", new SelectList(deliveryTemplates, "Value", "Text"), "Odaberi napomenu",new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
@@ -234,17 +234,22 @@
                             <div class="col-md-12">
                                 <label for="delivery-detail">@Html.DisplayNameFor(model => model.DeliveryDetailDetail)</label>
                                 <div id="delivery-detail">
-                                    @Html.TextArea("_DetailNote", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
+                                    @Html.TextArea("DetailNote", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-detail-ticketid">
-                                    @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-detail-identifier">
                                     @Html.TextBox("Identifier", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = 1 })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="delivery-detail-invoice-number">
+                                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = 1 })
                                 </div>
                             </div>
                         </div>
@@ -274,21 +279,21 @@
                         <div class="row">
                             <div class="hidden">
                                 <div id="delivery-detail-receiver">
-                                    @Html.TextBox("_ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            @*<div class="col-md-12">
                                 <label for="delivery-detail-user">@Html.DisplayNameFor(model => model.DeliveryDetailAgent)</label>
                                 <div id="delivery-detail-user">
                                     @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <label for="delivery-detail-contact">Kontakt osoba</label>
                                 <div id="delivery-detail-contact">
-                                    @Html.DropDownList("_ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
+                                    @Html.DropDownList("Contact", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
@@ -296,7 +301,7 @@
                             <div class="col-md-12">
                                 <label for="delivery-detail-id">Odaberi staru napomenu za izmjenu</label>
                                 <div id="delivery-detail-contact">
-                                    @Html.DropDownList("_DetailNoteId", Model.DeliveryDetailsIds, new { @class = "form-control" })
+                                    @Html.DropDownList("DetailNoteId", Model.DeliveryDetailsIds, new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>
@@ -305,19 +310,19 @@
                             <div class="col-md-12">
                                 <label for="delivery-detail">Nova napomena</label>
                                 <div id="delivery-detail">
-                                    @Html.TextArea("_DetailNote", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
+                                    @Html.TextArea("DetailNote", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Napomena dostave" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-detail-ticketid">
-                                    @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Kreiraj napomenu</button>
+                    <button type="submit" class="btn btn-primary">Izmijeni napomenu</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
                 </div>
             </div>
@@ -340,12 +345,7 @@
                         <div class="row">
                             <div class="hidden">
                                 <div id="delivery-detail-receiver">
-                                    @Html.TextBox("_Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
-                                </div>
-                            </div>
-                            <div class="hidden">
-                                <div id="delivery-detail-user">
-                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
                                 </div>
                             </div>
                         </div>
@@ -362,15 +362,18 @@
                             <br />
                             <div class="col-md-12">
                                 <div id="delivery-new-email">
-                                    @Html.TextBox("_Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
+                                    @Html.TextBox("NewEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-detail-ticketid">
-                                    @Html.TextBox("_Id", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.MerElectronicId })
+                                    @Html.TextBox("MerElectronicId", ViewBag.CurrentFilter as string, new { @Value = Model.MerElectronicId })
                                 </div>
                                 <div id="delivery-detail-ticketid">
-                                    @Html.TextBox("_TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @Value = Model.TicketId })
+                                </div>
+                                <div id="delivery-invoice-number">
+                                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @Value = Model.InvoiceNumber })
                                 </div>
                             </div>
                         </div>
@@ -529,7 +532,7 @@
                                 <td style="width:5%;">
                                     <div class="btn-group" style="display:inline-grid;" role="group">
                                         <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, MerElectronicId = Document.Id, Model.ReceiverId, User.Identity.Name, IsTicket = false, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i></a>
-                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" style="margin:0px;" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-agent="@User.Identity.Name" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
+                                        <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" style="margin:0px;" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
                                     </div>
                                 </td>
                             }
@@ -652,8 +655,8 @@
                             <td style="width:15%;">@Contact.User</td>
                             <td style="width:55%;">
                                 <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
                             </td>
                         </tr>
                     }
@@ -810,7 +813,7 @@
                             <td>@Bounce.Subject</td>
                             @if (true)
                             {
-                                <td><a id="activateBounce" method="put" title="Aktivacija e-mail adrese" class="btn btn-sm btn-warning" data-bounce-id="@Html.Raw(Bounce.ID)" data-agent="@User.Identity.Name" data-ticket-id="@Html.Raw(Model.TicketId)" onclick="javascript: PostmarkActivateBounce()"><i class="fa fa-check"></i></a></td>
+                                <td><a id="activateBounce" method="put" title="Aktivacija e-mail adrese" class="btn btn-sm btn-warning" data-bounce-id="@Html.Raw(Bounce.ID)" data-ticket-id="@Html.Raw(Model.TicketId)" onclick="javascript: PostmarkActivateBounce()"><i class="fa fa-check"></i></a></td>
                             }
                         </tr>
                     }
@@ -839,11 +842,6 @@
                             <div>
                                 <div id="delivery-detail-receiver">
                                     @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = "" })
-                                </div>
-                            </div>
-                            <div>
-                                <div id="delivery-detail-user">
-                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
                                 </div>
                             </div>
                         </div>
@@ -1013,12 +1011,11 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
             data: {
-                _ReceiverId: $(this).data("receiver-id"),
-                _Agent: $(this).data("agent"),
-                _ContactId: $(this).data("contact"),
-                _DetailTemplate: $(this).data("detail-template"),
-                _DetailNote: $(this).data("detail-note"),
-                _TicketId: $(this).data("ticket-id"),
+                ReceiverId: $(this).data("receiver-id"),
+                Contact: $(this).data("contact"),
+                DetailTemplate: $(this).data("detail-template"),
+                DetailNote: $(this).data("detail-note"),
+                TicketId: $(this).data("ticket-id"),
                 Identifier: $(this).data("identifier-short")
             },
             success: function (data) {
@@ -1035,12 +1032,11 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
             data: {
-                _ReceiverId: $(this).data("receiver-id"),
-                _Agent: $(this).data("agent"),
-                _ContactId: $(this).data("contact"),
-                _DetailTemplate: $(this).data("detail-template"),
-                _DetailNote: $(this).data("detail-note"),
-                _TicketId: $(this).data("ticket-id"),
+                ReceiverId: $(this).data("receiver-id"),
+                Contact: $(this).data("contact"),
+                DetailTemplate: $(this).data("detail-template"),
+                DetailNote: $(this).data("detail-note"),
+                TicketId: $(this).data("ticket-id"),
                 Identifier: $(this).data("identifier")
             },
             success: function (data) {
@@ -1098,8 +1094,7 @@
                     url: '@Url.RouteUrl(new { action = "PostmarkActivateBounce", controller = "Delivery", area = ""})',
                     data: {
                         BounceId: $(this).data("bounce-id"),
-                        TicketId: $(this).data("ticket-id"),
-                        Agent: $(this).data("agent")
+                        TicketId: $(this).data("ticket-id")
                     },
                     success: function (data) {
                         if (data.Status === 'OK')

@@ -617,35 +617,21 @@ namespace MojCRM.Controllers
 
         // GET Delivery/ChangeEmail
         [Authorize]
-        public ActionResult ChangeEmail(string _Id, string _Receiver,  string _Email, string _Agent, string _TicketId)
+        public ActionResult ChangeEmail(ChangeEmailHelper model)
         {
-            int _IdInt = Int32.Parse(_Id);
-            int _TicketIdInt = Int32.Parse(_TicketId);
-            int _ReceiverInt = Int32.Parse(_Receiver);
-
-            var MerUser = (from u in db.Users
-                          where u.UserName == _Agent
-                          select u.MerUserUsername).First();
-            var MerPass = (from u in db.Users
-                          where u.UserName == _Agent
-                          select u.MerUserPassword).First();
-
-            var OldEmail = (from t in db.DeliveryTicketModels
-                            where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
-                            select t.BuyerEmail).First();
-            var InvoiceNumber = (from t in db.DeliveryTicketModels
-                                 where t.Id == _TicketIdInt && t.MerElectronicId == _IdInt
-                                 select t.InvoiceNumber).First();
+            var Credentials = (from u in db.Users
+                               where u.UserName == User.Identity.Name
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
 
             MerApiChangeEmail Request = new MerApiChangeEmail()
             {
-                Id = MerUser.ToString(),
-                Pass = MerPass.ToString(),
+                Id = Credentials.MerUser,
+                Pass = Credentials.MerPass,
                 Oib = "99999999927",
                 PJ = "",
                 SoftwareId = "MojCRM-001",
-                DocumentId = _IdInt,
-                Email = _Email
+                DocumentId = model.MerElectronicId,
+                Email = model.NewEmail
             };
 
             string MerRequest = JsonConvert.SerializeObject(Request);
@@ -659,40 +645,37 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = _Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + _Email + " i ponovno poslao obavijest za dokument broj: " + InvoiceNumber,
-                User = _Agent,
-                ReferenceId = _TicketIdInt,
+                Description = User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber,
+                User = User.Identity.Name,
+                ReferenceId = model.TicketId,
                 ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
 
-            UpdateStatus(_TicketIdInt);
+            UpdateStatus(model.TicketId);
 
-            return RedirectToAction("Details", new { id = _TicketIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
+            return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // GET: Delivery/ChangeEmailNoTicket
         [Authorize]
-        public ActionResult ChangeEmailNoTicket(int MerElectronicId, int ReceiverId, string Email, string OldEmail, int TicketId, string Agent, string InvoiceNumber)
+        public ActionResult ChangeEmailNoTicket(ChangeEmailHelper model)
         {
-            var MerUser = (from u in db.Users
-                           where u.UserName == Agent
-                           select u.MerUserUsername).First();
-            var MerPass = (from u in db.Users
-                           where u.UserName == Agent
-                           select u.MerUserPassword).First();
+            var Credentials = (from u in db.Users
+                               where u.UserName == User.Identity.Name
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
 
             MerApiChangeEmail Request = new MerApiChangeEmail()
             {
-                Id = MerUser.ToString(),
-                Pass = MerPass.ToString(),
+                Id = Credentials.MerUser,
+                Pass = Credentials.MerPass,
                 Oib = "99999999927",
                 PJ = "",
                 SoftwareId = "MojCRM-001",
-                DocumentId = MerElectronicId,
-                Email = Email
+                DocumentId = model.MerElectronicId,
+                Email = model.NewEmail
             };
 
             string MerRequest = JsonConvert.SerializeObject(Request);
@@ -706,16 +689,16 @@ namespace MojCRM.Controllers
 
             db.ActivityLogs.Add(new ActivityLog
             {
-                Description = Agent + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + OldEmail + " u " + Email + " i ponovno poslao obavijest za dokument broj: " + InvoiceNumber,
-                User = Agent,
-                ReferenceId = TicketId,
+                Description = User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber,
+                User = User.Identity.Name,
+                ReferenceId = model.TicketId,
                 ActivityType = ActivityLog.ActivityTypeEnum.MAILCHANGE,
                 Department = ActivityLog.DepartmentEnum.Delivery,
                 InsertDate = DateTime.Now,
             });
             db.SaveChanges();
 
-            return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId, Name = User.Identity.Name });
+            return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST Delivery/Remove/1125768
@@ -773,7 +756,7 @@ namespace MojCRM.Controllers
 
         // GET: Delivery/Details/5
         [Authorize]
-        public ActionResult Details(int id, int? receiverId, string Name)
+        public ActionResult Details(int id, int? receiverId)
         {
             if (id == null)
             {
@@ -785,9 +768,6 @@ namespace MojCRM.Controllers
                 return HttpNotFound();
             }
 
-            var ElectronicId = (from t in db.DeliveryTicketModels
-                                where t.Id == id
-                                select t.MerElectronicId).First();
             //UpdateStatus(ElectronicId);
 
             DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
@@ -835,17 +815,14 @@ namespace MojCRM.Controllers
             #endregion
 
 
-            var MerUser = (from u in db.Users
-                           where u.UserName == Name
-                           select u.MerUserUsername).First();
-            var MerPass = (from u in db.Users
-                           where u.UserName == Name
-                           select u.MerUserPassword).First();
+            var Credentials = (from u in db.Users
+                               where u.UserName == User.Identity.Name
+                               select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
 
             MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments()
             {
-                Id = MerUser,
-                Pass = MerPass,
+                Id = Credentials.MerUser,
+                Pass = Credentials.MerPass,
                 Oib = "99999999927",
                 PJ = "",
                 SoftwareId = "MojCRM-001",
@@ -903,28 +880,20 @@ namespace MojCRM.Controllers
 
         // POST: AddDetail/1125768
         [HttpPost]
-        public ActionResult AddDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailTemplate, string _DetailNote,
-                                      int _TicketId, int Identifier)
+        public ActionResult AddDetail(DeliveryDetailHelper model)
         {
-            var ContactName = (from c in db.Contacts
-                               where c.ContactFirstName + " " + c.ContactLastName == _ContactId
-                               select c).First();
-            var InvoiceNumber = (from t in db.DeliveryTicketModels
-                                 where t.Id == _TicketId
-                                 select t.InvoiceNumber).First();
-
-            if (_DetailTemplate == String.Empty && _DetailNote != String.Empty)
+            if (model.DetailTemplate == String.Empty && model.DetailNote != String.Empty)
             {
                 try
                 {
                     db.DeliveryDetails.Add(new DeliveryDetail
                     {
-                        ReceiverId = _ReceiverId,
-                        User = _Agent,
-                        DetailNote = _DetailNote,
+                        ReceiverId = model.ReceiverId,
+                        User = User.Identity.Name,
+                        DetailNote = model.DetailNote,
                         InsertDate = DateTime.Now,
-                        Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
-                        TicketId = _TicketId
+                        Contact = model.Contact,
+                        TicketId = model.TicketId
                     });
                     db.SaveChanges();
                 }
@@ -937,7 +906,7 @@ namespace MojCRM.Controllers
                         Message = ex.Message,
                         InnerException = String.Empty,
                         Request = ex.TargetSite.ToString(),
-                        User = _Agent,
+                        User = User.Identity.Name,
                         InsertDate = DateTime.Now
                     });
                     db.SaveChanges();
@@ -951,22 +920,22 @@ namespace MojCRM.Controllers
                         Message = ex.Message,
                         InnerException = ex.InnerException.ToString(),
                         Request = ex.TargetSite.ToString(),
-                        User = _Agent,
+                        User = User.Identity.Name,
                         InsertDate = DateTime.Now
                     });
                     db.SaveChanges();
                 }
             }
-            else if (_DetailNote == String.Empty && _DetailTemplate != String.Empty)
+            else if (model.DetailNote == String.Empty && model.DetailTemplate != String.Empty)
             {
                 db.DeliveryDetails.Add(new DeliveryDetail
                 {
-                    ReceiverId = _ReceiverId,
-                    User = _Agent,
-                    DetailNote = _DetailTemplate,
+                    ReceiverId = model.ReceiverId,
+                    User = User.Identity.Name,
+                    DetailNote = model.DetailTemplate,
                     InsertDate = DateTime.Now,
-                    Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
-                    TicketId = _TicketId
+                    Contact = model.Contact,
+                    TicketId = model.TicketId
                 });
                 db.SaveChanges();
             }
@@ -974,24 +943,24 @@ namespace MojCRM.Controllers
             {
                 db.DeliveryDetails.Add(new DeliveryDetail
                 {
-                    ReceiverId = _ReceiverId,
-                    User = _Agent,
-                    DetailNote = _DetailTemplate + " - " + _DetailNote,
+                    ReceiverId = model.ReceiverId,
+                    User = User.Identity.Name,
+                    DetailNote = model.DetailTemplate + " - " + model.DetailNote,
                     InsertDate = DateTime.Now,
-                    Contact = ContactName.ContactFirstName + " " + ContactName.ContactLastName,
-                    TicketId = _TicketId
+                    Contact = model.Contact,
+                    TicketId = model.TicketId
                 });
                 db.SaveChanges();
             }
 
-            switch (Identifier)
+            switch (model.Identifier)
             {
                 case 1:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je obavio uspješan poziv za dostavu eDokumenata broj: " + InvoiceNumber,
-                        User = _Agent,
-                        ReferenceId = _TicketId,
+                        Description = User.Identity.Name + " je obavio uspješan poziv za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User = User.Identity.Name,
+                        ReferenceId = model.TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -1001,9 +970,9 @@ namespace MojCRM.Controllers
                 case 2:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je obavio kraći informativni poziv vezano za dostavu eDokumenata broj: " + InvoiceNumber,
-                        User = _Agent,
-                        ReferenceId = _TicketId,
+                        Description = User.Identity.Name + " je obavio kraći informativni poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User = User.Identity.Name,
+                        ReferenceId = model.TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALSHORT,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -1013,9 +982,9 @@ namespace MojCRM.Controllers
                 case 3:
                     db.ActivityLogs.Add(new ActivityLog
                     {
-                        Description = _Agent + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata broj: " + InvoiceNumber,
-                        User = _Agent,
-                        ReferenceId = _TicketId,
+                        Description = User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User = User.Identity.Name,
+                        ReferenceId = model.TicketId,
                         ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
                         Department = ActivityLog.DepartmentEnum.Delivery,
                         InsertDate = DateTime.Now,
@@ -1024,26 +993,22 @@ namespace MojCRM.Controllers
                     break;
             }
 
-            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId, Name = User.Identity.Name });
+            return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST: Delivery/EditDetail/12345
         [HttpPost]
         [Authorize]
-        public ActionResult EditDetail(int _ReceiverId, string _Agent, string _ContactId, string _DetailNoteId, string _DetailNote, string _TicketId)
+        public ActionResult EditDetail(DeliveryDetailHelper model)
         {
-            int _TicketIdInt = Int32.Parse(_TicketId);
-            int _DetailNoteIdInt = Int32.Parse(_DetailNoteId);
-            var DetailForEdit = (from t in db.DeliveryDetails
-                                where t.Id == _DetailNoteIdInt
-                                select t).First();
+            var DetailForEdit = db.DeliveryDetails.Find(model.DetailNoteId);
 
-            DetailForEdit.DetailNote = _DetailNote;
-            DetailForEdit.Contact = _ContactId;
+            DetailForEdit.DetailNote = model.DetailNote;
+            DetailForEdit.Contact = model.Contact;
             DetailForEdit.UpdateDate = DateTime.Now;
             db.SaveChanges();
 
-            return RedirectToAction("Details", new { id = _TicketId, receiverId = _ReceiverId, Name = User.Identity.Name });
+            return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
         
         // POST: Delivery/Create
@@ -1277,7 +1242,7 @@ namespace MojCRM.Controllers
 
         // POST: Delivery/PostmarkActivateBounce
         [HttpPost]
-        public JsonResult PostmarkActivateBounce(int BounceId, int TicketId, string Agent)
+        public JsonResult PostmarkActivateBounce(int BounceId, int TicketId)
         {
             ActivateBounceResponse ActivateResponse;
             string ActivateLink = String.Format(@"https://api.postmarkapp.com/bounces/" + BounceId + "/activate");
@@ -1291,8 +1256,8 @@ namespace MojCRM.Controllers
 
                 db.ActivityLogs.Add(new ActivityLog
                 {
-                    Description = Agent + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
-                    User = Agent,
+                    Description = User.Identity.Name + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
+                    User = User.Identity.Name,
                     ReferenceId = TicketId,
                     ActivityType = ActivityLog.ActivityTypeEnum.POSTMARKACTIVATEBOUNCE,
                     Department = ActivityLog.DepartmentEnum.Delivery,
