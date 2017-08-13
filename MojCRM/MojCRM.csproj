@@ -361,6 +361,7 @@
     <Compile Include="Controllers\OrganizationsController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
+    <Compile Include="Helpers\DeliveryHelpers.cs" />
     <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
@@ -542,6 +543,7 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="bin\MojCRM.dll" />
     <Content Include="bin\MojCRM.pdb" />
+    <Content Include="Content\630px-FINA_Logo.svg.png" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -549,6 +551,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
     <Content Include="Content\CustomPTISheet.css" />
+    <Content Include="Content\eFaktura2.png" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
     <Content Include="Content\font-awesome.css" />

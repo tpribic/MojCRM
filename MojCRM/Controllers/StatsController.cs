@@ -176,6 +176,9 @@ namespace MojCRM.Controllers
             var DeliveryMail = (from a in db.ActivityLogs
                                 where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
                                 select a);
+            var TicketsAssigned = (from a in db.ActivityLogs
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.TICKETASSIGN
+                                   select a);
             var Activities = new List<CallCenterDaily>();
             var ActivitiesByDepartment = new List<CallCenterDailyByDepartment>();
 
@@ -188,6 +191,7 @@ namespace MojCRM.Controllers
                 MailChange = MailChange.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 Resend = Resend.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 DeliveryMail = DeliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                TicketsAssigned = TicketsAssigned.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
 
                 AgentActivities = (from a in db.ActivityLogs
                                    where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
@@ -206,7 +210,8 @@ namespace MojCRM.Controllers
                         NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.User == Day.Key).Count(),
                         NumberMailchange = MailChange.Where(a => a.User == Day.Key).Count(),
                         NumberResend = Resend.Where(a => a.User == Day.Key).Count(),
-                        NumberDeliveryMail = DeliveryMail.Where(a => a.User == Day.Key).Count()
+                        NumberMail = DeliveryMail.Where(a => a.User == Day.Key).Count(),
+                        NumberTicketsAssigned = TicketsAssigned.Where(a => a.User == Day.Key).Count()
                     };
                     Activities.Add(dailyActivities);
                 }
@@ -231,6 +236,7 @@ namespace MojCRM.Controllers
                 MailChange = MailChange.Where(t => t.InsertDate >= DateTime.Today);
                 Resend = Resend.Where(t => t.InsertDate >= DateTime.Today);
                 DeliveryMail = DeliveryMail.Where(t => t.InsertDate >= DateTime.Today);
+                TicketsAssigned = TicketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
                 foreach (var Day in AgentActivities)
                 {
                     var dailyActivities = new CallCenterDaily
@@ -240,7 +246,8 @@ namespace MojCRM.Controllers
                         NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.User == Day.Key).Count(),
                         NumberMailchange = MailChange.Where(a => a.User == Day.Key).Count(),
                         NumberResend = Resend.Where(a => a.User == Day.Key).Count(),
-                        NumberDeliveryMail = DeliveryMail.Where(a => a.User == Day.Key).Count()
+                        NumberMail = DeliveryMail.Where(a => a.User == Day.Key).Count(),
+                        NumberTicketsAssigned = TicketsAssigned.Where(a => a.User == Day.Key).Count()
                     };
                     Activities.Add(dailyActivities);
                 }
@@ -267,7 +274,8 @@ namespace MojCRM.Controllers
                 SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
                 SumMailchange = MailChange.Count(),
                 SumResend = Resend.Count(),
-                SumSentMail = DeliveryMail.Count()
+                SumSentMail = DeliveryMail.Count(),
+                SumTicketsAssigned = TicketsAssigned.Count()
             };
 
             return View(model);

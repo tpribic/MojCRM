@@ -301,7 +301,7 @@ namespace MojCRM.Controllers
             }
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
+            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt });
         }
 
         // POST: Contact/EditFromSales

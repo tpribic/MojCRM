@@ -28,6 +28,7 @@ namespace MojCRM.Controllers
             {
                 NumberOfOpportunitiesCreated = opportunities.Count(),
                 NumberOfOpportunitiesInProgress = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.START || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.ARRANGEMEETING || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.INCONTACT || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.PROCESSDIFFICULTIES).Count(),
+                NumberOfOpportunitiesUser = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.MERUSER).Count(),
                 NumberOfOpportunitiesToLead = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD).Count(),
                 NumberOfOpportunitiesRejected = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED).Count(),
                 NumberOfLeadsCreated = leads.Count(),
@@ -45,6 +46,8 @@ namespace MojCRM.Controllers
                 NumberOfOpportunitiesCreated = countModel.NumberOfOpportunitiesCreated,
                 NumberOfOpportunitiesInProgress = countModel.NumberOfOpportunitiesInProgress,
                 NumberOfOpportunitiesInProgressPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesInProgress / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+                NumberOfOpportunitesUser = countModel.NumberOfOpportunitiesUser,
+                NumberOfOpportunitiesUserPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesUser / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
                 NumberOfOpportunitiesToLead = countModel.NumberOfOpportunitiesToLead,
                 NumberOfOpportunitiesToLeadPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesToLead / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
                 NumberOfOpportunitiesRejected = countModel.NumberOfOpportunitiesRejected,
