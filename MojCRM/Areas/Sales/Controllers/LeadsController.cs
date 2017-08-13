@@ -91,13 +91,13 @@ namespace MojCRM.Areas.Sales.Controllers
                 }
                 if (!String.IsNullOrEmpty(Model.Lead))
                 {
-                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization) || l.RelatedOrganization.VAT.Contains(Model.Organization));
+                    leads = leads.Where(l => l.LeadTitle.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }
                 if (!String.IsNullOrEmpty(Model.Organization))
                 {
-                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization));
+                    leads = leads.Where(l => l.RelatedOrganization.SubjectName.Contains(Model.Organization) || l.RelatedOrganization.VAT.Contains(Model.Organization));
                     ViewBag.SearchResults = leads.Count();
                     ViewBag.SearchResultsAssigned = leads.Where(l => l.IsAssigned == true).Count();
                 }

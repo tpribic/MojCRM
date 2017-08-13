@@ -136,10 +136,10 @@ namespace MojCRM.Controllers
 
         // POST: Contact/CreateFromDelivery
         [HttpPost]
-        public ActionResult CreateFromSalesLead(LeadContactHelper Model)
+        public ActionResult CreateFromSalesLead(SalesContactHelper Model)
         {
             var _OrganizationId = (from o in db.Leads
-                                   where o.LeadId == Model.RelatedLeadId
+                                   where o.LeadId == Model.RelatedEntityId
                                    select o.RelatedOrganizationId).First().ToString();
 
             db.Contacts.Add(new Contact
@@ -147,7 +147,7 @@ namespace MojCRM.Controllers
                 OrganizationId = Int32.Parse(_OrganizationId),
                 ContactFirstName = Model.FirstName,
                 ContactLastName = Model.LastName,
-                Title = Model.Title,
+                Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
                 Email = Model.Email,
@@ -301,7 +301,7 @@ namespace MojCRM.Controllers
             }
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt, Name = User.Identity.Name });
+            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt });
         }
 
         // POST: Contact/EditFromSales

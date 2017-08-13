@@ -73,7 +73,19 @@ namespace MojCRM.Areas.Sales.Models
             REJECTED,
 
             [Description("Potrebno dogovoriti sastanak")]
-            ARRANGEMEETING
+            ARRANGEMEETING,
+
+            [Description("Procesne poteškoće")]
+            PROCESSDIFFICULTIES,
+
+            [Description("Moj-eRačun korisnik")]
+            MERUSER,
+
+            [Description("FINA korisnik")]
+            FINAUSER,
+
+            [Description("eFaktura korisnik")]
+            eFAKTURAUSER
         }
 
         public enum OpportunityRejectReasonEnum
@@ -114,6 +126,10 @@ namespace MojCRM.Areas.Sales.Models
                     case OpportunityStatusEnum.LEAD: return "Kreiran lead";
                     case OpportunityStatusEnum.REJECTED: return "Odbijeno";
                     case OpportunityStatusEnum.ARRANGEMEETING: return "Potrebno dogovoriti sastanak";
+                    case OpportunityStatusEnum.PROCESSDIFFICULTIES: return "Procesne poteškoće";
+                    case OpportunityStatusEnum.MERUSER: return "Moj-eRačun korisnik";
+                    case OpportunityStatusEnum.FINAUSER: return "FINA korisnik";
+                    case OpportunityStatusEnum.eFAKTURAUSER: return "eFaktura korisnik";
                 }
                 return "Status prodajne prilike";
             }

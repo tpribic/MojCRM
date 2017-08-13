@@ -361,6 +361,7 @@
     <Compile Include="Controllers\OrganizationsController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
+    <Compile Include="Helpers\DeliveryHelpers.cs" />
     <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
@@ -531,6 +532,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -541,45 +543,7 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="bin\MojCRM.dll" />
     <Content Include="bin\MojCRM.pdb" />
-    <Content Include="bin\roslyn\csc.exe" />
-    <Content Include="bin\roslyn\csi.exe" />
-    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
-    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
-    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
-    <Content Include="bin\roslyn\Microsoft.Win32.Primitives.dll" />
-    <Content Include="bin\roslyn\System.AppContext.dll" />
-    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
-    <Content Include="bin\roslyn\System.Console.dll" />
-    <Content Include="bin\roslyn\System.Diagnostics.FileVersionInfo.dll" />
-    <Content Include="bin\roslyn\System.Diagnostics.Process.dll" />
-    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
-    <Content Include="bin\roslyn\System.IO.Compression.dll" />
-    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
-    <Content Include="bin\roslyn\System.IO.FileSystem.DriveInfo.dll" />
-    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
-    <Content Include="bin\roslyn\System.IO.Pipes.dll" />
-    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
-    <Content Include="bin\roslyn\System.Security.AccessControl.dll" />
-    <Content Include="bin\roslyn\System.Security.Claims.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Algorithms.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Encoding.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Primitives.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.X509Certificates.dll" />
-    <Content Include="bin\roslyn\System.Security.Principal.Windows.dll" />
-    <Content Include="bin\roslyn\System.Text.Encoding.CodePages.dll" />
-    <Content Include="bin\roslyn\System.Threading.Thread.dll" />
-    <Content Include="bin\roslyn\System.ValueTuple.dll" />
-    <Content Include="bin\roslyn\System.Xml.ReaderWriter.dll" />
-    <Content Include="bin\roslyn\System.Xml.XmlDocument.dll" />
-    <Content Include="bin\roslyn\System.Xml.XPath.dll" />
-    <Content Include="bin\roslyn\System.Xml.XPath.XDocument.dll" />
-    <Content Include="bin\roslyn\vbc.exe" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="Content\630px-FINA_Logo.svg.png" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -587,6 +551,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
     <Content Include="Content\CustomPTISheet.css" />
+    <Content Include="Content\eFaktura2.png" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
     <Content Include="Content\font-awesome.css" />
@@ -704,15 +669,6 @@
     <Content Include="fonts\lato-reg-webfont.eot" />
     <Content Include="fonts\lato-reg-webfont.ttf" />
     <Content Include="fonts\lato-reg-webfont.woff" />
-    <Content Include="bin\roslyn\csc.exe.config" />
-    <Content Include="bin\roslyn\csc.rsp" />
-    <Content Include="bin\roslyn\csi.exe.config" />
-    <Content Include="bin\roslyn\csi.rsp" />
-    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
-    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
-    <Content Include="bin\roslyn\vbc.exe.config" />
-    <Content Include="bin\roslyn\vbc.rsp" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -848,7 +804,6 @@
     <Content Include="Views\Delivery\_ChangeEmailPartial.cshtml" />
     <Content Include="Views\Shared\_UserLayoutNew.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
-    <Content Include="Views\Stats\SalesStat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

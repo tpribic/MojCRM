@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using static MojCRM.Areas.Sales.Models.Opportunity;
 
 namespace MojCRM.Areas.Sales.ViewModels
 {
@@ -17,8 +18,10 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "Detalji prodajne prilike")]
         public string OpportunityDescription { get; set; }
 
+        public OpportunityStatusEnum OpportunityStatus { get; set; }
+
         [Display(Name = "Status prodajne prilike")]
-        public string OpportunityStatus { get; set; }
+        public string OpportunityStatusString { get; set; }
 
         [Display(Name = "Razlog odbijanja prodajne prilike")]
         public string RejectReasson { get; set; }
