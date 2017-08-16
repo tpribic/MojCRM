@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Areas.Sales.Models;
+using MojCRM.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -148,7 +149,41 @@ namespace MojCRM.ViewModels
         }
     }
 
-    public class GeneralCampaignStatusViewModel
+    public class SalesStatsViewModel
+    {
+        public IList<Lead> Leads { get; set; }
+        public IList<Opportunity> Opportunities { get; set; }
+        public IEnumerable<ApplicationUser> Agents { get; set; }
+        [Display(Name = "Broj prodajnih prilika")]
+        public IList<SaleAgentGrouping> SumAssignedOpportunities { get; set; }
+        [Display(Name = "Broj lead-ova")]
+        public IList<SaleAgentGrouping> SumAssignedLeads { get; set; }
+
+
+        public IList<SelectListItem> AgentList
+        {
+            get
+            {
+                var ListAgents = (from u in Agents
+                                  select new SelectListItem()
+                                  {
+                                      Text = u.UserName,
+                                      Value = u.UserName
+                                  }).ToList();
+                return ListAgents;
+            }
+            set { }
+        }
+    }
+    public class SaleAgentGrouping
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
+    }
+
+
+
+public class GeneralCampaignStatusViewModel
     {
         public int RelatedCampaignId { get; set; }
         public string RelatedCampaignName { get; set; }

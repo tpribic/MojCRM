@@ -48,10 +48,28 @@ namespace MojCRM.Controllers
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
             }
 
-            var ReferencedId = (from o in db.Organizations
-                               orderby o.MerId descending
-                               select o.MerId).First();
+            var ReferencedId = 438431;
+
+            var OrganizationsDB = (from o in db.Organizations
+                                   
+                                   select o).AsEnumerable();
+            var list = new List<int>();
+           
+            foreach (var Organization in OrganizationsDB)
+            {
+                list.Add(Organization.MerId);
+              
+
+            }
+
+            var result = Enumerable.Range(0, 442100).Except(list);
+            foreach (var rez in result)
+            {
+                System.Diagnostics.Debug.WriteLine(rez);
+            }
+                System.Diagnostics.Debug.WriteLine(result.Count());
             int CreatedCompanies = 0;
+            int NumberOfCompanies = 0;
             var Response = new MerGetSubjektDataResponse()
             {
                 Id = 238,
@@ -59,60 +77,73 @@ namespace MojCRM.Controllers
             };
             ReferencedId++;
             try
+
             {
                 while (Response != null)
                 {
-                    MerApiGetSubjekt Request = new MerApiGetSubjekt()
+                    foreach (var rez in result)
                     {
-                        Id = Credentials.MerUser,
-                        Pass = Credentials.MerPass,
-                        Oib = "99999999927",
-                        PJ = "",
-                        SoftwareId = "MojCRM-001",
-                        SubjektPJ = ReferencedId.ToString()
-                    };
-
-                    string MerRequest = JsonConvert.SerializeObject(Request);
-
-                    using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
-                    {
-                        Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                        Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
-                        var _Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
-                        _Response = _Response.Replace("[", "").Replace("]", "");
-                        MerGetSubjektDataResponse Result = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(_Response);
-                        if (Result == null)
+                        MerApiGetSubjekt Request = new MerApiGetSubjekt()
                         {
-                            break;
-                        }
-                        else
+                            Id = Credentials.MerUser,
+                            Pass = Credentials.MerPass,
+                            Oib = "99999999927",
+                            PJ = "",
+                            SoftwareId = "MojCRM-001",
+                            SubjektPJ = rez.ToString()
+                        };
+
+                        string MerRequest = JsonConvert.SerializeObject(Request);
+
+                        using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
                         {
-                            db.Organizations.Add(new Organizations
+                            Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                            Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                            var _Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
+                            _Response = _Response.Replace("[", "").Replace("]", "");
+                            MerGetSubjektDataResponse Result = JsonConvert.DeserializeObject<MerGetSubjektDataResponse>(_Response);
+                            if (Result == null)
                             {
-                                MerId = Result.Id,
-                                SubjectName = Result.Naziv,
-                                SubjectBusinessUnit = Result.PoslovnaJedinica,
-                                VAT = Result.Oib,
-                                FirstReceived = Result.FirstReceived,
-                                FirstSent = Result.FirstSent,
-                                InsertDate = DateTime.Now
-                            });
-                            db.MerDeliveryDetails.Add(new MerDeliveryDetails
+
+                            }
+                            else
                             {
-                                MerId = Result.Id,
-                                TotalReceived = Result.TotalReceived
-                            });
-                            db.OrganizationDetails.Add(new OrganizationDetail
-                            {
-                                MerId = Result.Id,
-                                OrganizationGroup = OrganizationGroupEnum.Nema
-                            });
-                            db.SaveChanges();
-                            Result = Response;
+                                System.Diagnostics.Debug.WriteLine(Result.Id);
+                               
+
+                                db.Organizations.Add(new Organizations
+                                {
+                                    MerId = Result.Id,
+                                    SubjectName = Result.Naziv,
+                                    SubjectBusinessUnit = Result.PoslovnaJedinica,
+                                    VAT = Result.Oib,
+                                    FirstReceived = Result.FirstReceived,
+                                    FirstSent = Result.FirstSent,
+                                    InsertDate = DateTime.Now
+                                });
+                                db.MerDeliveryDetails.Add(new MerDeliveryDetails
+                                {
+                                    MerId = Result.Id,
+                                    TotalReceived = Result.TotalReceived
+                                });
+                                db.OrganizationDetails.Add(new OrganizationDetail
+                                {
+                                    MerId = Result.Id,
+                                    OrganizationGroup = OrganizationGroupEnum.Nema
+                                });
+                                db.SaveChanges();
+                                Result = Response;
+
+
+                            }
+                            ReferencedId++;
+
+                            NumberOfCompanies++;
+                            CreatedCompanies++;
                         }
                     }
-                    ReferencedId++;
-                    CreatedCompanies++;
+
+                    break;
                 }
             }
             catch (NullReferenceException e)
@@ -190,22 +221,22 @@ namespace MojCRM.Controllers
                                  select o).AsEnumerable();
 
 
-                foreach (var Organization in Organizations)
+            foreach (var Organization in Organizations)
+            {
+                MerApiGetSubjekt Request = new MerApiGetSubjekt()
                 {
-                    MerApiGetSubjekt Request = new MerApiGetSubjekt()
-                    {
-                        Id = MerUser.ToString(),
-                        Pass = MerPass.ToString(),
-                        Oib = "99999999927",
-                        PJ = "",
-                        SoftwareId = "MojCRM-001",
-                        SubjektPJ = Organization.MerId.ToString()
-                    };
+                    Id = MerUser.ToString(),
+                    Pass = MerPass.ToString(),
+                    Oib = "99999999927",
+                    PJ = "",
+                    SoftwareId = "MojCRM-001",
+                    SubjektPJ = Organization.MerId.ToString()
+                };
 
-                    string MerRequest = JsonConvert.SerializeObject(Request);
+                string MerRequest = JsonConvert.SerializeObject(Request);
 
-                    using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
-                    {
+                using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
+                {
                     Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
                     Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
                     var _Response = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSubjektData").ToString(), "POST", MerRequest);
@@ -229,8 +260,8 @@ namespace MojCRM.Controllers
             int ReceiverIdInt = Int32.Parse(ReceiverId);
 
             var DetailForEdit = (from dd in db.MerDeliveryDetails
-                                   where dd.MerId == ReceiverIdInt
-                                   select dd).First();
+                                 where dd.MerId == ReceiverIdInt
+                                 select dd).First();
 
             DetailForEdit.ImportantComments = Comment;
             db.SaveChanges();

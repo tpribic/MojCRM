@@ -15,13 +15,14 @@ namespace MojCRM.Controllers
         public ActionResult Index()
         {
             var campaign = (from c in db.Campaigns
-                            where c.CampaignId == 1
+                            where c.CampaignId == 2
                             select c).First();
+          
             var opportunities = (from o in db.Opportunities
-                                 where o.RelatedCampaignId == 1
+                                 where o.RelatedCampaignId == 2
                                  select o);
             var leads = (from l in db.Leads
-                         where l.RelatedCampaignId == 1
+                         where l.RelatedCampaignId == 2
                          select l);
 
             var countModel = new GeneralCampaignStatusViewModelCount()
