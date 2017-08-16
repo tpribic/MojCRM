@@ -26,7 +26,7 @@ namespace MojCRM.Areas.Sales.Helpers
         public string LastName { get; set; }
         public string Telephone { get; set; }
         public string Mobile { get; set; }
-        public string Email { get; set; }
+        public string ContactEmail { get; set; }
         public string TitleFunction { get; set; }
         public int? RelatedEntityId { get; set; }
         public string ContactId { get; set; }

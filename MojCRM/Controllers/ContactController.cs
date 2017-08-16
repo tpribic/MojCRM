@@ -123,7 +123,7 @@ namespace MojCRM.Controllers
                 Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
-                Email = Model.Email,
+                Email = Model.ContactEmail,
                 User = User.Identity.Name,
                 InsertDate = DateTime.Now,
                 ContactType = Contact.ContactTypeEnum.SALES,
@@ -150,7 +150,7 @@ namespace MojCRM.Controllers
                 Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
-                Email = Model.Email,
+                Email = Model.ContactEmail,
                 User = User.Identity.Name,
                 InsertDate = DateTime.Now,
                 ContactType = Contact.ContactTypeEnum.SALES,
@@ -327,9 +327,9 @@ namespace MojCRM.Controllers
             {
                 ContactForUpdate.MobilePhoneNumber = Model.Mobile;
             }
-            if (!String.IsNullOrEmpty(Model.Email))
+            if (!String.IsNullOrEmpty(Model.ContactEmail))
             {
-                ContactForUpdate.Email = Model.Email;
+                ContactForUpdate.Email = Model.ContactEmail;
             }
             if (!String.IsNullOrEmpty(Model.TitleFunction))
             {
