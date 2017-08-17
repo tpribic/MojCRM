@@ -1,4 +1,5 @@
 ﻿using MojCRM.Areas.Sales.Helpers;
+using MojCRM.Helpers;
 using MojCRM.Models;
 using MojCRM.ViewModels;
 using System;
@@ -47,30 +48,27 @@ namespace MojCRM.Controllers
 
         // POST: Contact/CreateFromDelivery
         [HttpPost]
-        public ActionResult CreateFromDelivery(string FirstName, string LastName, string Telephone, string Mobile, string Email, string Agent, string Receiver, string DocumentId)
+        public ActionResult CreateFromDelivery(DeliveryContactHelper model)
         {
-            int ReceiverInt = Int32.Parse(Receiver);
-            int DocumentIdInt = Int32.Parse(DocumentId);
-
             try
             {
                 db.Contacts.Add(new Contact
                 {
-                    OrganizationId = ReceiverInt,
-                    ContactFirstName = FirstName,
-                    ContactLastName = LastName,
-                    Title = "N/A",
-                    TelephoneNumber = Telephone,
-                    MobilePhoneNumber = Mobile,
-                    Email = Email,
-                    User = Agent,
+                    OrganizationId = model.ReceiverId,
+                    ContactFirstName = model.FirstName,
+                    ContactLastName = model.LastName,
+                    Title = model.TitleFunction,
+                    TelephoneNumber = model.Telephone,
+                    MobilePhoneNumber = model.Mobile,
+                    Email = model.Email,
+                    User = User.Identity.Name,
                     InsertDate = DateTime.Now,
                     ContactType = Contact.ContactTypeEnum.DELIVERY,
                 });
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Delivery", new { id = DocumentIdInt, receiverId = ReceiverInt, Name = User.Identity.Name });
+                return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)
@@ -80,11 +78,11 @@ namespace MojCRM.Controllers
                     db.LogError.Add(new LogError
                     {
                         Method = @"Contact - CreateFromDelivery",
-                        Parameters = @"Id = " + Receiver + @" FirstName = '" + FirstName + @"' LastName = '" + LastName + @"' TelephoneNumber = '" + Telephone + @"' MobilePhoneNumber = '" + Mobile + @"' Email = '" + Email + @"' User = '" + Agent + @"'",
+                        Parameters = @"Id = " + model.ReceiverId + @" FirstName = '" + model.FirstName + @"' LastName = '" + model.LastName + @"' TelephoneNumber = '" + model.Telephone + @"' MobilePhoneNumber = '" + model.Mobile + @"' Email = '" + model.Email + @"' User = '" + User.Identity.Name + @"'",
                         Message = @"Entity of type '" + eve.Entry.Entity.GetType().Name.ToString() + @"' in state '" + eve.Entry.State.ToString() + @"' has following validation errors",
                         InnerException = "",
                         Request = "",
-                        User = Agent,
+                        User = User.Identity.Name,
                         InsertDate = DateTime.Now
                     });
                     db.SaveChanges();
@@ -97,7 +95,7 @@ namespace MojCRM.Controllers
                             Message = "Property " + ve.PropertyName + " Error " + ve.ErrorMessage,
                             InnerException = "",
                             Request = "",
-                            User = Agent,
+                            User = User.Identity.Name,
                             InsertDate = DateTime.Now
                         });
                         db.SaveChanges();
@@ -123,7 +121,7 @@ namespace MojCRM.Controllers
                 Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
-                Email = Model.Email,
+                Email = Model.ContactEmail,
                 User = User.Identity.Name,
                 InsertDate = DateTime.Now,
                 ContactType = Contact.ContactTypeEnum.SALES,
@@ -150,7 +148,7 @@ namespace MojCRM.Controllers
                 Title = Model.TitleFunction,
                 TelephoneNumber = Model.Telephone,
                 MobilePhoneNumber = Model.Mobile,
-                Email = Model.Email,
+                Email = Model.ContactEmail,
                 User = User.Identity.Name,
                 InsertDate = DateTime.Now,
                 ContactType = Contact.ContactTypeEnum.SALES,
@@ -266,42 +264,39 @@ namespace MojCRM.Controllers
 
         // POST: Contact/EditFromDelivery
         [HttpPost]
-        public ActionResult EditFromDelivery(string _ContactId, string _FirstName, string _LastName, string _Telephone, string _Mobile, string _Email, string _Agent, string _Receiver, string _DocumentId)
+        public ActionResult EditFromDelivery(DeliveryContactHelper model)
         {
-            int _ReceiverInt = Int32.Parse(_Receiver);
-            int _DocumentIdInt = Int32.Parse(_DocumentId);
+            var ContactForUpdate = db.Contacts.Find(model.ContactId);
 
-            var ContactForUpdate = (from c in db.Contacts
-                                    where c.ContactFirstName + " " + c.ContactLastName == _ContactId
-                                    select c).First();
-
-            if (!String.IsNullOrEmpty(_FirstName))
+            if (!String.IsNullOrEmpty(model.FirstName))
             {
-                ContactForUpdate.ContactFirstName = _FirstName;
+                ContactForUpdate.ContactFirstName = model.FirstName;
             }
-            if (!String.IsNullOrEmpty(_LastName))
+            if (!String.IsNullOrEmpty(model.LastName))
             {
-                ContactForUpdate.ContactLastName = _LastName;
+                ContactForUpdate.ContactLastName = model.LastName;
             }
-            if (!String.IsNullOrEmpty(_Telephone))
+            if (!String.IsNullOrEmpty(model.Telephone))
             {
-                ContactForUpdate.TelephoneNumber = _Telephone;
+                ContactForUpdate.TelephoneNumber = model.Telephone;
             }
-            if (!String.IsNullOrEmpty(_Mobile))
+            if (!String.IsNullOrEmpty(model.Mobile))
             {
-                ContactForUpdate.MobilePhoneNumber = _Mobile;
+                ContactForUpdate.MobilePhoneNumber = model.Mobile;
             }
-            if (!String.IsNullOrEmpty(_Email))
+            if (!String.IsNullOrEmpty(model.Email))
             {
-                ContactForUpdate.Email = _Email;
+                ContactForUpdate.Email = model.Email;
             }
-            if (!String.IsNullOrEmpty(_Agent))
+            if (!String.IsNullOrEmpty(model.TitleFunction))
             {
-                ContactForUpdate.User = _Agent;
+                ContactForUpdate.Title = model.TitleFunction;
             }
+            ContactForUpdate.UpdateDate = DateTime.Now;
+            ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = _DocumentIdInt, receiverId = _ReceiverInt });
+            return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST: Contact/EditFromSales
@@ -327,9 +322,9 @@ namespace MojCRM.Controllers
             {
                 ContactForUpdate.MobilePhoneNumber = Model.Mobile;
             }
-            if (!String.IsNullOrEmpty(Model.Email))
+            if (!String.IsNullOrEmpty(Model.ContactEmail))
             {
-                ContactForUpdate.Email = Model.Email;
+                ContactForUpdate.Email = Model.ContactEmail;
             }
             if (!String.IsNullOrEmpty(Model.TitleFunction))
             {
