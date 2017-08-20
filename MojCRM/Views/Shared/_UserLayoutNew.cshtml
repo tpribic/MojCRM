@@ -36,7 +36,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="#">
+                                        <a href="@Url.RouteUrl(new { action = "Index", controller = "Manage", area = ""})">
                                             <i class="fa fa-user"></i>
                                             <span class="text">Korisnički profil</span>
                                         </a>
@@ -47,11 +47,11 @@
                                             <span class="text">Postavke</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li style="height:34px;">
                                         @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
                                         {
                                             @Html.AntiForgeryToken()
-                                            <a href="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">
+                                            <a href="#" onclick="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">
                                                 <i class="fa fa-power-off"></i>
                                                 <span class="text">Odjavi se</span>
                                             </a>
