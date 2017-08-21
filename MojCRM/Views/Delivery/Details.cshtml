@@ -847,7 +847,7 @@
                         <div class="row hidden">
                             <div>
                                 <div id="delivery-detail-receiver">
-                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = "" })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = Model.ReceiverId })
                                 </div>
                             </div>
                         </div>
@@ -864,7 +864,7 @@
                             <br />
                             <div class="col-md-12">
                                 <div id="delivery-new-email">
-                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
+                                    @Html.TextBox("NewEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
                                 </div>
                             </div>
                             <div class="hidden">
