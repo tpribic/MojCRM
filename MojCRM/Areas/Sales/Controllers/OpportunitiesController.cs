@@ -170,8 +170,8 @@ namespace MojCRM.Areas.Sales.Controllers
             var _RelatedCampaign = (from c in db.Campaigns
                                     where c.CampaignId == opportunity.RelatedCampaignId
                                     select c).First();
-            var _Users = (from u in db.Users
-                          select u).AsEnumerable();
+            var _Users = db.Users.AsEnumerable();
+            var _RelatedLeadId = db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
             //var _LastOpportunityNote = (from n in db.OpportunityNotes
             //                            where n.RelatedOpportunityId == opportunity.OpportunityId
             //                            select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();
@@ -236,7 +236,8 @@ namespace MojCRM.Areas.Sales.Controllers
                 RelatedOpportunityActivities = _RelatedOpportunityActivities,
                 Users = _Users,
                 SalesNoteTemplates = salesNoteTemplates,
-                RejectReasons = rejectReasonList
+                RejectReasons = rejectReasonList,
+                RelatedLeadId = _RelatedLeadId
             };
 
             return View(OpportunityDetails);

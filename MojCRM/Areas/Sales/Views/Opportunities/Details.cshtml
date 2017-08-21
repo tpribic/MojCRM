@@ -615,31 +615,28 @@
                     <h5>Potvrđivanjem ove akcije kreirat ćete lead za niže navedene podatke.</h5>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <label for="organization-name">Naziv tvrtke</label>
                                 <div id="organization-name">
-                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName, @disabled = true })
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label for="opportunity-description">Opis prodajne prilike</label>
-                                <div id="opportunity-description">
-                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription, @disabled = true })
+                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName })
                                 </div>
                             </div>
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="campaign-name">Naziv povezane kampanje</label>
-                                <div id="campaign-name">
-                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName, @disabled = true })
+                            <div class="col-md-8">
+                                <label for="opportunity-description">Opis prodajne prilike</label>
+                                <div id="opportunity-description">
+                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription })
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label for="campaign-name">Dodijeljeno agentu</label>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="campaign-name">Naziv povezane kampanje</label>
                                 <div id="campaign-name">
-                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name, @disabled = true })
+                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName })
                                 </div>
                             </div>
                         </div>
@@ -806,6 +803,10 @@
     {
         <h4 style="text-align:center; color:red">Ova prodajna prilika je dodijeljena agentu: <strong>@Model.AssignedTo</strong></h4>
     }
+    @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD)
+    {
+        <h4 style="text-align:center">Na temelju ove prilike kreiran je <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = Model.RelatedLeadId})">lead</a>.</h4>
+    }
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
@@ -817,12 +818,12 @@
                     {
                         <button type="button" title="Dodijeli prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                     }
-                    @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    @if (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD && Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED)
                     {
-                        <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
-                    }
-                    @if ((Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD) || (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED))
-                    {
+                        if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                        {
+                            <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
+                        }
                         <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                         <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
                         <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
@@ -903,10 +904,13 @@
                 <strong>Status prodajne prilike:</strong>
                 @Model.OpportunityStatusString
             </div>
-            <div class="col-md-4">
-                <strong>Razlog odbijanja prodajne prilike:</strong>
-                @Model.RejectReasson
-            </div>
+            @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED)
+            {
+                <div class="col-md-4">
+                    <strong>Razlog odbijanja prodajne prilike:</strong>
+                    @Model.RejectReasson
+                </div>
+            }
             <div class="col-md-4">
 
             </div>
