@@ -66,6 +66,7 @@ namespace MojCRM.Areas.Sales.Helpers
     public class LeadChangeStatusHelper
     {
         public LeadStatusEnum NewStatus { get; set; }
+        public string StatusDescription { get; set; }
         public int RelatedLeadId { get; set; }
     }
 

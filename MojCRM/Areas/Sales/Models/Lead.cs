@@ -62,7 +62,10 @@ namespace MojCRM.Areas.Sales.Models
             ACCEPTED,
 
             [Description("Dogovoren sastanak")]
-            MEETING
+            MEETING,
+
+            [Description("Procesne poteškoće")]
+            PROCESSDIFFICULTIES,
         }
 
         public enum LeadRejectReasonEnum
@@ -132,6 +135,7 @@ namespace MojCRM.Areas.Sales.Models
                     case LeadStatusEnum.QOUTESENT: return "Poslana ponuda";
                     case LeadStatusEnum.ACCEPTED: return "Ponuda prihvaćena";
                     case LeadStatusEnum.MEETING: return "Dogovoren sastanak";
+                    case LeadStatusEnum.PROCESSDIFFICULTIES: return "Procesne poteškoće";
                 }
                 return "Status leada";
             }

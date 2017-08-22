@@ -1,7 +1,7 @@
 ﻿@using GridMvc.Html
 @using System.Web.UI.WebControls
 
-@model IEnumerable<MojCRM.Models.Delivery>
+@model IQueryable<MojCRM.Models.Delivery>
 
 @{
     ViewBag.Title = "Dostava eRačuna";
@@ -223,8 +223,10 @@
     @Html.Grid(Model).Named("PopisRačunaZaDostavu").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
 columns.Add().Encoded(false).Sanitized(false).RenderValueAs(o => Html.CheckBox("checked", false, new { o.MerElectronicId, @class = "checked", @id = "checkbox", @idVal = o.Id }));
-columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").RenderValueAs(m => m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit).Sortable(true);
-columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").RenderValueAs(m => m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit).Sortable(true);
+columns.Add(m => m.Sender.SubjectName).Encoded(false).Sanitized(false).Titled("Pošijatelj").Sortable(true).RenderValueAs(m =>
+@Html.RouteLink(m.Sender.SubjectName + " (" + m.Sender.VAT + ") - " + m.Sender.SubjectBusinessUnit, new { action = "Details", controller = "Organizations", area = "", id = m.SenderId}));
+columns.Add(m => m.Receiver.SubjectName).Encoded(false).Sanitized(false).Titled("Primatelj").Sortable(true).RenderValueAs(m =>
+@Html.RouteLink(m.Receiver.SubjectName + " (" + m.Receiver.VAT + ") - " + m.Receiver.SubjectBusinessUnit, new { action = "Details", controller = "Organizations", area = "", id = m.ReceiverId }));
 columns.Add(m => m.InvoiceNumber).Encoded(false).Sanitized(false).Titled("Interni broj").Sortable(false);
 columns.Add(m => m.SentDate).Encoded(false).Sanitized(false).Titled("Datum slanja").Sortable(true).RenderValueAs(m =>
 {

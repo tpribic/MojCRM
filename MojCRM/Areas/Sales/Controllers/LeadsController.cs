@@ -127,11 +127,11 @@ namespace MojCRM.Areas.Sales.Controllers
 
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
-                return View(leads.ToList().OrderByDescending(l => l.InsertDate));
+                return View(leads.OrderByDescending(l => l.InsertDate));
             }
             else
             {
-                return View(leads.Where(l => l.LeadStatus != Lead.LeadStatusEnum.REJECTED || l.LeadStatus != Lead.LeadStatusEnum.ACCEPTED).ToList().OrderByDescending(l => l.InsertDate));
+                return View(leads.Where(l => l.LeadStatus != Lead.LeadStatusEnum.REJECTED || l.LeadStatus != Lead.LeadStatusEnum.ACCEPTED).OrderByDescending(l => l.InsertDate));
             }
         }
 
@@ -459,6 +459,7 @@ namespace MojCRM.Areas.Sales.Controllers
         {
             var lead = db.Leads.Find(Model.RelatedLeadId);
             lead.LeadStatus = Model.NewStatus;
+            lead.StatusDescription = Model.StatusDescription;
             lead.UpdateDate = DateTime.Now;
             lead.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();

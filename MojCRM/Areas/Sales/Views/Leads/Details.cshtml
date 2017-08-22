@@ -10,6 +10,7 @@
         {
             new ListItem{ Value= "0", Text = "Kreirano"},
             new ListItem{ Value= "1", Text = "U kontaktu"},
+            new ListItem{ Value= "6", Text = "Procesne poteškoće"},
             new ListItem{ Value= "2", Text = "Odbijeno"},
             new ListItem{ Value= "3", Text = "Poslana ponuda"},
             new ListItem{ Value= "4", Text = "Prihvaćena ponuda"},
@@ -455,9 +456,16 @@
                         <hr />
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="status">Status</label>
-                                <div id="status">
-                                    @Html.DropDownList("NewStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi novi status prilike", new { @class = "form-control" })
+                                <label for="status-lns">Status</label>
+                                <div id="status-lns">
+                                    @Html.DropDownList("NewStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi novi status prilike", new { @class = "form-control", @id = "lns" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="col-md-12" id="status-description-lns">
+                                <label>Opis</label>
+                                <div>
+                                    @Html.TextArea("StatusDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Placeholder = "Unesite pojašnjenje statusa" })
                                 </div>
                             </div>
                             <div class="hidden">
@@ -912,7 +920,15 @@
                 });
             window.location.reload(true)
         });
+    }
+    $('#lns').on('change', function () {
+        if ($("#lns option:selected").text() === "Procesne poteškoće") {
+            $("#status-description-lns").show()
         }
+        else {
+            $("#status-description-lns").hide()
+        }
+    });
 </script>
 
 

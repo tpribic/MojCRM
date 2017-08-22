@@ -26,22 +26,15 @@ namespace MojCRM.Controllers
 
         // GET: Delivery
         [Authorize]
-        public async Task<ActionResult> Index(string SortOrder, DeliverySearchHelper model)
+        public ActionResult Index(string SortOrder, DeliverySearchHelper model)
         {
             ViewBag.InsertDateParm = String.IsNullOrEmpty(SortOrder) ? "InsertDate" : String.Empty;
 
-            var ResultsNew = from t in db.DeliveryTicketModels
-                          //where t.DocumentStatus == 30
-                          select t;
-            var OpenTickets = from t in db.DeliveryTicketModels
-                              where t.DocumentStatus == 30
-                              select t;
-            var TicketsCreatedToday = from t in db.DeliveryTicketModels
-                                      where t.InsertDate > DateTime.Today.Date
-                                      select t;
-            var TicketsCreatedTodayFirstTime = from t in db.DeliveryTicketModels
-                                               where t.InsertDate > DateTime.Today.Date && t.FirstInvoice == true
-                                               select t;
+            var ReferenceDate = new DateTime(2017, (DateTime.Today.AddMonths(-2)).Month, 1);
+            var ResultsNew = db.DeliveryTicketModels.Where(t => t.InsertDate >= ReferenceDate);
+            var OpenTickets = db.DeliveryTicketModels.Where(t => t.DocumentStatus == 30);
+            var TicketsCreatedToday = db.DeliveryTicketModels.Where(t => t.InsertDate > DateTime.Today.Date);
+            var TicketsCreatedTodayFirstTime = db.DeliveryTicketModels.Where(t => t.InsertDate > DateTime.Today.Date && t.FirstInvoice == true);
 
             ViewBag.OpenTickets = OpenTickets.Count();
             ViewBag.OpenTicketsAssigned = OpenTickets.Where(t => t.IsAssigned == true).Count();
@@ -50,9 +43,7 @@ namespace MojCRM.Controllers
             ViewBag.TicketsCreatedTodayFirstTime = TicketsCreatedTodayFirstTime.Count();
             ViewBag.TicketsCreatedTodayFirstTimeAssigned = TicketsCreatedTodayFirstTime.Where(t => t.IsAssigned == true).Count();
             var _date = new DateTime(2017, 7, 1);
-            ViewBag.TotalOpenedTickets = (from t in db.DeliveryTicketModels
-                                          where t.IsAssigned == false && t.InsertDate >= _date && t.DocumentStatus == 30
-                                          select t).Count();
+            ViewBag.TotalOpenedTickets = db.DeliveryTicketModels.Where(t => t.IsAssigned == false && t.InsertDate >= _date && t.DocumentStatus == 30).Count();
 
             int DocumentStatusInt;
             if (!String.IsNullOrEmpty(model.DocumentStatus))
@@ -177,16 +168,16 @@ namespace MojCRM.Controllers
                     break;
             }
 
-            return View(await ResultsNew.ToListAsync());
+            return View(ResultsNew);
         }
 
         // GET: Delivery/CreateTicketsFirstTime
         // Kreiranje kartica za prvo preuzimanje
         //[Authorize(Roles = "Superadmin")]
-        public JsonResult CreateTicketsFirstTime(string user)
+        public JsonResult CreateTicketsFirstTime(Guid user)
         {
             var Credentials = new { MerUser = "", MerPass = "" };
-            if (String.IsNullOrEmpty(user))
+            if (String.IsNullOrEmpty(user.ToString()))
             {
                 Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
@@ -195,7 +186,7 @@ namespace MojCRM.Controllers
             else
             {
                 Credentials = (from u in db.Users
-                               where u.Id == user
+                               where u.Id == user.ToString()
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
             }
 
@@ -245,10 +236,10 @@ namespace MojCRM.Controllers
         // GET: Delivery/CreateTickets
         // Kreiranje kartica za redovito preuzimanje
         //[Authorize(Roles = "Superadmin")]
-        public JsonResult CreateTickets(string user)
+        public JsonResult CreateTickets(Guid user)
         {
             var Credentials = new { MerUser = "", MerPass = ""};
-            if (String.IsNullOrEmpty(user))
+            if (String.IsNullOrEmpty(user.ToString()))
             {
                 Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
@@ -257,7 +248,7 @@ namespace MojCRM.Controllers
             else
             {
                 Credentials = (from u in db.Users
-                               where u.Id == user
+                               where u.Id == user.ToString()
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
             }
 
@@ -523,13 +514,11 @@ namespace MojCRM.Controllers
         // GET: Delivery/UpdateAllStatuses
         public ActionResult UpdateAllStatusesOther()
         {
-            var OpenTickets = (from t in db.DeliveryTicketModels
-                               where (t.DocumentStatus != 30 || t.DocumentStatus != 40 || t.DocumentStatus != 55)
-                               select t).AsEnumerable();
+            var ReferenceDate = new DateTime(2017, (DateTime.Today.AddMonths(-2)).Month, 1);
+            var OpenTickets = db.DeliveryTicketModels.Where(t => t.DocumentStatus != 30 && t.DocumentStatus != 40 && t.DocumentStatus != 55);
 
             foreach (var Ticket in OpenTickets)
             {
-                //var TicketForUpdate = db.DeliveryTicketModels.Find(Ticket.Id);
                 var MerString = "https://www.moj-eracun.hr/exchange/getstatus?id=" + Ticket.MerElectronicId + "&ver=13ca6cad-60a4-4894-ba38-1a6f86b25a3c";
                 MerDeliveryJsonResponse Result = ParseJson(MerString);
 

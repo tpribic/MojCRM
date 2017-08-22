@@ -34,6 +34,12 @@
     columns.Add(m => m.VAT).Encoded(false).Sanitized(false).Titled("OIB tvrtke").Sortable(true);
     columns.Add(m => m.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(true);
     columns.Add(m => m.Income).Encoded(false).Sanitized(false).Titled("Godišnji prihod").Sortable(true).Format("{0:C}");
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+    return @<div><span>
+        <a href = "@Url.RouteUrl(new { action = "Details", controller = "Organizations", area = "", id = m.MerId })" title = "Detalji tvrtke"><i class="fa fa-list"></i></a>
+        </span></div>;
+    });
 }).WithPaging(20)
 </body>
 

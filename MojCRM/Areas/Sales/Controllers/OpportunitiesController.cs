@@ -131,11 +131,11 @@ namespace MojCRM.Areas.Sales.Controllers
 
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
-                return View(opportunities.ToList().OrderByDescending(op => op.InsertDate));
+                return View(opportunities.OrderByDescending(op => op.InsertDate));
             }
             else
             {
-                return View(opportunities.Where(op => op.OpportunityStatus != Opportunity.OpportunityStatusEnum.LEAD || op.OpportunityStatus != Opportunity.OpportunityStatusEnum.REJECTED).ToList().OrderByDescending(op => op.InsertDate));
+                return View(opportunities.Where(op => op.OpportunityStatus != Opportunity.OpportunityStatusEnum.LEAD || op.OpportunityStatus != Opportunity.OpportunityStatusEnum.REJECTED).OrderByDescending(op => op.InsertDate));
             }
         }
 
@@ -171,7 +171,11 @@ namespace MojCRM.Areas.Sales.Controllers
                                     where c.CampaignId == opportunity.RelatedCampaignId
                                     select c).First();
             var _Users = db.Users.AsEnumerable();
-            var _RelatedLeadId = db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
+            var _RelatedLeadId = 0;
+            if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD)
+            {
+                _RelatedLeadId = db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
+            }
             //var _LastOpportunityNote = (from n in db.OpportunityNotes
             //                            where n.RelatedOpportunityId == opportunity.OpportunityId
             //                            select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();

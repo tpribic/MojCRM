@@ -533,6 +533,7 @@
     <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationsViewModels.cs" />
     <Compile Include="ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -804,6 +805,7 @@
     <Content Include="Views\Delivery\_ChangeEmailPartial.cshtml" />
     <Content Include="Views\Shared\_UserLayoutNew.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
+    <Content Include="Views\Organizations\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
