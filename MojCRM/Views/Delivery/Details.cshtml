@@ -697,7 +697,26 @@
                             {
                         <tr>
                             <td>@Invoice.Sender.SubjectName</td>
-                            <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Model.DocumentStatusString</span></td>
+                            @if (Invoice.DocumentStatus == 10)
+                            {
+                                <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                            }
+                            @if (Invoice.DocumentStatus == 30)
+                            {
+                                <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-warning">@Invoice.DocumentStatusString</span></td>
+                            }
+                            @if (Invoice.DocumentStatus == 40)
+                            {
+                                <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-success">@Invoice.DocumentStatusString</span></td>
+                            }
+                            @if (Invoice.DocumentStatus == 50)
+                            {
+                                <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-danger">@Invoice.DocumentStatusString</span></td>
+                            }
+                            @if (Invoice.DocumentStatus == 55)
+                            {
+                                <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                            }
                             <td>@Invoice.BuyerEmail</td>
                             <td>@Invoice.InvoiceNumber</td>
                             <td>@Invoice.SentDate.ToShortDateString()</td>

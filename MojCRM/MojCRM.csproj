@@ -806,6 +806,10 @@
     <Content Include="Views\Shared\_UserLayoutNew.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
     <Content Include="Views\Organizations\Details.cshtml" />
+    <Content Include="Views\Organizations\_TicketsAsReceiver.cshtml" />
+    <Content Include="Views\Organizations\_TicketsAsSender.cshtml" />
+    <Content Include="Views\Organizations\_BusinessUnits.cshtml" />
+    <Content Include="Views\Organizations\_GeneralInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

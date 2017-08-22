@@ -1,0 +1,54 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+    @{ 
+        Layout = null;
+    }
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    @if (Model.TicketsAsReceiver.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Pošiljatelj</th>
+                <th>Tip dokumenta</th>
+                <th>E-mail adresa</th>
+                <th>Broj dokumenta</th>
+                <th>Datum slanja</th>
+            </tr>
+            @foreach (var Invoice in Model.TicketsAsReceiver)
+            {
+                <tr>
+                    <td>@Invoice.Sender.SubjectName</td>
+                    @if (Invoice.DocumentStatus == 10)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatusString == "Poslan")
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-warning">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 40)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-success">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 50)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-danger">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 55)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                    }
+                    <td>@Invoice.BuyerEmail</td>
+                    <td>@Invoice.InvoiceNumber</td>
+                    <td>@Invoice.SentDate.ToShortDateString()</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Za ovu tvrtku nisu kreirane kartice za ulazne eDokumente</p>
+    }
+</div>

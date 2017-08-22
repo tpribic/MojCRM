@@ -7,4 +7,38 @@
 
 <h2>@Model.Organization.SubjectName</h2>
 <h5>OIB: @Model.Organization.VAT</h5>
+<hr />
+<div class="widget">
+    <div class="widget-header">
+        <h3>Detaljni podaci tvrtke</h3>
+    </div>
+    <div class="widget-content">
+        <div class="custom-tabs-left">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#general-info" data-toggle="tab"><i class="fa fa-info-circle"></i> Opći podaci</a></li>
+                <li><a href="#business-units" data-toggle="tab"><i class="fa fa-industry"></i> Poslovnice</a></li>
+                <li><a href="#tickets-as-receiver" data-toggle="tab"><i class="fa fa-ticket"></i> Kartice dostave (primatelj)</a></li>
+                <li><a href="#tickets-as-sender" data-toggle="tab"><i class="fa fa-ticket"></i> Kartice dostave (pošiljatelj)</a></li>
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane fade in active" id="general-info">
+                    <h5>Opći podaci</h5>
+                    @Html.Partial("_GeneralInfo", Model)
+                </div>
+                <div class="tab-pane fade in active" id="business-units">
+                    <h5>Popis poslovnica</h5>
+                    @Html.Partial("_BusinessUnits", Model)
+                </div>
+                <div class="tab-pane fade" id="tickets-as-receiver">
+                    <h5>Pregled kartica za dostavu (kao primatelj)</h5>
+                    @Html.Partial("_TicketsAsReceiver", Model)
+                </div>
+                <div class="tab-pane fade" id="tickets-as-sender">
+                    <h5>Pregled kartica za dostavu (kao pošiljatelj)</h5>
+                    @Html.Partial("_TicketsAsSender", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

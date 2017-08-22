@@ -38,7 +38,10 @@ namespace MojCRM.Controllers
             var organization = db.Organizations.Find(id);
             var model = new OrganizationDetailsViewModel()
             {
-                Organization = organization
+                Organization = organization,
+                OrganizationBusinessUnits = db.Organizations.Where(o => o.VAT == organization.VAT && o.SubjectBusinessUnit != ""),
+                TicketsAsReceiver = db.DeliveryTicketModels.Where(t => t.ReceiverId == id).OrderByDescending(t => t.SentDate),
+                TicketsAsSender = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate)
             };
 
             return View(model);
