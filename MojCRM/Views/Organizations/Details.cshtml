@@ -1,0 +1,10 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    var title = Model.Organization.SubjectName;
+    ViewBag.Title = title + " - Detalji tvrtke";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2>@Model.Organization.SubjectName</h2>
+<h5>OIB: @Model.Organization.VAT</h5>
+

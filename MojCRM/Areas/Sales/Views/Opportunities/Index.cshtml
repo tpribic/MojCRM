@@ -1,6 +1,6 @@
 ﻿@using GridMvc.Html
 @using System.Web.UI.WebControls
-@model IEnumerable<MojCRM.Areas.Sales.Models.Opportunity>
+@model IQueryable<MojCRM.Areas.Sales.Models.Opportunity>
 
 @{
     ViewBag.Title = "Pregled prodajnih prilika";
@@ -157,11 +157,12 @@
 
 @Html.Grid(Model).Named("PopisProdajnihPrilika").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-    columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
-    columns.Add(m => m.OpportunityTitle).Encoded(false).Sanitized(false).Titled("Naziv prilike").Sortable(false);
-    columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false);
-    columns.Add(m => m.OpportunityStatus).Encoded(false).Sanitized(false).Titled("Status prilike").Sortable(true).RenderValueAs(m =>
-    {
+columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
+columns.Add(m => m.OpportunityTitle).Encoded(false).Sanitized(false).Titled("Naziv prilike").Sortable(false);
+columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false).RenderValueAs(m =>
+Html.RouteLink(m.RelatedOrganization.SubjectName, new { action = "Details", controller = "Organizations", area = "", id = m.RelatedOrganizationId}));
+columns.Add(m => m.OpportunityStatus).Encoded(false).Sanitized(false).Titled("Status prilike").Sortable(true).RenderValueAs(m =>
+{
     if (m.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.START)
     {
         return @<div><span class="label label-default">@Html.Raw(m.OpportunityStatusString)</span></div>;

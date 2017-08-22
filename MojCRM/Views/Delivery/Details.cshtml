@@ -67,19 +67,19 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="delivery-contact-user">@Html.DisplayNameFor(model => model.DeliveryContactAgent)</label>
-                                <div id="delivery-contact-agent">
-                                    @Html.TextBox("Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                <label for="delivery-contact-title">Titula / Funkcija</label>
+                                <div id="delivery-contact-title">
+                                    @Html.TextBox("TitleFunction", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / Funkcija" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-receiver">
-                                    @Html.TextBox("Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("DocumentId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                         <div class="col-md-6">
                             <label for="delivery-detail-contact">Kontakt osoba</label>
                             <div id="delivery-detail-contact">
-                                @Html.DropDownList("_ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
+                                @Html.DropDownList("ContactId", Model.RelatedDeliveryContactsForDetails, new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -118,19 +118,19 @@
                             <div class="col-md-4">
                                 <label for="delivery-contact-first-name">@Html.DisplayNameFor(model => model.DeliveryContactFirstName)</label>
                                 <div id="delivery-contact-first-name">
-                                    @Html.TextBox("_FirstName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactFirstName })
+                                    @Html.TextBox("FirstName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactFirstName })
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="delivery-contact-last-name">@Html.DisplayNameFor(model => model.DeliveryContactLastName)</label>
                                 <div id="delivery-contact-last-name">
-                                    @Html.TextBox("_LastName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactLastName })
+                                    @Html.TextBox("LastName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactLastName })
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="delivery-contact-telephone">@Html.DisplayNameFor(model => model.DeliveryContactTelephone)</label>
                                 <div id="delivery-contact-telephone">
-                                    @Html.TextBox("_Telephone", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactTelephone })
+                                    @Html.TextBox("Telephone", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactTelephone })
                                 </div>
                             </div>
                         </div>
@@ -139,29 +139,29 @@
                             <div class="col-md-4">
                                 <label for="delivery-contact-mobile">@Html.DisplayNameFor(model => model.DeliveryContactMobileTelephone)</label>
                                 <div id="delivery-contact-mobile">
-                                    @Html.TextBox("_Mobile", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactMobileTelephone })
+                                    @Html.TextBox("Mobile", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.DeliveryContactMobileTelephone })
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="delivery-contact-email">@Html.DisplayNameFor(model => model.DeliveryEmailAddress)</label>
                                 <div id="delivery-contact-email">
-                                    @Html.TextBox("_Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = Model.DeliveryContactEmail })
+                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = Model.DeliveryContactEmail })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="delivery-contact-user">@Html.DisplayNameFor(model => model.DeliveryContactAgent)</label>
-                                <div id="delivery-contact-agent">
-                                    @Html.TextBox("_Agent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = @User.Identity.Name })
+                                <label for="delivery-contact-title">Titula / Funkcija</label>
+                                <div id="delivery-contact-title">
+                                    @Html.TextBox("TitleFunction", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / Funkcija" })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-receiver">
-                                    @Html.TextBox("_Receiver", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverId })
                                 </div>
                             </div>
                             <div class="hidden">
                                 <div id="delivery-contact-documentid">
-                                    @Html.TextBox("_DocumentId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
+                                    @Html.TextBox("TicketId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.TicketId })
                                 </div>
                             </div>
                         </div>
@@ -249,7 +249,7 @@
                             </div>
                             <div class="hidden">
                                 <div id="delivery-detail-invoice-number">
-                                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = 1 })
+                                    @Html.TextBox("InvoiceNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.InvoiceNumber })
                                 </div>
                             </div>
                         </div>
@@ -590,7 +590,10 @@
             <div class="modal-header">
                 <div class="btn-group" role="group">
                     <button type="button" title="Kreiranje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" href="#AddDetail" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                    <a href="#DeleteDetail" title="Brisanje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                    @if (Model.RelatedDeliveryDetails.Count() != 0)
+                    {
+                        <a href="#DeleteDetail" title="Brisanje napomene dostave" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                    }
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Napomene o dostavi eDokumenta</h4>
@@ -631,7 +634,10 @@
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
+                @if (Model.RelatedDeliveryContacts.Count() != 0)
+                {
+                    <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
+                }
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Kontakti za dostavu eRačuna</h4>
             </div>
@@ -841,7 +847,7 @@
                         <div class="row hidden">
                             <div>
                                 <div id="delivery-detail-receiver">
-                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = "" })
+                                    @Html.TextBox("ReceiverId", ViewBag.CurrentFilter as string, new { @class = "form-control", @id = "_Receiver", @Value = Model.ReceiverId })
                                 </div>
                             </div>
                         </div>
@@ -850,7 +856,7 @@
                                 <div id="delivery-email">
                                     <label for="old-email">E-mail adresa primatelja:</label>
                                     <div id="old-email">
-                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = "", @id = "delivery-email", @disabled = "disabled" })
+                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = "", @id = "delivery-email" })
                                     </div>
                                 </div>
                             </div>
@@ -858,7 +864,7 @@
                             <br />
                             <div class="col-md-12">
                                 <div id="delivery-new-email">
-                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
+                                    @Html.TextBox("NewEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Nova e-mail adresa" })
                                 </div>
                             </div>
                             <div class="hidden">

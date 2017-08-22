@@ -30,15 +30,10 @@
             </div>
             <div class="modal-body" style="overflow-y:auto; max-height:400px">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <label for="note-contact">Kontakt osoba</label>
                         <div id="note-contact">
                             @Html.DropDownList("Contact", Model.RelatedSalesContactsForDetails, new { @class = "form-control col-md-10", @id = "contact-for-note" })
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div>
-                            @Html.CheckBox("IsActivity", true, new { @class = "checked", @id = "IsActivity" })
                         </div>
                     </div>
                 </div>
@@ -68,7 +63,8 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="add-note" onclick="javascript: AddNote()" data-opportunity-id="@Html.Raw(Model.OpportunityId)">Kreiraj bilješku</button>
+                <button type="submit" class="btn btn-primary" id="add-note" onclick="javascript: AddNote()" data-opportunity-id="@Html.Raw(Model.OpportunityId)">Kreiraj bilješku kao aktivnost</button>
+                <button type="submit" class="btn btn-primary" id="add-note" onclick="javascript: AddNoteNoActivity()" data-opportunity-id="@Html.Raw(Model.OpportunityId)">Kreiraj bilješku</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
             </div>
         </div>
@@ -269,13 +265,13 @@
                             <div class="col-md-4">
                                 <label for="sales-contact-email">E-mail adresa kontakta</label>
                                 <div id="sales-contact-email">
-                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
+                                    @Html.TextBox("ContactEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="sales-contact-user">Titula / Funkcija</label>
-                                <div id="sales-contact-agent">
-                                    @Html.TextBox("Title", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
+                                <label for="sales-contact-title">Titula / Funkcija</label>
+                                <div id="sales-contact-title">
+                                    @Html.TextBox("TitleFunction", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Titula / funkcija kontakta" })
                                 </div>
                             </div>
                             <div class="hidden">
@@ -346,7 +342,7 @@
                             <div class="col-md-4">
                                 <label for="sales-contact-email">E-mail adresa kontakta</label>
                                 <div id="sales-contact-email">
-                                    @Html.TextBox("Email", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
+                                    @Html.TextBox("ContactEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "E-mail adresa kontakta" })
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -619,31 +615,28 @@
                     <h5>Potvrđivanjem ove akcije kreirat ćete lead za niže navedene podatke.</h5>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <label for="organization-name">Naziv tvrtke</label>
                                 <div id="organization-name">
-                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName, @disabled = true })
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label for="opportunity-description">Opis prodajne prilike</label>
-                                <div id="opportunity-description">
-                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription, @disabled = true })
+                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName })
                                 </div>
                             </div>
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="campaign-name">Naziv povezane kampanje</label>
-                                <div id="campaign-name">
-                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName, @disabled = true })
+                            <div class="col-md-8">
+                                <label for="opportunity-description">Opis prodajne prilike</label>
+                                <div id="opportunity-description">
+                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription })
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label for="campaign-name">Dodijeljeno agentu</label>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="campaign-name">Naziv povezane kampanje</label>
                                 <div id="campaign-name">
-                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name, @disabled = true })
+                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName })
                                 </div>
                             </div>
                         </div>
@@ -713,7 +706,10 @@
             <div class="modal-header">
                 <div class="btn-group" role="group">
                     <button type="button" title="Kreiranje bilješke" class="btn btn-default btn-sm" data-toggle="modal" href="#AddNote" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                    <a href="#DeleteNote" title="Brisanje bilješke" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                    @if (Model.RelatedOpportunityNotes.Count() != 0)
+                    {
+                        <a href="#DeleteNote" title="Brisanje bilješke" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal"><i class="fa fa-trash"></i></a>
+                    }
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Bilješke o prodajnoj prilici</h4>
@@ -750,18 +746,21 @@
 
 <!--Modal - Sales Contacts-->
 <div class="modal fade" id="SalesContacts" tabindex="-1" role="dialog" aria-labelledby="SalesContacts">
-    <div class="modal-dialog modal-lg" role="document" style="width: 650px">
+    <div class="modal-dialog modal-lg" role="document" style="width: 900px">
         <div class="modal-content" style="overflow:hidden">
             <div class="modal-header">
                 <div class="btn-group" role="group">
                     <button type="button" title="Kreiranje kontakta" class="btn btn-default btn-sm" data-toggle="modal" href="#CreateContact" data-dismiss="modal"><i class="fa fa-plus"></i></button>
-                    <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
+                    @if (Model.RelatedSalesContacts.Count() != 0)
+                    {
+                        <a role="button" data-toggle="modal" href="#EditContact" class="btn btn-sm btn-default" title="Izmjena kontakta za dostavu" data-dismiss="modal"><i class="fa fa-pencil"></i></a>
+                    }
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>Kontakti za prodaju</h4>
             </div>
             <div class="modal-body">
-                <table class="table">
+                <table class="table" @*style="word-break:break-word;"*@>
                     <tr>
                         <th>Ime kontakta</th>
                         <th>Prezime kontakta</th>
@@ -774,13 +773,13 @@
                     @foreach (var Contact in Model.RelatedSalesContacts)
                     {
                         <tr>
-                            <td>@Contact.ContactFirstName</td>
-                            <td>@Contact.ContactLastName</td>
-                            <td>@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
-                            <td><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-opportunity-id="@Html.Raw(Model.OpportunityId)" name="contact-email" class="opportunity-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
-                            <td>@Contact.Title</td>
-                            <td>@Contact.User</td>
-                            <td>
+                            <td style="width:15%;">@Contact.ContactFirstName</td>
+                            <td style="width:15%;">@Contact.ContactLastName</td>
+                            <td style="width:20%;">@Contact.TelephoneNumber;  @Contact.MobilePhoneNumber</td>
+                            <td style="width:20%;"><a data-agent="@User.Identity.Name" data-email="@Contact.Email" data-opportunity-id="@Html.Raw(Model.OpportunityId)" name="contact-email" class="opportunity-mail" href="mailto:@Contact.Email">@Contact.Email</a></td>
+                            <td style="width:15%;">@Contact.Title</td>
+                            <td style="width:10%;">@Contact.User</td>
+                            <td style="width:5%;">
                                 <a href="#AddNote" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
                                 <a data-dismiss="modal" href="#AddNoteInfo" data-toggle="modal" title="Dodaj bilješku i zabilježi informativni poziv"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
                                 <a data-dismiss="modal" data-opportunity-id="@Html.Raw(Model.OpportunityId)" data-agent="@User.Identity.Name" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
@@ -804,6 +803,10 @@
     {
         <h4 style="text-align:center; color:red">Ova prodajna prilika je dodijeljena agentu: <strong>@Model.AssignedTo</strong></h4>
     }
+    @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD)
+    {
+        <h4 style="text-align:center">Na temelju ove prilike kreiran je <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = Model.RelatedLeadId})">lead</a>.</h4>
+    }
     <div>
         <div class="row" style="text-align:center">
             <div class="col-md-12">
@@ -815,12 +818,12 @@
                     {
                         <button type="button" title="Dodijeli prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                     }
-                    @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    @if (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD && Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED)
                     {
-                        <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
-                    }
-                    @if ((Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD) || (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED))
-                    {
+                        if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                        {
+                            <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
+                        }
                         <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                         <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
                         <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
@@ -901,10 +904,13 @@
                 <strong>Status prodajne prilike:</strong>
                 @Model.OpportunityStatusString
             </div>
-            <div class="col-md-4">
-                <strong>Razlog odbijanja prodajne prilike:</strong>
-                @Model.RejectReasson
-            </div>
+            @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED)
+            {
+                <div class="col-md-4">
+                    <strong>Razlog odbijanja prodajne prilike:</strong>
+                    @Model.RejectReasson
+                </div>
+            }
             <div class="col-md-4">
 
             </div>
@@ -929,7 +935,8 @@
                 User: $(this).data("agent"),
                 Contact: $(this).data("contact"),
                 Note: $(this).data('detail-template'),
-                Identifier: $(this).data("identifier")
+                Identifier: $(this).data("identifier"),
+                IsActivity: true
             },
             success: function (data) {
                 if (data.Status === 'OK')
@@ -981,11 +988,11 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Leads", area = "Sales" })',
+            url: '@Url.RouteUrl(new { action = "AddNote", controller = "Opportunities", area = "Sales" })',
             data: {
-                RelatedLeadId: $(this).data("opportunity-id"),
-                Contact: $("#info-note").val(),
-                Note: $("#note-for-note").val(),
+                RelatedOpportunityId: $(this).data("opportunity-id"),
+                Contact: $("#contact-for-note").val(),
+                Note: $("#info-note").val(),
                 IsActivity: true,
                 Identifier: 2
             },
@@ -994,6 +1001,26 @@
         window.location.reload(true)
     });
     }
+    function AddNoteNoActivity() {
+        $(document).on("click", "#add-note", function (e) {
+            e.preventDefault();
+            var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "AddNote", controller = "Opportunities", area = "Sales" })',
+                    data: {
+                        NoteTemplates: selectedItems,
+                        RelatedOpportunityId: $(this).data("opportunity-id"),
+                        Contact: $("#contact-for-note").val(),
+                        Note: $("#note-for-note").val(),
+                        IsActivity: false,
+                        Identifier: 1
+                    },
+                    dataType: 'json'
+                });
+            window.location.reload(true)
+        });
+        }
     $('#orrl').on('change', function () {
         if ($("#orrl option:selected").text() === "Drugo / Ostalo") {
             $("#status-description-orrl").show()

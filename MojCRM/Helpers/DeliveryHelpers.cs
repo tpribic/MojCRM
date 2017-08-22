@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MojCRM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -40,5 +41,18 @@ namespace MojCRM.Helpers
         public string InvoiceNumber { get; set; }
         public int? DetailNoteId { get; set; }
         public int? Identifier { get; set; }
+    }
+
+    public class DeliveryContactHelper
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Telephone { get; set; }
+        public string Mobile { get; set; }
+        public string Email { get; set; }
+        public string TitleFunction { get; set; }
+        public int ReceiverId { get; set; }
+        public int TicketId { get; set; }
+        public int? ContactId { get; set; }
     }
 }

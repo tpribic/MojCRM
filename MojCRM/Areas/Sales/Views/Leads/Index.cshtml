@@ -1,6 +1,6 @@
 ﻿@using GridMvc.Html
 @using System.Web.UI.WebControls
-@model IEnumerable<MojCRM.Areas.Sales.Models.Lead>
+@model IQueryable<MojCRM.Areas.Sales.Models.Lead>
 
 @{
     ViewBag.Title = "Pregled leadova";
@@ -12,6 +12,7 @@
         {
             new ListItem{ Value= "0", Text = "Kreirano"},
             new ListItem{ Value= "1", Text = "U kontaktu"},
+            new ListItem{ Value= "6", Text = "Procesne poteškoće"},
             new ListItem{ Value= "2", Text = "Odbijeno"},
             new ListItem{ Value= "3", Text = "Poslana ponuda"},
             new ListItem{ Value= "4", Text = "Prihvaćena ponuda"}
@@ -153,11 +154,12 @@
 
 @Html.Grid(Model).Named("PopisLeadova").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-    columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
-    columns.Add(m => m.LeadTitle).Encoded(false).Sanitized(false).Titled("Naziv leada").Sortable(false);
-    columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false);
-    columns.Add(m => m.LeadStatus).Encoded(false).Sanitized(false).Titled("Status leada").Sortable(true).RenderValueAs(m =>
-    {
+columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
+columns.Add(m => m.LeadTitle).Encoded(false).Sanitized(false).Titled("Naziv leada").Sortable(false);
+columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false).RenderValueAs(m =>
+Html.RouteLink(m.RelatedOrganization.SubjectName, new { action = "Details", controller = "Organizations", area = "", id = m.RelatedOrganizationId }));
+columns.Add(m => m.LeadStatus).Encoded(false).Sanitized(false).Titled("Status leada").Sortable(true).RenderValueAs(m =>
+{
     if (m.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.START)
     {
         return @<div><span class="label label-default">@Html.Raw(m.LeadStatusString)</span></div>;

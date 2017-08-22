@@ -1,5 +1,6 @@
 ﻿using MojCRM.Models;
 using MojCRM.Helpers;
+using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +32,23 @@ namespace MojCRM.Controllers
             return View(Organizations.ToList().OrderBy(o => o.MerId));
         }
 
+        // GET: Organizations/Details/5
+        public ActionResult Details(int id)
+        {
+            var organization = db.Organizations.Find(id);
+            var model = new OrganizationDetailsViewModel()
+            {
+                Organization = organization
+            };
+
+            return View(model);
+        }
+
         // GET: Organizations/GetOrganizations
-        public JsonResult GetOrganizations(string user)
+        public JsonResult GetOrganizations(Guid user)
         {
             var Credentials = new { MerUser = "", MerPass = "" };
-            if (String.IsNullOrEmpty(user))
+            if (String.IsNullOrEmpty(user.ToString()))
             {
                 Credentials = (from u in db.Users
                                where u.UserName == User.Identity.Name
@@ -44,7 +57,7 @@ namespace MojCRM.Controllers
             else
             {
                 Credentials = (from u in db.Users
-                               where u.Id == user
+                               where u.Id == user.ToString()
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
             }
 
