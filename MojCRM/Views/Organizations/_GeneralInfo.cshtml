@@ -1,1 +1,17 @@
-﻿
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    <div class="row">
+        <div class="col-md-6" title="Osobni identifikacijski broj">
+            <strong>OIB: </strong>@Model.Organization.VAT
+        </div>
+        <div class="col-md-6" title="Podaci iz 2015.">
+            <strong>Ukupni godišnji prihod: </strong><span>@Html.DisplayFor(m => m.Organization.Income)</span>
+        </div>
+    </div>
+</div>

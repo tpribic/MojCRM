@@ -1,0 +1,53 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    @if (Model.Leads.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Naziv kampanje</th>
+                <th>Status leada</th>
+                <th>Opis leada</th>
+                <th>Dodijeljeno agentu</th>
+            </tr>
+            @foreach (var Lead in Model.Leads)
+            {
+                <tr>
+                    <td>@Lead.RelatedCampaign</td>
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.START)
+                    {
+                        <td><span class="label label-default">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.INCONTACT)
+                    {
+                        <td><span class="label label-primary">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.QOUTESENT)
+                    {
+                        <td><span class="label label-primary">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.ACCEPTED)
+                    {
+                        <td><span class="label label-success">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.REJECTED)
+                    {
+                        <td><span class="label label-danger">@Html.Raw(Lead.LeadStatusString)</span><br /><span style="color:red">@Html.Raw(Lead.LeadRejectReasonString)</span></td>
+                    }
+                    <td>@Lead.LeadDescription</td>
+                    <td>@Lead.AssignedTo</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Za ovu tvrtku nisu kreirani leadovi</p>
+    }
+</div>
+

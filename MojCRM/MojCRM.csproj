@@ -810,6 +810,8 @@
     <Content Include="Views\Organizations\_TicketsAsSender.cshtml" />
     <Content Include="Views\Organizations\_BusinessUnits.cshtml" />
     <Content Include="Views\Organizations\_GeneralInfo.cshtml" />
+    <Content Include="Views\Organizations\_Opportunities.cshtml" />
+    <Content Include="Views\Organizations\_Leads.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
