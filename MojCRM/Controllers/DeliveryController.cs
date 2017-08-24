@@ -871,6 +871,7 @@ namespace MojCRM.Controllers
         [HttpPost]
         public ActionResult AddDetail(DeliveryDetailHelper model)
         {
+            var contact = db.Contacts.Find(model.Contact);
             if (model.DetailTemplate == String.Empty && model.DetailNote != String.Empty)
             {
                 try
@@ -881,7 +882,7 @@ namespace MojCRM.Controllers
                         User = User.Identity.Name,
                         DetailNote = model.DetailNote,
                         InsertDate = DateTime.Now,
-                        Contact = model.Contact,
+                        Contact = contact.ContactFirstName + " " + contact.ContactLastName,
                         TicketId = model.TicketId
                     });
                     db.SaveChanges();
@@ -923,7 +924,7 @@ namespace MojCRM.Controllers
                     User = User.Identity.Name,
                     DetailNote = model.DetailTemplate,
                     InsertDate = DateTime.Now,
-                    Contact = model.Contact,
+                    Contact = contact.ContactFirstName + " " + contact.ContactLastName,
                     TicketId = model.TicketId
                 });
                 db.SaveChanges();
@@ -936,7 +937,7 @@ namespace MojCRM.Controllers
                     User = User.Identity.Name,
                     DetailNote = model.DetailTemplate + " - " + model.DetailNote,
                     InsertDate = DateTime.Now,
-                    Contact = model.Contact,
+                    Contact = contact.ContactFirstName + " " + contact.ContactLastName,
                     TicketId = model.TicketId
                 });
                 db.SaveChanges();
@@ -991,9 +992,10 @@ namespace MojCRM.Controllers
         public ActionResult EditDetail(DeliveryDetailHelper model)
         {
             var DetailForEdit = db.DeliveryDetails.Find(model.DetailNoteId);
+            var contact = db.Contacts.Find(model.Contact);
 
             DetailForEdit.DetailNote = model.DetailNote;
-            DetailForEdit.Contact = model.Contact;
+            DetailForEdit.Contact = contact.ContactFirstName + " " + contact.ContactLastName;
             DetailForEdit.UpdateDate = DateTime.Now;
             db.SaveChanges();
 

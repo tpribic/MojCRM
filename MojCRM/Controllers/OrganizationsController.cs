@@ -29,7 +29,7 @@ namespace MojCRM.Controllers
                 Organizations = Organizations.Where(o => o.SubjectName.Contains(Organization) || o.VAT.Contains(Organization));
             }
 
-            return View(Organizations.ToList().OrderBy(o => o.MerId));
+            return View(Organizations.OrderBy(o => o.MerId));
         }
 
         // GET: Organizations/Details/5
@@ -38,7 +38,16 @@ namespace MojCRM.Controllers
             var organization = db.Organizations.Find(id);
             var model = new OrganizationDetailsViewModel()
             {
-                Organization = organization
+                Organization = organization,
+                OrganizationBusinessUnits = db.Organizations.Where(o => o.VAT == organization.VAT && o.SubjectBusinessUnit != ""),
+                Opportunities = db.Opportunities.Where(op => op.RelatedOrganizationId == id),
+                OpportunitiesCount = db.Opportunities.Where(op => op.RelatedOrganizationId == id).Count(),
+                Leads = db.Leads.Where(l => l.RelatedOrganizationId == id),
+                LeadsCount = db.Leads.Where(l => l.RelatedOrganizationId == id).Count(),
+                TicketsAsReceiver = db.DeliveryTicketModels.Where(t => t.ReceiverId == id).OrderByDescending(t => t.SentDate),
+                TicketsAsReceiverCount = db.DeliveryTicketModels.Where(t => t.ReceiverId == id).OrderByDescending(t => t.SentDate).Count(),
+                TicketsAsSender = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate),
+                TicketsAsSenderCount = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate).Count()
             };
 
             return View(model);

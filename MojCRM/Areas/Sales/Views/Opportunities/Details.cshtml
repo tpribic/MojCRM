@@ -798,6 +798,7 @@
 
 <body>
     <h2 style="text-align:center"><strong>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
+    @*<h2>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</h2>*@
     <br />
     @if (Model.IsAssigned == true)
     {
@@ -975,7 +976,7 @@
                         RelatedOpportunityId: $(this).data("opportunity-id"),
                         Contact: $("#contact-for-note").val(),
                         Note: $("#note-for-note").val(),
-                        IsActivity: $("#IsActivity").val(),
+                        IsActivity: true,
                         Identifier: 1
                     },
                     dataType: 'json'

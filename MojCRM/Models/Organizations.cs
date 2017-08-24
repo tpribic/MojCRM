@@ -33,6 +33,8 @@ namespace MojCRM.Models
         public int? Employees { get; set; }
 
         [Display(Name = "Ukupan godišnji prihod")]
+        [DisplayFormat(DataFormatString = "{0:C0}")]
+        [DataType(DataType.Currency)]
         public decimal? Income { get; set; }
 
         [Display(Name = "Datum unosa")]

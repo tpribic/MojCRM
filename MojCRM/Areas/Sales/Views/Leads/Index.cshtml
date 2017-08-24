@@ -47,7 +47,7 @@
 
 <hr />
 
-@if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+@*@if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
 {
     <div>
         <div class="row" style="text-align:center">
@@ -61,7 +61,7 @@
         </div>
     </div>
     <hr />
-}
+}*@
 
 @using (Html.BeginForm("Index", "Leads", new { area = "Sales" }, FormMethod.Get))
     {

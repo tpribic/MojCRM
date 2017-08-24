@@ -266,7 +266,7 @@ namespace MojCRM.Controllers
         [HttpPost]
         public ActionResult EditFromDelivery(DeliveryContactHelper model)
         {
-            var ContactForUpdate = db.Contacts.Where(c => c.ContactFirstName + " " + c.ContactLastName == model.FirstName + " " + model.LastName).First();
+            var ContactForUpdate = db.Contacts.Find(model.ContactId);
 
             if (!String.IsNullOrEmpty(model.FirstName))
             {

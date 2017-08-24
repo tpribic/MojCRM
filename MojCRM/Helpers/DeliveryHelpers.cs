@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace MojCRM.Helpers
 {
@@ -35,7 +36,7 @@ namespace MojCRM.Helpers
     {
         public int ReceiverId { get; set; }
         public int TicketId { get; set; }
-        public string Contact { get; set; }
+        public int Contact { get; set; }
         public string DetailTemplate { get; set; }
         public string DetailNote { get; set; }
         public string InvoiceNumber { get; set; }
