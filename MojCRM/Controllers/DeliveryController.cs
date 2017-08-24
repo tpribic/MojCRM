@@ -236,7 +236,7 @@ namespace MojCRM.Controllers
         // GET: Delivery/CreateTickets
         // Kreiranje kartica za redovito preuzimanje
         //[Authorize(Roles = "Superadmin")]
-        public JsonResult CreateTickets(Guid user)
+        public JsonResult CreateTickets(Guid? user)
         {
             var Credentials = new { MerUser = "", MerPass = ""};
             if (String.IsNullOrEmpty(user.ToString()))
