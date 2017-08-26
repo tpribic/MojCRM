@@ -516,6 +516,10 @@
     <Compile Include="Migrations\201708261654174_Aug26Update.Designer.cs">
       <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708261931576_Aug26Update2.cs" />
+    <Compile Include="Migrations\201708261931576_Aug26Update2.Designer.cs">
+      <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -527,6 +531,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MerDeliveryDetails.cs" />
     <Compile Include="Models\MeViewModels.cs" />
+    <Compile Include="Models\OrganizationAttribute.cs" />
     <Compile Include="Models\OrganizationDetail.cs" />
     <Compile Include="Models\Organizations.cs" />
     <Compile Include="MvcApplication.cs" />
@@ -946,6 +951,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708261654174_Aug26Update.resx">
       <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708261931576_Aug26Update2.resx">
+      <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

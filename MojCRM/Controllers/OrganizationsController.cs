@@ -50,7 +50,8 @@ namespace MojCRM.Controllers
                 TicketsAsReceiver = db.DeliveryTicketModels.Where(t => t.ReceiverId == id).OrderByDescending(t => t.SentDate),
                 TicketsAsReceiverCount = db.DeliveryTicketModels.Where(t => t.ReceiverId == id).OrderByDescending(t => t.SentDate).Count(),
                 TicketsAsSender = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate),
-                TicketsAsSenderCount = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate).Count()
+                TicketsAsSenderCount = db.DeliveryTicketModels.Where(t => t.SenderId == id).OrderByDescending(t => t.SentDate).Count(),
+                Attributes = db.OrganizationAttributes.Where(a => a.OrganizationId == id).OrderBy(a => a.AttributeClass)
             };
 
             return View(model);

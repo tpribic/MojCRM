@@ -6,7 +6,29 @@
 }
 
 <h2>@Model.Organization.SubjectName</h2>
-<h5>OIB: @Model.Organization.VAT</h5>
+<div class="row">
+    <div class="col-md-3">
+        <h5>OIB: @Model.Organization.VAT</h5>
+    </div>
+    <div class="col-md-9">
+        @foreach (var Attribute in Model.Attributes)
+        {
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.MER)
+            {
+                <span><i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:blue"></i> </span>
+            }
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.FINA)
+            {
+                <i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:darkblue"></i>
+            }
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.EFAKTURA)
+            {
+                <i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:lightgreen"></i>
+            }
+        }
+    </div>
+</div>
+<hr />
 <hr />
 <div class="widget">
     <div class="widget-header">

@@ -23,6 +23,7 @@ namespace MojCRM.ViewModels
         public int TicketsAsReceiverCount { get; set; }
         public IQueryable<Delivery> TicketsAsSender { get; set; }
         public int TicketsAsSenderCount { get; set; }
+        public IQueryable<OrganizationAttribute> Attributes { get; set; }
 
         public string OrganizationGroupString
         {
