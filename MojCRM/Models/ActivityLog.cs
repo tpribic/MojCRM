@@ -20,8 +20,8 @@ namespace MojCRM.Models
         public DateTime? UpdateDate { get; set; }
         public enum ActivityTypeEnum
         {
-            [Description("Test")]
-            TEST,
+            [Description("Sistemske akcije")]
+            SYSTEM,
 
             [Description("Uspješan poziv")]
             SUCCALL,
@@ -82,7 +82,7 @@ namespace MojCRM.Models
             {
                 switch (ActivityType)
                 {
-                    case ActivityTypeEnum.TEST: return "Test";
+                    case ActivityTypeEnum.SYSTEM: return "Sistemske akcije";
                     case ActivityTypeEnum.SUCCALL: return "Uspješan poziv";
                     case ActivityTypeEnum.SUCCALSHORT: return "Uspješan poziv (nekonkretni)";
                     case ActivityTypeEnum.UNSUCCAL: return "Neuspješan poziv";
@@ -125,5 +125,6 @@ namespace MojCRM.Models
                 return "Modul";
             }
         }
+        
     }
 }

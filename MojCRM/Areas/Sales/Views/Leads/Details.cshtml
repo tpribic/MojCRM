@@ -809,10 +809,13 @@
             <strong>Status leada:</strong>
             @Model.LeadStatus
         </div>
-        <div class="col-md-4">
-            <strong>Razlog odbijanja leada:</strong>
-            @Model.RejectReason
-        </div>
+        @if (Model.LeadStatus == "Odbijeno")
+        {
+            <div class="col-md-4">
+                <strong>Razlog odbijanja leada:</strong>
+                @Model.RejectReason
+            </div>
+        }
         <div class="col-md-4">
 
         </div>

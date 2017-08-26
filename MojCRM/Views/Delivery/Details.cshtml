@@ -354,7 +354,7 @@
                                 <div id="delivery-email">
                                     <label for="delivery-email">@Html.DisplayNameFor(model => model.ReceiverEmail)</label>
                                     <div id="old-email">
-                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverEmail, @disabled = "disabled" })
+                                        @Html.TextBox("OldEmail", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.ReceiverEmail })
                                     </div>
                                 </div>
                             </div>
@@ -661,8 +661,8 @@
                             <td style="width:15%;">@Contact.User</td>
                             <td style="width:55%;">
                                 <a href="#AddDetail" data-toggle="modal" data-dismiss="modal"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
-                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactFirstName + " " + Contact.ContactLastName)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Informativni poziv" data-detail-note="" data-ticket-id="@Model.TicketId" data-invoice-number="@Model.InvoiceNumber" data-identifier-short="2" href="#" class="add-successfull-call-short"><i style="color: lightgreen" class="fa fa-phone-square"></i></a>
+                                <a data-dismiss="modal" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-contact="@Html.Raw(Contact.ContactId)" data-detail-template="Nisu se javili" data-detail-note="" data-ticket-id="@Model.TicketId" data-invoice-number="@Model.InvoiceNumber" data-identifier="3" href="#" class="add-unsuccessfull-call"><i style="color: gold" class="fa fa-phone-square"></i></a>
                             </td>
                         </tr>
                     }
@@ -1041,6 +1041,7 @@
                 DetailTemplate: $(this).data("detail-template"),
                 DetailNote: $(this).data("detail-note"),
                 TicketId: $(this).data("ticket-id"),
+                InvoiceNumber: $(this).data("invoice-number"),
                 Identifier: $(this).data("identifier-short")
             },
             success: function (data) {
@@ -1062,6 +1063,7 @@
                 DetailTemplate: $(this).data("detail-template"),
                 DetailNote: $(this).data("detail-note"),
                 TicketId: $(this).data("ticket-id"),
+                InvoiceNumber: $(this).data("invoice-number"),
                 Identifier: $(this).data("identifier")
             },
             success: function (data) {

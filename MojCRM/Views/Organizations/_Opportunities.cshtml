@@ -13,7 +13,9 @@
                 <th>Naziv kampanje</th>
                 <th>Status prilike</th>
                 <th>Opis prilike</th>
+                <th>Zadnji kontakt</th>
                 <th>Dodijeljeno agentu</th>
+                <th></th>
             </tr>
             @foreach (var Opportunity in Model.Opportunities)
             {
@@ -48,7 +50,16 @@
                         <td><span class="label label-danger">@Html.Raw(Opportunity.OpportunityStatusString)</span><br /><span style="color:red">@Html.Raw(Opportunity.OpportunityRejectReasonString)</span></td>
                     }
                     <td>@Opportunity.OpportunityDescription</td>
+                    <td>@Opportunity.LastContactDate</td>
                     <td>@Opportunity.AssignedTo</td>
+                    @if ((User.Identity.Name == Opportunity.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    {
+                    <td>
+                        <span>
+                            <a href="@Url.RouteUrl(new { action = "Details", controller = "Opportunities", area = "Sales", id = Opportunity.OpportunityId })" title="Detalji prodajne prilike"><i class="fa fa-list"></i></a>
+                        </span>
+                    </td>;
+                    }
                 </tr>
             }
         </table>

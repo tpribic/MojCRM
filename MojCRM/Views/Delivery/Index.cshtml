@@ -303,12 +303,12 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
 
         if (m.DocumentStatus == 30 && (m.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) || m.AssignedTo == User.Identity.Name))
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         if (m.DocumentStatus != 30)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, User.Identity.Name, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         return @<span>
