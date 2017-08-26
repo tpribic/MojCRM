@@ -1,0 +1,25 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    <div class="row">
+        <div class="col-md-12" title="Napomena o zaprimanju eRačuna ključna za ovog subjekta" style="color:red">
+            <strong>Glavna napomena za zaprimanje eRačuna: </strong>@Model.MerDeliveryDetails.ImportantComments
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6" title="Komentari o dostavi eRačuna iz servisa Moj-eRačun">
+            <strong>Napomena: </strong>@Model.MerDeliveryDetails.Comments
+        </div>
+        <div class="col-md-6" title="Kontakt brojevi iz servisa Moj-eRačun">
+            <strong>Komentari: </strong>@Model.MerDeliveryDetails.Telephone
+        </div>
+    </div>
+</div>
+
+

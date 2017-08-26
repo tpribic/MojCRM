@@ -1,0 +1,44 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    <div class="row">
+        <div class="col-md-12" title="ERP ili druga računovodstvena programska rješenja ">
+            <strong>ERP(ovi): </strong>@Model.OrganizationDetails.ERP
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6" title="Broj izlaznih računa na mjesečnoj razini">
+            <strong>Broj IRA: </strong>@Model.OrganizationDetails.NumberOfInvoicesSent
+        </div>
+        <div class="col-md-6" title="Broj ulaznih računa na mjesečnoj razini">
+            <strong>Broj URA: </strong>@Model.OrganizationDetails.NumberOfInvoicesReceived
+        </div>
+    </div>
+    <hr />
+    <h5><img src="~/Content/e_racun_logo_source.png" style="width:100px; height:30px;" title="Podaci o korištenju servisa Moj-eRačun" /></h5>
+    <br />
+    <div class="row">
+        <div class="col-md-6" title="Datum i vrijeme slanja prvog eDokumenta putem servisa Moj-eRačun">
+            <strong>Prvo slanje: </strong>@Model.Organization.FirstSent
+        </div>
+        <div class="col-md-6" title="Datum i vrijeme zaprimanja prvog eDokumenta putem servisa Moj-eRačun">
+            <strong>Prvo slanje: </strong>@Model.Organization.FirstReceived
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6" title="Ukupno poslano eDokumenata putem servisa Moj-eRačun">
+            <strong>Ukupno poslano: </strong>
+        </div>
+        <div class="col-md-6" title="Ukupno zaprimljeno eDokumenata putem servisa Moj-eRačun">
+            <strong>Ukupno zaprimljeno: </strong>@Model.MerDeliveryDetails.TotalReceived
+        </div>
+    </div>
+</div>
+

@@ -39,7 +39,10 @@ namespace MojCRM.Controllers
             var model = new OrganizationDetailsViewModel()
             {
                 Organization = organization,
+                OrganizationDetails = db.OrganizationDetails.Where(od => od.MerId == id).First(),
+                MerDeliveryDetails = db.MerDeliveryDetails.Where(mdd => mdd.MerId == id).First(),
                 OrganizationBusinessUnits = db.Organizations.Where(o => o.VAT == organization.VAT && o.SubjectBusinessUnit != ""),
+                Contacts = db.Contacts.Where(c => c.OrganizationId == id),
                 Opportunities = db.Opportunities.Where(op => op.RelatedOrganizationId == id),
                 OpportunitiesCount = db.Opportunities.Where(op => op.RelatedOrganizationId == id).Count(),
                 Leads = db.Leads.Where(l => l.RelatedOrganizationId == id),

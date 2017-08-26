@@ -512,6 +512,10 @@
     <Compile Include="Migrations\201707311439532_Jul31Update.Designer.cs">
       <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708261654174_Aug26Update.cs" />
+    <Compile Include="Migrations\201708261654174_Aug26Update.Designer.cs">
+      <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -812,6 +816,9 @@
     <Content Include="Views\Organizations\_GeneralInfo.cshtml" />
     <Content Include="Views\Organizations\_Opportunities.cshtml" />
     <Content Include="Views\Organizations\_Leads.cshtml" />
+    <Content Include="Views\Organizations\_AdditionalInfo.cshtml" />
+    <Content Include="Views\Organizations\_MerDeliveryData.cshtml" />
+    <Content Include="Views\Organizations\_Contacts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -936,6 +943,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707311439532_Jul31Update.resx">
       <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708261654174_Aug26Update.resx">
+      <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
