@@ -134,8 +134,8 @@ namespace MojCRM.Controllers
                             {
                                 MerId = Result.Id,
                                 MainAddress = Result.Adresa,
-                                MainPostalCode = Int32.Parse(Result.Mjesto.TrimEnd(' ')),
-                                MainCity = Result.Mjesto.TrimStart(' '),
+                                MainPostalCode = Int32.Parse(Result.Mjesto.Substring(0, 5).Trim()),
+                                MainCity = Result.Mjesto.Substring(6).Trim(),
                                 OrganizationGroup = OrganizationGroupEnum.Nema
                             });
                             db.SaveChanges();
