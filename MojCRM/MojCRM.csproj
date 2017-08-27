@@ -520,6 +520,10 @@
     <Compile Include="Migrations\201708261931576_Aug26Update2.Designer.cs">
       <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708271453120_Aug27Update.cs" />
+    <Compile Include="Migrations\201708271453120_Aug27Update.Designer.cs">
+      <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -954,6 +958,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708261931576_Aug26Update2.resx">
       <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708271453120_Aug27Update.resx">
+      <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

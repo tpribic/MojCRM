@@ -66,9 +66,9 @@ namespace MojCRM.ViewModels
                     case Organizations.LegalFormEnum.DOO: return "Društvo s ograničenom odgovornošću";
                     case Organizations.LegalFormEnum.JDOO: return "Jednostavno društvo s ograničenom odgovornošću";
                     case Organizations.LegalFormEnum.DD: return "Dioničko društvo";
-                    case Organizations.LegalFormEnum.KDJTD: return "Ostala trgovačka društva (Komanditno društvo, Javno trgovačko društvo";
+                    case Organizations.LegalFormEnum.KDJTD: return "Ostala trgovačka društva (Komanditno društvo, Javno trgovačko društvo)";
                     case Organizations.LegalFormEnum.OBRT: return "Obrt";
-                    case Organizations.LegalFormEnum.OTHER: return "Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.";
+                    case Organizations.LegalFormEnum.OTHER: return "Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.)";
                 }
                 return "Nije navedeno";
             }

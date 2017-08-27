@@ -2,6 +2,117 @@
 @{
     Layout = null;
 }
+
+<!--Modal - ChangeContactInfo-->
+@using (Html.BeginForm("EditOrganizationDetails", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="changeContactInfo" tabindex="-1" role="dialog" aria-labelledby="changeContactInfo">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni kontakt podatke</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="contact-email">E-mail adrese:</label>
+                                <div id="contact-email">
+                                    @Html.TextBox("EmailAddress", ViewBag.CurrentFilter as string, new { @class = "form-control col-md-12", @Value = Model.OrganizationDetails.EmailAddress })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="contact-telephone">Broj telefona:</label>
+                                <div id="contact-telephone">
+                                    @Html.TextBox("TelephoneNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.TelephoneNumber })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contact-mobile">Broj mobitela:</label>
+                                <div id="contact-mobile">
+                                    @Html.TextBox("MobilePhoneNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.MobilePhoneNumber })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="organization-id">
+                                    @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - ChangeDeliveryAddress-->
+@using (Html.BeginForm("EditOrganizationDetails", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="changeDeliveryAddress" tabindex="-1" role="dialog" aria-labelledby="changeDeliveryAddress">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni podatke o adresi za dostavu</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="delivery-address">Adresa:</label>
+                                <div id="delivery-address">
+                                    @Html.TextBox("CorrespondenceAddress", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.CorrespondenceAddress })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="delivery-postal-code">Poštanski broj:</label>
+                                <div id="delivery-postal-code">
+                                    @Html.TextBox("CorrespondencePostalCode", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.CorrespondencePostalCode })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="delivery-city">Grad / Mjesto:</label>
+                                <div id="delivery-city">
+                                    @Html.TextBox("CorrespondenceCity", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.CorrespondenceCity })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                            <div class="hidden">
+                                <div id="organization-id">
+                                    @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+}
+
 <div class="col-md-3">
 
 </div>
@@ -31,6 +142,15 @@
     </div>
     <hr />
     <div class="row">
+        <div class="col-md-11" title="E-mail adresa/adrese za kontakt">
+            <strong>E-mail adrese: </strong>@Model.OrganizationDetails.EmailAddress
+        </div>
+        <div class="col-md-1" title="Uredi kontakt podatke">
+            <a href="#changeContactInfo" data-toggle="modal"><i class="fa fa-edit"></i></a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
         <div class="col-md-6" title="Broj telefona za kontakt">
             <strong>Broj telefona: </strong>@Model.OrganizationDetails.TelephoneNumber
         </div>
@@ -38,19 +158,16 @@
             <strong>Broj mobitela: </strong>@Model.OrganizationDetails.MobilePhoneNumber
         </div>
     </div>
-    <br />
-    <div class="row">
-        <div class="col-md-12" title="E-mail adresa/adrese za kontakt">
-            <strong>E-mail adrese: </strong>@Model.OrganizationDetails.EmailAddress
-        </div>
-    </div>
     <hr />
     <div class="row">
         <div class="col-md-6">
             <strong>Adresa sjedišta</strong>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <strong>Adresa za dostavu</strong>
+        </div>
+        <div class="col-md-1" title="Uredi podatke o adresi za dostavu">
+            <a href="#changeDeliveryAddress" data-toggle="modal"><i class="fa fa-edit"></i></a>
         </div>
     </div>
     <br />

@@ -10,7 +10,7 @@
     <div class="col-md-3">
         <h5>OIB: @Model.Organization.VAT</h5>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
         @foreach (var Attribute in Model.Attributes)
         {
             if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.MER)
@@ -27,8 +27,13 @@
             }
         }
     </div>
+    @if (User.IsInRole("Superadmin"))
+    {
+        <div class="col-md-1">
+            <a href="@Url.RouteUrl(new { action = "UpdateOrganization", controller = "Organizations", area = "", MerId = Model.Organization.MerId })" title="Sinkroniziraj podatke sa servisom Moj-eRačun"><i class="fa fa-refresh"></i></a>
+        </div>
+    }
 </div>
-<hr />
 <hr />
 <div class="widget">
     <div class="widget-header">

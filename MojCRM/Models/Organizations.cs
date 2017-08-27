@@ -41,6 +41,9 @@ namespace MojCRM.Models
         [Display(Name = "Pravni oblik")]
         public LegalFormEnum LegalForm { get; set; }
 
+        [Display(Name = "Informacijski posrednik")]
+        public ServiceProviderEnum ServiceProvider { get; set; }
+
         [Display(Name = "Zadnju promjenu obavio")]
         public string LastUpdatedBy { get; set; }
 
@@ -81,6 +84,17 @@ namespace MojCRM.Models
 
             [Description("Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.")]
             OTHER
+        }
+        public enum ServiceProviderEnum
+        {
+            [Description("Moj-eRačun")]
+            MER,
+
+            [Description("FINA - Ministarstva")]
+            FINAB2G,
+
+            [Description("FINA - B2B")]
+            FINAB2B
         }
     }
 }

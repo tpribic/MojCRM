@@ -48,7 +48,10 @@ namespace MojCRM.Models
             CREATEDLEAD,
 
             [Description("Zaključana kartica")]
-            TICKETASSIGN
+            TICKETASSIGN,
+
+            [Description("Izmjena podataka tvrtke")]
+            ORGANIZATIONUPDATE
         }
         public enum DepartmentEnum
         {
@@ -73,7 +76,10 @@ namespace MojCRM.Models
             Opportunities,
 
             [Description("Leadovi")]
-            Leads
+            Leads,
+
+            [Description("Tvrtke")]
+            Organizations
         }
 
         public string ActivityTypeString

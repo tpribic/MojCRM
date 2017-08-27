@@ -17,6 +17,8 @@ namespace MojCRM.Models
         public string Telephone { get; set; }
         public string ImportantComments { get; set; }
 
+        [Display(Name = "Ukupan broj poslanih dokumenata")]
+        public int? TotalSent { get; set; }
         [Display(Name = "Ukupan broj primljenih dokumenata")]
         public int? TotalReceived { get; set; }
     }

@@ -2,16 +2,77 @@
 @{
     Layout = null;
 }
+<!--Modal - ChangeAdditionalInfo-->
+@using (Html.BeginForm("EditOrganizationDetails", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="changeAdditionalInfo" tabindex="-1" role="dialog" aria-labelledby="changeAdditionalInfo">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni podatke o ERP-u i broju računa</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="erp">ERP:</label>
+                                <div id="erp">
+                                    @Html.TextBox("ERP", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.ERP })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="sent-invoices">Broj IRA:</label>
+                                <div id="sent-invoices">
+                                    @Html.TextBox("NumberOfInvoicesSent", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.NumberOfInvoicesSent })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="received-invoices">Broj URA:</label>
+                                <div id="received-invoices">
+                                    @Html.TextBox("NumberOfInvoicesReceived", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationDetails.NumberOfInvoicesReceived })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="hidden">
+                            <div id="organization-id">
+                                @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
 <div class="col-md-3">
 
 </div>
 <div class="col-md-9">
     <div class="row">
-        <div class="col-md-12" title="ERP ili druga računovodstvena programska rješenja ">
+        <div class="col-md-11" title="ERP ili druga računovodstvena programska rješenja ">
             <strong>ERP(ovi): </strong>@Model.OrganizationDetails.ERP
         </div>
+        <div class="col-md-1" title="Uredi podatke o ERP-u i broju računa">
+            <a href="#changeAdditionalInfo" data-toggle="modal"><i class="fa fa-edit"></i></a>
+        </div>
     </div>
-    <hr />
+    <br />
     <div class="row">
         <div class="col-md-6" title="Broj izlaznih računa na mjesečnoj razini">
             <strong>Broj IRA: </strong>@Model.OrganizationDetails.NumberOfInvoicesSent
@@ -28,13 +89,13 @@
             <strong>Prvo slanje: </strong>@Model.Organization.FirstSent
         </div>
         <div class="col-md-6" title="Datum i vrijeme zaprimanja prvog eDokumenta putem servisa Moj-eRačun">
-            <strong>Prvo slanje: </strong>@Model.Organization.FirstReceived
+            <strong>Prvo zaprimanje: </strong>@Model.Organization.FirstReceived
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col-md-6" title="Ukupno poslano eDokumenata putem servisa Moj-eRačun">
-            <strong>Ukupno poslano: </strong>
+            <strong>Ukupno poslano: </strong>@Model.MerDeliveryDetails.TotalSent
         </div>
         <div class="col-md-6" title="Ukupno zaprimljeno eDokumenata putem servisa Moj-eRačun">
             <strong>Ukupno zaprimljeno: </strong>@Model.MerDeliveryDetails.TotalReceived
