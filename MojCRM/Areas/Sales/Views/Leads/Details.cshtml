@@ -747,7 +747,7 @@
     <div class="row">
         <div class="col-md-4" id="organization-name">
             <strong>Naziv (OIB) tvrtke:</strong>
-            @Model.OrganizationName (@Model.OrganizationVAT)
+            <a href="@Url.RouteUrl(new { action = "Details", controller = "Organizations", area = "", Id = Model.OrganizationId })">@Model.OrganizationName (@Model.OrganizationVAT)</a>
         </div>
         <div class="col-md-4">
             <strong>Kontakt brojevi:</strong>
@@ -809,10 +809,13 @@
             <strong>Status leada:</strong>
             @Model.LeadStatus
         </div>
-        <div class="col-md-4">
-            <strong>Razlog odbijanja leada:</strong>
-            @Model.RejectReason
-        </div>
+        @if (Model.LeadStatus == "Odbijeno")
+        {
+            <div class="col-md-4">
+                <strong>Razlog odbijanja leada:</strong>
+                @Model.RejectReason
+            </div>
+        }
         <div class="col-md-4">
 
         </div>

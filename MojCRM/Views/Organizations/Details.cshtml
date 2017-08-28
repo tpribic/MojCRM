@@ -6,7 +6,34 @@
 }
 
 <h2>@Model.Organization.SubjectName</h2>
-<h5>OIB: @Model.Organization.VAT</h5>
+<div class="row">
+    <div class="col-md-3">
+        <h5>OIB: @Model.Organization.VAT</h5>
+    </div>
+    <div class="col-md-8">
+        @foreach (var Attribute in Model.Attributes)
+        {
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.MER)
+            {
+                <span><i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:blue"></i> </span>
+            }
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.FINA)
+            {
+                <i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:darkblue"></i>
+            }
+            if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.EFAKTURA)
+            {
+                <i class="@Attribute.AttributeTypeIcon" title="@Attribute.AttributeClassString - @Attribute.AttributeTypeString" style="color:lightgreen"></i>
+            }
+        }
+    </div>
+    @if (User.IsInRole("Superadmin"))
+    {
+        <div class="col-md-1">
+            <a href="@Url.RouteUrl(new { action = "UpdateOrganization", controller = "Organizations", area = "", MerId = Model.Organization.MerId })" title="Sinkroniziraj podatke sa servisom Moj-eRačun"><i class="fa fa-refresh"></i></a>
+        </div>
+    }
+</div>
 <hr />
 <div class="widget">
     <div class="widget-header">
@@ -16,9 +43,12 @@
         <div class="custom-tabs-left">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#general-info" data-toggle="tab"><i class="fa fa-info-circle"></i> Opći podaci</a></li>
+                <li><a href="#additional-info" data-toggle="tab"><i class="fa fa-info-circle"></i> Dodatni podaci</a></li>
                 <li><a href="#business-units" data-toggle="tab"><i class="fa fa-industry"></i> Poslovnice</a></li>
+                <li><a href="#contacts" data-toggle="tab"><i class="fa fa-address-book-o"></i> Kontakti</a></li>
                 <li><a href="#opportunities" data-toggle="tab"><i class="fa fa-money"></i> Prodajne prilike <span class="badge element-bg-color-blue">@Model.OpportunitiesCount</span></a></li>
                 <li><a href="#leads" data-toggle="tab"><i class="fa fa-money"></i> Leadovi <span class="badge element-bg-color-blue">@Model.LeadsCount</span></a></li>
+                <li><a href="#mer-delivery-data" data-toggle="tab"><img src="~/Content/ikona-preglednik.ico" style="height: 21px; width: 21px"/> Podaci za dostavu</a></li>
                 <li><a href="#tickets-as-receiver" data-toggle="tab"><i class="fa fa-ticket"></i> Kartice dostave (primatelj) <span class="badge element-bg-color-blue">@Model.TicketsAsReceiverCount</span></a></li>
                 <li><a href="#tickets-as-sender" data-toggle="tab"><i class="fa fa-ticket"></i> Kartice dostave (pošiljatelj) <span class="badge element-bg-color-blue">@Model.TicketsAsSenderCount</span></a></li>
             </ul>
@@ -27,17 +57,29 @@
                     <h5>Opći podaci</h5>
                     @Html.Partial("_GeneralInfo", Model)
                 </div>
+                <div class="tab-pane fade" id="additional-info">
+                    <h5>Dodatni podaci</h5>
+                    @Html.Partial("_AdditionalInfo", Model)
+                </div>
                 <div class="tab-pane fade" id="business-units">
                     <h5>Popis poslovnica</h5>
                     @Html.Partial("_BusinessUnits", Model)
+                </div>
+                <div class="tab-pane fade" id="contacts">
+                    <h5>Popis kontakata</h5>
+                    @Html.Partial("_Contacts", Model)
                 </div>
                 <div class="tab-pane fade" id="opportunities">
                     <h5>Prodajne prilike</h5>
                     @Html.Partial("_Opportunities", Model)
                 </div>
                 <div class="tab-pane fade" id="leads">
-                    <h5>Prodajne prilike</h5>
+                    <h5>Leadovi</h5>
                     @Html.Partial("_Leads", Model)
+                </div>
+                <div class="tab-pane fade" id="mer-delivery-data">
+                    <h5>Podaci za dostavu eDokumenata</h5>
+                    @Html.Partial("_MerDeliveryData", Model)
                 </div>
                 <div class="tab-pane fade" id="tickets-as-receiver">
                     <h5>Pregled kartica za dostavu (kao primatelj)</h5>

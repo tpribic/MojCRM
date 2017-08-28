@@ -269,29 +269,18 @@ namespace MojCRM.Controllers
             var ContactForUpdate = db.Contacts.Find(model.ContactId);
 
             if (!String.IsNullOrEmpty(model.FirstName))
-            {
                 ContactForUpdate.ContactFirstName = model.FirstName;
-            }
             if (!String.IsNullOrEmpty(model.LastName))
-            {
                 ContactForUpdate.ContactLastName = model.LastName;
-            }
             if (!String.IsNullOrEmpty(model.Telephone))
-            {
                 ContactForUpdate.TelephoneNumber = model.Telephone;
-            }
             if (!String.IsNullOrEmpty(model.Mobile))
-            {
                 ContactForUpdate.MobilePhoneNumber = model.Mobile;
-            }
             if (!String.IsNullOrEmpty(model.Email))
-            {
                 ContactForUpdate.Email = model.Email;
-            }
             if (!String.IsNullOrEmpty(model.TitleFunction))
-            {
                 ContactForUpdate.Title = model.TitleFunction;
-            }
+
             ContactForUpdate.UpdateDate = DateTime.Now;
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();

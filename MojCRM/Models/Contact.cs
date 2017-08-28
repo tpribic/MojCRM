@@ -76,5 +76,19 @@ namespace MojCRM.Models
             }
             set { }
         }
+
+        public string ContactTypeString
+        {
+            get
+            {
+                switch (ContactType)
+                {
+                    case ContactTypeEnum.GENERAL: return "Općeniti";
+                    case ContactTypeEnum.DELIVERY: return "Dostava eDokumenata";
+                    case ContactTypeEnum.SALES: return "Prodaja";
+                }
+                return "Nije poznato";
+            }
+        }
     }
 }
