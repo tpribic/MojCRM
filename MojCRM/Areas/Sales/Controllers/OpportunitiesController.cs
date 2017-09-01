@@ -142,45 +142,47 @@ namespace MojCRM.Areas.Sales.Controllers
         // GET: Sales/Opportunities/Details/5
         public ActionResult Details(int id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Opportunity opportunity = db.Opportunities.Find(id);
-            if (opportunity == null)
-            {
-                return HttpNotFound();
-            }
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Opportunity opportunity = db.Opportunities.Find(id);
+                if (opportunity == null)
+                {
+                    return HttpNotFound();
+                }
 
-            var _RelatedSalesContacts = (from c in db.Contacts
-                                         where c.Organization.MerId == opportunity.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
-                                         select c).AsEnumerable();
-            var _RelatedOpportunityNotes = (from n in db.OpportunityNotes
-                                            where n.RelatedOpportunityId == opportunity.OpportunityId
-                                            select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
-            var _RelatedOpportunityActivities = (from a in db.ActivityLogs
-                                                 where a.ReferenceId == id && a.Module == ModuleEnum.Opportunities
-                                                 select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
-            var _RelatedOrganization = (from o in db.Organizations
-                                        where o.MerId == opportunity.RelatedOrganizationId
-                                        select o).First();
-            var _RelatedOrganizationDetail = (from od in db.OrganizationDetails
-                                              where od.MerId == opportunity.RelatedOrganizationId
-                                              select od).First();
-            var _RelatedCampaign = (from c in db.Campaigns
-                                    where c.CampaignId == opportunity.RelatedCampaignId
-                                    select c).First();
-            var _Users = db.Users.AsEnumerable();
-            var _RelatedLeadId = 0;
-            if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD)
-            {
-                _RelatedLeadId = db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
-            }
-            //var _LastOpportunityNote = (from n in db.OpportunityNotes
-            //                            where n.RelatedOpportunityId == opportunity.OpportunityId
-            //                            select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();
+                var _RelatedSalesContacts = (from c in db.Contacts
+                                             where c.Organization.MerId == opportunity.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
+                                             select c).AsEnumerable();
+                var _RelatedOpportunityNotes = (from n in db.OpportunityNotes
+                                                where n.RelatedOpportunityId == opportunity.OpportunityId
+                                                select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
+                var _RelatedOpportunityActivities = (from a in db.ActivityLogs
+                                                     where a.ReferenceId == id && a.Module == ModuleEnum.Opportunities
+                                                     select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
+                var _RelatedOrganization = (from o in db.Organizations
+                                            where o.MerId == opportunity.RelatedOrganizationId
+                                            select o).First();
+                var _RelatedOrganizationDetail = (from od in db.OrganizationDetails
+                                                  where od.MerId == opportunity.RelatedOrganizationId
+                                                  select od).First();
+                var _RelatedCampaign = (from c in db.Campaigns
+                                        where c.CampaignId == opportunity.RelatedCampaignId
+                                        select c).First();
+                var _Users = db.Users.AsEnumerable();
+                var _RelatedLeadId = 0;
+                if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD)
+                {
+                    _RelatedLeadId = db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
+                }
+                //var _LastOpportunityNote = (from n in db.OpportunityNotes
+                //                            where n.RelatedOpportunityId == opportunity.OpportunityId
+                //                            select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();
 
-            var salesNoteTemplates = new List<ListItem>
+                var salesNoteTemplates = new List<ListItem>
                 {
                     new ListItem{ Value = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)", Text = "razloženo funkcioniranje servisa (opis onoga što se dogodi nakon što korisnik klikne pošalji eRačun)" },
                     new ListItem{ Value = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)", Text = "argumentirana korisnička podrška -- ažuriranje mailova (90% uspješnost), slanje tipske obavijesti, zvanje za preuzimanje (97% uspješnost)" },
@@ -201,7 +203,7 @@ namespace MojCRM.Areas.Sales.Controllers
                     new ListItem{ Value = "obrazložio procesnu pokrivenost primatelja te odagnao brige i strahove u vezi preuzimanja od strane njihovih kupaca", Text = "obrazložio procesnu pokrivenost primatelja te odagnao brige i strahove u vezi preuzimanja od strane njihovih kupaca" }
                 };
 
-            var rejectReasonList = new List<ListItem>
+                var rejectReasonList = new List<ListItem>
             {
                 new ListItem{ Value= "0", Text = "Ne želi navesti"},
                 new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
@@ -213,38 +215,44 @@ namespace MojCRM.Areas.Sales.Controllers
                 new ListItem{ Value= "7", Text = "Drugo / Ostalo"},
             };
 
-            var OpportunityDetails = new OpportunityDetailViewModel()
-            {
-                OpportunityId = id,
-                OpportunityDescription = opportunity.OpportunityDescription,
-                OpportunityStatus = opportunity.OpportunityStatus,
-                OpportunityStatusString = opportunity.OpportunityStatusString,
-                RejectReasson = opportunity.OpportunityRejectReasonString,
-                OrganizationId = opportunity.RelatedOrganizationId,
-                OrganizationName = _RelatedOrganization.SubjectName,
-                OrganizationVAT = _RelatedOrganization.VAT,
-                TelephoneNumber = _RelatedOrganizationDetail.TelephoneNumber,
-                MobilePhoneNumber = _RelatedOrganizationDetail.MobilePhoneNumber,
-                Email = _RelatedOrganizationDetail.EmailAddress,
-                ERP = _RelatedOrganizationDetail.ERP,
-                NumberOfInvoicesSent = _RelatedOrganizationDetail.NumberOfInvoicesSent,
-                NumberOfInvoicesReceived = _RelatedOrganizationDetail.NumberOfInvoicesReceived,
-                RelatedCampaignId = opportunity.RelatedCampaignId,
-                RelatedCampaignName = _RelatedCampaign.CampaignName,
-                IsAssigned = opportunity.IsAssigned,
-                AssignedTo = opportunity.AssignedTo,
-                LastContactedDate = opportunity.LastContactDate,
-                LastContactedBy = opportunity.LastContactedBy,
-                RelatedSalesContacts = _RelatedSalesContacts,
-                RelatedOpportunityNotes = _RelatedOpportunityNotes,
-                RelatedOpportunityActivities = _RelatedOpportunityActivities,
-                Users = _Users,
-                SalesNoteTemplates = salesNoteTemplates,
-                RejectReasons = rejectReasonList,
-                RelatedLeadId = _RelatedLeadId
-            };
+                var OpportunityDetails = new OpportunityDetailViewModel()
+                {
+                    OpportunityId = id,
+                    OpportunityDescription = opportunity.OpportunityDescription,
+                    OpportunityStatus = opportunity.OpportunityStatus,
+                    OpportunityStatusString = opportunity.OpportunityStatusString,
+                    RejectReasson = opportunity.OpportunityRejectReasonString,
+                    OrganizationId = opportunity.RelatedOrganizationId,
+                    OrganizationName = _RelatedOrganization.SubjectName,
+                    OrganizationVAT = _RelatedOrganization.VAT,
+                    TelephoneNumber = _RelatedOrganizationDetail.TelephoneNumber,
+                    MobilePhoneNumber = _RelatedOrganizationDetail.MobilePhoneNumber,
+                    Email = _RelatedOrganizationDetail.EmailAddress,
+                    ERP = _RelatedOrganizationDetail.ERP,
+                    NumberOfInvoicesSent = _RelatedOrganizationDetail.NumberOfInvoicesSent,
+                    NumberOfInvoicesReceived = _RelatedOrganizationDetail.NumberOfInvoicesReceived,
+                    RelatedCampaignId = opportunity.RelatedCampaignId,
+                    RelatedCampaignName = _RelatedCampaign.CampaignName,
+                    IsAssigned = opportunity.IsAssigned,
+                    AssignedTo = opportunity.AssignedTo,
+                    LastContactedDate = opportunity.LastContactDate,
+                    LastContactedBy = opportunity.LastContactedBy,
+                    RelatedSalesContacts = _RelatedSalesContacts,
+                    RelatedOpportunityNotes = _RelatedOpportunityNotes,
+                    RelatedOpportunityActivities = _RelatedOpportunityActivities,
+                    Users = _Users,
+                    SalesNoteTemplates = salesNoteTemplates,
+                    RejectReasons = rejectReasonList,
+                    RelatedLeadId = _RelatedLeadId
+                };
 
-            return View(OpportunityDetails);
+                return View(OpportunityDetails);
+            }
+            catch (InvalidOperationException)
+            {
+                return View("ErrorNoLead");
+                throw;
+            }
         }
 
         // POST: Sales/Opportunities/AddNote
@@ -469,6 +477,11 @@ namespace MojCRM.Areas.Sales.Controllers
 
         public ActionResult ConvertToLead(ConvertToLeadHelper Model)
         {
+            var lastOpportunityNote = db.OpportunityNotes
+                .Where(on => on.RelatedOpportunityId == Model.OpportunityId)
+                .OrderByDescending(on => on.Id)
+                .First();
+
             db.Leads.Add(new Lead()
             {
                 LeadTitle = Model.OrganizationName,
@@ -496,6 +509,17 @@ namespace MojCRM.Areas.Sales.Controllers
             opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.LEAD;
             opportunity.UpdateDate = DateTime.Now;
             opportunity.LastUpdatedBy = User.Identity.Name;
+            db.SaveChanges();
+
+            var leadId = db.Leads.Where(l => l.RelatedCampaignId == Model.RelatedCampaignId && l.RelatedOpportunityId == Model.OpportunityId).Select(l => l.LeadId).First();
+            db.LeadNotes.Add(new LeadNote
+            {
+                RelatedLeadId = leadId,
+                User = lastOpportunityNote.User,
+                Note = "ZADNJA BILJEŠKA IZ PRODAJNE PRILIKE: " + lastOpportunityNote.Note,
+                InsertDate = DateTime.Now,
+                Contact = lastOpportunityNote.Contact
+            });
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }

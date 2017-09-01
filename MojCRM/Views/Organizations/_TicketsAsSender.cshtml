@@ -19,7 +19,7 @@
             @foreach (var Invoice in Model.TicketsAsSender)
             {
                 <tr>
-                    <td>@Invoice.Sender.SubjectName</td>
+                    <td>@Invoice.Receiver.SubjectName</td>
                     @if (Invoice.DocumentStatus == 10)
                     {
                         <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>

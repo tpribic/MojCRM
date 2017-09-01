@@ -707,7 +707,7 @@
 
 
 
-<h2 style="text-align:center"><strong>Detalji leda: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
+<h2 style="text-align:center"><strong>Detalji leada: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
 <br />
 @if (Model.IsAssigned == true)
 {
@@ -868,6 +868,7 @@
 
     function AddNote() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
@@ -888,6 +889,7 @@
         }
     function AddNoteInfo() {
         $(document).on("click", "#add-note-info", function (e) {
+        this.disabled = true;
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -906,6 +908,7 @@
     }
     function AddNoteNoActivity() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({

@@ -683,6 +683,7 @@
     <Content Include="fonts\lato-reg-webfont.eot" />
     <Content Include="fonts\lato-reg-webfont.ttf" />
     <Content Include="fonts\lato-reg-webfont.woff" />
+    <Content Include="Views\Shared\ErrorNoLead.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

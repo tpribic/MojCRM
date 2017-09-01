@@ -353,6 +353,54 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        // POST: Organizations/EditImportantOrganizationInfo
+        [Authorize(Roles = "Superadmin")]
+        public ActionResult EditImportantOrganizationInfo(EditImportantOrganizationInfo Model)
+        {
+            var organization = db.Organizations.Find(Model.MerId);
+
+            string LogString = "Agent " + User.Identity.Name + " je napravio izmjene na subjektu: "
+                + organization.SubjectName + ". Izmjenjeni su:";
+
+            if (Model.LegalForm != null)
+            {
+                if (Model.LegalForm != organization.LegalForm)
+                    LogString += " - pravni oblik iz " + organization.LegalForm + " u " + Model.LegalForm;
+                organization.LegalForm = (Organizations.LegalFormEnum)Model.LegalForm;
+            }
+            if (Model.OrganizationGroup != null)
+            {
+                if (Model.OrganizationGroup != organization.OrganizationDetail.OrganizationGroup)
+                    LogString += " - članstvo u grupaciji iz " + organization.OrganizationDetail.OrganizationGroup + " u " + Model.OrganizationGroup;
+                organization.OrganizationDetail.OrganizationGroup = (OrganizationGroupEnum)Model.OrganizationGroup;
+            }
+            LogString += ".";
+            organization.UpdateDate = DateTime.Now;
+            organization.LastUpdatedBy = User.Identity.Name;
+
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // POST: Organizations/CopyMainAddress
+        [HttpPost]
+        public JsonResult CopyMainAddress(EditOrganizationDetails Model)
+        {
+            var organization = db.OrganizationDetails.Find(Model.MerId);
+
+            organization.CorrespondenceAddress = Model.MainAddress;
+            organization.CorrespondencePostalCode = Model.MainPostalCode;
+            organization.CorrespondenceCity = Model.MainCity;
+            organization.Organization.UpdateDate = DateTime.Now;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK"});
+        }
+
         public void LogActivity(string ActivityDescription, string User, int ActivityReferenceId, ActivityLog.ActivityTypeEnum ActivityType)
         {
             db.ActivityLogs.Add(new ActivityLog

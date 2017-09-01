@@ -13,10 +13,10 @@
             new ListItem{ Value= "1", Text = "U kontaktu"},
             new ListItem{ Value= "4", Text = "Potrebno dogovoriti sastanak"},
             new ListItem{ Value= "5", Text = "Procesne poteškoće"},
-            new ListItem{ Value= "2", Text = "Kreiran lead"},
+            //new ListItem{ Value= "2", Text = "Kreiran lead"},
             new ListItem{ Value= "7", Text = "FINA korisnik"},
             new ListItem{ Value = "8", Text = "eFaktura korisnik"},
-            new ListItem{ Value= "3", Text = "Odbijeno"}
+            //new ListItem{ Value= "3", Text = "Odbijeno"}
         };
 }
 
@@ -966,6 +966,7 @@
 
     function AddNote() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
@@ -986,6 +987,7 @@
         }
     function AddNoteInfo() {
         $(document).on("click", "#add-note-info", function (e) {
+        this.disabled = true;
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -1004,6 +1006,7 @@
     }
     function AddNoteNoActivity() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({

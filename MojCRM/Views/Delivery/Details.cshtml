@@ -16,7 +16,8 @@
             new ListItem{ Value = "Filip Karmazen", Text = "Filip Karmazen"},
             new ListItem{ Value = "Katarina Ceković", Text = "Katarina Ceković"},
             new ListItem{ Value = "Viktor Jajtić", Text = "Viktor Jajtić"},
-            new ListItem{ Value = "Nikolina Ćosić", Text = "Nikolina Ćosić"}
+            new ListItem{ Value = "Nikolina Ćosić", Text = "Nikolina Ćosić"},
+            new ListItem{ Value = "Ivan Boban", Text = "Ivan Boban"}
         };
 }
 
@@ -956,7 +957,7 @@
         </div>
         <div class="col-md-4">
             <strong>@Html.DisplayNameFor(model => model.ReceiverName)</strong>
-            @Model.ReceiverName (@Model.ReceiverVAT)
+            <a href="@Url.RouteUrl(new { action = "Details", controller = "Organizations", area = "", Id = Model.ReceiverId })">@Model.ReceiverName (@Model.ReceiverVAT)</a>
         </div>
         <div class="col-md-4">
             <strong>@Html.DisplayNameFor(model => model.ReceiverEmail)</strong>
@@ -1115,6 +1116,7 @@
         };
         function PostmarkActivateBounce() {
             $(document).on("click", "#activateBounce", function (e) {
+                this.disabled = true;
                 e.preventDefault();
                 $.ajax({
                     method: 'POST',
