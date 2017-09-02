@@ -1043,9 +1043,8 @@ namespace MojCRM.Controllers
         // POST: Delivery/Contacts
         public ActionResult Contacts(string Organization, string ContactName, string Number, string Email)
         {
-            var Results = from c in db.Contacts
-                          where c.ContactType == Contact.ContactTypeEnum.DELIVERY
-                          select c;
+            var Results = db.Contacts.Where(c => c.ContactType == Contact.ContactTypeEnum.DELIVERY);
+
             if (!String.IsNullOrEmpty(Organization))
             {
                 Results = Results.Where(c => c.Organization.SubjectName.Contains(Organization) || c.Organization.VAT.Contains(Organization));
@@ -1063,7 +1062,7 @@ namespace MojCRM.Controllers
                 Results = Results.Where(c => c.Email.Contains(Email));
             }
 
-            return View(Results);
+            return View(Results.OrderByDescending(r => r.InsertDate));
         }
 
         protected override void Dispose(bool disposing)
