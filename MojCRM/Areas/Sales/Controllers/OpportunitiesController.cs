@@ -248,8 +248,17 @@ namespace MojCRM.Areas.Sales.Controllers
 
                 return View(OpportunityDetails);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Opportunities - Details",
+                    Parameters = id.ToString(),
+                    Message = @"Prilikom ulaska u detalje prodajne prilike javila se greška: " + ioe.Message,
+                    User = User.Identity.Name,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
                 return View("ErrorNoLead");
                 throw;
             }

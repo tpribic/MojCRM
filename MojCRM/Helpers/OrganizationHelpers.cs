@@ -28,5 +28,6 @@ namespace MojCRM.Helpers
         public int MerId { get; set; }
         public LegalFormEnum? LegalForm { get; set; }
         public OrganizationGroupEnum? OrganizationGroup { get; set; }
+        public ServiceProviderEnum? ServiceProvider { get; set; }
     }
 }

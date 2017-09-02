@@ -60,6 +60,43 @@
         </div>
     </div>
 }
+<!--Modal - ChangeServiceProvider-->
+@using (Html.BeginForm("EditImportantOrganizationInfo", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="changeServiceProvider" tabindex="-1" role="dialog" aria-labelledby="changeServiceProvider">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni podatke o informacijskom posredniku</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="legal-form">Pravni oblik:</label>
+                                <div id="legal-form">
+                                    @Html.DropDownList("ServiceProvider", Model.ServiceProviderDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            <div id="organization-id">
+                                @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
 <div class="col-md-3">
 
 </div>
@@ -80,6 +117,29 @@
         <div class="col-md-6" title="Broj ulaznih računa na mjesečnoj razini">
             <strong>Broj URA: </strong>@Model.OrganizationDetails.NumberOfInvoicesReceived
         </div>
+    </div>
+    <hr />
+    <div class="row">
+        <p class="col-md-11">Informacijski posrednik</p>
+        @if (User.IsInRole("Superadmin"))
+        {
+            <div class="col-md-1" title="Uredi informacijskog posrednika">
+                <a href="#changeServiceProvider" data-toggle="modal"><i class="fa fa-edit"></i></a>
+            </div>
+        }
+    </div>
+    <div class="row" title="Podaci o formalnoj razmjeni putem servisa Moj-eRačun">
+        <div class="col-md-6">
+            <strong>Ovaj subjekt za razmjenu eDokumenata koristi posrednika: </strong>
+        </div>
+        @if (Model.Organization.ServiceProvider == MojCRM.Models.Organizations.ServiceProviderEnum.MER)
+        {
+            <div class="col-md-6"><img src="~/Content/e_racun_logo_source.png" alt="Moj-eRačun korisnik" title="Moj-eRačun korisnik" style="width:90px; height:27px" /></div>;
+        }
+        @if (Model.Organization.ServiceProvider == MojCRM.Models.Organizations.ServiceProviderEnum.FINAB2G || Model.Organization.ServiceProvider == MojCRM.Models.Organizations.ServiceProviderEnum.FINAB2B)
+        {
+            <div class="col-md-6"><img src="~/Content/630px-FINA_Logo.svg.png" alt="FINA korisnik" title="FINA korisnik" style="width:85px; height:16px" /></div>;
+        }
     </div>
     <hr />
     <h5><img src="~/Content/e_racun_logo_source.png" style="width:100px; height:30px;" title="Podaci o korištenju servisa Moj-eRačun" /></h5>

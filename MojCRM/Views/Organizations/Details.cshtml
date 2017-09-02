@@ -93,4 +93,29 @@
         </div>
     </div>
 </div>
+<script>
+    function CopyMainAddress() {
+        $(document).on("click", "a.copy-main-address", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "CopyMainAddress", controller = "Organizations", area = "" })',
+            data: {
+                MerId: "@Model.Organization.MerId",
+                MainAddress: "@Model.OrganizationDetails.MainAddress",
+                MainPostalCode: "@Model.OrganizationDetails.MainPostalCode",
+                MainCity: "@Model.OrganizationDetails.MainCity"
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Uspješno ste kopirali adresu sjedišta u adresu dostave!");
+                else
+                    alert("Greška!");
+            },
+            dataType: 'json'
+        });
+        window.location.reload(true)
+    });
+    }
+</script>
 

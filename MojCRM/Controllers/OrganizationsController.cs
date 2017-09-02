@@ -374,6 +374,12 @@ namespace MojCRM.Controllers
                     LogString += " - članstvo u grupaciji iz " + organization.OrganizationDetail.OrganizationGroup + " u " + Model.OrganizationGroup;
                 organization.OrganizationDetail.OrganizationGroup = (OrganizationGroupEnum)Model.OrganizationGroup;
             }
+            if (Model.ServiceProvider != null)
+            {
+                if (Model.ServiceProvider != organization.ServiceProvider)
+                    LogString += " - informacijski posrednik iz " + organization.ServiceProvider + " u " + Model.ServiceProvider;
+                organization.ServiceProvider = (Organizations.ServiceProviderEnum)Model.ServiceProvider;
+            }
             LogString += ".";
             organization.UpdateDate = DateTime.Now;
             organization.LastUpdatedBy = User.Identity.Name;

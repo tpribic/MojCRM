@@ -249,5 +249,19 @@ namespace MojCRM.ViewModels
                 return organizationGroupList;
             }
         }
+        public IList<SelectListItem> ServiceProviderDropdown
+        {
+            get
+            {
+                var serviceProviderList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = "-- Odaberi informacijskog posrednika --"},
+                    new SelectListItem{ Value = "0", Text = "Moj-eRačun" },
+                    new SelectListItem{ Value = "1", Text = "FINA - B2G" },
+                    new SelectListItem{ Value = "2", Text = "FINA - B2B" }
+                };
+                return serviceProviderList;
+            }
+        }
     }
 }
