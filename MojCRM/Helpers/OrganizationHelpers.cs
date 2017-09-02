@@ -31,6 +31,7 @@ namespace MojCRM.Helpers
         public LegalFormEnum? LegalForm { get; set; }
         public OrganizationGroupEnum? OrganizationGroup { get; set; }
         public ServiceProviderEnum? ServiceProvider { get; set; }
+        public int? LegalStatus { get; set; }
     }
     public class AddOrganizationAttribute
     {

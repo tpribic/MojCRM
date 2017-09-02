@@ -8,7 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MojCRM.Controllers
+namespace MojCRM.Areas.Stats.Controllers
 {
     public class StatsController : Controller
     {

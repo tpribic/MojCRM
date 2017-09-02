@@ -263,6 +263,19 @@ namespace MojCRM.ViewModels
                 return serviceProviderList;
             }
         }
+        public IList<SelectListItem> LegalStatusDropdown
+        {
+            get
+            {
+                var legalStatusList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = "-- Odaberi pravni status --"},
+                    new SelectListItem{ Value = "0", Text = "Brisana" },
+                    new SelectListItem{ Value = "1", Text = "Aktivna" }
+                };
+                return legalStatusList;
+            }
+        }
     }
 
     public class AddOrganizationAttributeViewModel

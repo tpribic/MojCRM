@@ -1,4 +1,5 @@
-﻿using MojCRM.Helpers;
+﻿using MojCRM.Areas.Cooperation.Models;
+using MojCRM.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,6 +42,14 @@ namespace MojCRM.Models
         public string NumberOfInvoicesSent { get; set; }
         public string NumberOfInvoicesReceived { get; set; }
         public OrganizationGroupEnum OrganizationGroup { get; set; }
+
+        public int? MerSendSoftware { get; set; }
+        [ForeignKey("MerSendSoftware")]
+        public virtual MerIntegrationSoftware SendSoftware { get; set; }
+
+        public int? MerReceiveSoftware { get; set; }
+        [ForeignKey("MerReceiveSoftware")]
+        public virtual MerIntegrationSoftware ReceiveSoftware { get; set; }
 
         public virtual Organizations Organization { get; set; }
 

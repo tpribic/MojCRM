@@ -67,5 +67,9 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.LeadNote> LeadNotes { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.OrganizationAttribute> OrganizationAttributes { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Cooperation.Models.MerIntegrationSoftware> MerIntegrationSoftware { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Stats.Models.MerDocumentExchangeHistory> MerDocumentExchangeHistory { get; set; }
     }
 }

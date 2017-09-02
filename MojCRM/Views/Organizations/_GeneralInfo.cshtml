@@ -121,7 +121,7 @@
             <div class="modal-content" style="overflow:hidden">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>Izmijeni podatke o pravnom obliku / članstvu u grupaciji</h4>
+                    <h4>Izmijeni podatke o pravnom obliku i statusu / članstvu u grupaciji</h4>
                 </div>
                 <div class="modal-body changeEmail">
                     <div class="form-group">
@@ -131,6 +131,16 @@
                                 <label for="legal-form">Pravni oblik:</label>
                                 <div id="legal-form">
                                     @Html.DropDownList("LegalForm", Model.LegalFormDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="legal-status">Pravni status:</label>
+                                <div id="legal-status">
+                                    @Html.DropDownList("LegalStatus", Model.LegalStatusDropdown, new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>

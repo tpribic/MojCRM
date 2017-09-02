@@ -380,6 +380,23 @@ namespace MojCRM.Controllers
                     LogString += " - informacijski posrednik iz " + organization.ServiceProvider + " u " + Model.ServiceProvider;
                 organization.ServiceProvider = (Organizations.ServiceProviderEnum)Model.ServiceProvider;
             }
+            if (Model.LegalStatus != null)
+            {
+                if (Model.LegalStatus == 0)
+                {
+                    var temp = false;
+                    if (temp != organization.IsActive)
+                        LogString += " - pravni status iz aktivnog u brisano";
+                    organization.IsActive = false;
+                }
+                if (Model.LegalStatus == 1)
+                {
+                    var temp = true;
+                    if (temp != organization.IsActive)
+                        LogString += " - pravni status iz brisanog u aktivno";
+                    organization.IsActive = true;
+                }
+            }
             LogString += ".";
             organization.UpdateDate = DateTime.Now;
             organization.LastUpdatedBy = User.Identity.Name;

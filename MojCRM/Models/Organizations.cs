@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MojCRM.Areas.Cooperation.Models;
+using MojCRM.Areas.Stats.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +43,15 @@ namespace MojCRM.Models
         [Display(Name = "Pravni oblik")]
         public LegalFormEnum LegalForm { get; set; }
 
+        [Display(Name = "Status")]
+        public bool IsActive { get; set; }
+
+        [Display(Name = "Partner")]
+        public bool IsPartner { get; set; }
+
+        [Display(Name = "SLA")]
+        public bool HasSLA { get; set; }
+
         [Display(Name = "Informacijski posrednik")]
         public ServiceProviderEnum ServiceProvider { get; set; }
 
@@ -61,6 +72,8 @@ namespace MojCRM.Models
         public virtual OrganizationDetail OrganizationDetail { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
+        public virtual ICollection<MerIntegrationSoftware> IntegrationSoftware { get; set; }
+        public virtual ICollection<MerDocumentExchangeHistory> DocumentExchanges { get; set; }
 
         public enum LegalFormEnum
         {

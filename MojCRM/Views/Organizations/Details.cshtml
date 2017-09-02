@@ -10,7 +10,17 @@
     <div class="col-md-3">
         <h5>OIB: @Model.Organization.VAT</h5>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-3">
+        @if (Model.Organization.IsActive == true)
+        {
+            <span class="label label-success">Aktivna</span>
+        }
+        @if (Model.Organization.IsActive == false)
+        {
+            <span class="label label-danger">Brisana</span>
+        }
+    </div>
+    <div class="col-md-5">
         @foreach (var Attribute in Model.Attributes)
         {
             if (Attribute.AttributeClass == MojCRM.Models.OrganizationAttribute.AttributeClassEnum.MER)

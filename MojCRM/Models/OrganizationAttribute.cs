@@ -15,7 +15,7 @@ namespace MojCRM.Models
 
         public int OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
-        public Organizations Organization { get; set; }
+        public virtual Organizations Organization { get; set; }
         public AttributeClassEnum AttributeClass { get; set; }
         public AttributeTypeEnum AttributeType { get; set; }
         public bool IsActive { get; set; }

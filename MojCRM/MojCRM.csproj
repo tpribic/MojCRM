@@ -312,6 +312,8 @@
     <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
     <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
     <Compile Include="Areas\Campaigns\ViewModels\CreateCampaign.cs" />
+    <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
+    <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -351,6 +353,8 @@
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
     <Compile Include="Areas\Sales\ViewModels\LeadDetailViewModel.cs" />
     <Compile Include="Areas\Sales\ViewModels\OpportunityDetailViewModel.cs" />
+    <Compile Include="Areas\Stats\Models\MerDocumentExchangeHistory.cs" />
+    <Compile Include="Areas\Stats\StatsAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -359,7 +363,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
     <Compile Include="Controllers\OrganizationsController.cs" />
-    <Compile Include="Controllers\StatsController.cs" />
+    <Compile Include="Areas\Stats\Controllers\StatsController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Helpers\DeliveryHelpers.cs" />
     <Compile Include="Helpers\Helpers.cs" />
@@ -524,6 +528,10 @@
     <Compile Include="Migrations\201708271453120_Aug27Update.Designer.cs">
       <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709021823473_Sep2Update.cs" />
+    <Compile Include="Migrations\201709021823473_Sep2Update.Designer.cs">
+      <DependentUpon>201709021823473_Sep2Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
@@ -547,7 +555,7 @@
     <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\OrganizationsViewModels.cs" />
-    <Compile Include="ViewModels\StatsViewModels.cs" />
+    <Compile Include="Areas\Stats\ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.SqlServer.sql" />
@@ -684,6 +692,8 @@
     <Content Include="fonts\lato-reg-webfont.ttf" />
     <Content Include="fonts\lato-reg-webfont.woff" />
     <Content Include="Views\Shared\ErrorNoLead.cshtml" />
+    <Content Include="Areas\Cooperation\Views\web.config" />
+    <Content Include="Areas\Stats\Views\web.config" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -806,11 +816,11 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Contact\Create.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
-    <Content Include="Views\Stats\Index.cshtml" />
-    <Content Include="Views\Stats\CallCenterDaily.cshtml" />
-    <Content Include="Views\Stats\_CallCenterDailyQuery.cshtml" />
-    <Content Include="Views\Stats\Delivery.cshtml" />
-    <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Index.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\CallCenterDaily.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\_CallCenterDailyQuery.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Delivery.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\PersonalDailyActivities.cshtml" />
     <Content Include="Views\Delivery\Contacts.cshtml" />
     <Content Include="Views\Contact\Details.cshtml" />
     <Content Include="Views\Contact\Edit.cshtml" />
@@ -834,7 +844,10 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Campaigns\Views\Shared\" />
+    <Folder Include="Areas\Cooperation\Controllers\" />
+    <Folder Include="Areas\Cooperation\Views\Shared\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
+    <Folder Include="Areas\Stats\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -963,6 +976,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708271453120_Aug27Update.resx">
       <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709021823473_Sep2Update.resx">
+      <DependentUpon>201709021823473_Sep2Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

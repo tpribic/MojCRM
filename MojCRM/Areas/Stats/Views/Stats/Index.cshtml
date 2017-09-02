@@ -10,8 +10,7 @@
 <h4>Osobni izvještaji</h4>
 <div class="row">
     <div class="col-md-3">
-        <a href="@Url.RouteUrl(new { action = "PersonalDailyActivities", controller = "Stats", area = "", User.Identity.Name})"
-        <a href="@Url.Action("PersonalDailyActivities", "Stats")" class="btn btn-default btn-sm">
+        <a href="@Url.RouteUrl(new { action = "PersonalDailyActivities", controller = "Stats", area = "Stats", User.Identity.Name})" class="btn btn-default btn-sm">
             <i class="fa fa-book"></i>
             Osobni dnevnik
         </a>
@@ -23,7 +22,7 @@
     <h4>Statistike pozivnog centra</h4>
     <div class="row">
         <div class="col-md-3">
-            <a href="@Url.Action("CallCenterDaily", "Stats")" class="btn btn-default btn-sm">
+            <a href="@Url.RouteUrl(new { action = "CallCenterDaily", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
                 <i class="fa fa-headphones"></i>
                 Dnevna statistika poziva
             </a>
@@ -33,7 +32,7 @@
     <h4>Statistike odjela dostave</h4>
     <div class="row">
         <div class="col-md-3">
-            <a href="@Url.Action("Delivery", "Stats")" class="btn btn-default btn-sm">
+            <a href="@Url.RouteUrl(new { action = "Delivery", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
                 <i class="fa fa-ticket"></i>
                 Statistika kreiranih kartica
             </a>
