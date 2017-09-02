@@ -264,4 +264,46 @@ namespace MojCRM.ViewModels
             }
         }
     }
+
+    public class AddOrganizationAttributeViewModel
+    {
+        public int MerId { get; set; }
+        [Required(ErrorMessage = "Morate unijeti OIB ili naziv tvrtke")]
+        public string Organization { get; set; }
+        public IList<SelectListItem> ClassDropdown
+        {
+            get
+            {
+                var classList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = "-- Odaberi klasu atributa --"},
+                    new SelectListItem{ Value = "0", Text = "Opća" },
+                    new SelectListItem{ Value = "1", Text = "Moj-eRačun" },
+                    new SelectListItem{ Value = "2", Text = "FINA" },
+                    new SelectListItem{ Value = "3", Text = "eFAktura" }
+                };
+                return classList;
+            }
+        }
+        public IList<SelectListItem> TypeDropdown
+        {
+            get
+            {
+                var typeList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = "-- Odaberi tip atributa --"},
+                    new SelectListItem{ Value = "0", Text = "Opći" },
+                    new SelectListItem{ Value = "1", Text = "Pošiljatelj" },
+                    new SelectListItem{ Value = "2", Text = "Primatelj" },
+                    new SelectListItem{ Value = "3", Text = "Ugovorni korisnik" },
+                    new SelectListItem{ Value = "4", Text = "PrePaid korisnik" },
+                    new SelectListItem{ Value = "5", Text = "Moj-DMS korisnik" },
+                    new SelectListItem{ Value = "6", Text = "Moj-eArhiv korisnik" },
+                    new SelectListItem{ Value = "7", Text = "Partner - integrator" },
+                    new SelectListItem{ Value = "8", Text = "Partner - knjigovodstveni servis" }
+                };
+                return typeList;
+            }
+        }
+    }
 }

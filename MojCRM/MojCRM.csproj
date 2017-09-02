@@ -829,6 +829,7 @@
     <Content Include="Views\Organizations\_AdditionalInfo.cshtml" />
     <Content Include="Views\Organizations\_MerDeliveryData.cshtml" />
     <Content Include="Views\Organizations\_Contacts.cshtml" />
+    <Content Include="Views\Organizations\AddAttribute.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -391,6 +391,31 @@ namespace MojCRM.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        // GET: Organizations/AddAttribute
+        public ActionResult AddAttribute()
+        {
+            var model = new AddOrganizationAttributeViewModel();
+            return View(model);
+        }
+
+        // POST: Organizations/AddAttribute
+        [HttpPost]
+        [Authorize(Roles = "Superadmin")]
+        public ActionResult AddAttribute(AddOrganizationAttribute Model)
+        {
+            db.OrganizationAttributes.Add(new OrganizationAttribute
+            {
+                OrganizationId = Model.MerId,
+                AttributeClass = Model.AttributeClass,
+                AttributeType = Model.AttributeType,
+                IsActive = true,
+                AssignedBy = User.Identity.Name,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+            return RedirectToAction("Details", new { id = Model.MerId });
+        }
+
         // POST: Organizations/CopyMainAddress
         [HttpPost]
         public JsonResult CopyMainAddress(EditOrganizationDetails Model)
@@ -420,6 +445,42 @@ namespace MojCRM.Controllers
                 InsertDate = DateTime.Now
             });
             db.SaveChanges();
+        }
+
+        public JsonResult AutocompleteOrganization(string query)
+        {
+            try
+            {
+                var organizations = db.Organizations.Where(o =>
+                o.SubjectName.StartsWith(query) ||
+                o.VAT.StartsWith(query))
+                .Select(o => new { Organization = o.SubjectName + " - " + o.VAT, MerId = o.MerId})
+                .Take(10)
+                .ToList();
+
+                //var _model = new List<OrganizationSearch>();
+                //foreach (var org in organizations)
+                //    _model.Add(new OrganizationSearch
+                //    {
+                //        MerId = org.MerId,
+                //        OrganizationName = org.SubjectName + " - " + org.VAT
+                //    });
+                //var model = JsonConvert.SerializeObject(_model);
+                return Json(organizations, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Organizations - AutocompleteOrganization",
+                    Parameters = query,
+                    Message = @"Dogodila se greška prilikom pretraživanja tvrtki. Opis: " + ex.Message,
+                    User = User.Identity.Name,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
+                throw;
+            }
         }
 
         protected override void Dispose(bool disposing)
