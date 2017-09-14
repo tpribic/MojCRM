@@ -1,4 +1,5 @@
 ﻿using MojCRM.Areas.Cooperation.Models;
+using MojCRM.Areas.HelpDesk.Models;
 using MojCRM.Areas.Stats.Models;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,7 @@ namespace MojCRM.Models
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
         public virtual ICollection<MerIntegrationSoftware> IntegrationSoftware { get; set; }
         public virtual ICollection<MerDocumentExchangeHistory> DocumentExchanges { get; set; }
+        public virtual ICollection<AcquireEmail> AqcuireEmails { get; set; }
 
         public enum LegalFormEnum
         {

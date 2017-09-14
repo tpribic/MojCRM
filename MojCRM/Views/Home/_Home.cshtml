@@ -1,83 +1,166 @@
-﻿@model MojCRM.ViewModels.GeneralCampaignStatusViewModel
+﻿@model MojCRM.ViewModels.HomeViewModel
 @{
     ViewBag.Title = "Početna";
+    var startedCampaigns = @Model.Campaigns.Where(c => c.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.START).Count();
 }
 
-@if (User.IsInRole("Management") || User.IsInRole("Superadmin"))
-{
-    <div class="content">
-        <div class="main-header">
-            <h2>NADZORNA PLOČA</h2>
-            <em>Pregled ključnih statističkih pokazatelja</em>
+<div class="content">
+    <div class="main-header">
+        <h2>NADZORNA PLOČA</h2>
+        <em>Pregled ključnih statističkih pokazatelja</em>
+    </div>
+    <div class="main-content">
+        <div class="row">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <h3><i class="fa fa-phone"></i> Ažuriranje baza korisnika</h3> <em>- Popis otvorenih kampanja za ažuriranje baza korisnika</em>
+                    <div class="btn-group widget-header-toolbar">
+                        <a href="#" title="Fokusiraj" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
+                        <a href="#" title="Proširi/Sažmi" class="btn-borderless btn-toggle-expand"><i class="fa fa-chevron-up"></i></a>
+                        @*<a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>*@
+                    </div>
+                    @if (startedCampaigns != 0)
+                    {
+                        <div class="widget-header-toolbar">
+                            <div class="label label-danger" title="Broj kampanja koje su trenutno tek pokrenute"><i class="fa fa-warning"></i> @startedCampaigns pokrenuto</div>
+                        </div>
+                    }
+                </div>
+                <div class="widget-content">
+                    <table id="ticket-table" class="table table-sorting">
+                        <thead>
+                            <tr>
+                                <th>Naziv</th>
+                                <th>Opis</th>
+                                <th>Pokrenuo</th>
+                                <th>Status</th>
+                                <th>Početak</th>
+                                <th>Predviđeni završetak</th>
+                                <th>Završetak</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Campaign in Model.Campaigns)
+                            {
+                                <tr>
+                                    <td>@Campaign.Campaign.CampaignName</td>
+                                    <td>@Campaign.Campaign.CampaignDescription</td>
+                                    <td>@Campaign.Campaign.CampaignInitiatior</td>
+                                    @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.START)
+                                    {
+                                        <td><span class="label label-critical">@Campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.INPROGRESS)
+                                    {
+                                        <td><span class="label label-medium">@Campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.HOLD)
+                                    {
+                                        <td><span class="label label-low">@Campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.ENDED)
+                                    {
+                                        <td><span class="label label-low">@Campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.COMPLETED)
+                                    {
+                                        <td><span class="label label-primary">@Campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    <td>@Campaign.Campaign.CampaignStartDate.ToShortDateString()</td>
+                                    <td>@Campaign.Campaign.CampaignPlannedEndDate.ToShortDateString()</td>
+                                    <td>@Campaign.Campaign.CampaignEndDate</td>
+                                </tr>
+                                <tr>
+                                    <td title="Preostalo za obradu od ukupnog broja kreiranih predmeta">Status obrade: @Campaign.NotVerifiedCount / @Campaign.TotalCount</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="@Campaign.VerifiedPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Campaign.VerifiedPercent%;">
+                                                @Campaign.VerifiedPercent% dovršeno
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="main-content">
+        @if (User.IsInRole("Management") || User.IsInRole("Superadmin"))
+        {
+            <br />
             <div class="row">
                 <div class="col-md-12">
                     <div class="widget widget-hide-header">
                         <div class="widget-header">
-                            <h3>INA kampanja</h3>
+                            <h3>INA kampanja</h3> <em>- favoriziranje zaprimanja eRačuna kod korisnika</em>
+                            <div class="btn-group widget-header-toolbar">
+                                <a href="#" title="Fokusiraj" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
+                                <a href="#" title="Proširi/Sažmi" class="btn-borderless btn-toggle-expand"><i class="fa fa-chevron-up"></i></a>
+                                @*<a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>*@
+                            </div>
                         </div>
                         <div class="widget-content">
                             <div class="row">
                                 <div class="col-md-2">
                                     <p class="text-center">Broj kreiranih prodajnih prilika</p>
-                                    <p class="text-center"><strong>@Model.NumberOfOpportunitiesCreated</strong></p>
+                                    <p class="text-center"><strong>@Model.INACampaign.NumberOfOpportunitiesCreated</strong></p>
                                     <p class="text-center">Broj kreiranih leadova</p>
-                                    <p class="text-center"><strong>@Model.NumberOfLeadsCreated</strong></p>
+                                    <p class="text-center"><strong>@Model.INACampaign.NumberOfLeadsCreated</strong></p>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfOpportunitiesInProgressPercent" title="@Model.NumberOfOpportunitiesInProgress">
-                                        <span class="percent">@Model.NumberOfOpportunitiesInProgressPercent</span>
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.INACampaign.NumberOfOpportunitiesInProgressPercent" title="@Model.INACampaign.NumberOfOpportunitiesInProgress">
+                                        <span class="percent">@Model.INACampaign.NumberOfOpportunitiesInProgressPercent</span>
                                     </div>
                                     <p class="text-center">Broj prodajnih prilika u obradi</p>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart green" data-percent="@Model.NumberOfOpportunitiesUserPercent" title="@Model.NumberOfOpportunitiesRejected">
-                                        <span class="percent">@Model.NumberOfOpportunitiesUserPercent</span>
+                                    <div class="easy-pie-chart green" data-percent="@Model.INACampaign.NumberOfOpportunitiesUserPercent" title="@Model.INACampaign.NumberOfOpportunitiesRejected">
+                                        <span class="percent">@Model.INACampaign.NumberOfOpportunitiesUserPercent</span>
                                     </div>
                                     <p class="text-center">Broj postojećih korisnika</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart green" data-percent="@Model.NumberOfOpportunitiesToLeadPercent" title="@Model.NumberOfOpportunitiesToLead">
-                                        <span class="percent">@Model.NumberOfOpportunitiesToLeadPercent</span>
+                                    <div class="easy-pie-chart green" data-percent="@Model.INACampaign.NumberOfOpportunitiesToLeadPercent" title="@Model.INACampaign.NumberOfOpportunitiesToLead">
+                                        <span class="percent">@Model.INACampaign.NumberOfOpportunitiesToLeadPercent</span>
                                     </div>
                                     <p class="text-center">Broj kreiranih leadova</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfOpportunitiesRejectedPercent" title="@Model.NumberOfOpportunitiesRejected">
-                                        <span class="percent">@Model.NumberOfOpportunitiesRejectedPercent</span>
+                                    <div class="easy-pie-chart red" data-percent="@Model.INACampaign.NumberOfOpportunitiesRejectedPercent" title="@Model.INACampaign.NumberOfOpportunitiesRejected">
+                                        <span class="percent">@Model.INACampaign.NumberOfOpportunitiesRejectedPercent</span>
                                     </div>
                                     <p class="text-center">Broj odbijenih prodajnih prilika</p>
                                 </div>
                             </div>
                             <div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsInProgressPercent" title="@Model.NumberOfLeadsInProgress">
-                                        <span class="percent">@Model.NumberOfLeadsInProgressPercent</span>
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.INACampaign.NumberOfLeadsInProgressPercent" title="@Model.INACampaign.NumberOfLeadsInProgress">
+                                        <span class="percent">@Model.INACampaign.NumberOfLeadsInProgressPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova u obradi</p>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsMeetingsPercent" title="@Model.NumberOfLeadsMeetings">
-                                        <span class="percent">@Model.NumberOfLeadsMeetingsPercent</span>
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.INACampaign.NumberOfLeadsMeetingsPercent" title="@Model.INACampaign.NumberOfLeadsMeetings">
+                                        <span class="percent">@Model.INACampaign.NumberOfLeadsMeetingsPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova sa dogovorenim sastankom</p>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart yellow" data-percent="@Model.NumberOfLeadsQuotesPercent" title="@Model.NumberOfLeadsQuotes">
-                                        <span class="percent">@Model.NumberOfLeadsQuotesPercent</span>
+                                    <div class="easy-pie-chart yellow" data-percent="@Model.INACampaign.NumberOfLeadsQuotesPercent" title="@Model.INACampaign.NumberOfLeadsQuotes">
+                                        <span class="percent">@Model.INACampaign.NumberOfLeadsQuotesPercent</span>
                                     </div>
                                     <p class="text-center">Broj leadova sa poslanom ponudom</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart green" data-percent="@Model.NumberOfLeadsAcceptedPercent" title="@Model.NumberOfLeadsAccepted">
-                                        <span class="percent">@Model.NumberOfLeadsAcceptedPercent</span>
+                                    <div class="easy-pie-chart green" data-percent="@Model.INACampaign.NumberOfLeadsAcceptedPercent" title="@Model.INACampaign.NumberOfLeadsAccepted">
+                                        <span class="percent">@Model.INACampaign.NumberOfLeadsAcceptedPercent</span>
                                     </div>
                                     <p class="text-center">Broj realiziranih (prihvaćenih) ponuda</p>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="easy-pie-chart red" data-percent="@Model.NumberOfLeadsRejectedPercent" title="@Model.NumberOfLeadsRejected">
-                                        <span class="percent">@Model.NumberOfLeadsRejectedPercent</span>
+                                    <div class="easy-pie-chart red" data-percent="@Model.INACampaign.NumberOfLeadsRejectedPercent" title="@Model.INACampaign.NumberOfLeadsRejected">
+                                        <span class="percent">@Model.INACampaign.NumberOfLeadsRejectedPercent</span>
                                     </div>
                                     <p class="text-center">Broj odbijenih leadova</p>
                                 </div>
@@ -86,7 +169,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-}
-
+</div>

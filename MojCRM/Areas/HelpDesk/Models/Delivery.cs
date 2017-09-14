@@ -1,10 +1,11 @@
 ﻿using MojCRM.Helpers;
+using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MojCRM.Models
+namespace MojCRM.Areas.HelpDesk.Models
 {
     public class Delivery
     {

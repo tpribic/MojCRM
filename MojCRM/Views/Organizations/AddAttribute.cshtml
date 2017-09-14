@@ -13,7 +13,7 @@
 
     <h5>Odaberite tvrtku za dodavanje atributa</h5>
     @Html.Label("Tvrtka:")
-    @Html.TextBoxFor(m => m.Organization, new { @class = "form-control" })
+    @Html.TextBoxFor(m => m.Organization, new { @class = "form-control ui-autocomplete-input" })
     @Html.ValidationMessageFor(m => m.Organization)
     @Html.HiddenFor(m => m.MerId);
     <br />

@@ -105,6 +105,18 @@
                                 <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
                             </ul>
                         </li>
+                        @if (User.IsInRole("Guest"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-wrench"></i><span class="text">Podrška</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "AcquireEmail", area = "HelpDesk"})"><span class="text">Ažuriranje baza korisnika</span></a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <li>
@@ -113,8 +125,9 @@
                                     <i class="toggle-icon fa fa-angle-left"></i>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = ""})"><span class="text">Popis kartica za dostavu</span></a></li>
-                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = ""})"><span class="text">Popis kontakata za dostavu</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "AcquireEmail", area = "HelpDesk"})"><span class="text">Ažuriranje baza korisnika</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "HelpDesk"})"><span class="text">Popis kartica za dostavu</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = "HelpDesk"})"><span class="text">Popis kontakata za dostavu</span></a></li>
                                     @if (User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                                     {
                                     }

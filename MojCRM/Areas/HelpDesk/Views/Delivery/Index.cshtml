@@ -1,7 +1,7 @@
 ﻿@using GridMvc.Html
 @using System.Web.UI.WebControls
 
-@model IQueryable<MojCRM.Models.Delivery>
+@model IQueryable<MojCRM.Areas.HelpDesk.Models.Delivery>
 
 @{
     ViewBag.Title = "Dostava eRačuna";
@@ -297,19 +297,19 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     {
         if (m.DocumentStatus == 30 && m.IsAssigned == false)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
-        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", m.Id, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "HelpDesk", m.Id, returnUrl = Request.Url })" title="Provjeri status dokumenta"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
         <a data-mer-id="@Html.Raw(m.MerElectronicId)" data-ticket-id="@Html.Raw(m.Id)" href="#" class="remove-from-list-ajax" title="Ukloni s popisa za dostavu"><i style="color: red" class="fa fa-remove"></i></a>
     </span>;
 
         if (m.DocumentStatus == 30 && (m.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) || m.AssignedTo == User.Identity.Name))
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         if (m.DocumentStatus != 30)
             return @<span>
-        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", m.Id, m.ReceiverId, returnUrl = Request.Url })" title="Detalji kartice"><i class="fa fa-edit"></i></a>
     </span>;
 
         return @<span>
@@ -324,7 +324,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite ukloniti ovaj dokument iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                    url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "HelpDesk" })',
                     data: {
                         MerElectronicId: $(this).data("mer-id"),
                         TicketId: $(this).data("ticket-id")
@@ -343,7 +343,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "HelpDesk" })',
             data: {
                 _Agent: $(this).data("agent"),
                 _Email: $(this).data("email"),
@@ -369,7 +369,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         if (window.confirm("Ponovo pošalji obavijest o ovom dokumentu?"))
             $.ajax({
                 method: 'POST',
-                url: '@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = ""})',
+                url: '@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "HelpDesk" })',
                 data: {
                     Id: $(this).data("mer-id"),
                     Agent: $(this).data("@User.Identity.Name")
@@ -395,7 +395,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite ukloniti označene dokumente iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "" })',
+                    url: '@Url.RouteUrl(new { action = "RemoveAll", controller = "Delivery", area = "HelpDesk" })',
                     data: {
                         TicketIds: selectedItems
                     },
@@ -416,7 +416,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
+                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = "HelpDesk" })',
                     data: {
                         Id: $(this).data("ticket-id")
                     },
@@ -438,7 +438,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
             if (window.confirm("Jeste li sigurni da želite dodijeliti označene dokumente iz popisa za dostavu?"))
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "AssignAll", controller = "Delivery", area = "" })',
+                    url: '@Url.RouteUrl(new { action = "AssignAll", controller = "Delivery", area = "HelpDesk" })',
                     data: {
                         TicketIds: selectedItems
                     },

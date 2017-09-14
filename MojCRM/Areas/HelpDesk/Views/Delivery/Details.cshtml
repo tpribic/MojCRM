@@ -1,4 +1,4 @@
-﻿@model MojCRM.ViewModels.DeliveryDetailsViewModel
+﻿@model MojCRM.Areas.HelpDesk.ViewModels.DeliveryDetailsViewModel
 @using System.Web.UI.WebControls
 @using MojCRM.Helpers
 
@@ -532,7 +532,7 @@
                             {
                                 <td style="width:5%;">
                                     <div class="btn-group" style="display:inline-grid;" role="group">
-                                        <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, MerElectronicId = Document.Id, Model.ReceiverId, User.Identity.Name, IsTicket = false, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i></a>
+                                        <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "HelpDesk", Model.TicketId, MerElectronicId = Document.Id, Model.ReceiverId, User.Identity.Name, IsTicket = false, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i></a>
                                         <a id="changeEmailNoTicket" method="post" title="Izmijeni e-mail adresu primatelja" class="btn btn-sm btn-primary" data-mer-id="@Document.Id" style="margin:0px;" data-old-email="@Document.EmailPrimatelja" data-ticket-id="@Html.Raw(Model.TicketId)" data-receiver-id="@Html.Raw(Model.ReceiverId)" data-invoice-number="@Document.InterniBroj" onclick="javascript: ChangeEmailNoTicket()" data-dismiss="modal" data-toggle="modal" href="#ChangeEmailNoTicket"><i class="glyphicon glyphicon-envelope"></i></a>
                                     </div>
                                 </td>
@@ -722,8 +722,8 @@
                             <td>@Invoice.InvoiceNumber</td>
                             <td>@Invoice.SentDate.ToShortDateString()</td>
                             <td>
-                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
-                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", Invoice.Id, Invoice.ReceiverId, User.Identity.Name, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
+                                <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "HelpDesk", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
                                 <a data-mer-id="@Html.Raw(Invoice.MerElectronicId)" href="#" class="remove-from-list-ajax"><i style="color: red" class="fa fa-remove"></i></a>
                             </td>
                         </tr>
@@ -920,8 +920,8 @@
     <div class="row" style="text-align:center">
         <div class="col-md-12">
             <div class="btn-group" role="group">
-                <a href="@Url.RouteUrl(new { action = "UpdateStatusDetails", controller = "Delivery", area = "", Model.TicketId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> @*Osvježi status*@</a>
-                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
+                <a href="@Url.RouteUrl(new { action = "UpdateStatusDetails", controller = "Delivery", area = "HelpDesk", Model.TicketId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Osvježavanje statusa dokumenta - @Model.MerDocumentTypeIdString - @Model.InvoiceNumber"><i class="glyphicon glyphicon-refresh"></i> @*Osvježi status*@</a>
+                <a href="@Url.RouteUrl(new { action = "Resend", controller = "Delivery", area = "HelpDesk", Model.TicketId, Model.MerElectronicId, Model.ReceiverId, returnUrl = Request.Url })" class="btn btn-sm btn-primary" title="Ponovno slanje obavijesti o dostavi eRačuna"><i class="glyphicon glyphicon-share-alt"></i> @*Ponovi slanje*@</a>
                 <button type="button" title="Promjena e-mail adrese za dostavu eRačuna" class="btn btn-primary btn-sm" data-toggle="modal" href="#ChangeEmail"><i class="glyphicon glyphicon-envelope"></i></button>
                 <button type="button" title="Pregled povijesti razmjene eDokumenata putem servisa Moj-eRačun" class="btn btn-primary btn-sm" data-toggle="modal" href="#DocumentHistory"><i class="fa fa-history"></i></button>
             </div>
@@ -942,7 +942,7 @@
                 {
                     <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassing" href="#Reassing"><i class="fa fa-mail-reply-all"></i></button>
                 }
-                <a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                <a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "HelpDesk", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na inicijalni popis kartica"><i class="glyphicon glyphicon-arrow-left"></i></a>
             </div>
         </div>
     </div>
@@ -1017,7 +1017,7 @@
         if (window.confirm("Jeste li sigurni da želite ukloniti ovaj račun iz popisa za dostavu?"))
             $.ajax({
                 method: 'POST',
-                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "" })',
+                url: '@Url.RouteUrl(new { action = "Remove", controller = "Delivery", area = "HelpDesk" })',
                 data: {
                     MerElectronicId: $(this).data("mer-id")
                 },
@@ -1035,7 +1035,7 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
+            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "HelpDesk" })',
             data: {
                 ReceiverId: $(this).data("receiver-id"),
                 Contact: $(this).data("contact"),
@@ -1057,7 +1057,7 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "" })',
+            url: '@Url.RouteUrl(new { action = "AddDetail", controller = "Delivery", area = "HelpDesk" })',
             data: {
                 ReceiverId: $(this).data("receiver-id"),
                 Contact: $(this).data("contact"),
@@ -1079,7 +1079,7 @@
         e.preventDefault();
         $.ajax({
             method: 'POST',
-            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "" })',
+            url: '@Url.RouteUrl(new { action = "LogEmail", controller = "Delivery", area = "HelpDesk" })',
             data: {
                 _Email: $(this).data("email"),
                 _TicketId: $(this).data("ticket-id"),
@@ -1098,7 +1098,7 @@
                 if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
                     $.ajax({
                         method: 'POST',
-                        url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = ""})',
+                        url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = "HelpDesk" })',
                         data: {
                             Id: $(this).data("ticket-id"),
                             Agent: $(this).data("agent")
@@ -1120,7 +1120,7 @@
                 e.preventDefault();
                 $.ajax({
                     method: 'POST',
-                    url: '@Url.RouteUrl(new { action = "PostmarkActivateBounce", controller = "Delivery", area = ""})',
+                    url: '@Url.RouteUrl(new { action = "PostmarkActivateBounce", controller = "Delivery", area = "HelpDesk" })',
                     data: {
                         BounceId: $(this).data("bounce-id"),
                         TicketId: $(this).data("ticket-id")

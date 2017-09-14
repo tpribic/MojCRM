@@ -173,7 +173,7 @@
                 $.ajax({
                     contentType: 'application/json; charset=utf-8',
                     type: 'POST',
-                    url: '@Url.RouteUrl(new { action = "AssignManagement", controller = "Delivery", area = "" })',
+                    url: '@Url.RouteUrl(new { action = "AssignManagement", controller = "Delivery", area = "HelpDesk" })',
             data: things,
             success: function () {
                 if (data.Status === 'OK')

@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Areas.Campaigns.ViewModels;
+using MojCRM.Models;
 using MojCRM.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MojCRM.Controllers
 
         public ActionResult Index()
         {
-            var campaign = (from c in db.Campaigns
+            var campaignINA = (from c in db.Campaigns
                             where c.CampaignId == 1
                             select c).First();
             var opportunities = (from o in db.Opportunities
@@ -39,10 +40,10 @@ namespace MojCRM.Controllers
                 NumberOfLeadsAccepted = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.ACCEPTED).Count()
             };
 
-            var model = new GeneralCampaignStatusViewModel()
+            var modelINA = new GeneralCampaignStatusViewModel()
             {
                 RelatedCampaignId = 6,
-                RelatedCampaignName = campaign.CampaignName,
+                RelatedCampaignName = campaignINA.CampaignName,
                 NumberOfOpportunitiesCreated = countModel.NumberOfOpportunitiesCreated,
                 NumberOfOpportunitiesInProgress = countModel.NumberOfOpportunitiesInProgress,
                 NumberOfOpportunitiesInProgressPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesInProgress / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
@@ -63,6 +64,31 @@ namespace MojCRM.Controllers
                 NumberOfLeadsRejectedPercent = Math.Round((((decimal)countModel.NumberOfLeadsRejected / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
                 NumberOfLeadsAccepted = countModel.NumberOfLeadsAccepted,
                 NumberOfLeadsAcceptedPercent = Math.Round((((decimal)countModel.NumberOfLeadsAccepted / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+            };
+
+            var campaignsTemp = db.Campaigns.Where(c => c.CampaignType == Areas.Campaigns.Models.Campaign.CampaignTypeEnum.EMAILBASES);
+            var campaigns = new List<EmailBasesCampaignStatsViewModel>();
+            foreach (var campaign in campaignsTemp)
+            {
+                var newCampaign = new EmailBasesCampaignStatsViewModel()
+                {
+                    Campaign = campaign,
+                    TotalCount = db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count(),
+                    NotVerifiedCount = db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus != Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED).Count(),
+                    CreatedPercent = Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CREATED).Count() 
+                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
+                    CheckedPercent = Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED).Count()
+                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
+                    VerifiedPercent =  Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED).Count()
+                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
+                };
+                campaigns.Add(newCampaign);
+            }
+
+            var model = new HomeViewModel()
+            {
+                INACampaign = modelINA,
+                Campaigns = campaigns
             };
             return View(model);
         }

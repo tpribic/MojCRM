@@ -17,8 +17,11 @@ using MojCRM.Helpers;
 using PagedList;
 using System.Data.Entity.Infrastructure;
 using System.Text;
+using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Areas.HelpDesk.ViewModels;
+using MojCRM.Areas.HelpDesk.Helpers;
 
-namespace MojCRM.Controllers
+namespace MojCRM.Areas.HelpDesk.Controllers
 {
     public class DeliveryController : Controller
     {
@@ -827,7 +830,7 @@ namespace MojCRM.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (i.DokumentTypeId != 6 && i.DokumentTypeId != 632)).AsEnumerable(),
+                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (/*i.DokumentTypeId != 6 && -- This was removed from API on Moj-eRačun*/ i.DokumentTypeId != 632)).AsEnumerable(),
                     PostmarkOpenings = OpeningHistoryResponse,
                     PostmarkBounces = Bounces
                 };

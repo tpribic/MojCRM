@@ -38,13 +38,13 @@ namespace MojCRM.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<MojCRM.Models.Delivery> DeliveryTicketModels { get; set; }
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.Delivery> DeliveryTicketModels { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Contact> Contacts { get; set; }
 
-        public System.Data.Entity.DbSet<MojCRM.Models.DeliveryDetail> DeliveryDetails { get; set; }
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.DeliveryDetail> DeliveryDetails { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.LogError> LogError { get; set; }
 
@@ -71,5 +71,7 @@ namespace MojCRM.Models
         public System.Data.Entity.DbSet<MojCRM.Areas.Cooperation.Models.MerIntegrationSoftware> MerIntegrationSoftware { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Areas.Stats.Models.MerDocumentExchangeHistory> MerDocumentExchangeHistory { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.AcquireEmail> AcquireEmails { get; set; }
     }
 }

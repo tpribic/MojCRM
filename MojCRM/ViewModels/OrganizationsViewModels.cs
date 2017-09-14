@@ -1,4 +1,6 @@
-﻿using MojCRM.Areas.Sales.Models;
+﻿using MojCRM.Areas.Campaigns.Models;
+using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Areas.Sales.Models;
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace MojCRM.ViewModels
         public MerDeliveryDetails MerDeliveryDetails { get; set; }
         public IQueryable<Organizations> OrganizationBusinessUnits { get; set; }
         public IQueryable<Contact> Contacts { get; set; }
+        public IQueryable<Campaign> CampaignsFor { get; set; } //Campaigns where Campaign was created for them
+        public IQueryable<AcquireEmail> AcquireEmails { get; set; }
         public IQueryable<Opportunity> Opportunities { get; set; }
         public int OpportunitiesCount { get; set; }
         public IQueryable<Lead> Leads { get; set; }

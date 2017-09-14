@@ -21,5 +21,8 @@ namespace MojCRM.Models
         public int? TotalSent { get; set; }
         [Display(Name = "Ukupan broj primljenih dokumenata")]
         public int? TotalReceived { get; set; }
+
+        [Display(Name = "Prikupljena informacija o zaprimanju eRačuna")]
+        public string AcquiredReceivingInformation { get; set; }
     }
 }

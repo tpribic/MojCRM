@@ -42,7 +42,9 @@ namespace MojCRM
                 //"~/Scripts/bootstrap.min.js",
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-datepicker.min.js",
-                "~/Scripts/bootstrap-tour.custom.js"));
+                "~/Scripts/bootstrap-tour.custom.js",
+                "~/Scripts/bootstrap-progressbar.js",
+                "~/Scripts/bootstrap-multiselect.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/bootstrap.css",
@@ -71,7 +73,8 @@ namespace MojCRM
                 "~/Scripts/jquery.mapael.js",
                 "~/Scripts/king-chart-stat.js",
                 "~/Scripts/king-components.js"/*,
-                "~/Scripts/king-table.js"*/));
+                "~/Scripts/king-table.js"*/,
+                "~/Scripts/king-elements.js"));
         }
     }
 }

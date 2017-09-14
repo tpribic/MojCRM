@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using MojCRM.Areas.HelpDesk.Helpers;
 
 namespace MojCRM.Controllers
 {
@@ -43,6 +44,8 @@ namespace MojCRM.Controllers
                 MerDeliveryDetails = db.MerDeliveryDetails.Where(mdd => mdd.MerId == id).First(),
                 OrganizationBusinessUnits = db.Organizations.Where(o => o.VAT == organization.VAT && o.SubjectBusinessUnit != ""),
                 Contacts = db.Contacts.Where(c => c.OrganizationId == id),
+                CampaignsFor = db.Campaigns.Where(c => c.RelatedCompanyId == id),
+                AcquireEmails = db.AcquireEmails.Where(a => a.RelatedOrganizationId == id),
                 Opportunities = db.Opportunities.Where(op => op.RelatedOrganizationId == id),
                 OpportunitiesCount = db.Opportunities.Where(op => op.RelatedOrganizationId == id).Count(),
                 Leads = db.Leads.Where(l => l.RelatedOrganizationId == id),
@@ -267,13 +270,11 @@ namespace MojCRM.Controllers
 
         // POST: Organizations/EditImportantComment
         [HttpPost]
-        public ActionResult EditImportantComment(string Comment, string ReceiverId)
+        public ActionResult EditImportantComment(string Comment, int ReceiverId)
         {
-            int ReceiverIdInt = Int32.Parse(ReceiverId);
-
             var DetailForEdit = (from dd in db.MerDeliveryDetails
-                                   where dd.MerId == ReceiverIdInt
-                                   select dd).First();
+                                 where dd.MerId == ReceiverId
+                                 select dd).First();
 
             DetailForEdit.ImportantComments = Comment;
             db.SaveChanges();
@@ -342,6 +343,31 @@ namespace MojCRM.Controllers
                     LogString += " - poštanski broj iz " + organization.CorrespondencePostalCode + " u " + Model.CorrespondencePostalCode;
                 organization.CorrespondencePostalCode = Model.CorrespondencePostalCode;
             }
+            LogString += ".";
+            organization.Organization.UpdateDate = DateTime.Now;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // POST: Organizations/EditAcquiredReceivingInformation
+        public ActionResult EditAcquiredReceivingInformation(EditAcquiredReceivingInformationHelper model)
+        {
+            var organization = db.MerDeliveryDetails.Find(model.MerId);
+            string LogString = "Agent " + User.Identity.Name + " je izmjenio informaciju za preuzimanju na subjektu: "
+                + organization.Organization.SubjectName + ". Izmjenjeno je:";
+
+            if (!String.IsNullOrEmpty(model.NewAcquiredReceivingInformation))
+            {
+                if (!String.Equals(model.NewAcquiredReceivingInformation, organization.AcquiredReceivingInformation))
+                    LogString += " stara informacija o preuzimanju: " + organization.AcquiredReceivingInformation + ", nova informacija o preuzimanju " + model.NewAcquiredReceivingInformation;
+                organization.AcquiredReceivingInformation = model.NewAcquiredReceivingInformation;
+            }
+
             LogString += ".";
             organization.Organization.UpdateDate = DateTime.Now;
             organization.Organization.LastUpdatedBy = User.Identity.Name;

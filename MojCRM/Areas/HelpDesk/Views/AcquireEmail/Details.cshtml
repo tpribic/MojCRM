@@ -1,0 +1,72 @@
+﻿@model MojCRM.Areas.HelpDesk.Models.AcquireEmail
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2>Detalji unosa za ažuriranje baze korisnika</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <strong>Naziv kampanje: </strong>@Model.Campaign.CampaignName
+    </div>
+    <div class="col-md-6">
+        <strong>Subjekt u obradi: </strong>@Model.Organization.SubjectName
+    </div>
+</div>
+<hr />
+<h4>Uredi kontakt podatke</h4>
+@using (Html.BeginForm("EditOrganizationDetails", "Organizations", new { area = "" }, FormMethod.Post))
+{
+<div class="row">
+    <div class="col-md-6">
+        <label for="telephone-number">Broj telefona</label>
+        <div id="telephone-number">
+            @Html.TextBox("TelephoneNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = Model.Organization.OrganizationDetail.TelephoneNumber })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="mobile-phone-number">Broj mobitela</label>
+        <div id="mobile-phone-number">
+            @Html.TextBox("MobilePhoneNumber", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = Model.Organization.OrganizationDetail.MobilePhoneNumber })
+        </div>
+    </div>
+    <div class="hidden">
+        @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-sm btn-primary">Predaj izmjene</button>
+    </div>
+</div>
+}
+<hr />
+<h4>Uredi informaciju o preuzimanju</h4>
+@using (Html.BeginForm("EditAcquiredReceivingInformation", "Organizations", new { area = "" }, FormMethod.Post))
+{
+<div class="row">
+    <div class="col-md-6">
+        <label for="receiving-information">Informacija o preuzimanju eRačuna</label>
+        <div id="receiving-information">
+            @Html.TextBox("AcquiredReceivingInformation", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerDeliveryDetail.AcquiredReceivingInformation })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="new-receiving-information">Nova informacija o preuzimanju eRačuna</label>
+        <div id="new-receiving-information">
+            @Html.TextBox("NewAcquiredReceivingInformation", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Unesi novu informaciju o preuzimanju" })
+        </div>
+    </div>
+    <div class="hidden">
+        @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-sm btn-primary">Predaj izmjene</button>
+    </div>
+</div>
+}

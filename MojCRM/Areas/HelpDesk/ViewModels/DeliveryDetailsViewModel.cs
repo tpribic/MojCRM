@@ -1,4 +1,5 @@
-﻿using MojCRM.Helpers;
+﻿using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Helpers;
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MojCRM.ViewModels
+namespace MojCRM.Areas.HelpDesk.ViewModels
 {
     public class DeliveryDetailsViewModel
     {

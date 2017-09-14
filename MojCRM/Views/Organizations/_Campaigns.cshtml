@@ -1,0 +1,72 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    <h4>Kampanje pokrenute za ovu tvrtku</h4>
+    @if (Model.CampaignsFor.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Naziv</th>
+                <th>Opis</th>
+                <th>Pokrenuo</th>
+                <th>Tip</th>
+                <th>Status</th>
+                <th>Početak</th>
+                <th>Predviđeni završetak</th>
+                <th>Završetak</th>
+            </tr>
+            @foreach (var Campaign in Model.CampaignsFor)
+            {
+                <tr>
+                    <td>@Campaign.CampaignName</td>
+                    <td>@Campaign.CampaignDescription</td>
+                    <td>@Campaign.CampaignInitiatior</td>
+                    <td>@Campaign.CampaignTypeString</td>
+                    <td>@Campaign.CampaignStatusString</td>
+                    <td>@Campaign.CampaignStartDate.ToShortDateString()</td>
+                    <td>@Campaign.CampaignPlannedEndDate.ToShortDateString()</td>
+                    <td>@Campaign.CampaignEndDate</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Ova tvrtka nema kampanja pokrenutih u njeno ime</p>
+    }
+    <hr />
+    <h4>Kampanje u kojima je sudjelovala ova tvrtka</h4>
+    <br />
+    <h5><strong>Ažuriranje baze korisnika</strong></h5>
+    @if (Model.AcquireEmails.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Povezana kampanja</th>
+                <th>Status obrade</th>
+                <th>Zadnje kontaktirao</th>
+                <th>Datum zadnjeg kontakta</th>
+            </tr>
+            @foreach (var Entry in Model.AcquireEmails)
+            {
+                <tr>
+                    <td>@Entry.Campaign.CampaignName</td>
+                    <td>@Entry.AcquireEmailStatusString</td>
+                    <td>@Entry.LastContactedBy</td>
+                    <td>@Entry.LastContactDate</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Ova tvrtka nije sudjelovala u ažuriranju baza korisnika</p>
+    }
+</div>
+
+
