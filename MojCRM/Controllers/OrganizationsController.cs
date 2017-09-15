@@ -468,6 +468,7 @@ namespace MojCRM.Controllers
             organization.CorrespondenceAddress = Model.MainAddress;
             organization.CorrespondencePostalCode = Model.MainPostalCode;
             organization.CorrespondenceCity = Model.MainCity;
+            organization.CorrespondenceCountry = Model.MainCountry;
             organization.Organization.UpdateDate = DateTime.Now;
             organization.Organization.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();

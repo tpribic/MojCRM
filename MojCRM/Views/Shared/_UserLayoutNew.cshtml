@@ -79,32 +79,38 @@
                         <li class="active">
                             <a href="@Url.RouteUrl(new { action = "Index", controller = "Home", area = ""})"><i class="fa fa-home"></i><span class="text">Početna</span></a>
                         </li>
-                        <li>
-                            <a href="#" class="js-sub-menu-toggle">
-                                <i class="fa fa-list"></i><span class="text">Popisi</span>
-                                <i class="toggle-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu ">
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><span class="text">Tvrtke</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contact", area = ""})"><span class="text">Kontakti</span></a></li>
-                            </ul> 
-                        </li>
+                        @if (!User.IsInRole("Guest"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-list"></i><span class="text">Popisi</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu ">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><span class="text">Tvrtke</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contact", area = ""})"><span class="text">Kontakti</span></a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <li>
                                 <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns"})"><i class="fa fa-phone"></i><span class="text">Kampanje</span></a>
                             </li>
                         }
-                        <li>
-                            <a href="#" class="js-sub-menu-toggle">
-                                <i class="fa fa-money"></i><span class="text">Prodaja</span>
-                                <i class="toggle-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu">
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
-                            </ul>
-                        </li>
+                        @if (!User.IsInRole("Guest"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-money"></i><span class="text">Prodaja</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole("Guest"))
                         {
                             <li>

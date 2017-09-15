@@ -11,17 +11,30 @@
 <hr />
 @Html.Grid(Model).Named("PopisPredmetaZaAžuriranjeBazaKorisnika").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
-//columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => Html.CheckBox("checked", false, new { r.Id, @class = "checked", @id = "checkbox" }));
-columns.Add(r => r.Campaign.CampaignName).Encoded(false).Sanitized(false).Titled("Kampanja").Sortable(true);
-columns.Add(r => r.Organization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke za kontakt").RenderValueAs(v =>
-Html.RouteLink(v.Organization.SubjectName + " (" + v.Organization.VAT + ")", new { action = "Details", controller = "Organizations", area = "", id = v.RelatedOrganizationId }));
-columns.Add(r => r.Organization.OrganizationDetail.TelephoneNumber).Encoded(false).Sanitized(false).Titled("Kontakt brojevi telefona").RenderValueAs(v =>
-v.Organization.OrganizationDetail.TelephoneNumber + ";" + v.Organization.OrganizationDetail.MobilePhoneNumber);
-columns.Add(r => r.Organization.MerDeliveryDetail.AcquiredReceivingInformation).Encoded(false).Sanitized(false).Titled("Informacija o zaprimanju eRačuna").Sortable(false);
-columns.Add(r => r.AcquireEmailStatusString).Encoded(false).Sanitized(false).Titled("Status");
-columns.Add().Encoded(false).Sanitized(false).Titled("Aktivnosti").RenderValueAs(v =>
-{
-    return @<span>
+    //columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => Html.CheckBox("checked", false, new { r.Id, @class = "checked", @id = "checkbox" }));
+    columns.Add(r => r.Campaign.CampaignName).Encoded(false).Sanitized(false).Titled("Kampanja").Sortable(true);
+    columns.Add(r => r.Organization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke za kontakt").RenderValueAs(v =>
+    {
+    if (User.IsInRole("Guest"))
+    {
+        return @<span>
+     @v.Organization.SubjectName (@v.Organization.VAT)
+    </span>;
+    }
+    else
+    {
+        return @<span>
+        @Html.RouteLink(v.Organization.SubjectName + " (" + v.Organization.VAT + ")", new { action = "Details", controller = "Organizations", area = "", id = v.RelatedOrganizationId })
+    </span>;
+    }
+});
+    columns.Add(r => r.Organization.OrganizationDetail.TelephoneNumber).Encoded(false).Sanitized(false).Titled("Kontakt brojevi telefona").RenderValueAs(v =>
+    v.Organization.OrganizationDetail.TelephoneNumber + ";" + v.Organization.OrganizationDetail.MobilePhoneNumber);
+    columns.Add(r => r.Organization.MerDeliveryDetail.AcquiredReceivingInformation).Encoded(false).Sanitized(false).Titled("Informacija o zaprimanju eRačuna").Sortable(false);
+    columns.Add(r => r.AcquireEmailStatusString).Encoded(false).Sanitized(false).Titled("Status");
+    columns.Add().Encoded(false).Sanitized(false).Titled("Aktivnosti").RenderValueAs(v =>
+    {
+        return @<span>
     <a class="add-successfull-call" data-entity-id="@v.Id" title="Zabilježi uspješan poziv"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
     <a class="add-unsuccessfull-call" data-entity-id="@v.Id" title="Zabilježi neuspješan poziv"><i style="color: red" class="fa fa-phone-square"></i></a>
     </span>;

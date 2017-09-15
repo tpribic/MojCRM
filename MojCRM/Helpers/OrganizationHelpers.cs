@@ -6,6 +6,7 @@ using System.Web;
 using static MojCRM.Models.Organizations;
 using MojCRM.Models;
 using System.ComponentModel.DataAnnotations;
+using static MojCRM.Models.OrganizationDetail;
 
 namespace MojCRM.Helpers
 {
@@ -15,6 +16,7 @@ namespace MojCRM.Helpers
         public string MainAddress { get; set; }
         public int MainPostalCode { get; set; }
         public string MainCity { get; set; }
+        public CountryIdentificationCodeEnum MainCountry { get; set; }
         public string CorrespondenceAddress { get; set; }
         public int CorrespondencePostalCode { get; set; }
         public string CorrespondenceCity { get; set; }
