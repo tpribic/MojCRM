@@ -97,4 +97,9 @@
 <p>
     <a href="@Url.RouteUrl(new { action = "Edit", controller = "Campaigns", area = "Campaigns", id=Model.CampaignId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
     <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
+    @if (Model.CampaignType == MojCRM.Areas.Campaigns.Models.Campaign.CampaignTypeEnum.EMAILBASES)
+    {
+        <a href="@Url.RouteUrl(new { action = "ImportEntities", controller = "AcquireEmail", area = "HelpDesk", CampaignId = Model.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>
+        <a href="@Url.RouteUrl(new { action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", CampaignId = Model.CampaignId })" class="btn btn-sm btn-default" title="Preuzmi rezultate"><i class="fa fa-file-excel-o"></i></a>
+    }
 </p>

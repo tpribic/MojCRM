@@ -44,6 +44,8 @@ namespace MojCRM.Models
 
         [Display(Name = "Agent")]
         public string User { get; set; }
+        [Display(Name = "Zabrana kontakta")]
+        public bool DoNotCall { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 

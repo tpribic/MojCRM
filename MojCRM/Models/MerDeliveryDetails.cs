@@ -24,5 +24,7 @@ namespace MojCRM.Models
 
         [Display(Name = "Prikupljena informacija o zaprimanju eRačuna")]
         public string AcquiredReceivingInformation { get; set; }
+        public bool AcquiredReceivingInformationIsVerified { get; set; }
+        public bool RequiredPostalService { get; set; }
     }
 }
