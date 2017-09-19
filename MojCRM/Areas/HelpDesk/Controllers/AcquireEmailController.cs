@@ -138,21 +138,25 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
         public ActionResult ExportEntities(int CampaignId)
         {
-            var gv = new GridView();
-            gv.DataSource = GetEntityList(CampaignId);
-            gv.DataBind();
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=ExportedEntities.xls");
-            Response.ContentType = "application/ms-excel";
-            Response.Charset = "";
-            Response.ContentEncoding = new System.Text.UTF8Encoding();
-            StringWriter objStringWriter = new StringWriter();
-            HtmlTextWriter objHtmlTextWriter = new HtmlTextWriter(objStringWriter);
-            gv.RenderControl(objHtmlTextWriter);
-            Response.Output.Write(objStringWriter.ToString());
-            Response.Flush();
-            Response.End();
+            #region OldWay
+            //var gv = new GridView();
+            //gv.DataSource = GetEntityList(CampaignId);
+            //gv.DataBind();
+            //Response.ClearContent();
+            //Response.Buffer = true;
+            //Response.AddHeader("content-disposition", "attachment; filename=ExportedEntities.xls");
+            //Response.ContentType = "application/ms-excel";
+            //Response.Charset = "";
+            //Response.ContentEncoding = new System.Text.UTF8Encoding();
+            //StringWriter objStringWriter = new StringWriter();
+            //HtmlTextWriter objHtmlTextWriter = new HtmlTextWriter(objStringWriter);
+            //gv.RenderControl(objHtmlTextWriter);
+            //Response.Output.Write(objStringWriter.ToString());
+            //Response.Flush();
+            //Response.End();
+            #endregion
+
+
 
             return Redirect(Request.UrlReferrer.ToString());
         }

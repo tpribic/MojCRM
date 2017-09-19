@@ -19,7 +19,7 @@
 @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
 {
     <hr />
-    <h4>Statistike pozivnog centra</h4>
+    <h4>Statistike agenata</h4>
     <div class="row">
         <div class="col-md-3">
             <a href="@Url.RouteUrl(new { action = "CallCenterDaily", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
