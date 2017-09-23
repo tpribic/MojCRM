@@ -73,8 +73,8 @@ namespace MojCRM.Areas.Campaigns.Controllers
             {
                 CampaignName = Model.CampaignName,
                 CampaignDescription = Model.CampaignDescription,
-                CampaignInitiatior = User.Identity.Name,
-                RelatedCompanyId = 111955,
+                CampaignInitiatior = Model.CampaignInitiator,
+                RelatedCompanyId = Model.RelatedCompanyId,
                 CampaignType = Model.CampaignType,
                 CampaignStatus = Campaign.CampaignStatusEnum.START,
                 CampaignStartDate = Model.CampaignStartDate,

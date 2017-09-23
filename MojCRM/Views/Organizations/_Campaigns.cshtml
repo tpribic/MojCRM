@@ -2,11 +2,102 @@
 @{
     Layout = null;
 }
+
+
+<!--Modal - CreateCampaign-->
+@using (Html.BeginForm("Create", "Campaigns", new { area = "Campaigns"}, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal fade" id="createCampaign" tabindex="-1" role="dialog" aria-labelledby="createCampaign">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Kreiraj kampanju</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="campaign-name">Naziv kampanje:</label>
+                                <div id="campaign-name">
+                                    @Html.TextBox("CampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control col-md-12", @placeholder = "Naziv kampanje" })
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="campaign-description">Opis kampanje:</label>
+                                <div id="campaign-description">
+                                    @Html.TextArea("CampaignDescription", ViewBag.CurrentFilter as string, new { @class = "form-control col-md-12", @placeholder = "Opis kampanje" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="campaign-initiator">Kampanju pokreće:</label>
+                                <div id="campaign-initiator">
+                                    @Html.TextBox("CampaignInitiator", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="campaign-type">Tip kampanje:</label>
+                                <div id="campaign-type">
+                                    @Html.DropDownList("CampaignType", Model.CampaignTypeDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hidden">
+                                <div id="organization-id">
+                                    @Html.TextBox("RelatedCompanyId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="start-date">Datum pokretanja:</label>
+                                <div id="start-date">
+                                    @Html.TextBox("CampaignStartDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Datum pokretanja", @type = "text", @id = "start-date", @name = "start-date" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="planned-end-date">Planirani datum završetka:</label>
+                                <div id="planned-end-date">
+                                    @Html.TextBox("CampaignPlannedEndDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Planirani datum završetka", @type = "text", @id = "planned-end-date", @name = "planned-end-date" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Kreiraj kampanju</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
+
+
 <div class="col-md-3">
 
 </div>
 <div class="col-md-9">
-    <h4>Kampanje pokrenute za ovu tvrtku</h4>
+    <div class="row">
+        <div class="col-md-11">
+            <h4>Kampanje pokrenute za ovu tvrtku</h4>  
+        </div>
+        @if (User.IsInRole("Administrator") || User.IsInRole("Management") || User.IsInRole("Superadmin"))
+        {
+            <div class="col-md-1" title="Kreiraj kampanju">
+                <a href="#createCampaign" data-toggle="modal"><i class="fa fa-plus"></i></a>
+            </div>   
+        }
+    </div>
+    <br/>
     @if (Model.CampaignsFor.Count() != 0)
     {
         <table class="table">
@@ -19,18 +110,22 @@
                 <th>Početak</th>
                 <th>Predviđeni završetak</th>
                 <th>Završetak</th>
+                <th></th>
             </tr>
-            @foreach (var Campaign in Model.CampaignsFor)
+            @foreach (var campaign in Model.CampaignsFor)
             {
                 <tr>
-                    <td>@Campaign.CampaignName</td>
-                    <td>@Campaign.CampaignDescription</td>
-                    <td>@Campaign.CampaignInitiatior</td>
-                    <td>@Campaign.CampaignTypeString</td>
-                    <td>@Campaign.CampaignStatusString</td>
-                    <td>@Campaign.CampaignStartDate.ToShortDateString()</td>
-                    <td>@Campaign.CampaignPlannedEndDate.ToShortDateString()</td>
-                    <td>@Campaign.CampaignEndDate</td>
+                    <td>@campaign.CampaignName</td>
+                    <td>@campaign.CampaignDescription</td>
+                    <td>@campaign.CampaignInitiatior</td>
+                    <td>@campaign.CampaignTypeString</td>
+                    <td>@campaign.CampaignStatusString</td>
+                    <td>@campaign.CampaignStartDate.ToShortDateString()</td>
+                    <td>@campaign.CampaignPlannedEndDate.ToShortDateString()</td>
+                    <td>@campaign.CampaignEndDate</td>
+                    <td>
+                        <a href="@Url.RouteUrl(new {action = "Details", controller = "Campaigns", area = "Campaigns", id = @campaign.CampaignId, returnUrl = Request.Url})"><i class="fa fa-edit"></i></a>
+                    </td>
                 </tr>
             }
         </table>
@@ -39,9 +134,9 @@
     {
         <p>Ova tvrtka nema kampanja pokrenutih u njeno ime</p>
     }
-    <hr />
+    <hr/>
     <h4>Kampanje u kojima je sudjelovala ova tvrtka</h4>
-    <br />
+    <br/>
     <h5><strong>Ažuriranje baze korisnika</strong></h5>
     @if (Model.AcquireEmails.Count() != 0)
     {
@@ -52,13 +147,13 @@
                 <th>Zadnje kontaktirao</th>
                 <th>Datum zadnjeg kontakta</th>
             </tr>
-            @foreach (var Entry in Model.AcquireEmails)
+            @foreach (var entry in Model.AcquireEmails)
             {
                 <tr>
-                    <td>@Entry.Campaign.CampaignName</td>
-                    <td>@Entry.AcquireEmailStatusString</td>
-                    <td>@Entry.LastContactedBy</td>
-                    <td>@Entry.LastContactDate</td>
+                    <td>@entry.Campaign.CampaignName</td>
+                    <td>@entry.AcquireEmailStatusString</td>
+                    <td>@entry.LastContactedBy</td>
+                    <td>@entry.LastContactDate</td>
                 </tr>
             }
         </table>

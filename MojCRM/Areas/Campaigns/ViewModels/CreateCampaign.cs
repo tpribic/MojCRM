@@ -15,6 +15,9 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         [Display(Name = "Pokrenuo")]
         public string CampaignInitiator { get; set; }
 
+        [Display(Name = "ID tvrtke")]
+        public int RelatedCompanyId { get; set; }
+
         [Display(Name = "Tip")]
         public CampaignTypeEnum CampaignType { get; set; }
 

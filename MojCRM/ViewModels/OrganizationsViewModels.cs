@@ -2,11 +2,9 @@
 using MojCRM.Areas.HelpDesk.Models;
 using MojCRM.Areas.Sales.Models;
 using MojCRM.Models;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MojCRM.ViewModels
@@ -209,14 +207,14 @@ namespace MojCRM.ViewModels
             {
                 var legalFormList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi pravni oblik --"},
-                    new SelectListItem{ Value = "0", Text = "Nije navedeno" },
-                    new SelectListItem{ Value = "1", Text = "Društvo s ograničenom odgovornošću" },
-                    new SelectListItem{ Value = "2", Text = "Jednostavno društvo s ograničenom odgovornošću" },
-                    new SelectListItem{ Value = "3", Text = "Dioničko društvo" },
-                    new SelectListItem{ Value = "4", Text = "Ostala trgovačka društva (Komanditno društvo, Javno trgovačko društvo)" },
-                    new SelectListItem{ Value = "5", Text = "Obrt" },
-                    new SelectListItem{ Value = "6", Text = "Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.)" },
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi pravni oblik --"},
+                    new SelectListItem{ Value = "0", Text = @"Nije navedeno" },
+                    new SelectListItem{ Value = "1", Text = @"Društvo s ograničenom odgovornošću" },
+                    new SelectListItem{ Value = "2", Text = @"Jednostavno društvo s ograničenom odgovornošću" },
+                    new SelectListItem{ Value = "3", Text = @"Dioničko društvo" },
+                    new SelectListItem{ Value = "4", Text = @"Ostala trgovačka društva (Komanditno društvo, Javno trgovačko društvo)" },
+                    new SelectListItem{ Value = "5", Text = @"Obrt" },
+                    new SelectListItem{ Value = "6", Text = @"Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.)" },
                 };
                 return legalFormList;
             }
@@ -227,28 +225,28 @@ namespace MojCRM.ViewModels
             {
                 var organizationGroupList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi grupaciju --"},
-                    new SelectListItem{ Value = "0", Text = "Ne pripada grupaciji" },
-                    new SelectListItem{ Value = "1", Text = "Adris Grupa" },
-                    new SelectListItem{ Value = "2", Text = "Koncern Agrokor" },
-                    new SelectListItem{ Value = "3", Text = "Atlantic Grupa" },
-                    new SelectListItem{ Value = "4", Text = "Poslovna grupacija Auto Hrvatska" },
-                    new SelectListItem{ Value = "5", Text = "Babić Pekare" },
-                    new SelectListItem{ Value = "6", Text = "COMET" },
-                    new SelectListItem{ Value = "7", Text = "CIOS" },
-                    new SelectListItem{ Value = "8", Text = "CVH" },
-                    new SelectListItem{ Value = "9", Text = "Holcim Grupa" },
-                    new SelectListItem{ Value = "10", Text = "MSAN Grupa" },
-                    new SelectListItem{ Value = "11", Text = "NEXE Grupa" },
-                    new SelectListItem{ Value = "12", Text = "NTL Grupa" },
-                    new SelectListItem{ Value = "13", Text = "Pivac Grupa" },
-                    new SelectListItem{ Value = "14", Text = "Rijeka Holding" },
-                    new SelectListItem{ Value = "15", Text = "STRABAG" },
-                    new SelectListItem{ Value = "16", Text = "Styria Grupa" },
-                    new SelectListItem{ Value = "17", Text = "Koncern Sunce" },
-                    new SelectListItem{ Value = "18", Text = "Ultra Gros" },
-                    new SelectListItem{ Value = "19", Text = "Žito Grupa" },
-                    new SelectListItem{ Value = "20", Text = "Zagrebački Holding" }
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi grupaciju --"},
+                    new SelectListItem{ Value = "0", Text = @"Ne pripada grupaciji" },
+                    new SelectListItem{ Value = "1", Text = @"Adris Grupa" },
+                    new SelectListItem{ Value = "2", Text = @"Koncern Agrokor" },
+                    new SelectListItem{ Value = "3", Text = @"Atlantic Grupa" },
+                    new SelectListItem{ Value = "4", Text = @"Poslovna grupacija Auto Hrvatska" },
+                    new SelectListItem{ Value = "5", Text = @"Babić Pekare" },
+                    new SelectListItem{ Value = "6", Text = @"COMET" },
+                    new SelectListItem{ Value = "7", Text = @"CIOS" },
+                    new SelectListItem{ Value = "8", Text = @"CVH" },
+                    new SelectListItem{ Value = "9", Text = @"Holcim Grupa" },
+                    new SelectListItem{ Value = "10", Text = @"MSAN Grupa" },
+                    new SelectListItem{ Value = "11", Text = @"NEXE Grupa" },
+                    new SelectListItem{ Value = "12", Text = @"NTL Grupa" },
+                    new SelectListItem{ Value = "13", Text = @"Pivac Grupa" },
+                    new SelectListItem{ Value = "14", Text = @"Rijeka Holding" },
+                    new SelectListItem{ Value = "15", Text = @"STRABAG" },
+                    new SelectListItem{ Value = "16", Text = @"Styria Grupa" },
+                    new SelectListItem{ Value = "17", Text = @"Koncern Sunce" },
+                    new SelectListItem{ Value = "18", Text = @"Ultra Gros" },
+                    new SelectListItem{ Value = "19", Text = @"Žito Grupa" },
+                    new SelectListItem{ Value = "20", Text = @"Zagrebački Holding" }
             };
                 return organizationGroupList;
             }
@@ -259,10 +257,10 @@ namespace MojCRM.ViewModels
             {
                 var serviceProviderList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi informacijskog posrednika --"},
-                    new SelectListItem{ Value = "0", Text = "Moj-eRačun" },
-                    new SelectListItem{ Value = "1", Text = "FINA - B2G" },
-                    new SelectListItem{ Value = "2", Text = "FINA - B2B" }
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi informacijskog posrednika --"},
+                    new SelectListItem{ Value = "0", Text = @"Moj-eRačun" },
+                    new SelectListItem{ Value = "1", Text = @"FINA - B2G" },
+                    new SelectListItem{ Value = "2", Text = @"FINA - B2B" }
                 };
                 return serviceProviderList;
             }
@@ -273,11 +271,25 @@ namespace MojCRM.ViewModels
             {
                 var legalStatusList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi pravni status --"},
-                    new SelectListItem{ Value = "0", Text = "Brisana" },
-                    new SelectListItem{ Value = "1", Text = "Aktivna" }
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi pravni status --"},
+                    new SelectListItem{ Value = "0", Text = @"Brisana" },
+                    new SelectListItem{ Value = "1", Text = @"Aktivna" }
                 };
                 return legalStatusList;
+            }
+        }
+        public IList<SelectListItem> CampaignTypeDropdown
+        {
+            get
+            {
+                var campaignTypeList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi tip kampanje" },
+                    new SelectListItem{ Value = "1", Text = @"Ažuriranje baza kupaca" },
+                    new SelectListItem{ Value = "2", Text = @"Prodajna kampanja" },
+                    new SelectListItem{ Value = "3", Text = @"CRM kampanja" }
+                };
+                return campaignTypeList;
             }
         }
     }
@@ -293,11 +305,11 @@ namespace MojCRM.ViewModels
             {
                 var classList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi klasu atributa --"},
-                    new SelectListItem{ Value = "0", Text = "Opća" },
-                    new SelectListItem{ Value = "1", Text = "Moj-eRačun" },
-                    new SelectListItem{ Value = "2", Text = "FINA" },
-                    new SelectListItem{ Value = "3", Text = "eFAktura" }
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi klasu atributa --"},
+                    new SelectListItem{ Value = "0", Text = @"Opća" },
+                    new SelectListItem{ Value = "1", Text = @"Moj-eRačun" },
+                    new SelectListItem{ Value = "2", Text = @"FINA" },
+                    new SelectListItem{ Value = "3", Text = @"eFAktura" }
                 };
                 return classList;
             }
@@ -308,16 +320,16 @@ namespace MojCRM.ViewModels
             {
                 var typeList = new List<SelectListItem>
                 {
-                    new SelectListItem{ Value = null, Text = "-- Odaberi tip atributa --"},
-                    new SelectListItem{ Value = "0", Text = "Opći" },
-                    new SelectListItem{ Value = "1", Text = "Pošiljatelj" },
-                    new SelectListItem{ Value = "2", Text = "Primatelj" },
-                    new SelectListItem{ Value = "3", Text = "Ugovorni korisnik" },
-                    new SelectListItem{ Value = "4", Text = "PrePaid korisnik" },
-                    new SelectListItem{ Value = "5", Text = "Moj-DMS korisnik" },
-                    new SelectListItem{ Value = "6", Text = "Moj-eArhiv korisnik" },
-                    new SelectListItem{ Value = "7", Text = "Partner - integrator" },
-                    new SelectListItem{ Value = "8", Text = "Partner - knjigovodstveni servis" }
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi tip atributa --"},
+                    new SelectListItem{ Value = "0", Text = @"Opći" },
+                    new SelectListItem{ Value = "1", Text = @"Pošiljatelj" },
+                    new SelectListItem{ Value = "2", Text = @"Primatelj" },
+                    new SelectListItem{ Value = "3", Text = @"Ugovorni korisnik" },
+                    new SelectListItem{ Value = "4", Text = @"PrePaid korisnik" },
+                    new SelectListItem{ Value = "5", Text = @"Moj-DMS korisnik" },
+                    new SelectListItem{ Value = "6", Text = @"Moj-eArhiv korisnik" },
+                    new SelectListItem{ Value = "7", Text = @"Partner - integrator" },
+                    new SelectListItem{ Value = "8", Text = @"Partner - knjigovodstveni servis" }
                 };
                 return typeList;
             }
