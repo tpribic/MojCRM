@@ -105,45 +105,89 @@
                     <div class="widget-content">
                         <table id="my-campaign-table" class="table table-sorting">
                             <thead>
-                                <tr>
-                                    <th>Naziv kampanje</th>
-                                    <th>Status kampanje</th>
-                                    <th>Moja uloga</th>
-                                </tr>
+                            <tr>
+                                <th>Naziv kampanje</th>
+                                <th>Status kampanje</th>
+                                <th>Moja uloga</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach (var campaign in Model.CampaignMembers)
-                                {
-                                    <tr>
-                                        <td>@campaign.Campaign.CampaignName</td>
-                                        @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.START)
-                                        {
-                                            <td><span class="label label-critical">@campaign.Campaign.CampaignStatusString</span></td>
-                                        }
-                                        @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.INPROGRESS)
-                                        {
-                                            <td><span class="label label-medium">@campaign.Campaign.CampaignStatusString</span></td>
-                                        }
-                                        @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.HOLD)
-                                        {
-                                            <td><span class="label label-low">@campaign.Campaign.CampaignStatusString</span></td>
-                                        }
-                                        @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.ENDED)
-                                        {
-                                            <td><span class="label label-low">@campaign.Campaign.CampaignStatusString</span></td>
-                                        }
-                                        @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.COMPLETED)
-                                        {
-                                            <td><span class="label label-primary">@campaign.Campaign.CampaignStatusString</span></td>
-                                        }
-                                        <td>@campaign.MemberRoleString</td>
-                                    </tr>
-                                }
+                            @foreach (var campaign in Model.CampaignMembers)
+                            {
+                                <tr>
+                                    <td>@campaign.Campaign.CampaignName</td>
+                                    @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.START)
+                                    {
+                                        <td><span class="label label-critical">@campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.INPROGRESS)
+                                    {
+                                        <td><span class="label label-medium">@campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.HOLD)
+                                    {
+                                        <td><span class="label label-low">@campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.ENDED)
+                                    {
+                                        <td><span class="label label-low">@campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    @if (campaign.Campaign.CampaignStatus == Campaign.CampaignStatusEnum.COMPLETED)
+                                    {
+                                        <td><span class="label label-primary">@campaign.Campaign.CampaignStatusString</span></td>
+                                    }
+                                    <td>@campaign.MemberRoleString</td>
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            @if (Model.AgentActivities.Count != 0 && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+            {
+                <div class="col-md-6">
+                    <div class="widget widget-table">
+                        <div class="widget-header">
+                            <h3><i class="fa fa-book"></i> Aktivnosti</h3> <em>- Popis današnjih aktivnosti agenata</em>
+                            <div class="btn-group widget-header-toolbar">
+                                <a href="#" title="Fokusiraj" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
+                                <a href="#" title="Proširi/Sažmi" class="btn-borderless btn-toggle-expand"><i class="fa fa-chevron-up"></i></a>
+                                @*<a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>*@
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <table id="activities-table" class="table table-sorting">
+                                <thead>
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th title="Broj uspješnih poziva">UP</th>
+                                        <th title="Neuspješni pozivi">NP</th>
+                                        <th title="Broj izmijenjenih e-mailov adresa za dostavu eDokumenata">IMA</th>
+                                        <th title="Broj pononvo poslanih obavijesti o dostavi eDokumenata">PP</th>
+                                        <th title="Broj poslanih e-mail poruka korisnicima">PM</th>
+                                        <th title="Broj dodijeljenih kartica za dostavu eDokumenata">DK</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var agent in Model.AgentActivities)
+                                    {
+                                        <tr>
+                                            <td>@agent.Agent</td>
+                                            <td>@agent.NumberSuccessfulCalls</td>
+                                            <td>@agent.NumberUnsuccessfulCalls</td>
+                                            <td>@agent.NumberMailchange</td>
+                                            <td>@agent.NumberResend</td>
+                                            <td>@agent.NumberMail</td>
+                                            <td>@agent.NumberTicketsAssigned</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         @if (User.IsInRole("Management") || User.IsInRole("Superadmin"))
         {

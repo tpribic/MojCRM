@@ -20,6 +20,7 @@ using System.Text;
 using MojCRM.Areas.HelpDesk.Models;
 using MojCRM.Areas.HelpDesk.ViewModels;
 using MojCRM.Areas.HelpDesk.Helpers;
+using MojCRM.Areas.Stats.ViewModels;
 
 namespace MojCRM.Areas.HelpDesk.Controllers
 {

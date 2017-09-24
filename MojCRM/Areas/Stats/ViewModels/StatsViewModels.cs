@@ -1,15 +1,11 @@
-﻿using MojCRM.Models;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
-using static MojCRM.Models.ActivityLog;
+using MojCRM.Models;
 
-namespace MojCRM.ViewModels
+namespace MojCRM.Areas.Stats.ViewModels
 {
     public class DailyDelivery
     {
@@ -41,7 +37,6 @@ namespace MojCRM.ViewModels
                               }).ToList();
                 return agents;
             }
-            set { }
         }
     }
     public class AssigningTickets
@@ -71,7 +66,7 @@ namespace MojCRM.ViewModels
     public class CallCenterDailyByDepartment
     {
         [Display(Name = "Odjel")]
-        public DepartmentEnum Department { get; set; }
+        public ActivityLog.DepartmentEnum Department { get; set; }
         [Display(Name = "Zbroj uspješnih poziva")]
         public int NumberSuccessfulCalls { get; set; }
         [Display(Name = "Zbroj neuspješnih poziva")]
@@ -90,9 +85,9 @@ namespace MojCRM.ViewModels
             {
                 switch (Department)
                 {
-                    case DepartmentEnum.MojCRM: return "Moj-CRM";
-                    case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
-                    case DepartmentEnum.Sales: return "Odjel prodaje";
+                    case ActivityLog.DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                    case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
                 }
                 return "Odjel";
             }
@@ -114,6 +109,40 @@ namespace MojCRM.ViewModels
         public int? SumResend { get; set; }
         [Display(Name = "Zaključane kartice (Odjel dostave)")]
         public int? SumTicketsAssigned { get; set; }
+
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public IList<CallCenterDaily> GetActivitiesForDashboard()
+        {
+            var referenceDate = DateTime.Now.Date;
+            var activities = new List<CallCenterDaily>();
+            var successfulCalls = _db.ActivityLogs.Where(a => (a.InsertDate >= referenceDate) && (a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT));
+            var unsuccessfulCalls = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL));
+            var mailChange = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.MAILCHANGE));
+            var resend = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.RESEND));
+            var deliveryMail = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL));
+            var ticketsAssigned = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.TICKETASSIGN));
+
+            var agentActivities = (from a in _db.ActivityLogs
+                               where (a.InsertDate >= referenceDate)
+                               group a by a.User into ga
+                               select ga).ToList();
+            foreach (var day in agentActivities)
+            {
+                var dailyActivities = new CallCenterDaily
+                {
+                    Agent = day.Key,
+                    NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                    NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                    NumberMailchange = mailChange.Count(a => a.User == day.Key),
+                    NumberResend = resend.Count(a => a.User == day.Key),
+                    NumberMail = deliveryMail.Count(a => a.User == day.Key),
+                    NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key)
+                };
+                activities.Add(dailyActivities);
+            }
+
+            return activities;
+        }
     }
 
     public class PersonalDailyActivitiesViewModel
@@ -136,15 +165,14 @@ namespace MojCRM.ViewModels
         {
             get
             {
-                var ListAgents = (from u in Agents
+                var listAgents = (from u in Agents
                                   select new SelectListItem()
                                   {
                                       Text = u.UserName,
                                       Value = u.UserName
                                   }).ToList();
-                return ListAgents;
+                return listAgents;
             }
-            set { }
         }
     }
 

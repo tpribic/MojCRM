@@ -7,6 +7,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MojCRM.Areas.Stats.ViewModels;
 
 namespace MojCRM.Areas.Stats.Controllers
 {

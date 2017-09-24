@@ -1,4 +1,4 @@
-﻿@model MojCRM.ViewModels.CallCenterDailyStatsViewModel
+﻿@model MojCRM.Areas.Stats.ViewModels.CallCenterDailyStatsViewModel
 @{
     ViewBag.Title = "Dnevna statistika poziva pozivnog centra";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
@@ -64,15 +64,15 @@
                 <th>Ispravak mailova (Odjel dostave)</th>
                 <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
             </tr>
-            @foreach (var Department in Model.ActivitiesByDepartment)
+            @foreach (var department in Model.ActivitiesByDepartment)
             {
                 <tr>
-                    <td>@Department.DepartmentString</td>
-                    <td>@Department.NumberSuccessfulCalls</td>
-                    <td>@Department.NumberUnsuccessfulCalls</td>
-                    <td>@Department.NumberMail</td>
-                    <td>@Department.NumberMailchange</td>
-                    <td>@Department.NumberResend</td>
+                    <td>@department.DepartmentString</td>
+                    <td>@department.NumberSuccessfulCalls</td>
+                    <td>@department.NumberUnsuccessfulCalls</td>
+                    <td>@department.NumberMail</td>
+                    <td>@department.NumberMailchange</td>
+                    <td>@department.NumberResend</td>
                 </tr>
             }
             <tr></tr>
@@ -92,16 +92,16 @@
                     <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
                     <th>Dodijeljene kartice (Odjel dostave)</th>
                 </tr>
-                @foreach (var Activity in Model.Activities)
+                @foreach (var activity in Model.Activities)
             {
                     <tr>
-                        <td>@Activity.Agent</td>
-                        <td>@Activity.NumberSuccessfulCalls</td>
-                        <td>@Activity.NumberUnsuccessfulCalls</td>
-                        <td>@Activity.NumberMail</td>
-                        <td>@Activity.NumberMailchange</td>
-                        <td>@Activity.NumberResend</td>
-                        <td>@Activity.NumberTicketsAssigned</td>
+                        <td>@activity.Agent</td>
+                        <td>@activity.NumberSuccessfulCalls</td>
+                        <td>@activity.NumberUnsuccessfulCalls</td>
+                        <td>@activity.NumberMail</td>
+                        <td>@activity.NumberMailchange</td>
+                        <td>@activity.NumberResend</td>
+                        <td>@activity.NumberTicketsAssigned</td>
                     </tr>
                 }
                 <tr></tr>
