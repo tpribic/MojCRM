@@ -1,8 +1,6 @@
 ﻿using MojCRM.Areas.Campaigns.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using MojCRM.Areas.Campaigns.Models;
 
 namespace MojCRM.ViewModels
 {
@@ -10,5 +8,6 @@ namespace MojCRM.ViewModels
     { 
         public GeneralCampaignStatusViewModel INACampaign { get; set; }
         public IList<EmailBasesCampaignStatsViewModel> Campaigns { get; set; }
+        public IList<CampaignMember> CampaignMembers { get; set; }
     }
 }

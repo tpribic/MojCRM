@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using MojCRM.Models;
 
 namespace MojCRM.Areas.Campaigns.Models
 {
@@ -44,6 +47,13 @@ namespace MojCRM.Areas.Campaigns.Models
                 }
                 return "Rola";
             }
+        }
+
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public IList<CampaignMember> GetCamapigns(string agent)
+        {
+            var model = _db.CampaignMembers.Where(cm => cm.MemberName == agent).ToList();
+            return model;
         }
     }
 }

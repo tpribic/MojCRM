@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using MojCRM.Areas.Campaigns.Models;
 
 namespace MojCRM.Controllers
 {
@@ -67,12 +68,14 @@ namespace MojCRM.Controllers
             };
 
             var campaignsModel = new EmailBasesCampaignStatsViewModel();
-            var campaigns = campaignsModel.GetModels();
+            var campaignMemberModel = new CampaignMember();
+
 
             var model = new HomeViewModel()
             {
                 INACampaign = modelINA,
-                Campaigns = campaigns
+                Campaigns = campaignsModel.GetModels(),
+                CampaignMembers = campaignMemberModel.GetCamapigns(User.Identity.Name)
             };
             return View(model);
         }

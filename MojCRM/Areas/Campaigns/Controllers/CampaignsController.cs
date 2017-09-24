@@ -27,6 +27,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
         public ActionResult Details(int id)
         {
             Campaign campaign = db.Campaigns.Find(id);
+            var model = new CampaignDetailsViewModel();
             var campaignBasesStats = new EmailBasesCampaignStatsViewModel();
             var campaignSalesStats = new SalesCampaignStatsViewModel();
             if (campaign == null)
@@ -37,14 +38,27 @@ namespace MojCRM.Areas.Campaigns.Controllers
             List<CampaignMember> list = new List<CampaignMember>();
             foreach (var member in db.CampaignMembers.Where(cm => cm.CampaignId == id))
                 list.Add(member);
-            var model = new CampaignDetailsViewModel
+            switch (campaign.CampaignType)
             {
-                Campaign = campaign,
-                EmailBasesStats = campaignBasesStats.GetModel(id),
-                SalesStats = campaignSalesStats.GetModel(id),
-                AssignedMembers = list
-            };
-
+                case Campaign.CampaignTypeEnum.EMAILBASES:
+                    model = new CampaignDetailsViewModel
+                    {
+                        Campaign = campaign,
+                        EmailBasesStats = campaignBasesStats.GetModel(id),
+                        SalesStats = null,
+                        AssignedMembers = list
+                    };
+                    return View(model);
+                case Campaign.CampaignTypeEnum.SALES:
+                    model = new CampaignDetailsViewModel
+                    {
+                        Campaign = campaign,
+                        EmailBasesStats = null,
+                        SalesStats = campaignSalesStats.GetModel(id),
+                        AssignedMembers = list
+                    };
+                    return View(model);
+            }
             return View(model);
         }
 
