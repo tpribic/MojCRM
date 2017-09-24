@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MojCRM.Areas.Campaigns.Models
 {
@@ -21,7 +18,7 @@ namespace MojCRM.Areas.Campaigns.Models
         public string MemberName { get; set; }
         public MemberRoleEnum MemberRole { get; set; }
         public DateTime InsertDate { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         public enum MemberRoleEnum
         {
@@ -33,6 +30,20 @@ namespace MojCRM.Areas.Campaigns.Models
 
             [Description("Član")]
             MEMBER
+        }
+
+        public string MemberRoleString
+        {
+            get
+            {
+                switch (MemberRole)
+                {
+                    case MemberRoleEnum.HEAD: return "Nositelj kampanje";
+                    case MemberRoleEnum.SUPERVISOR: return "Nadzornik kampanje";
+                    case MemberRoleEnum.MEMBER: return "Član kampanje";
+                }
+                return "Rola";
+            }
         }
     }
 }

@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/cae1139d-8dc3-4950-baa2-57b6fa693957/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/MojCRM</ApplicationInsightsResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -323,8 +324,9 @@
     <Compile Include="Areas\Campaigns\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
     <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CampaignViewModels.cs" />
     <Compile Include="Areas\Campaigns\ViewModels\CreateCampaign.cs" />
-    <Compile Include="Areas\Campaigns\ViewModels\EmailBasesCampaignStatsViewModel.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CampaignStatsViewModel.cs" />
     <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
     <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
     <Compile Include="Areas\HelpDesk\Controllers\AcquireEmailController.cs" />
@@ -556,6 +558,10 @@
     <Compile Include="Migrations\201709161018443_Sep16Update.cs" />
     <Compile Include="Migrations\201709161018443_Sep16Update.Designer.cs">
       <DependentUpon>201709161018443_Sep16Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709241226582_Sep24Update.cs" />
+    <Compile Include="Migrations\201709241226582_Sep24Update.Designer.cs">
+      <DependentUpon>201709241226582_Sep24Update.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1018,6 +1024,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709161018443_Sep16Update.resx">
       <DependentUpon>201709161018443_Sep16Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709241226582_Sep24Update.resx">
+      <DependentUpon>201709241226582_Sep24Update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

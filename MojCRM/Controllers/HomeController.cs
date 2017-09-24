@@ -66,24 +66,8 @@ namespace MojCRM.Controllers
                 NumberOfLeadsAcceptedPercent = Math.Round((((decimal)countModel.NumberOfLeadsAccepted / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
             };
 
-            var campaignsTemp = db.Campaigns.Where(c => c.CampaignType == Areas.Campaigns.Models.Campaign.CampaignTypeEnum.EMAILBASES);
-            var campaigns = new List<EmailBasesCampaignStatsViewModel>();
-            foreach (var campaign in campaignsTemp)
-            {
-                var newCampaign = new EmailBasesCampaignStatsViewModel()
-                {
-                    Campaign = campaign,
-                    TotalCount = db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count(),
-                    NotVerifiedCount = db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus != Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED).Count(),
-                    CreatedPercent = Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CREATED).Count() 
-                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
-                    CheckedPercent = Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED).Count()
-                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
-                    VerifiedPercent =  Math.Round((((decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED).Count()
-                    / (decimal)db.AcquireEmails.Where(a => a.RelatedCampaignId == campaign.CampaignId).Count()) * 100), 0),
-                };
-                campaigns.Add(newCampaign);
-            }
+            var campaignsModel = new EmailBasesCampaignStatsViewModel();
+            var campaigns = campaignsModel.GetModels();
 
             var model = new HomeViewModel()
             {

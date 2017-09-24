@@ -24,18 +24,28 @@ namespace MojCRM.Areas.Campaigns.Controllers
         }
 
         // GET: Campaigns/Campaigns/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Campaign campaign = db.Campaigns.Find(id);
+            var campaignBasesStats = new EmailBasesCampaignStatsViewModel();
+            var campaignSalesStats = new SalesCampaignStatsViewModel();
             if (campaign == null)
             {
                 return HttpNotFound();
             }
-            return View(campaign);
+
+            List<CampaignMember> list = new List<CampaignMember>();
+            foreach (var member in db.CampaignMembers.Where(cm => cm.CampaignId == id))
+                list.Add(member);
+            var model = new CampaignDetailsViewModel
+            {
+                Campaign = campaign,
+                EmailBasesStats = campaignBasesStats.GetModel(id),
+                SalesStats = campaignSalesStats.GetModel(id),
+                AssignedMembers = list
+            };
+
+            return View(model);
         }
 
         // GET: Campaigns/Campaigns/Create
@@ -67,18 +77,18 @@ namespace MojCRM.Areas.Campaigns.Controllers
         // POST: Campaigns/Campaigns/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateCampaign Model)
+        public ActionResult Create(CreateCampaign model)
         {
             db.Campaigns.Add(new Campaign
             {
-                CampaignName = Model.CampaignName,
-                CampaignDescription = Model.CampaignDescription,
-                CampaignInitiatior = Model.CampaignInitiator,
-                RelatedCompanyId = Model.RelatedCompanyId,
-                CampaignType = Model.CampaignType,
+                CampaignName = model.CampaignName,
+                CampaignDescription = model.CampaignDescription,
+                CampaignInitiatior = model.CampaignInitiator,
+                RelatedCompanyId = model.RelatedCompanyId,
+                CampaignType = model.CampaignType,
                 CampaignStatus = Campaign.CampaignStatusEnum.START,
-                CampaignStartDate = Model.CampaignStartDate,
-                CampaignPlannedEndDate = Model.CampaignPlannedEndDate,
+                CampaignStartDate = model.CampaignStartDate,
+                CampaignPlannedEndDate = model.CampaignPlannedEndDate,
                 InsertDate = DateTime.Now
             });
             db.SaveChanges();
@@ -144,6 +154,30 @@ namespace MojCRM.Areas.Campaigns.Controllers
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeStatus(Campaign.CampaignStatusEnum newStatus, int campaignId)
+        {
+            Campaign campaign = db.Campaigns.Find(campaignId);
+            campaign.CampaignStatus = newStatus;
+            campaign.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        [HttpPost]
+        public ActionResult AddMember(string agent, CampaignMember.MemberRoleEnum role, int campaignId)
+        {
+            db.CampaignMembers.Add(new CampaignMember
+            {
+                CampaignId = campaignId,
+                MemberName = agent,
+                MemberRole = role,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         protected override void Dispose(bool disposing)
