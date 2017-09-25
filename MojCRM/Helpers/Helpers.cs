@@ -4,9 +4,31 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using MojCRM.Models;
 
 namespace MojCRM.Helpers
 {
+    public class HelperMethods
+    {
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+
+        public void LogActivity(string activityDescription, string user, int activityReferenceId, 
+            ActivityLog.ActivityTypeEnum activityType, ActivityLog.DepartmentEnum department, ActivityLog.ModuleEnum module)
+        {
+            _db.ActivityLogs.Add(new ActivityLog
+            {
+                Description = activityDescription,
+                User = user,
+                ReferenceId = activityReferenceId,
+                ActivityType = activityType,
+                Department = department,
+                Module = module,
+                InsertDate = DateTime.Now
+            });
+            _db.SaveChanges();
+        }
+    }
+
     public class ChangeEmailNoTicket
     {
         public int MerElectronicId { get; set; }

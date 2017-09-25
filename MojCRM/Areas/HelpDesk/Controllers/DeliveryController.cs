@@ -27,6 +27,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
     public class DeliveryController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private HelperMethods _helper = new HelperMethods();
 
         // GET: Delivery
         [Authorize]
@@ -237,7 +238,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 CreatedTickets = ResultsFirstTime.Count();
             }
 
-            LogActivity("Kreirano kartica za prvi put: " + CreatedTickets, Agent, 0, ActivityLog.ActivityTypeEnum.SYSTEM);
+            _helper.LogActivity("Kreirano kartica za prvi put: " + CreatedTickets, Agent, 0, ActivityLog.ActivityTypeEnum.SYSTEM, ActivityLog.DepartmentEnum.MojCRM, ActivityLog.ModuleEnum.Delivery);
 
             return Json(new { Status = "OK", CreatedTickets = CreatedTickets }, JsonRequestBehavior.AllowGet);
         }
@@ -304,7 +305,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 CreatedTickets = ResultsRegularDelivery.Count();
             }
 
-            LogActivity("Kreirano kartica: " + CreatedTickets, Agent, 0, ActivityLog.ActivityTypeEnum.SYSTEM);
+            _helper.LogActivity("Kreirano kartica: " + CreatedTickets, Agent, 0, ActivityLog.ActivityTypeEnum.SYSTEM, ActivityLog.DepartmentEnum.MojCRM, ActivityLog.ModuleEnum.Delivery);
 
             return Json(new { Status = "OK", CreatedTickets = CreatedTickets }, JsonRequestBehavior.AllowGet);
         }
@@ -590,11 +591,11 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
             if (InvoiceNumber == null)
             {
-                LogActivity(User.Identity.Name + " je ponovno poslao obavijest za primatelja " + Receiver, User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.RESEND);
+                _helper.LogActivity(User.Identity.Name + " je ponovno poslao obavijest za primatelja " + Receiver, User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.RESEND, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
             }
             else
             {
-                LogActivity(User.Identity.Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber, User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.RESEND);
+                _helper.LogActivity(User.Identity.Name + " je ponovno poslao obavijest za dokument " + InvoiceNumber, User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.RESEND, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
             }
 
             return RedirectToAction("Details", new { id = TicketId, receiverId = ReceiverId });
@@ -628,8 +629,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
-            LogActivity(User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber, 
-                User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.MAILCHANGE);
+            _helper.LogActivity(User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber,
+                User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.MAILCHANGE, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
             UpdateStatus(model.TicketId);
 
             return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
@@ -663,8 +664,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/changeEmail").ToString(), "POST", MerRequest);
             }
 
-            LogActivity(User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber,
-                User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.MAILCHANGE);
+            _helper.LogActivity(User.Identity.Name + " je izmijenio e-mail adresu za dostavu eDokumenta iz " + model.OldEmail + " u " + model.NewEmail + " i ponovno poslao obavijest za dokument broj: " + model.InvoiceNumber,
+                User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.MAILCHANGE, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
 
             return RedirectToAction("Details", new { id = model.TicketId, receiverId = model.ReceiverId });
         }
@@ -925,16 +926,16 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             switch (model.Identifier)
             {
                 case 1:
-                    LogActivity(User.Identity.Name + " je obavio uspješan poziv za dostavu eDokumenata broj: " + model.InvoiceNumber,
-                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.SUCCALL);
+                    _helper.LogActivity(User.Identity.Name + " je obavio uspješan poziv za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.SUCCALL, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
                     break;
                 case 2:
-                    LogActivity(User.Identity.Name + " je obavio kraći informativni poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
-                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.SUCCALSHORT);
+                    _helper.LogActivity(User.Identity.Name + " je obavio kraći informativni poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.SUCCALSHORT, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
                     break;
                 case 3:
-                    LogActivity(User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
-                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.UNSUCCAL);
+                    _helper.LogActivity(User.Identity.Name + " je pokušao obaviti telefonski poziv vezano za dostavu eDokumenata broj: " + model.InvoiceNumber,
+                        User.Identity.Name, model.TicketId, ActivityLog.ActivityTypeEnum.UNSUCCAL, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
                     break;
             }
 
@@ -1093,8 +1094,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         {
             var ticket = db.DeliveryTicketModels.Find(_TicketId);
 
-            LogActivity(User.Identity.Name + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata broj: " + ticket.InvoiceNumber,
-                User.Identity.Name, _TicketId, ActivityLog.ActivityTypeEnum.EMAIL);
+            _helper.LogActivity(User.Identity.Name + " je poslao e-mail na adresu: " + _Email + " na temu dostave eDokumenata broj: " + ticket.InvoiceNumber,
+                User.Identity.Name, _TicketId, ActivityLog.ActivityTypeEnum.EMAIL, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
         }
 
         public JsonResult Assign(int Id)
@@ -1102,8 +1103,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             var TicketForAssignement = db.DeliveryTicketModels.Find(Id);
             TicketForAssignement.IsAssigned = true;
             TicketForAssignement.AssignedTo = User.Identity.Name;
-            LogActivity("Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssignement.Receiver.SubjectName + ", za eDokument: " + TicketForAssignement.InvoiceNumber,
-                User.Identity.Name, Id, ActivityLog.ActivityTypeEnum.TICKETASSIGN);
+            _helper.LogActivity("Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssignement.Receiver.SubjectName + ", za eDokument: " + TicketForAssignement.InvoiceNumber,
+                User.Identity.Name, Id, ActivityLog.ActivityTypeEnum.TICKETASSIGN, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
 
             return Json(new { Status = "OK" });
         }
@@ -1180,26 +1181,11 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 var Response = Postmark.UploadString(ActivateLink, "PUT", ActivateLink);
                 ActivateResponse = JsonConvert.DeserializeObject<ActivateBounceResponse>(Response);
 
-                LogActivity(User.Identity.Name + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
-                    User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.POSTMARKACTIVATEBOUNCE);
+                _helper.LogActivity(User.Identity.Name + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
+                    User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.POSTMARKACTIVATEBOUNCE, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
             }
 
             return Json(new { Status = "OK" });
-        }
-
-        public void LogActivity(string ActivityDescription, string User, int ActivityReferenceId, ActivityLog.ActivityTypeEnum ActivityType)
-        {
-            db.ActivityLogs.Add(new ActivityLog
-            {
-                Description = ActivityDescription,
-                User = User,
-                ReferenceId = ActivityReferenceId,
-                ActivityType = ActivityType,
-                Department = ActivityLog.DepartmentEnum.Delivery,
-                Module = ActivityLog.ModuleEnum.Delivery,
-                InsertDate = DateTime.Now
-            });
-            db.SaveChanges();
         }
     }
 }
