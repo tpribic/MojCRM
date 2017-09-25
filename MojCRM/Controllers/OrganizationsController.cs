@@ -473,7 +473,32 @@ namespace MojCRM.Controllers
             organization.Organization.LastUpdatedBy = User.Identity.Name;
             db.SaveChanges();
 
-            return Json(new { Status = "OK"});
+            return Json(new { Status = "OK" });
+        }
+
+        [HttpPost]
+        public JsonResult MarkAsVerified(int merId)
+        {
+            var organization = db.MerDeliveryDetails.Find(merId);
+            organization.AcquiredReceivingInformationIsVerified = true;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            organization.Organization.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new {Status = "OK"});
+        }
+
+        [HttpPost]
+        public JsonResult MarkAsPostalService(int merId)
+        {
+            var organization = db.MerDeliveryDetails.Find(merId);
+            organization.RequiredPostalService = true;
+            organization.AcquiredReceivingInformation = "ŽELE POŠTOM";
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            organization.Organization.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
         }
 
         public void LogActivity(string ActivityDescription, string User, int ActivityReferenceId, ActivityLog.ActivityTypeEnum ActivityType)

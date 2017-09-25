@@ -19,6 +19,47 @@
                             <div class="col-md-10">
                                 <label for="important-comment">Napomena:</label>
                                 <div id="important-comment">
+                                    @Html.TextArea("NewAcquiredReceivingInformation", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="hidden">
+                            <div id="organization-id">
+                                @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                            </div>
+                            <div>
+                                @Html.TextBox("AcquiredReceivingInformation", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.MerDeliveryDetails.AcquiredReceivingInformation })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - EditAcquiredReceivingInformation-->
+@using (Html.BeginForm("EditAcquiredReceivingInformation", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="editAcquiredReceivingInformation" tabindex="-1" role="dialog" aria-labelledby="editAcquiredReceivingInformation">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Uredi informacijuo zaprimanju za ovog primatelja</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="acquired-information">Napomena:</label>
+                                <div id="acquired-information">
                                     @Html.TextArea("Comment", ViewBag.CurrentFilter as string, new { @class = "form-control" })
                                 </div>
                             </div>
@@ -53,9 +94,49 @@
         </div>
     </div>
     <br />
-    <div class="col-md-12" title="Napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika">
-        <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
-    </div>
+    @if (Model.MerDeliveryDetails.AcquiredReceivingInformationIsVerified)
+    {
+        <div class="row">
+            <div class="col-md-10" title="Verificirana napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika" style="color: green">
+                <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
+            </div>
+            @if (Model.MerDeliveryDetails.RequiredPostalService)
+            {
+                <div class="col-md-1" title="Korisnik želi zaprimati račune poštom">
+                    <i class="fa fa-envelope text-warning" style="color: gold"></i>
+                </div>
+            }
+            <div class="col-md-1" title="Uredi prikupljenu informaciju o zaprimanju eRačuna za ovog subjekta">
+                <a href="#editAcquiredReceivingInformation" data-toggle="modal"><i class="fa fa-edit"></i></a>
+                @if (Model.MerDeliveryDetails.RequiredPostalService == false)
+                {
+                   <a onclick="MarkPostalService()" class="mark-postal"><i class="fa fa-envelope"></i></a>
+                }
+            </div>
+        </div>
+    }
+    @if (Model.MerDeliveryDetails.AcquiredReceivingInformationIsVerified == false)
+    {
+        <div class="row">
+            <div class="col-md-10" title="Napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika">
+                <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
+            </div>
+            @if (Model.MerDeliveryDetails.RequiredPostalService)
+            {
+                <div class="col-md-1" title="Korisnik želi zaprimati račune poštom">
+                    <i class="fa fa-envelope" style="color: gold"></i>
+                </div>
+            }
+            <div class="col-md-1" title="Uredi prikupljenu informaciju o zaprimanju eRačuna za ovog subjekta">
+                <a href="#editAcquiredReceivingInformation" data-toggle="modal"><i class="fa fa-edit"></i></a>
+                <a onclick="MarkVerified()" class="mark-verified"><i class="fa fa-check"></i></a>
+                @if (Model.MerDeliveryDetails.RequiredPostalService == false)
+                {
+                    <a onclick="MarkPostalService()" class="mark-postal"><i class="fa fa-envelope"></i></a>
+                }
+            </div>
+        </div>
+    }
     <hr />
     <div class="row">
         <div class="col-md-6" title="Komentari o dostavi eRačuna iz servisa Moj-eRačun">
@@ -66,5 +147,46 @@
         </div>
     </div>
 </div>
-
+<script>
+    function MarkVerified() {
+        $(document).on("click", "a.mark-verified", function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: 'POST',
+                url: '@Url.RouteUrl(new { action = "MarkAsVerified", controller = "Organizations", area = "" })',
+                data: {
+                    merId: "@Model.Organization.MerId",
+                },
+                success: function (data) {
+                    if (data.Status === 'OK')
+                        alert("Uspješno ste označili informaciju o zaiprimanju kao verificiranu!");
+                    else
+                        alert("Greška!");
+                },
+                dataType: 'json'
+            });
+            window.location.reload(true);
+        });
+    }
+    function MarkPostalService() {
+        $(document).on("click", "a.mark-postal", function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: 'POST',
+                url: '@Url.RouteUrl(new { action = "MarkAsPostalService", controller = "Organizations", area = "" })',
+                data: {
+                    merId: "@Model.Organization.MerId",
+                },
+                success: function (data) {
+                    if (data.Status === 'OK')
+                        alert("Uspješno ste označili da korisnik želi zaprimati eRačune poštom!");
+                    else
+                        alert("Greška!");
+                },
+                dataType: 'json'
+            });
+            window.location.reload(true);
+        });
+    }
+</script>
 
