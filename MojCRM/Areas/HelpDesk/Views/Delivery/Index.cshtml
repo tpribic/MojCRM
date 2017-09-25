@@ -279,9 +279,9 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     });
     columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kartice").Sortable(true).RenderValueAs(m =>
     {
-        if (m.DocumentStatus == 30 && m.IsAssigned == false)
+        if (m.DocumentStatus == 30 && m.IsAssigned == false && m.Receiver.MerDeliveryDetail.RequiredPostalService)
             return
-            @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" onclick="javascript: Assign()"></a></div>;
+            @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" onclick="javascript: Assign()"></a> <i class="fa fa-envelope fa-2x" style="color: gold"></i></div>;
 
         if (m.DocumentStatus == 30 && m.IsAssigned == true)
             return @<span>
