@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.IO;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
 using Excel = Microsoft.Office.Interop.Excel;
+using ExcelOut = ExcelLibrary.SpreadSheet;
 using MojCRM.Areas.HelpDesk.Helpers;
 using System.Web.UI.WebControls;
 using System.Web.UI;
@@ -94,14 +95,16 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             return Json(new { Status = "OK" });
         }
 
-        public JsonResult ImportEntities(int CampaignId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult ImportEntities(int campaignId)
         {
-            int ImportedEntities = 0;
+            int importedEntities = 0;
 
             Application oExcel = new Application();
             string filepath = @"C:\MojCRM\ImportAcquireEmail.xlsx";
-            Workbook WB = oExcel.Workbooks.Open(filepath);
-            Worksheet wks = (Excel.Worksheet)WB.Worksheets[1];
+            Workbook wb = oExcel.Workbooks.Open(filepath);
+            Worksheet wks = (Worksheet)wb.Worksheets[1];
 
             Range firstColumn = wks.UsedRange.Columns[1];
             Array VATTemp = (Array)firstColumn.Cells.Value;
@@ -111,32 +114,37 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             {
                 if (VAT != "")
                 {
-                    var relatedOrganization = db.Organizations.Where(o => o.SubjectBusinessUnit == "" && o.VAT == VAT).First();
+                    var relatedOrganization = db.Organizations.First(o => o.SubjectBusinessUnit == "" && o.VAT == VAT);
 
                     if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
                     {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, CampaignId);
-                        ImportedEntities++;
+                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                        importedEntities++;
                     }
                     else if (relatedOrganization.MerDeliveryDetail.RequiredPostalService)
                     {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CHECKED, CampaignId);
-                        ImportedEntities++;
+                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CHECKED, campaignId);
+                        importedEntities++;
+                    }
+                    else if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && relatedOrganization.MerDeliveryDetail.RequiredPostalService)
+                    {
+                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                        importedEntities++;
                     }
                     else
                     {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CREATED, CampaignId);
-                        ImportedEntities++;
+                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CREATED, campaignId);
+                        importedEntities++;
                     }
                 }
                 else
                     break;
             }
 
-            return Json(new { NumberOfImportedEntites = ImportedEntities }, JsonRequestBehavior.AllowGet);
+            return Json(new { NumberOfImportedEntites = importedEntities }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ExportEntities(int CampaignId)
+        public ActionResult ExportEntities(int campaignId)
         {
             #region OldWay
             //var gv = new GridView();
@@ -156,27 +164,54 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             //Response.End();
             #endregion
 
+            string savePath = @"C:\Temp\ExportAcquireEmail.xls";
+            int cell = 1;
+            var results = GetEntityList(campaignId);
+            ExcelOut.Workbook wb = new ExcelOut.Workbook();
+            ExcelOut.Worksheet ws =
+                new ExcelOut.Worksheet("Rezultati obrade baze")
+                {
+                    Cells =
+                    {
+                        [0, 0] = new ExcelOut.Cell("Naziv kampanje"),
+                        [0, 1] = new ExcelOut.Cell("OIB partnera"),
+                        [0, 2] = new ExcelOut.Cell("Naziv partnera"),
+                        [0, 3] = new ExcelOut.Cell("Informacija o zaprimanju eRačuna")
+                    }
+                };
 
+
+            foreach (var res in results)
+            {
+                ws.Cells[cell, 0] = new ExcelOut.Cell(res.CampaignName);
+                ws.Cells[cell, 1] = new ExcelOut.Cell(res.VAT);
+                ws.Cells[cell, 2] = new ExcelOut.Cell(res.SubjectName);
+                ws.Cells[cell, 3] = new ExcelOut.Cell(res.AcquiredReceivingInformation);
+                cell++;
+            }
+
+            wb.Worksheets.Add(ws);
+            wb.Save(savePath);
 
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        public void CreateEntity(Organizations Organization, AcquireEmailStatusEnum Status, int CampaignId)
+        public void CreateEntity(Organizations organization, AcquireEmailStatusEnum status, int campaignId)
         {
             db.AcquireEmails.Add(new AcquireEmail
             {
-                RelatedOrganizationId = Organization.MerId,
-                RelatedCampaignId = CampaignId,
-                AcquireEmailStatus = Status,
+                RelatedOrganizationId = organization.MerId,
+                RelatedCampaignId = campaignId,
+                AcquireEmailStatus = status,
                 InsertDate = DateTime.Now
             });
             db.SaveChanges();
         }
 
-        public IList<AcquireEmailExportModel> GetEntityList(int CampaignId)
+        public IList<AcquireEmailExportModel> GetEntityList(int campaignId)
         {
             var entityList = (from ae in db.AcquireEmails
-                              where ae.RelatedCampaignId == CampaignId && ae.AcquireEmailStatus == AcquireEmailStatusEnum.VERIFIED
+                              where ae.RelatedCampaignId == campaignId && ae.AcquireEmailStatus == AcquireEmailStatusEnum.VERIFIED
                               select new AcquireEmailExportModel
                               {
                                   CampaignName = ae.Campaign.CampaignName,
