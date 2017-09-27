@@ -97,7 +97,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             int invalidEntities = 0;
             List<string> invalidVATs = new List<string>();
 
-            string filepath = @"D:\MojCRM\ImportAcquireEmail.xls";
+            string filepath = @"C:\MojCRM\ImportAcquireEmail.xls";
 
             ExcelOut.Workbook wb = ExcelOut.Workbook.Load(filepath);
             ExcelOut.Worksheet ws = wb.Worksheets[0];
@@ -193,7 +193,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             //Response.End();
             #endregion
 
-            string savePath = @"C:\Temp\ExportAcquireEmail.xls";
+            string savePath = @"C:\MojCRM\ExportAcquireEmail.xls";
             int cell = 1;
             var results = GetEntityList(campaignId);
             ExcelOut.Workbook wb = new ExcelOut.Workbook();
