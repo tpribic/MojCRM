@@ -1,0 +1,83 @@
+﻿@model MojCRM.Areas.HelpDesk.Helpers.AcquireEmailCheckResults
+@{
+    ViewBag.Title = "Provjera tvrtki prije unosa u bazu";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2>Provjera tvrtki prije unosa u bazu</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" title="Pokreni kreiranje predmeta za ažuriranje baza podataka korisnika" class="btn btn-sm btn-default" id="create-entities" onclick="Import()"><i class="fa fa-check"></i></button>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <strong>Broj OIB-ova koji se nalaze u bazi podataka: </strong> @Model.ValidEntities
+        </div>
+        <br/>
+        <table class="table">
+            <tr>
+                <th>OIB</th>
+            </tr>
+            @foreach (var entity in Model.ValidVATs)
+            {
+                <tr>
+                    <td>@entity</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <strong>Broj OIB-ova koji se ne nalaze u bazi podataka: </strong> @Model.InvalidEntities
+        </div>
+        <br />
+        <table class="table">
+            <tr>
+                <th>OIB</th>
+            </tr>
+            @foreach (var entity in Model.InvalidVATs)
+            {
+                <tr>
+                    <td>@entity</td>
+                </tr>
+            }
+        </table>
+    </div>    
+</div>
+@if (@Model.ImportedEntities != 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <p style="color: red">Broj imporiranih predmeta: @Model.ImportedEntities</p>
+        </div>
+    </div>   
+}
+
+<script>
+    function Import() {
+        $(document).on("click", "#create-entities", function (e) {
+            e.preventDefault();
+            if (window.confirm("Jeste li sigurni da želite kreirati predmete za valjanje OIB-ove?"))
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "CheckEntitiesForImport", controller = "AcquireEmail", area = "HelpDesk" })',
+                    data: {
+                        campaignId: "@Model.CampaignId",
+                        create: true
+                    },
+                    success: function (data) {
+                        if (data.Status === 'OK')
+                            alert("Uspješno ste kreirali predmete!");
+                        else
+                            alert("Greška!");
+                    },
+                    dataType: 'json'
+                });
+            window.location.reload(true);
+        });
+    }
+</script>

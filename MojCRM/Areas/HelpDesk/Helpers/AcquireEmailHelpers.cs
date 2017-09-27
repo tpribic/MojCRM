@@ -19,4 +19,14 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public string SubjectName { get; set; }
         public string AcquiredReceivingInformation { get; set; }
     }
+
+    public class AcquireEmailCheckResults
+    {
+        public int CampaignId { get; set; }
+        public int ValidEntities { get; set; }
+        public int InvalidEntities { get; set; }
+        public int ImportedEntities { get; set; }
+        public List<string> ValidVATs { get; set; }
+        public List<string> InvalidVATs { get; set; }
+    }
 }

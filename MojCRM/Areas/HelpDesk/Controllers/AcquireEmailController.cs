@@ -1,18 +1,12 @@
-﻿using Microsoft.Office.Interop.Excel;
-using MojCRM.Areas.HelpDesk.Models;
+﻿using MojCRM.Areas.HelpDesk.Models;
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.IO;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
-using Excel = Microsoft.Office.Interop.Excel;
 using ExcelOut = ExcelLibrary.SpreadSheet;
 using MojCRM.Areas.HelpDesk.Helpers;
-using System.Web.UI.WebControls;
-using System.Web.UI;
 
 namespace MojCRM.Areas.HelpDesk.Controllers
 {
@@ -95,53 +89,88 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             return Json(new { Status = "OK" });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult ImportEntities(int campaignId)
+        public ActionResult CheckEntitiesForImport(int campaignId, bool create = false)
         {
             int importedEntities = 0;
+            int validEntities = 0;
+            List<string> validVATs = new List<string>();
+            int invalidEntities = 0;
+            List<string> invalidVATs = new List<string>();
 
-            Application oExcel = new Application();
-            string filepath = @"C:\MojCRM\ImportAcquireEmail.xlsx";
-            Workbook wb = oExcel.Workbooks.Open(filepath);
-            Worksheet wks = (Worksheet)wb.Worksheets[1];
+            string filepath = @"D:\MojCRM\ImportAcquireEmail.xls";
 
-            Range firstColumn = wks.UsedRange.Columns[1];
-            Array VATTemp = (Array)firstColumn.Cells.Value;
-            string[] VATs = VATTemp.OfType<object>().Select(o => o.ToString()).ToArray();
+            ExcelOut.Workbook wb = ExcelOut.Workbook.Load(filepath);
+            ExcelOut.Worksheet ws = wb.Worksheets[0];
 
-            foreach (var VAT in VATs)
+            for (int rowIndex = ws.Cells.FirstRowIndex; rowIndex <= ws.Cells.LastRowIndex; rowIndex++)
             {
-                if (VAT != "")
-                {
-                    var relatedOrganization = db.Organizations.First(o => o.SubjectBusinessUnit == "" && o.VAT == VAT);
+                ExcelOut.Row row = ws.Cells.GetRow(rowIndex);
 
-                    if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
+                for (int colIndex = row.FirstColIndex; colIndex <= row.LastColIndex; colIndex++)
+                {
+                    ExcelOut.Cell cell = row.GetCell(colIndex);
+
+                    string VAT = cell.StringValue;
+
+                    if (VAT != "")
                     {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
-                        importedEntities++;
+                        if (db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
+                        {
+                            validVATs.Add(VAT);
+                            if (create)
+                            {
+                                ImportEntities(campaignId, VAT);
+                                importedEntities++;
+                            }
+
+                            validEntities++;
+                        }
+                        else
+                        {
+                            invalidVATs.Add(VAT);
+                            invalidEntities++;
+                        }
                     }
-                    else if (relatedOrganization.MerDeliveryDetail.RequiredPostalService)
-                    {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CHECKED, campaignId);
-                        importedEntities++;
-                    }
-                    else if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && relatedOrganization.MerDeliveryDetail.RequiredPostalService)
-                    {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
-                        importedEntities++;
-                    }
-                    else
-                    {
-                        CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CREATED, campaignId);
-                        importedEntities++;
-                    }
-                }
-                else
-                    break;
+                } 
             }
 
-            return Json(new { NumberOfImportedEntites = importedEntities }, JsonRequestBehavior.AllowGet);
+            var model = new AcquireEmailCheckResults
+            {
+                CampaignId = campaignId,
+                ValidEntities = validEntities,
+                InvalidEntities = invalidEntities,
+                ImportedEntities = importedEntities,
+                ValidVATs = validVATs,
+                InvalidVATs = invalidVATs
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public void ImportEntities(int campaignId, string VAT)
+        {
+            if (VAT != "")
+            {
+                var relatedOrganization = db.Organizations.First(o => o.SubjectBusinessUnit == "" && o.VAT == VAT);
+
+                if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
+                {
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                }
+                else if (relatedOrganization.MerDeliveryDetail.RequiredPostalService)
+                {
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CHECKED, campaignId);
+                }
+                else if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && relatedOrganization.MerDeliveryDetail.RequiredPostalService)
+                {
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                }
+                else
+                {
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CREATED, campaignId);
+                }
+            }
         }
 
         public ActionResult ExportEntities(int campaignId)

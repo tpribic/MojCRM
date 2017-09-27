@@ -130,7 +130,7 @@
                     <button type="button" title="Dodijeli agenta kampanji" class="btn btn-sm btn-default" data-toggle="modal" href="#AddAgent"><i class="fa fa-plus"></i> <i class="fa fa-user"></i></button>
                     @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
                     {
-                        <a href="@Url.RouteUrl(new { action = "ImportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>
+                        <a href="@Url.RouteUrl(new { action = "CheckEntitiesForImport", controller = "AcquireEmail", area = "HelpDesk", campaignId = Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>
                         <a href="@Url.RouteUrl(new { action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Preuzmi rezultate"><i class="fa fa-file-excel-o"></i></a>
                     }
                     <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
