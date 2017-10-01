@@ -1103,6 +1103,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             var TicketForAssignement = db.DeliveryTicketModels.Find(Id);
             TicketForAssignement.IsAssigned = true;
             TicketForAssignement.AssignedTo = User.Identity.Name;
+            db.SaveChanges();
             _helper.LogActivity("Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssignement.Receiver.SubjectName + ", za eDokument: " + TicketForAssignement.InvoiceNumber,
                 User.Identity.Name, Id, ActivityLog.ActivityTypeEnum.TICKETASSIGN, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
 

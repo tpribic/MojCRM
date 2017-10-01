@@ -1,12 +1,8 @@
 ﻿using MojCRM.Areas.Cooperation.Models;
 using MojCRM.Helpers;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MojCRM.Models
 {
@@ -56,10 +52,13 @@ namespace MojCRM.Models
         public enum CountryIdentificationCodeEnum
         {
             [Description("Nema podatka")]
-            NOINFO,
+            Noinfo,
 
             [Description("Hrvatska")]
-            HR,
+            Hr,
+
+            [Description("Slovenija")]
+            Si
         }
     }
 }

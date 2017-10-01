@@ -82,8 +82,8 @@ namespace MojCRM.ViewModels
             {
                 switch (OrganizationDetails.MainCountry)
                 {
-                    case OrganizationDetail.CountryIdentificationCodeEnum.NOINFO: return "Nema podatka";
-                    case OrganizationDetail.CountryIdentificationCodeEnum.HR: return "Hrvatska";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Noinfo: return "Nema podatka";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Hr: return "Hrvatska";
                 }
                 return "Nema podatka";
             }
@@ -94,8 +94,8 @@ namespace MojCRM.ViewModels
             {
                 switch (OrganizationDetails.CorrespondenceCountry)
                 {
-                    case OrganizationDetail.CountryIdentificationCodeEnum.NOINFO: return "Nema podatka";
-                    case OrganizationDetail.CountryIdentificationCodeEnum.HR: return "Hrvatska";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Noinfo: return "Nema podatka";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Hr: return "Hrvatska";
                 }
                 return "Nema podatka";
             }
@@ -105,47 +105,47 @@ namespace MojCRM.ViewModels
         {
             get
             {
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("100") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("100") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Grad Zagreb";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("10") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("10") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Zagrebačka županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("49") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("49") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Krapinsko-zagorska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("44") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("44") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Sisačko-moslavačka županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("47") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("47") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Karlovačka županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("42") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("42") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Varaždinska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("48") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("48") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Koprivničko-križevačka županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("43") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("43") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Bjelovarsko-bilogorska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("51") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("51") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Primorsko-goranska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("53") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("53") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Ličko-senjska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("33") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("33") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Virovitičko-podravska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("34") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("34") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Požeško-slavonska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("35") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("35") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Brodsko-posavska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("23") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("23") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Zadarska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("31") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("31") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Osječko-baranjska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("22") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("22") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Šibensko-kninska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("32") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("32") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Vukovarsko-srijemska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("21") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("21") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Splitsko-dalmatinska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("52") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("52") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Istarska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("20") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("20") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Dubrovačko-neretvanska županija";
-                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("40") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.MainPostalCode.ToString().StartsWith("40") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Međimurska županija";
                 return "Nije poznato";
             }
@@ -155,47 +155,47 @@ namespace MojCRM.ViewModels
         {
             get
             {
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("100") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("100") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Grad Zagreb";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("10") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("10") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Zagrebačka županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("49") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("49") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Krapinsko-zagorska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("44") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("44") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Sisačko-moslavačka županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("47") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("47") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Karlovačka županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("42") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("42") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Varaždinska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("48") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("48") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Koprivničko-križevačka županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("43") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("43") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Bjelovarsko-bilogorska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("51") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("51") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Primorsko-goranska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("53") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("53") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Ličko-senjska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("33") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("33") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Virovitičko-podravska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("34") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("34") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Požeško-slavonska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("35") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("35") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Brodsko-posavska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("23") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("23") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Zadarska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("31") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("31") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Osječko-baranjska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("22") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("22") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Šibensko-kninska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("32") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("32") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Vukovarsko-srijemska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("21") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("21") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Splitsko-dalmatinska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("52") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("52") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Istarska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("20") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("20") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Dubrovačko-neretvanska županija";
-                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("40") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.HR)
+                if (OrganizationDetails.CorrespondencePostalCode.ToString().StartsWith("40") && OrganizationDetails.MainCountry == OrganizationDetail.CountryIdentificationCodeEnum.Hr)
                     return "Međimurska županija";
                 return "Nije poznato";
             }
