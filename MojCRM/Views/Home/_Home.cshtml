@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            @if (Model.AgentActivities.Count != 0 && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+            @if (Model.AgentActivities.Count() != 0 && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
             {
                 <div class="col-md-6">
                     <div class="widget widget-table">

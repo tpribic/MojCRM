@@ -156,13 +156,13 @@ namespace MojCRM.Areas.Sales.Controllers
 
                 var _RelatedSalesContacts = (from c in db.Contacts
                                              where c.Organization.MerId == opportunity.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
-                                             select c).AsEnumerable();
+                                             select c);
                 var _RelatedOpportunityNotes = (from n in db.OpportunityNotes
                                                 where n.RelatedOpportunityId == opportunity.OpportunityId
-                                                select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
+                                                select n).OrderByDescending(n => n.InsertDate);
                 var _RelatedOpportunityActivities = (from a in db.ActivityLogs
                                                      where a.ReferenceId == id && a.Module == ModuleEnum.Opportunities
-                                                     select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
+                                                     select a).OrderByDescending(a => a.InsertDate);
                 var _RelatedOrganization = (from o in db.Organizations
                                             where o.MerId == opportunity.RelatedOrganizationId
                                             select o).First();
@@ -172,7 +172,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 var _RelatedCampaign = (from c in db.Campaigns
                                         where c.CampaignId == opportunity.RelatedCampaignId
                                         select c).First();
-                var _Users = db.Users.AsEnumerable();
+                var _Users = db.Users;
                 var _RelatedLeadId = 0;
                 if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD)
                 {

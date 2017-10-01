@@ -116,6 +116,44 @@
         </div>
     </div>
 }
+<!--Modal - Upload File-->
+@using (Html.BeginForm("CheckEntitiesForImport", "AcquireEmail", new { area = "HelpDesk", enctype = "multipart/form-data" }, FormMethod.Post))
+{
+    <div class="modal fade" id="checkEntities" tabindex="-1" role="dialog" aria-labelledby="checkEntities">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Učitavanje podataka</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                Molimo odaberite tablicu iz koje želite pročitati podatke.
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <label for="file">Učitaj tablicu s podacima:</label>  
+                            <input type="file" name="file" id="file"/><br><br>  
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Učitaj</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <h2 style="text-align:center"><strong>Detalji kampanje</strong></h2>
 
@@ -130,7 +168,8 @@
                     <button type="button" title="Dodijeli agenta kampanji" class="btn btn-sm btn-default" data-toggle="modal" href="#AddAgent"><i class="fa fa-plus"></i> <i class="fa fa-user"></i></button>
                     @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
                     {
-                        <a href="@Url.RouteUrl(new { action = "CheckEntitiesForImport", controller = "AcquireEmail", area = "HelpDesk", campaignId = Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>
+                        <button type="button" title="Kreiraj unose za ažuriranje baze" class="btn btn-sm btn-default" data-toggle="modal" href="#checkEntities"><i class="fa fa-plus"></i></button>
+                        @*<a href="@Url.RouteUrl(new { action = "CheckEntitiesForImport", controller = "AcquireEmail", area = "HelpDesk", campaignId = Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>*@
                         <a href="@Url.RouteUrl(new { action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Preuzmi rezultate"><i class="fa fa-file-excel-o"></i></a>
                     }
                     <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
@@ -141,7 +180,7 @@
     <hr />
     @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES)
     {
-        <label for="bases-progress" title="Preostalo za obradu od ukupnog broja kreiranih predmeta">Status obrade: @Model.SalesStats.NotStartedCount / @Model.SalesStats.TotalCount</label>
+        <label for="bases-progress" title="Broj obrađenih prodajnih prilika">Status obrade: @Model.SalesStats.NotStartedCount / @Model.SalesStats.TotalCount</label>
         <div id="bases-progress" class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="@Model.SalesStats.NotStartedPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Model.SalesStats.NotStartedPercent%;">
                 @Model.SalesStats.NotStartedPercent% dovršeno

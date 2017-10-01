@@ -2,7 +2,9 @@
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
 using ExcelOut = ExcelLibrary.SpreadSheet;
@@ -89,7 +91,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             return Json(new { Status = "OK" });
         }
 
-        public ActionResult CheckEntitiesForImport(int campaignId, bool create = false)
+        public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId, bool create = false)
         {
             int importedEntities = 0;
             int validEntities = 0;
@@ -97,7 +99,9 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             int invalidEntities = 0;
             List<string> invalidVATs = new List<string>();
 
-            string filepath = @"C:\MojCRM\ImportAcquireEmail.xls";
+            //string filepath = @"C:\MojCRM\ImportAcquireEmail.xls";
+            string filepath = Path.Combine(Server.MapPath("~/Temp"), Path.GetFileName(file.FileName));
+            file.SaveAs(filepath);
 
             ExcelOut.Workbook wb = ExcelOut.Workbook.Load(filepath);
             ExcelOut.Worksheet ws = wb.Worksheets[0];

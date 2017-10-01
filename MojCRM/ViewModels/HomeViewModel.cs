@@ -1,15 +1,15 @@
 ﻿using MojCRM.Areas.Campaigns.ViewModels;
-using System.Collections.Generic;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Areas.Stats.ViewModels;
+using System.Linq;
 
 namespace MojCRM.ViewModels
 {
     public class HomeViewModel
     { 
         public GeneralCampaignStatusViewModel INACampaign { get; set; }
-        public IList<EmailBasesCampaignStatsViewModel> Campaigns { get; set; }
-        public IList<CampaignMember> CampaignMembers { get; set; }
-        public IList<CallCenterDaily> AgentActivities { get; set; }
+        public IQueryable<EmailBasesCampaignStatsViewModel> Campaigns { get; set; }
+        public IQueryable<CampaignMember> CampaignMembers { get; set; }
+        public IQueryable<CallCenterDaily> AgentActivities { get; set; }
     }
 }

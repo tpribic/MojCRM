@@ -743,15 +743,15 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
             var _RelatedInvoicesList = (from t in db.DeliveryTicketModels
                                         where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate && t.DocumentStatus == 30
-                                        select t).AsEnumerable();
+                                        select t);
 
             var _RelatedDeliveryContacts = (from t in db.Contacts
                                             where t.Organization.MerId == receiverId && t.ContactType == Contact.ContactTypeEnum.DELIVERY
-                                            select t).AsEnumerable();
+                                            select t);
 
             var _RelatedDeliveryDetails = (from t in db.DeliveryDetails
                                            where t.Receiver.MerId == receiverId
-                                           select t).AsEnumerable().OrderByDescending(t => t.Id);
+                                           select t).OrderByDescending(t => t.Id);
 
             var _ImportantComment = (from dd in db.MerDeliveryDetails
                                      where dd.MerId == receiverId
@@ -759,7 +759,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
             var _RelatedActivities = (from a in db.ActivityLogs
                                       where a.ReferenceId == id
-                                      select a).AsEnumerable().OrderByDescending(a => a.Id);
+                                      select a).OrderByDescending(a => a.Id);
 
             #region Postmark API
             MessagesOutboundOpenResponse OpeningHistoryResponse;
@@ -832,7 +832,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     RelatedActivities = _RelatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (/*i.DokumentTypeId != 6 && -- This was removed from API on Moj-eRačun*/ i.DokumentTypeId != 632)).AsEnumerable(),
+                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (/*i.DokumentTypeId != 6 && -- This was removed from API on Moj-eRačun*/ i.DokumentTypeId != 632)).AsQueryable(),
                     PostmarkOpenings = OpeningHistoryResponse,
                     PostmarkBounces = Bounces
                 };

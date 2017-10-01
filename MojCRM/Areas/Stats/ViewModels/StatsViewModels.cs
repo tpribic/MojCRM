@@ -24,7 +24,7 @@ namespace MojCRM.Areas.Stats.ViewModels
 
         public int CreatedTicketsTodayCount { get; set; }
         public int CreatedTicketsTodayFirstTimeCount { get; set; }
-        public IList<DailyDelivery> Deliveries { get; set; }
+        public IQueryable<DailyDelivery> Deliveries { get; set; }
         public IList<SelectListItem> Agents
         {
             get
@@ -95,8 +95,8 @@ namespace MojCRM.Areas.Stats.ViewModels
     }
     public class CallCenterDailyStatsViewModel
     {
-        public IList<CallCenterDaily> Activities { get; set; }
-        public IList<CallCenterDailyByDepartment> ActivitiesByDepartment { get; set; }
+        public IQueryable<CallCenterDaily> Activities { get; set; }
+        public IQueryable<CallCenterDailyByDepartment> ActivitiesByDepartment { get; set; }
         [Display(Name = "Uspješni pozivi")]
         public int SumSuccessfulCalls { get; set; }
         [Display(Name = "Neuspješni pozivi")]
@@ -111,7 +111,7 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? SumTicketsAssigned { get; set; }
 
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        public IList<CallCenterDaily> GetActivitiesForDashboard()
+        public IQueryable<CallCenterDaily> GetActivitiesForDashboard()
         {
             var referenceDate = DateTime.Now.Date;
             var activities = new List<CallCenterDaily>();
@@ -141,14 +141,14 @@ namespace MojCRM.Areas.Stats.ViewModels
                 activities.Add(dailyActivities);
             }
 
-            return activities;
+            return activities.AsQueryable();
         }
     }
 
     public class PersonalDailyActivitiesViewModel
     {
-        public IList<ActivityLog> PersonalActivities { get; set; }
-        public IEnumerable<ApplicationUser> Agents { get; set; }
+        public IQueryable<ActivityLog> PersonalActivities { get; set; }
+        public IQueryable<ApplicationUser> Agents { get; set; }
         [Display(Name = "Ukupno uspješnih poziva")]
         public int SumSuccessfulCalls { get; set; }
         [Display(Name = "Ukupno uspješnih kratkih poziva")]

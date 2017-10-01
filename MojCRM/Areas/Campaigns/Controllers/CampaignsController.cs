@@ -20,7 +20,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
         public ActionResult Index()
         {
             var campaigns = db.Campaigns.Include(c => c.RelatedCompany);
-            return View(campaigns.ToList().OrderByDescending(c => c.InsertDate));
+            return View(campaigns.OrderByDescending(c => c.InsertDate));
         }
 
         // GET: Campaigns/Campaigns/Details/5
@@ -35,9 +35,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
                 return HttpNotFound();
             }
 
-            List<CampaignMember> list = new List<CampaignMember>();
-            foreach (var member in db.CampaignMembers.Where(cm => cm.CampaignId == id))
-                list.Add(member);
+            var list = db.CampaignMembers.Where(cm => cm.CampaignId == id);
             switch (campaign.CampaignType)
             {
                 case Campaign.CampaignTypeEnum.EMAILBASES:

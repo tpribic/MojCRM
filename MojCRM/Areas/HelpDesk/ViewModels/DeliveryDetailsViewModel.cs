@@ -140,11 +140,11 @@ namespace MojCRM.Areas.HelpDesk.ViewModels
                 return "Status";
             }
         }
-        public IEnumerable<Delivery> RelatedInvoices { get; set; }
-        public IEnumerable<Contact> RelatedDeliveryContacts { get; set; }
-        public IEnumerable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
-        public IEnumerable<ActivityLog> RelatedActivities { get; set; }
-        public IEnumerable<MerGetSentDocumentsResponse> DocumentHistory { get; set; }
+        public IQueryable<Delivery> RelatedInvoices { get; set; }
+        public IQueryable<Contact> RelatedDeliveryContacts { get; set; }
+        public IQueryable<DeliveryDetail> RelatedDeliveryDetails { get; set; }
+        public IQueryable<ActivityLog> RelatedActivities { get; set; }
+        public IQueryable<MerGetSentDocumentsResponse> DocumentHistory { get; set; }
         public MessagesOutboundOpenResponse PostmarkOpenings { get; set; }
         public BouncesResponse PostmarkBounces { get; set; }
         public IList<SelectListItem> RelatedDeliveryContactsForDetails

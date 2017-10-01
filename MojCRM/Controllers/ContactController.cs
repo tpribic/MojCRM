@@ -69,7 +69,7 @@ namespace MojCRM.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+                return Redirect(Request.UrlReferrer.ToString());
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)

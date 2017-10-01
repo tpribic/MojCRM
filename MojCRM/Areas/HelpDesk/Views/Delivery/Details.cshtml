@@ -9,20 +9,23 @@
 
 @{ 
     var deliveryAgents = new List<ListItem>
-        {
-            new ListItem{ Value = "Darko Glatki", Text = "Darko Glatki"},
-            new ListItem{ Value = "Tomislav Ptiček", Text = "Tomislav Ptiček"},
-            new ListItem{ Value = "Filip Troskot", Text = "Filip Troskot"},
-            new ListItem{ Value = "Filip Karmazen", Text = "Filip Karmazen"},
-            new ListItem{ Value = "Katarina Ceković", Text = "Katarina Ceković"},
-            new ListItem{ Value = "Viktor Jajtić", Text = "Viktor Jajtić"},
-            new ListItem{ Value = "Nikolina Ćosić", Text = "Nikolina Ćosić"},
-            new ListItem{ Value = "Ivan Boban", Text = "Ivan Boban"}
-        };
+    {
+        new ListItem{ Value = "Darko Glatki", Text = "Darko Glatki"},
+        new ListItem{ Value = "Filip Troskot", Text = "Filip Troskot"},
+        new ListItem{ Value = "Filip Karmazen", Text = "Filip Karmazen"},
+        new ListItem{ Value = "Katarina Ceković", Text = "Katarina Ceković"},
+        new ListItem{ Value = "Viktor Jajtić", Text = "Viktor Jajtić"},
+        new ListItem{ Value = "Filip Vučemilović Grgić", Text = "Filip Vučemilović Grgić"},
+        new ListItem{ Value = "Nikolina Ćosić", Text = "Nikolina Ćosić"},
+        new ListItem{ Value = "Ivan Boban", Text = "Ivan Boban"},
+        new ListItem{ Value = "Ana Šimac", Text = "Ana Šimac"},
+        new ListItem{ Value = "Matija Ekart", Text = "Matija Ekart"},
+        new ListItem{ Value = "Filip Klarić", Text = "Filip Klarić"}
+    };
 }
 
 <!--Modal - CreateContact-->
-@using (Html.BeginForm("CreateFromDelivery", "Contact", FormMethod.Post))
+@using (Html.BeginForm("CreateFromDelivery", "Contact", new { area = ""}, FormMethod.Post))
 {
     <div class="modal fade" id="CreateContact" tabindex="-1" role="dialog" aria-labelledby="CreateContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -96,7 +99,7 @@
 }
 
 <!--Modal - EditContact-->
-@using (Html.BeginForm("EditFromDelivery", "Contact", FormMethod.Post))
+@using (Html.BeginForm("EditFromDelivery", "Contact", new { area = "" }, FormMethod.Post))
 {
     <div class="modal fade" id="EditContact" tabindex="-1" role="dialog" aria-labelledby="EditContact">
         <div class="modal-dialog modal-lg" role="document">
@@ -738,7 +741,7 @@
 </div>
 
 <!--Modal - Edit Important Comment-->
-@using (Html.BeginForm("EditImportantComment", "Organizations", FormMethod.Post))
+@using (Html.BeginForm("EditImportantComment", "Organizations", new { area = "" }, FormMethod.Post))
 {
     <div class="modal fade" id="EditImportantComment" tabindex="-1" role="dialog" aria-labelledby="EditImportantComment">
         <div class="modal-dialog modal-sm" role="document">

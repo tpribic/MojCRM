@@ -14,9 +14,9 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         public Campaign Campaign { get; set; }
         public EmailBasesCampaignStatsViewModel EmailBasesStats { get; set; }
         public SalesCampaignStatsViewModel SalesStats { get; set; }
-        public IList<CampaignMember> AssignedMembers { get; set; }
+        public IQueryable<CampaignMember> AssignedMembers { get; set; }
 
-        public IList<SelectListItem> CampaignStatusList
+        public IQueryable<SelectListItem> CampaignStatusList
         {
             get
             {
@@ -28,11 +28,11 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                     new SelectListItem {Value = "3", Text = @"Prekinuto"},
                     new SelectListItem {Value = "4", Text = @"Završeno"}
                 };
-                return statusList;
+                return statusList.AsQueryable();
             }
         }
 
-        public IList<SelectListItem> MemberRoleList
+        public IQueryable<SelectListItem> MemberRoleList
         {
             get
             {
@@ -43,10 +43,10 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                     new SelectListItem {Value = "1", Text = @"Nadzornik kampanje"},
                     new SelectListItem {Value = "2", Text = @"Član kampanje"}
                 };
-                return roleList;
+                return roleList.AsQueryable();
             }
         }
-        public IList<SelectListItem> AgentList
+        public IQueryable<SelectListItem> AgentList
         {
             get
             {
@@ -60,7 +60,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                     agentsList.Add(new SelectListItem { Value = agent.UserName, Text = agent.UserName });
                 }
 
-                return agentsList;
+                return agentsList.AsQueryable();
             }
         }
     }

@@ -150,13 +150,13 @@ namespace MojCRM.Areas.Sales.Controllers
 
             var _RelatedSalesContacts = (from c in db.Contacts
                                          where c.Organization.MerId == lead.RelatedOrganizationId && c.ContactType == Contact.ContactTypeEnum.SALES
-                                         select c).AsEnumerable();
+                                         select c);
             var _RelatedLeadNotes = (from n in db.LeadNotes
                                      where n.RelatedLeadId == lead.LeadId
-                                     select n).OrderByDescending(n => n.InsertDate).AsEnumerable();
+                                     select n).OrderByDescending(n => n.InsertDate);
             var _RelatedLeadActivities = (from a in db.ActivityLogs
                                           where a.ReferenceId == lead.LeadId && a.Module == ModuleEnum.Leads
-                                          select a).OrderByDescending(a => a.InsertDate).AsEnumerable();
+                                          select a).OrderByDescending(a => a.InsertDate);
             var _RelatedOrganization = (from o in db.Organizations
                                         where o.MerId == lead.RelatedOrganizationId
                                         select o).First();
@@ -167,7 +167,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                     where c.CampaignId == lead.RelatedCampaignId
                                     select c).First();
             var _Users = (from u in db.Users
-                          select u).AsEnumerable();
+                          select u);
             //var _LastLeadNote = (from n in db.LeadNotes
             //                     where n.RelatedLeadId == lead.LeadId
             //                     select n).OrderByDescending(n => n.InsertDate).Select(n => n.Note).First().ToString();

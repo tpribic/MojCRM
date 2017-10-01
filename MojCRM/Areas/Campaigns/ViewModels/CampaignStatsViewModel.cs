@@ -45,7 +45,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         public decimal VerifiedPercent { get; set; }
 
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        public List<EmailBasesCampaignStatsViewModel> GetModels()
+        public IQueryable<EmailBasesCampaignStatsViewModel> GetModels()
         {
             var campaignsTemp = _db.Campaigns.Where(c => c.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES);
             var list = new List<EmailBasesCampaignStatsViewModel>();
@@ -67,7 +67,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                 list.Add(newCampaign);
             }
 
-            return list;
+            return list.AsQueryable();
         }
         public EmailBasesCampaignStatsViewModel GetModel(int id)
         {

@@ -45,15 +45,13 @@ namespace MojCRM.Areas.Stats.Controllers
                                 where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
                                 select a);
 
-            
-
             var ReferenceDate = DateTime.Today.AddDays(-1);
            
             var _Agents = (from u in db.Users
-                           select u).AsEnumerable();
+                           select u);
            
             var _Activities = (from a in db.ActivityLogs
-                               select a).ToList();
+                               select a);
 
           
             var searchDate = Convert.ToDateTime(SearchDate);
@@ -66,12 +64,9 @@ namespace MojCRM.Areas.Stats.Controllers
             
             if (String.IsNullOrEmpty(SearchDate))
             {
-                _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate>= DateTime.Today)).ToList();
+                _Activities = _Activities.Where(a => (a.User == Name) && /*(a.InsertDate >= ReferenceDate) && (a.InsertDate < DateTime.Today)*/ (a.InsertDate>= DateTime.Today));
 
-                
-
-               
-                    SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
+                SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
                 ShortSuccessfulCalls = ShortSuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today && a.User == Name);
 
                 UnsuccessfulCalls = UnsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today && t.User == Name);
@@ -94,7 +89,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 MailChange = MailChange.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
                 DeliveryMail = DeliveryMail.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Name);
-                _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
+                _Activities = _Activities.Where(a => (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
                 
                 _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Name) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
@@ -113,11 +108,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 Resend = Resend.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
                 DeliveryMail = DeliveryMail.Where(t => ((t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus)) && t.User == Agent);
 
-             
-
-                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)).ToList();
-                 
-               
+                _Activities = _Activities.Where(a => (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
 
                 _DistinctDepartments = (from a in db.ActivityLogs
                                         where (a.User == Agent) && (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
@@ -269,8 +260,8 @@ namespace MojCRM.Areas.Stats.Controllers
 
             var model = new CallCenterDailyStatsViewModel
             {
-                Activities = Activities,
-                ActivitiesByDepartment = ActivitiesByDepartment,
+                Activities = Activities.AsQueryable(),
+                ActivitiesByDepartment = ActivitiesByDepartment.AsQueryable(),
                 SumSuccessfulCalls = SuccessfulCalls.Count(),
                 SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
                 SumMailchange = MailChange.Count(),
@@ -353,7 +344,7 @@ namespace MojCRM.Areas.Stats.Controllers
             {
                 CreatedTicketsTodayCount = CreatedTickets.Count(),
                 CreatedTicketsTodayFirstTimeCount = CreatedTicketsFirst.Count(),
-                Deliveries = Deliveries
+                Deliveries = Deliveries.AsQueryable()
             };
 
             var _date = new DateTime(2017, 7, 1);

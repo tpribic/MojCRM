@@ -46,14 +46,16 @@
     var deliveryAgents = new List<ListItem>
         {
             new ListItem{ Value = "Darko Glatki", Text = "Darko Glatki"},
-            new ListItem{ Value = "Tomislav Ptiček", Text = "Tomislav Ptiček"},
             new ListItem{ Value = "Filip Troskot", Text = "Filip Troskot"},
             new ListItem{ Value = "Filip Karmazen", Text = "Filip Karmazen"},
             new ListItem{ Value = "Katarina Ceković", Text = "Katarina Ceković"},
             new ListItem{ Value = "Viktor Jajtić", Text = "Viktor Jajtić"},
             new ListItem{ Value = "Filip Vučemilović Grgić", Text = "Filip Vučemilović Grgić"},
             new ListItem{ Value = "Nikolina Ćosić", Text = "Nikolina Ćosić"},
-            new ListItem{ Value = "Ivan Boban", Text = "Ivan Boban"}
+            new ListItem{ Value = "Ivan Boban", Text = "Ivan Boban"},
+            new ListItem{ Value = "Ana Šimac", Text = "Ana Šimac"},
+            new ListItem{ Value = "Matija Ekart", Text = "Matija Ekart"},
+            new ListItem{ Value = "Filip Klarić", Text = "Filip Klarić"}
         };
 
 }
@@ -279,6 +281,9 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
     });
     columns.Add(m => m.InsertDate).Encoded(false).Sanitized(false).Titled("Datum kartice").Sortable(true).RenderValueAs(m =>
     {
+        if (m.DocumentStatus == 30 && m.IsAssigned == false)
+            return
+                @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" onclick="javascript: Assign()"></a></div>;
         if (m.DocumentStatus == 30 && m.IsAssigned == false && m.Receiver.MerDeliveryDetail.RequiredPostalService)
             return
             @<div><span>@Html.Raw(m.InsertDate.ToShortDateString())</span><br /><a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o fa-2x text-success assinged" data-ticket-id="@Html.Raw(m.Id)" onclick="javascript: Assign()"></a> <i class="fa fa-envelope fa-2x" style="color: gold"></i></div>;
@@ -360,7 +365,7 @@ columns.Add(m => m.MerDocumentTypeIdString).Encoded(false).Sanitized(false).Titl
         var email = "matej@moj-eracun.hr; alen.jedud@moj-eracun.hr";
         var subject = "Moj-CRM -- Dnevni izvještaj -- Odjel dostave";
         var body = "Poštovani," + "%0D%0A" + "%0D%0A" + "danas je kreirano @ViewBag.TicketsCreatedToday kartica, od toga @ViewBag.OpenTicketsAssigned za prvi puta." + "%0D%0A" + "%0D%0A" + "Uključujući stare kartice, ukupno se mora obraditi @ViewBag.TotalOpenedTickets kartica. Zbog toga će raspored na dostavi biti:" + "%0D%0A" + "%0D%0A"
-            + "Darko Glatki: " + "%0D%0A" + "Tomislav Ptiček: " + "%0D%0A" + "Filip Troskot: " + "%0D%0A" + "Filip Karmazen: " + "%0D%0A" + "Katarina Ceković: " + "%0D%0A" + "Nikolina Ćosić: " + "%0D%0A" + "Matija Ekart: " + "%0D%0A" + "Ana Šimac: " + "%0D%0A" + "%0D%0A" + "Lijep pozdrav,";
+            + "Darko Glatki: " + "%0D%0A" + "Tomislav Ptiček: " + "%0D%0A" + "Filip Troskot: " + "%0D%0A" + "Filip Karmazen: " + "%0D%0A" + "Katarina Ceković: " + "%0D%0A" + "Nikolina Ćosić: " + "%0D%0A" + "Matija Ekart: " + "%0D%0A" + "Ana Šimac: " + "%0D%0A" + "Filip Klarić: " + "%0D%0A" + "%0D%0A" + "Lijep pozdrav,";
         window.location = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
     });
     function Resend() {
