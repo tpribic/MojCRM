@@ -84,6 +84,7 @@ namespace MojCRM.ViewModels
                 {
                     case OrganizationDetail.CountryIdentificationCodeEnum.Noinfo: return "Nema podatka";
                     case OrganizationDetail.CountryIdentificationCodeEnum.Hr: return "Hrvatska";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Si: return "Slovenija";
                 }
                 return "Nema podatka";
             }
@@ -96,6 +97,7 @@ namespace MojCRM.ViewModels
                 {
                     case OrganizationDetail.CountryIdentificationCodeEnum.Noinfo: return "Nema podatka";
                     case OrganizationDetail.CountryIdentificationCodeEnum.Hr: return "Hrvatska";
+                    case OrganizationDetail.CountryIdentificationCodeEnum.Si: return"Slovenija";
                 }
                 return "Nema podatka";
             }

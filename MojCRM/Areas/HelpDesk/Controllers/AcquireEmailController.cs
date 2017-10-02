@@ -14,34 +14,34 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 {
     public class AcquireEmailController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext _db = new ApplicationDbContext();
         // GET: HelpDesk/AcquireEmail
         [Authorize]
         public ActionResult Index()
         {
-            var list = db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED);
+            var list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED);
             return View(list.OrderByDescending(x => x.Id));
         }
 
         public ActionResult Details(int id)
         {
-            var entity = db.AcquireEmails.Find(id);
+            var entity = _db.AcquireEmails.Find(id);
 
             return View(entity);
         }
 
         [HttpPost]
-        public JsonResult LogActivity(int EntityId, int Identifier)
+        public JsonResult LogActivity(int entityId, int identifier)
         {
-            var entity = db.AcquireEmails.Find(EntityId);
-            switch (Identifier)
+            var entity = _db.AcquireEmails.Find(entityId);
+            switch (identifier)
             {
                 case 1:
-                    db.ActivityLogs.Add(new ActivityLog()
+                    _db.ActivityLogs.Add(new ActivityLog()
                     {
                         Description = "Agent " + User.Identity.Name + " je obavio uspješan poziv za ažuriranje baze korisnika.",
                         User = User.Identity.Name,
-                        ReferenceId = EntityId,
+                        ReferenceId = entityId,
                         ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
                         Department = ActivityLog.DepartmentEnum.DatabaseUpdate,
                         Module = ActivityLog.ModuleEnum.AqcuireEmail,
@@ -49,14 +49,14 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     });
                     entity.LastContactedBy = User.Identity.Name;
                     entity.LastContactDate = DateTime.Now;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     break;
                 case 2:
-                    db.ActivityLogs.Add(new ActivityLog()
+                    _db.ActivityLogs.Add(new ActivityLog()
                     {
                         Description = "Agent " + User.Identity.Name + " je pokušao obaviti poziv za ažuriranje baze korisnika.",
                         User = User.Identity.Name,
-                        ReferenceId = EntityId,
+                        ReferenceId = entityId,
                         ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
                         Department = ActivityLog.DepartmentEnum.DatabaseUpdate,
                         Module = ActivityLog.ModuleEnum.AqcuireEmail,
@@ -64,7 +64,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     });
                     entity.LastContactedBy = User.Identity.Name;
                     entity.LastContactDate = DateTime.Now;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     break;
             }
             return Json(new { Status = "OK" });
@@ -72,25 +72,26 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
 
         [HttpPost]
-        public JsonResult ChangeStatus(int EntityId, int Identifier)
+        public JsonResult ChangeStatus(int entityId, int identifier)
         {
-            var entity = db.AcquireEmails.Find(EntityId);
-            switch (Identifier)
+            var entity = _db.AcquireEmails.Find(entityId);
+            switch (identifier)
             {
                 case 1:
-                    entity.AcquireEmailStatus = Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CHECKED;
                     entity.UpdateDate = DateTime.Now;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     break;
                 case 2:
-                    entity.AcquireEmailStatus = Models.AcquireEmail.AcquireEmailStatusEnum.VERIFIED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
                     entity.UpdateDate = DateTime.Now;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                     break;
             }
             return Json(new { Status = "OK" });
         }
 
+        [HttpPost]
         public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId, bool create = false)
         {
             int importedEntities = 0;
@@ -100,8 +101,9 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             List<string> invalidVATs = new List<string>();
 
             //string filepath = @"C:\MojCRM\ImportAcquireEmail.xls";
-            string filepath = Path.Combine(Server.MapPath("~/Temp"), Path.GetFileName(file.FileName));
-            file.SaveAs(filepath);
+            string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
+            if(!create)
+                file.SaveAs(filepath);
 
             ExcelOut.Workbook wb = ExcelOut.Workbook.Load(filepath);
             ExcelOut.Worksheet ws = wb.Worksheets[0];
@@ -118,7 +120,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
                     if (VAT != "")
                     {
-                        if (db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
+                        if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
                         {
                             validVATs.Add(VAT);
                             if (create)
@@ -148,6 +150,9 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 InvalidVATs = invalidVATs
             };
 
+            if(create)
+                System.IO.File.Delete(filepath);
+
             return View(model);
         }
 
@@ -156,7 +161,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         {
             if (VAT != "")
             {
-                var relatedOrganization = db.Organizations.First(o => o.SubjectBusinessUnit == "" && o.VAT == VAT);
+                var relatedOrganization = _db.Organizations.First(o => o.SubjectBusinessUnit == "" && o.VAT == VAT);
 
                 if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
                 {
@@ -231,19 +236,19 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
         public void CreateEntity(Organizations organization, AcquireEmailStatusEnum status, int campaignId)
         {
-            db.AcquireEmails.Add(new AcquireEmail
+            _db.AcquireEmails.Add(new AcquireEmail
             {
                 RelatedOrganizationId = organization.MerId,
                 RelatedCampaignId = campaignId,
                 AcquireEmailStatus = status,
                 InsertDate = DateTime.Now
             });
-            db.SaveChanges();
+            _db.SaveChanges();
         }
 
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)
         {
-            var entityList = (from ae in db.AcquireEmails
+            var entityList = (from ae in _db.AcquireEmails
                               where ae.RelatedCampaignId == campaignId && ae.AcquireEmailStatus == AcquireEmailStatusEnum.VERIFIED
                               select new AcquireEmailExportModel
                               {

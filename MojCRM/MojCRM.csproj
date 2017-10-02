@@ -888,6 +888,7 @@
     <Folder Include="Areas\HelpDesk\Views\Shared\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
     <Folder Include="Areas\Stats\Views\Shared\" />
+    <Folder Include="ImportFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

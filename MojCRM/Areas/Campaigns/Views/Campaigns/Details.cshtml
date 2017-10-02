@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if (Model.AssignedMembers.Count != 0)
+                        @if (Model.AssignedMembers.Count() != 0)
                         {
                             <br/>
                             <div class="row">
@@ -117,7 +117,7 @@
     </div>
 }
 <!--Modal - Upload File-->
-@using (Html.BeginForm("CheckEntitiesForImport", "AcquireEmail", new { area = "HelpDesk", enctype = "multipart/form-data" }, FormMethod.Post))
+@using (Html.BeginForm("CheckEntitiesForImport", "AcquireEmail", new { area = "HelpDesk" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="modal fade" id="checkEntities" tabindex="-1" role="dialog" aria-labelledby="checkEntities">
         <div class="modal-dialog modal-sm" role="document">
@@ -135,12 +135,14 @@
                         </div>
                         <hr />
                         <div class="row">
-                            <label for="file">Učitaj tablicu s podacima:</label>  
-                            <input type="file" name="file" id="file"/><br><br>  
-                            <br />
-                            <div class="hidden">
-                                <div id="ticketid">
-                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                            <div class="col-md-12">
+                                <label for="file">Učitaj tablicu s podacima:</label>
+                                <input type="file" name="file" id="file"/><br><br>
+                                <br/>
+                                <div class="hidden">
+                                    <div id="ticketid">
+                                        @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new {@class = "form-control", @Value = Model.Campaign.CampaignId})
+                                    </div>
                                 </div>
                             </div>
                         </div>

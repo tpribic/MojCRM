@@ -73,8 +73,8 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "LogActivity", controller = "AcquireEmail", area = "HelpDesk" })',
             data: {
-                EntityId: $(this).data("entity-id"),
-                Identifier: 1
+                entityId: $(this).data("entity-id"),
+                identifier: 1
             },
             success: function (data) {
                 if (data.Status === 'OK')
@@ -89,8 +89,8 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "LogActivity", controller = "AcquireEmail", area = "HelpDesk" })',
             data: {
-                EntityId: $(this).data("entity-id"),
-                Identifier: 2
+                entityId: $(this).data("entity-id"),
+                identifier: 2
             },
             success: function (data) {
                 if (data.Status === 'OK')
@@ -105,8 +105,8 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "ChangeStatus", controller = "AcquireEmail", area = "HelpDesk" })',
             data: {
-                EntityId: $(this).data("entity-id"),
-                Identifier: 1
+                entityId: $(this).data("entity-id"),
+                identifier: 1
             },
             success: function (data) {
                 if (data.Status === 'OK')
@@ -122,8 +122,8 @@
             method: 'POST',
             url: '@Url.RouteUrl(new { action = "ChangeStatus", controller = "AcquireEmail", area = "HelpDesk" })',
             data: {
-                EntityId: $(this).data("entity-id"),
-                Identifier: 2
+                entityId: $(this).data("entity-id"),
+                identifier: 2
             },
             success: function (data) {
                 if (data.Status === 'OK')
