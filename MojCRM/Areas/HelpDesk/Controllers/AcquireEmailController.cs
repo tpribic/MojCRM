@@ -7,8 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
-using ExcelOut = ExcelLibrary.SpreadSheet;
 using MojCRM.Areas.HelpDesk.Helpers;
+using OfficeOpenXml;
 
 namespace MojCRM.Areas.HelpDesk.Controllers
 {
@@ -100,46 +100,38 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             int invalidEntities = 0;
             List<string> invalidVATs = new List<string>();
 
-            //string filepath = @"C:\MojCRM\ImportAcquireEmail.xls";
             string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
             if(!create)
                 file.SaveAs(filepath);
 
-            ExcelOut.Workbook wb = ExcelOut.Workbook.Load(filepath);
-            ExcelOut.Worksheet ws = wb.Worksheets[0];
+            var wb = new ExcelPackage(new FileInfo(filepath));
+            var ws = wb.Workbook.Worksheets[1];
 
-            for (int rowIndex = ws.Cells.FirstRowIndex; rowIndex <= ws.Cells.LastRowIndex; rowIndex++)
+            for (int i = ws.Dimension.Start.Row; i <= ws.Dimension.End.Row; i++)
             {
-                ExcelOut.Row row = ws.Cells.GetRow(rowIndex);
+                string VAT = ws.Cells[i, 1].Value.ToString();
 
-                for (int colIndex = row.FirstColIndex; colIndex <= row.LastColIndex; colIndex++)
+                if (VAT != "")
                 {
-                    ExcelOut.Cell cell = row.GetCell(colIndex);
-
-                    string VAT = cell.StringValue;
-
-                    if (VAT != "")
+                    if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
                     {
-                        if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
+                        validVATs.Add(VAT);
+                        if (create)
                         {
-                            validVATs.Add(VAT);
-                            if (create)
-                            {
-                                ImportEntities(campaignId, VAT);
-                                importedEntities++;
-                            }
+                            ImportEntities(campaignId, VAT);
+                            importedEntities++;
+                        }
 
-                            validEntities++;
-                        }
-                        else
-                        {
-                            invalidVATs.Add(VAT);
-                            invalidEntities++;
-                        }
+                        validEntities++;
                     }
-                } 
+                    else
+                    {
+                        invalidVATs.Add(VAT);
+                        invalidEntities++;
+                    }
+                }
             }
-
+            
             var model = new AcquireEmailCheckResults
             {
                 CampaignId = campaignId,
@@ -202,36 +194,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             //Response.End();
             #endregion
 
-            string savePath = @"C:\MojCRM\ExportAcquireEmail.xls";
-            int cell = 1;
+            int cell = 2;
             var results = GetEntityList(campaignId);
-            ExcelOut.Workbook wb = new ExcelOut.Workbook();
-            ExcelOut.Worksheet ws =
-                new ExcelOut.Worksheet("Rezultati obrade baze")
-                {
-                    Cells =
-                    {
-                        [0, 0] = new ExcelOut.Cell("Naziv kampanje"),
-                        [0, 1] = new ExcelOut.Cell("OIB partnera"),
-                        [0, 2] = new ExcelOut.Cell("Naziv partnera"),
-                        [0, 3] = new ExcelOut.Cell("Informacija o zaprimanju eRačuna")
-                    }
-                };
-
+            var wb = new ExcelPackage();
+            var ws = wb.Workbook.Worksheets.Add("Rezultati obrade baze");
+            ws.Cells[1, 1].Value = "Naziv kampanje";
+            ws.Cells[1, 2].Value = "OIB partnera";
+            ws.Cells[1, 3].Value = "Naziv partnera";
+            ws.Cells[1, 4].Value = "Informacija o zaprimanju eRačuna";
 
             foreach (var res in results)
             {
-                ws.Cells[cell, 0] = new ExcelOut.Cell(res.CampaignName);
-                ws.Cells[cell, 1] = new ExcelOut.Cell(res.VAT);
-                ws.Cells[cell, 2] = new ExcelOut.Cell(res.SubjectName);
-                ws.Cells[cell, 3] = new ExcelOut.Cell(res.AcquiredReceivingInformation);
+                ws.Cells[cell, 1].Value = res.CampaignName;
+                ws.Cells[cell, 2].Value = res.VAT;
+                ws.Cells[cell, 3].Value = res.SubjectName;
+                ws.Cells[cell, 4].Value = res.AcquiredReceivingInformation;
                 cell++;
             }
 
-            wb.Worksheets.Add(ws);
-            wb.Save(savePath);
+            while (cell < 16)
+            {
+                ws.Cells[cell, 1].Value = "";
+                cell++;
+            }
 
-            return Redirect(Request.UrlReferrer.ToString());
+            return File(wb.GetAsByteArray(), "application/vnd.ms-excel", "Rezultati.xls");
         }
 
         public void CreateEntity(Organizations organization, AcquireEmailStatusEnum status, int campaignId)
