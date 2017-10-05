@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using MojCRM.Areas.Sales.Models;
 using MojCRM.Models;
 
 namespace MojCRM.Areas.Stats.ViewModels
@@ -25,16 +26,16 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int CreatedTicketsTodayCount { get; set; }
         public int CreatedTicketsTodayFirstTimeCount { get; set; }
         public IQueryable<DailyDelivery> Deliveries { get; set; }
-        public IList<SelectListItem> Agents
+        public IQueryable<SelectListItem> Agents
         {
             get
             {
-                var agents = (from u in db.Users
-                              select new SelectListItem()
+                var agents = from u in db.Users
+                              select new SelectListItem
                               {
                                   Text = u.UserName,
                                   Value = u.UserName
-                              }).ToList();
+                              };
                 return agents;
             }
         }
@@ -215,4 +216,37 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int NumberOfLeadsRejected { get; set; }
         public int NumberOfLeadsAccepted { get; set; }
     }
+
+    public class SalesStatsViewModel
+    {
+            public IQueryable<Lead> Leads { get; set; }
+            public IQueryable<Opportunity> Opportunities { get; set; }
+            public IQueryable<ApplicationUser> Agents { get; set; }
+            [Display(Name = "Broj prodajnih prilika")]
+            public IQueryable<SaleAgentGrouping> SumAssignedOpportunities { get; set; }
+            [Display(Name = "Broj lead-ova")]
+            public IQueryable<SaleAgentGrouping> SumAssignedLeads { get; set; }
+    
+    
+            public IQueryable<SelectListItem> AgentList
+            {
+                get
+                {
+                    var listAgents = from u in Agents
+                        select new SelectListItem
+                        {
+                            Text = u.UserName,
+                            Value = u.UserName
+                        };
+
+                return listAgents;
+                }
+            }
+    }
+    public class SaleAgentGrouping
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
+    }
+
 }

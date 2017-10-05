@@ -1,0 +1,209 @@
+﻿@model MojCRM.Areas.Stats.ViewModels.SalesStatsViewModel
+@{
+    ViewBag.Title = "Dnevnik agenata prodaje";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Dnevnik prodaje</strong></h2>
+<hr />
+
+<div class="row">
+    @using (Html.BeginForm("SalesStat", "Stats", FormMethod.Get))
+    {
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="search-date">Početni datum pretrage</label>
+                <div id="search-date">
+                    @Html.TextBox("SearchDateStart", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date-start", @name = "search-date-end" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="search-date">Završni datum pretrage</label>
+                <div id="search-date">
+                    @Html.TextBox("SearchDateEnd", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date-start", @name = "search-date-end" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3" style="margin-top:22px">
+            <div class="form-group">
+                <div>
+                    <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                    <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="jumbotron" style="padding-top:0;">
+    @foreach (var Agent in @Model.AgentList)
+    {
+        <div id="MainWrapSalesDiv" class="personal-div">
+            <div id=@("SalesAgentLablelWrap" + Agent.Text.Replace(" ", ""))>
+                <label for="SalesAgentTable" class="personal-label">@Agent.Text</label>
+            </div>
+            <div id=@("wrapTableSalesAgent"+Agent.Text.Replace(" ", "")) style="display:none;">
+                <hr class="smallerHR">
+
+                <div id=@("SalesAgentLablelOppWrap" + Agent.Text.Replace(" ", "")) class="salesAgentCategoryWrap">
+                    <label class="personal-label">
+                        Prodajne prilike:@foreach (var Sum in Model.SumAssignedOpportunities)
+                        {
+                            if (Sum != null && Sum.Name != null)
+                            {
+                                if (Sum.Name.Equals(Agent.Text))
+                                { @Sum.Count;
+                            break;
+                        }
+                        if (Model.SumAssignedOpportunities.IndexOf(Sum) == Model.SumAssignedOpportunities.Count - 1)
+                        {
+                                    <text>0</text>
+                                }
+
+                            }
+
+                        }
+                    </label>
+                </div>
+                <div id=@("salesAgentTableOpp"+Agent.Text.Replace(" ", "")) style="display:none;">
+                    <table class="table personal-table" style=" margin-bottom:0;word-break:break-word;">
+                        <tr>
+                            <td style="width:16%"><strong>Stvoreno</strong></td>
+                            <td style="width:16%"><strong>Naslov</strong></td>
+                            <td style="width:10%"><strong>Status</strong></td>
+                            <td style="width:16%"><strong>Zadnji kontakt</strong></td>
+                            <td style="width:16%"><strong>Datum zadnjeg kontakta</strong></td>
+                            <td style="width:26%"><strong>Opis</strong></td>
+                        </tr>
+                        @foreach (var Opportunity in @Model.Opportunities)
+                        {
+                            if (Opportunity != null && Opportunity.AssignedTo != null)
+                            {
+
+                                if (Opportunity.AssignedTo.Equals(Agent.Text.Trim()))
+                                {
+                                    <tr>
+
+                                        <td style="width:16%">@Opportunity.InsertDate</td>
+                                        <td style="width:16%">@Opportunity.OpportunityTitle</td>
+                                        <td style="width:10%">@Opportunity.OpportunityStatusString</td>
+                                        <td style="width:16%">@Opportunity.LastContactedBy</td>
+                                        <td style="width:16%">@Opportunity.LastContactDate</td>
+                                        <td style="width:26%">@Opportunity.OpportunityDescription</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </table>
+                </div>
+                <hr class="smallerHR">
+
+                <div id=@("SalesAgentLablelLeaWrap" + Agent.Text.Replace(" ", "")) class="salesAgentCategoryWrap">
+                    <label class="personal-label">
+                        Leads:@foreach (var Sum in Model.SumAssignedLeads)
+                        {
+                            if (Sum != null && Sum.Name != null)
+                            {
+                                if (Sum.Name.Equals(Agent.Text))
+                                { @Sum.Count;
+                                    break;
+                                }
+                                if (Model.SumAssignedLeads.IndexOf(Sum) == Model.SumAssignedLeads.Count - 1)
+                                {
+                                    <text>0</text>
+                                }
+                            }
+                        }
+                    </label>
+                </div>
+                <div id=@("salesAgentTableLea"+Agent.Text.Replace(" ", "")) style="display:none;">
+                    <table class="table personal-table" style="margin-bottom:0;word-break:break-word;">
+                        <tr>
+                            <td style="width:16%"><strong>Stvoreno</strong></td>
+                            <td style="width:16%"><strong>Naslov</strong></td>
+                            <td style="width:10%"><strong>Status</strong></td>
+                            <td style="width:16%"><strong>Zadnji kontakt</strong></td>
+                            <td style="width:16%"><strong>Datum zadnjeg kontakta</strong></td>
+                            <td style="width:26%"><strong>Opis</strong></td>
+                        </tr>
+                        @foreach (var Leads in @Model.Leads)
+                        {
+                            if (Leads != null && Leads.AssignedTo != null)
+                            {
+                                if (Leads.AssignedTo.Equals(Agent.Text.Trim()))
+                                {
+                                    <tr>
+
+                                        <td style="width:16%">@Leads.InsertDate</td>
+                                        <td style="width:16%">@Leads.LeadTitle</td>
+                                        <td style="width:10%">@Leads.LeadStatusString</td>
+                                        <td style="width:16%">@Leads.LastContactedBy</td>
+                                        <td style="width:16%">@Leads.LastContactDate</td>
+                                        <td style="width:26%">@Leads.LeadDescription</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    }
+
+</div>
+
+
+@foreach (var Agent in @Model.AgentList)
+{
+    <script>
+        $(function () {
+
+            $("div#@("SalesAgentLablelWrap" + Agent.Text.Replace(" ", ""))").click(function () {
+
+                $("div#@("wrapTableSalesAgent" + Agent.Text.Replace(" ", ""))").slideToggle("slow");
+
+
+            });
+            $("div#@("SalesAgentLablelOppWrap" + Agent.Text.Replace(" ", ""))").click(function () {
+
+                $("div#@("salesAgentTableOpp"+Agent.Text.Replace(" ", ""))").slideToggle("slow");
+
+
+            });
+            $("div#@("SalesAgentLablelLeaWrap" + Agent.Text.Replace(" ", ""))").click(function () {
+
+                $("div#@("salesAgentTableLea"+Agent.Text.Replace(" ", ""))").slideToggle("slow");
+
+
+            });
+        })
+    </script>
+
+
+}
+<script>
+    $(function () {
+        $(".date-picker").datepicker({
+            language: 'hr',
+            weekStart: 1,
+            format: "dd.mm.yyyy.",
+            autoclose: true,
+            orientation: "auto bottom",
+        });
+        $("#btn-reset").click(function (e) {
+            $(document).find('input[type=text]').attr('value', '');
+            $(document).find("select option").attr('selected', false);
+        });
+
+
+
+
+    })
+</script>

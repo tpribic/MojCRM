@@ -725,6 +725,7 @@
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap-progressbar.js" />
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\CheckEntitiesForImport.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\SalesStat.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />

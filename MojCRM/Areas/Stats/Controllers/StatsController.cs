@@ -354,5 +354,75 @@ namespace MojCRM.Areas.Stats.Controllers
 
             return View(model);
         }
+
+         // GET: Stats/Sales
+         public ActionResult SalesStat(string Agent, string SearchDateStart, string SearchDateEnd)
+         {
+ 
+ 
+             var _Agents = from u in db.Users
+                            select u;
+             var _Leads = from u in db.Leads
+                          where u.IsAssigned
+                          select u;
+             var _Opportunities = from u in db.Opportunities
+                                  where u.IsAssigned
+                                  select u;
+ 
+             var assignedOpportunities = db.Opportunities.Where(s => s.IsAssigned).GroupBy(d => d.AssignedTo)
+                 .Select(d => new SaleAgentGrouping
+                 {
+                    Name = d.Key,
+                    Count = d.Count()
+                 });
+ 
+             var assignedLeads = db.Leads.Where(s => s.IsAssigned).GroupBy(d => d.AssignedTo)
+                .Select(d => new SaleAgentGrouping
+                {
+                    Name = d.Key,
+                    Count = d.Count()
+                });
+ 
+ 
+             if(!String.IsNullOrEmpty(SearchDateStart) && !String.IsNullOrEmpty(SearchDateEnd))
+             {
+               /* 
+              
+               _Leads = _Leads.Where(t => t.InsertDate=>)
+                  _Opportunities = 
+ 
+                  assignedOpportunities = 
+ 
+                  assignedLeads =
+                  
+              */
+             }
+             if (String.IsNullOrEmpty(SearchDateStart) && String.IsNullOrEmpty(SearchDateEnd))
+             {
+ 
+             }
+             if (!String.IsNullOrEmpty(SearchDateStart) && String.IsNullOrEmpty(SearchDateEnd))
+             {
+ 
+             }
+             if (String.IsNullOrEmpty(SearchDateStart) && !String.IsNullOrEmpty(SearchDateEnd))
+             {
+ 
+             }
+ 
+             var SalesStat = new SalesStatsViewModel
+             {
+                 Leads = _Leads,
+                 Opportunities = _Opportunities,
+                 SumAssignedOpportunities = assignedOpportunities,
+                 SumAssignedLeads=assignedLeads,
+                 Agents = _Agents,
+ 
+ 
+             };
+ 
+             return View(SalesStat);
+ 
+         }
     }
 }
