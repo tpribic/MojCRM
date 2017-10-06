@@ -32,6 +32,23 @@
     @Html.Grid(Model).Named("PopisSvihTvrtki").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
     columns.Add(m => m.VAT).Encoded(false).Sanitized(false).Titled("OIB tvrtke").Sortable(true);
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        if (m.IsActive)
+        {
+            return @<div>
+                       <span class="label label-success">Aktivna</span>
+                   </div>;
+        }
+        if (!m.IsActive)
+        {
+            return @<div>
+                       <span class="label label-danger">Brisana</span>
+                   </div>;
+        }
+        return @<div></div>;
+
+    });
     columns.Add(m => m.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(true);
     columns.Add(m => m.OrganizationDetail.MainCity).Encoded(false).Sanitized(false).Titled("Mjesto").Sortable(false);
     columns.Add(m => m.Income).Encoded(false).Sanitized(false).Titled("Godišnji prihod").Sortable(true).Format("{0:C}");
