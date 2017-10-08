@@ -74,7 +74,9 @@ namespace MojCRM
                 "~/Scripts/king-chart-stat.js",
                 "~/Scripts/king-components.js"/*,
                 "~/Scripts/king-table.js"*/,
-                "~/Scripts/king-elements.js"));
+                "~/Scripts/king-elements.js",
+                "~/Scripts/daterangepicker.js",
+                "~/Scripts/moment.min.js"));
         }
     }
 }

@@ -60,5 +60,37 @@ namespace MojCRM.Models
             [Description("Slovenija")]
             Si
         }
+
+        public string OrganizationGroupString
+        {
+            get
+            {
+                switch (OrganizationGroup)
+                {
+                    case OrganizationGroupEnum.Nema: return "Ne pripada grupaciji";
+                    case OrganizationGroupEnum.AdrisGrupa: return "Adris Grupa";
+                    case OrganizationGroupEnum.Agrokor: return "Koncern Agrokor";
+                    case OrganizationGroupEnum.AtlanticGrupa: return "Atlantic Grupa";
+                    case OrganizationGroupEnum.AutoHrvatska: return "Poslovna grupacija Auto Hrvatska";
+                    case OrganizationGroupEnum.BabićPekare: return "Babić Pekare";
+                    case OrganizationGroupEnum.COMET: return "COMET";
+                    case OrganizationGroupEnum.CIOS: return "CIOS";
+                    case OrganizationGroupEnum.CVH: return "CVH";
+                    case OrganizationGroupEnum.Holcim: return "Holcim Grupa";
+                    case OrganizationGroupEnum.MSAN: return "MSAN Grupa";
+                    case OrganizationGroupEnum.NEXE: return "NEXE Grupa";
+                    case OrganizationGroupEnum.NTL: return "NTL Grupa";
+                    case OrganizationGroupEnum.PivacGrupa: return "Pivac Grupa";
+                    case OrganizationGroupEnum.RijekaHolding: return "Rijeka Holding";
+                    case OrganizationGroupEnum.STRABAG: return "STRABAG";
+                    case OrganizationGroupEnum.StyriaGrupa: return "Styria Grupa";
+                    case OrganizationGroupEnum.SunceKoncern: return "Koncern Sunce";
+                    case OrganizationGroupEnum.UltraGros: return "Ultra Gros";
+                    case OrganizationGroupEnum.Žito: return "Žito Grupa";
+                    case OrganizationGroupEnum.ZagrebačkiHolding: return "Zagrebački Holding";
+                }
+                return "Ne pripada grupaciji";
+            }
+        }
     }
 }

@@ -146,6 +146,71 @@ namespace MojCRM.Areas.Stats.ViewModels
         }
     }
 
+    public class CallCenterWeekly
+    {
+        [Display(Name = "Agent")]
+        public string Agent { get; set; }
+        [Display(Name = "Broj uspješnih poziva")]
+        public int NumberSuccessfulCalls { get; set; }
+        [Display(Name = "Broj neuspješnih poziva")]
+        public int NumberUnsuccessfulCalls { get; set; }
+        [Display(Name = "Broj ispravaka mailova")]
+        public int? NumberMailchange { get; set; }
+        [Display(Name = "Broj ponovno poslanih obavijesti o dostavi")]
+        public int? NumberResend { get; set; }
+        [Display(Name = "Broj poslanih e-mailova vezanih za dostavu")]
+        public int? NumberMail { get; set; }
+        [Display(Name = "Broj zaključanih kartica (Odjel dostave)")]
+        public int? NumberTicketsAssigned { get; set; }
+    }
+    public class CallCenterWeeklyByDepartment
+    {
+        [Display(Name = "Odjel")]
+        public ActivityLog.DepartmentEnum Department { get; set; }
+        [Display(Name = "Zbroj uspješnih poziva")]
+        public int NumberSuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj neuspješnih poziva")]
+        public int NumberUnsuccessfulCalls { get; set; }
+        [Display(Name = "Zbroj poslanih e-mailova korisnicima")]
+        public int? NumberMail { get; set; }
+        [Display(Name = "Zbroj ispravaka mailova (DOSTAVA)")]
+        public int? NumberMailchange { get; set; }
+        [Display(Name = "Zbroj ponovno poslanih obavijesti o dostavi (DOSTAVA)")]
+        public int? NumberResend { get; set; }
+
+
+        public string DepartmentString
+        {
+            get
+            {
+                switch (Department)
+                {
+                    case ActivityLog.DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
+                    case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
+                }
+                return "Odjel";
+            }
+        }
+    }
+    public class CallCenterWeeklyStatsViewModel
+    {
+        public IQueryable<CallCenterWeekly> Activities { get; set; }
+        public IQueryable<CallCenterWeeklyByDepartment> ActivitiesByDepartment { get; set; }
+        [Display(Name = "Uspješni pozivi")]
+        public int SumSuccessfulCalls { get; set; }
+        [Display(Name = "Neuspješni pozivi")]
+        public int SumUnsuccessfulCalls { get; set; }
+        [Display(Name = "Poslani e-mailovi vezani za dostavu")]
+        public int? SumSentMail { get; set; }
+        [Display(Name = "Ispravci e-mailova (Odjel dostave)")]
+        public int? SumMailchange { get; set; }
+        [Display(Name = "Ponovno poslane obavijesti o dostavi (Odjel dostave)")]
+        public int? SumResend { get; set; }
+        [Display(Name = "Zaključane kartice (Odjel dostave)")]
+        public int? SumTicketsAssigned { get; set; }
+    }
+
     public class PersonalDailyActivitiesViewModel
     {
         public IQueryable<ActivityLog> PersonalActivities { get; set; }

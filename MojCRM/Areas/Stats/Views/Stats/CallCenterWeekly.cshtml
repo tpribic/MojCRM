@@ -1,0 +1,116 @@
+﻿@model MojCRM.Areas.Stats.ViewModels.CallCenterWeeklyStatsViewModel
+@{
+    ViewBag.Title = "Tjedna statistika poziva";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Statistike agenata</strong></h2>
+<h3 style="text-align:center"><strong>Tjedna statistika poziva</strong></h3>
+<hr />
+<body>
+@using (Html.BeginForm("CallCenterWeekly", "Stats", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="search-date">Period pretrage</label>
+                <div id="search-date">
+                    @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Traženi period", @type = "text", @id = "daterange-default", @name = "daterange-default" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top:22px">
+            <div class="form-group">
+                <div>
+                    <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                    <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<hr />
+<h3 style="text-align:center"><strong>Skupna statistika</strong></h3>
+<div>
+    <table class="table">
+        <tr>
+            <th>@Html.LabelFor(model => model.SumSuccessfulCalls)</th>
+            <th>@Html.LabelFor(model => model.SumUnsuccessfulCalls)</th>
+            <th>@Html.LabelFor(model => model.SumSentMail)</th>
+            <th>@Html.LabelFor(model => model.SumMailchange)</th>
+            <th>@Html.LabelFor(model => model.SumResend)</th>
+            <th>@Html.LabelFor(model => model.SumTicketsAssigned)</th>
+        </tr>
+        <tr>
+            <td>@Model.SumSuccessfulCalls</td>
+            <td>@Model.SumUnsuccessfulCalls</td>
+            <td>@Model.SumSentMail</td>
+            <td>@Model.SumMailchange</td>
+            <td>@Model.SumResend</td>
+            <td>@Model.SumTicketsAssigned</td>
+        </tr>
+    </table>
+</div>
+<br />
+<hr />
+<h3 style="text-align:center"><strong>Statistika po odjelima</strong></h3>
+<div>
+    <table class="table">
+        <tr>
+            <th>Odjel</th>
+            <th>Uspješni pozivi</th>
+            <th>Neuspješni pozivi</th>
+            <th>Poslani e-mailovi korisnicima</th>
+            <th>Ispravak mailova (Odjel dostave)</th>
+            <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
+        </tr>
+        @foreach (var department in Model.ActivitiesByDepartment)
+        {
+            <tr>
+                <td>@department.DepartmentString</td>
+                <td>@department.NumberSuccessfulCalls</td>
+                <td>@department.NumberUnsuccessfulCalls</td>
+                <td>@department.NumberMail</td>
+                <td>@department.NumberMailchange</td>
+                <td>@department.NumberResend</td>
+            </tr>
+        }
+        <tr></tr>
+    </table>
+</div>
+<br />
+<hr />
+<h3 style="text-align:center"><strong>Statistika po agentima</strong></h3>
+<div>
+    <table class="table">
+        <tr>
+            <th>Agent</th>
+            <th>Uspješni pozivi</th>
+            <th>Neuspješni pozivi</th>
+            <th>Poslani e-mailovi korisnicima</th>
+            <th>Ispravak mailova (Odjel dostave)</th>
+            <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
+            <th>Dodijeljene kartice (Odjel dostave)</th>
+        </tr>
+        @foreach (var activity in Model.Activities)
+        {
+            <tr>
+                <td>@activity.Agent</td>
+                <td>@activity.NumberSuccessfulCalls</td>
+                <td>@activity.NumberUnsuccessfulCalls</td>
+                <td>@activity.NumberMail</td>
+                <td>@activity.NumberMailchange</td>
+                <td>@activity.NumberResend</td>
+                <td>@activity.NumberTicketsAssigned</td>
+            </tr>
+        }
+        <tr></tr>
+    </table>
+</div>
+</body>
+<script>
+    $('#daterange-default').daterangepicker({
+        format: 'DD-MM-YYYY'
+    });
+</script>
+
