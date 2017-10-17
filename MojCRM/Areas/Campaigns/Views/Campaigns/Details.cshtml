@@ -180,7 +180,7 @@
         </div>
     </div>
     <hr />
-    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES)
+    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES && Model.SalesStats.TotalCount != 0)
     {
         <label for="bases-progress" title="Broj obrađenih prodajnih prilika">Status obrade: @Model.SalesStats.NotStartedCount / @Model.SalesStats.TotalCount</label>
         <div id="bases-progress" class="progress">
@@ -189,7 +189,7 @@
             </div>
         </div>
     }
-    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
+    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES && Model.EmailBasesStats.TotalCount != 0)
     {
         <label for="bases-progress" title="Preostalo za obradu od ukupnog broja kreiranih predmeta">Status obrade: @Model.EmailBasesStats.NotVerifiedCount / @Model.EmailBasesStats.TotalCount</label>
         <div id="bases-progress" class="progress">

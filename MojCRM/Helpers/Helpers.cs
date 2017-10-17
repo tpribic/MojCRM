@@ -103,6 +103,9 @@ namespace MojCRM.Helpers
         Žito,
 
         [Description("Zagrebački Holding")]
-        ZagrebačkiHolding
+        ZagrebačkiHolding,
+
+        [Description("C.I.A.K. Grupa")]
+        Ciak
     }
 }

@@ -28,37 +28,6 @@ namespace MojCRM.ViewModels
         public int TicketsAsSenderCount { get; set; }
         public IQueryable<OrganizationAttribute> Attributes { get; set; }
 
-        public string OrganizationGroupString
-        {
-            get
-            {
-                switch (OrganizationDetails.OrganizationGroup)
-                {
-                    case Helpers.OrganizationGroupEnum.Nema: return "Ne pripada grupaciji";
-                    case Helpers.OrganizationGroupEnum.AdrisGrupa: return "Adris Grupa";
-                    case Helpers.OrganizationGroupEnum.Agrokor: return "Koncern Agrokor";
-                    case Helpers.OrganizationGroupEnum.AtlanticGrupa: return "Atlantic Grupa";
-                    case Helpers.OrganizationGroupEnum.AutoHrvatska: return "Poslovna grupacija Auto Hrvatska";
-                    case Helpers.OrganizationGroupEnum.BabićPekare: return "Babić Pekare";
-                    case Helpers.OrganizationGroupEnum.COMET: return "COMET";
-                    case Helpers.OrganizationGroupEnum.CIOS: return "CIOS";
-                    case Helpers.OrganizationGroupEnum.CVH: return "CVH";
-                    case Helpers.OrganizationGroupEnum.Holcim: return "Holcim Grupa";
-                    case Helpers.OrganizationGroupEnum.MSAN: return "MSAN Grupa";
-                    case Helpers.OrganizationGroupEnum.NEXE: return "NEXE Grupa";
-                    case Helpers.OrganizationGroupEnum.NTL: return "NTL Grupa";
-                    case Helpers.OrganizationGroupEnum.PivacGrupa: return "Pivac Grupa";
-                    case Helpers.OrganizationGroupEnum.RijekaHolding: return "Rijeka Holding";
-                    case Helpers.OrganizationGroupEnum.STRABAG: return "STRABAG";
-                    case Helpers.OrganizationGroupEnum.StyriaGrupa: return "Styria Grupa";
-                    case Helpers.OrganizationGroupEnum.SunceKoncern: return "Koncern Sunce";
-                    case Helpers.OrganizationGroupEnum.UltraGros: return "Ultra Gros";
-                    case Helpers.OrganizationGroupEnum.Žito: return "Žito Grupa";
-                    case Helpers.OrganizationGroupEnum.ZagrebačkiHolding: return "Zagrebački Holding";
-                }
-                return "Ne pripada grupaciji";
-            }
-        }
         public string LegalFormString
         {
             get
@@ -234,6 +203,7 @@ namespace MojCRM.ViewModels
                     new SelectListItem{ Value = "3", Text = @"Atlantic Grupa" },
                     new SelectListItem{ Value = "4", Text = @"Poslovna grupacija Auto Hrvatska" },
                     new SelectListItem{ Value = "5", Text = @"Babić Pekare" },
+                    new SelectListItem{ Value = "21", Text = @"C.I.A.K. Grupa"},
                     new SelectListItem{ Value = "6", Text = @"COMET" },
                     new SelectListItem{ Value = "7", Text = @"CIOS" },
                     new SelectListItem{ Value = "8", Text = @"CVH" },
