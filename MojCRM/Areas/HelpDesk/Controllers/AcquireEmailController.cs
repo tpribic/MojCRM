@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
 using MojCRM.Areas.HelpDesk.Helpers;
@@ -231,6 +232,44 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 InsertDate = DateTime.Now
             });
             _db.SaveChanges();
+        }
+
+        public JsonResult UpdateEntityStatus(int campaignId)
+        {
+            int updated = 0;
+
+            var entities = _db.AcquireEmails.Where(ac => ac.RelatedCampaignId == campaignId);
+
+            foreach (var entity in entities)
+            {
+                if (entity.Organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
+                {
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
+                    entity.UpdateDate = DateTime.Now;
+                    updated++;
+                }
+                else if (entity.Organization.MerDeliveryDetail.RequiredPostalService)
+                {
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CHECKED;
+                    entity.UpdateDate = DateTime.Now;
+                    updated++;
+                }
+                else if (entity.Organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && entity.Organization.MerDeliveryDetail.RequiredPostalService)
+                {
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
+                    entity.UpdateDate = DateTime.Now;
+                    updated++;
+                }
+                else
+                {
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CREATED;
+                    entity.UpdateDate = DateTime.Now;
+                    updated++;
+                }
+            }
+            _db.SaveChanges();
+
+            return Json(new { updated }, JsonRequestBehavior.AllowGet);
         }
 
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)
