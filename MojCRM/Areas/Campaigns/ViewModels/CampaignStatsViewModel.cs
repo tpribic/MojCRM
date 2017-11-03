@@ -69,27 +69,54 @@ namespace MojCRM.Areas.Campaigns.ViewModels
             {
                 foreach (var campaign in campaignsTemp)
                 {
-                    var newCampaign = new EmailBasesCampaignStatsViewModel()
+                    var totalCount = _db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId);
+                    if (totalCount != 0)
                     {
-                        Campaign = campaign,
-                        TotalCount = _db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId),
-                        NotVerifiedCount = _db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus != AcquireEmail.AcquireEmailStatusEnum.VERIFIED),
-                        CreatedPercent = Math.Round(((_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == AcquireEmail.AcquireEmailStatusEnum.CREATED)
-                                                      / (decimal)_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
-                        CheckedPercent = Math.Round(((_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == AcquireEmail.AcquireEmailStatusEnum.CHECKED)
-                                                      / (decimal)_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
-                        VerifiedPercent = Math.Round(((_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus == AcquireEmail.AcquireEmailStatusEnum.VERIFIED)
-                                                       / (decimal)_db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
-                    };
-                    list.Add(newCampaign);
+                        var newCampaign = new EmailBasesCampaignStatsViewModel()
+                        {
+                            Campaign = campaign,
+                            TotalCount = totalCount,
+                            NotVerifiedCount = _db.AcquireEmails.Count(a =>
+                                a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus !=
+                                AcquireEmail.AcquireEmailStatusEnum.VERIFIED),
+                            CreatedPercent = Math.Round(((_db.AcquireEmails.Count(a =>
+                                                              a.RelatedCampaignId == campaign.CampaignId &&
+                                                              a.AcquireEmailStatus ==
+                                                              AcquireEmail.AcquireEmailStatusEnum.CREATED)
+                                                          / (decimal) _db.AcquireEmails.Count(a =>
+                                                              a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
+                            CheckedPercent = Math.Round(((_db.AcquireEmails.Count(a =>
+                                                              a.RelatedCampaignId == campaign.CampaignId &&
+                                                              a.AcquireEmailStatus ==
+                                                              AcquireEmail.AcquireEmailStatusEnum.CHECKED)
+                                                          / (decimal) _db.AcquireEmails.Count(a =>
+                                                              a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
+                            VerifiedPercent = Math.Round(((_db.AcquireEmails.Count(a =>
+                                                               a.RelatedCampaignId == campaign.CampaignId &&
+                                                               a.AcquireEmailStatus ==
+                                                               AcquireEmail.AcquireEmailStatusEnum.VERIFIED)
+                                                           / (decimal) _db.AcquireEmails.Count(a =>
+                                                               a.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
+                        };
+                        list.Add(newCampaign);
+                    }
+                    else
+                    {
+                        var newCampaign = new EmailBasesCampaignStatsViewModel()
+                        {
+                            Campaign = campaign,
+                            TotalCount = totalCount,
+                            NotVerifiedCount = _db.AcquireEmails.Count(a => a.RelatedCampaignId == campaign.CampaignId && a.AcquireEmailStatus != AcquireEmail.AcquireEmailStatusEnum.VERIFIED),
+                            CreatedPercent = 0,
+                            CheckedPercent = 0,
+                            VerifiedPercent = 0,
+                        };
+                        list.Add(newCampaign);
+                    }
                 }
                 return list.AsQueryable();
             }
-            else
-            {
-                return list.AsQueryable();
-            }
-            
+            return list.AsQueryable();
         }
         public EmailBasesCampaignStatsViewModel GetModel(int id)
         {

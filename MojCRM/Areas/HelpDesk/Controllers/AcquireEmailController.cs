@@ -93,7 +93,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         }
 
         [HttpPost]
-        public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId, bool create = false)
+        public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId)
         {
             int importedEntities = 0;
             int validEntities = 0;
@@ -101,11 +101,11 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             int invalidEntities = 0;
             List<string> invalidVATs = new List<string>();
 
-            string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
-            if(!create)
-                file.SaveAs(filepath);
+            //string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
+            //if(!create)
+            //    file.SaveAs(filepath);
 
-            var wb = new ExcelPackage(new FileInfo(filepath));
+            var wb = new ExcelPackage(file.InputStream);
             var ws = wb.Workbook.Worksheets[1];
 
             for (int i = ws.Dimension.Start.Row; i <= ws.Dimension.End.Row; i++)
@@ -117,11 +117,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
                     {
                         validVATs.Add(VAT);
-                        if (create)
-                        {
-                            ImportEntities(campaignId, VAT);
-                            importedEntities++;
-                        }
+                        ImportEntities(campaignId, VAT);
+                        importedEntities++;
 
                         validEntities++;
                     }
@@ -143,8 +140,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 InvalidVATs = invalidVATs
             };
 
-            if(create)
-                System.IO.File.Delete(filepath);
+            //if(create)
+            //    System.IO.File.Delete(filepath);
 
             return View(model);
         }

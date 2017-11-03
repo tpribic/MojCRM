@@ -1,21 +1,21 @@
 ﻿@model MojCRM.Areas.HelpDesk.Helpers.AcquireEmailCheckResults
 @{
-    ViewBag.Title = "Provjera tvrtki prije unosa u bazu";
+    ViewBag.Title = "Unos predmeta za ažuriranje baza korisnika";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
-<h2>Provjera tvrtki prije unosa u bazu</h2>
+<h2>Unos predmeta za ažuriranje baza korisnika</h2>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-12">
         <button type="button" title="Pokreni kreiranje predmeta za ažuriranje baza podataka korisnika" class="btn btn-sm btn-default" id="create-entities" onclick="Import()"><i class="fa fa-check"></i></button>
     </div>
-</div>
+</div>*@
 <br/>
 <div class="row">
     <div class="col-md-6">
         <p>
-            <strong>Broj OIB-ova koji se nalaze u bazi podataka: </strong> @Model.ValidEntities
+            <strong>Broj OIB-ova koji se nalaze u bazi podataka i za koje su kreirani predmeti: </strong> @Model.ValidEntities
         </p>
         <br/>
         <table class="table">
@@ -32,7 +32,7 @@
     </div>
     <div class="col-md-6">
         <p>
-            <strong>Broj OIB-ova koji se ne nalaze u bazi podataka: </strong> @Model.InvalidEntities
+            <strong>Broj OIB-ova koji se ne nalaze u bazi podataka i za koje nisu kreirani predmeti: </strong> @Model.InvalidEntities
         </p>
         <br />
         <table class="table">
