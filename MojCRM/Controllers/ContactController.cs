@@ -286,7 +286,7 @@ namespace MojCRM.Controllers
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+            return RedirectToAction("Details", "Delivery", new { area = "HelpDesk", id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST: Contact/EditFromSales
