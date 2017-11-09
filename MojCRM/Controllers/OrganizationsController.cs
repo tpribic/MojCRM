@@ -414,6 +414,8 @@ namespace MojCRM.Controllers
                     if (temp != organization.IsActive)
                         LogString += " - pravni status iz aktivnog u brisano";
                     organization.IsActive = false;
+                    organization.MerDeliveryDetail.AcquiredReceivingInformation = "ZATVORENA TVRTKA";
+                    organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified = true;
                 }
                 if (Model.LegalStatus == 1)
                 {

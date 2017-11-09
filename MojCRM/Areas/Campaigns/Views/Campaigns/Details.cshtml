@@ -156,6 +156,75 @@
         </div>
     </div>
 }
+<!--Modal - Admin Assign-->
+@using (Html.BeginForm("AdminAssignEntities", "AcquireEmail", new { area = "HelpDesk" }, FormMethod.Post))
+{
+    <div class="modal fade" id="adminAssign" tabindex="-1" role="dialog" aria-labelledby="adminAssign">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Dodijeli predmete agentima</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align: center">
+                                Preostali broj predmeta za dodjelu: <strong>@Model.NumberOfUnassignedEntities</strong>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="agent">Agent</label>
+                                <div id="agent">
+                                    @Html.DropDownList("agent", Model.AgentList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="number">Željeni broj predmeta za dodjelu</label>
+                                <div id="number">
+                                    @Html.TextBox("number", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = @"Unesite željeni broj" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                                </div>
+                            </div>
+                        </div>
+                        @*TO DO: Napraviti popis agenata koji su dodijeljeni s brojem dodijeljenih predmeta*@
+                        @*@if (Model.AssignedMembers.Count() != 0)
+                        {
+                            <br />
+                            <div class="row">
+                                <label>Dodijeljeni agenti</label>
+                                <table class="table">
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Rola</th>
+                                    </tr>
+                                    @foreach (var agent in Model.AssignedMembers)
+                                    {
+                                        <tr>
+                                            <td>@agent.MemberName</td>
+                                            <td>@agent.MemberRoleString</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        }*@
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Predaj dodjelu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <h2 style="text-align:center"><strong>Detalji kampanje</strong></h2>
 
@@ -170,8 +239,8 @@
                     <button type="button" title="Dodijeli agenta kampanji" class="btn btn-sm btn-default" data-toggle="modal" href="#AddAgent"><i class="fa fa-plus"></i> <i class="fa fa-user"></i></button>
                     @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
                     {
+                        <button type="button" title="Dodijeli predmete" class="btn btn-default btn-sm" data-toggle="modal" href="#adminAssign"><i class="fa fa-reply-all"></i></button>
                         <button type="button" title="Kreiraj unose za ažuriranje baze" class="btn btn-sm btn-default" data-toggle="modal" href="#checkEntities"><i class="fa fa-plus"></i></button>
-                        @*<a href="@Url.RouteUrl(new { action = "CheckEntitiesForImport", controller = "AcquireEmail", area = "HelpDesk", campaignId = Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Kreiraj unose za ažuriranje baze"><i class="fa fa-plus"></i></a>*@
                         <a href="@Url.RouteUrl(new { action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Preuzmi rezultate"><i class="fa fa-file-excel-o"></i></a>
                     }
                     <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>

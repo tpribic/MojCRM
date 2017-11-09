@@ -44,6 +44,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
                         Campaign = campaign,
                         EmailBasesStats = campaignBasesStats.GetModel(id),
                         SalesStats = null,
+                        NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
                         AssignedMembers = list
                     };
                     return View(model);
@@ -53,6 +54,7 @@ namespace MojCRM.Areas.Campaigns.Controllers
                         Campaign = campaign,
                         EmailBasesStats = null,
                         SalesStats = campaignSalesStats.GetModel(id),
+                        NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
                         AssignedMembers = list
                     };
                     return View(model);
@@ -174,6 +176,10 @@ namespace MojCRM.Areas.Campaigns.Controllers
             Campaign campaign = db.Campaigns.Find(campaignId);
             campaign.CampaignStatus = newStatus;
             campaign.UpdateDate = DateTime.Now;
+            if (newStatus == Campaign.CampaignStatusEnum.COMPLETED)
+            {
+                campaign.CampaignEndDate = DateTime.Now;
+            }
             db.SaveChanges();
             return Redirect(Request.UrlReferrer.ToString());
         }

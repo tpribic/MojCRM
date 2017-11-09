@@ -111,7 +111,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (User.IsInRole("Guest"))
+                        @if (User.IsInRole("Guest") || User.IsInRole("Sales"))
                         {
                             <li>
                                 <a href="#" class="js-sub-menu-toggle">

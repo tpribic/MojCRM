@@ -1,13 +1,69 @@
 ﻿@using GridMvc.Html
+@using System.Web.UI.WebControls
 
 @model IQueryable<MojCRM.Areas.HelpDesk.Models.AcquireEmail>
 @{
     ViewBag.Title = "Ažuriranje baza korisnika";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+
+    var statusList = new List<ListItem>
+    {
+        new ListItem{ Value= "0", Text = "Kreirano"},
+        new ListItem{ Value= "1", Text = "Provjereno"},
+        new ListItem{ Value= "2", Text = "Verificirano"}
+    };
 }
 
 
 <h2>Ažuriranje baza korisnika</h2>
+@if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || User.IsInRole("Management"))
+{
+    <hr/>
+    using (Html.BeginForm("Index", "AcquireEmail", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="campaign-name">Naziv kapmanje</label>
+                    <div id="campaign-name">
+                        @Html.TextBox("CampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv kapmanje" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="organization-name">Naziv tvrtke</label>
+                    <div id="organization-name">
+                        @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv tvrtke" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="telephone-mail">Broj telefona ili informacija o zaprimanju</label>
+                    <div id="telephone-mail">
+                        @Html.TextBox("TelephoneMail", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Broj telefona ili informacija o zaprimanju" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="email-status">Status</label>
+                    <div id="email-status">
+                        @Html.DropDownList("EmailStatusEnum", new SelectList(statusList, "Value", "Text"), "-- Svi statusi --", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+            </div>
+        </div>
+    }
+    <hr />
+}
 <hr />
 @Html.Grid(Model).Named("PopisPredmetaZaAžuriranjeBazaKorisnika").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
 {
@@ -17,13 +73,13 @@
     {
     if (User.IsInRole("Guest"))
     {
-        return @<span>
+        return @<span title="@v.Organization.SubjectName (@v.Organization.VAT), @v.Organization.OrganizationDetail.MainAddress, @v.Organization.OrganizationDetail.MainPostalCode @v.Organization.OrganizationDetail.MainCity">
      @v.Organization.SubjectName (@v.Organization.VAT)
     </span>;
     }
     else
     {
-        return @<span>
+        return @<span title="@v.Organization.SubjectName (@v.Organization.VAT), @v.Organization.OrganizationDetail.MainAddress, @v.Organization.OrganizationDetail.MainPostalCode @v.Organization.OrganizationDetail.MainCity">
         @Html.RouteLink(v.Organization.SubjectName + " (" + v.Organization.VAT + ")", new { action = "Details", controller = "Organizations", area = "", id = v.RelatedOrganizationId })
     </span>;
     }
@@ -35,30 +91,30 @@
     columns.Add().Encoded(false).Sanitized(false).Titled("Aktivnosti").RenderValueAs(v =>
     {
         return @<span>
-    <a class="add-successfull-call" data-entity-id="@v.Id" title="Zabilježi uspješan poziv"><i style="color: forestgreen" class="fa fa-phone-square"></i></a>
-    <a class="add-unsuccessfull-call" data-entity-id="@v.Id" title="Zabilježi neuspješan poziv"><i style="color: red" class="fa fa-phone-square"></i></a>
+                   <a class="add-successfull-call" data-entity-id="@v.Id" title="Zabilježi uspješan poziv"><i style="color: forestgreen" class="fa fa-phone-square fa-lg"></i></a> |
+    <a class="add-unsuccessfull-call" data-entity-id="@v.Id" title="Zabilježi neuspješan poziv"><i style="color: red" class="fa fa-phone-square fa-lg"></i></a>
     </span>;
     });
     columns.Add().Encoded(false).Sanitized(false).Titled("Alati").RenderValueAs(v =>
     {
-        if ((User.IsInRole("Guest") || User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CREATED)
+        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CREATED)
         {
             return @<span>
-                 <a class="mark-checked" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: red" class="fa fa-check-circle-o"></i></a>
-                 <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit"></i></a>
+                 <a class="mark-checked" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: red" class="fa fa-check-circle-o fa-lg"></i></a> |
+                 <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit fa-lg"></i></a>
     </span>;
-        }
-        if (User.IsInRole("Guest") && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED)
-        {
-            return @<span>
-    <i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o"></i>
-</span>;
         }
         if ((User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED)
         {
             return @<span>
-             <a class="mark-verified" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o"></i></a>
-             <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit"></i></a>
+    <a class="mark-verified" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o fa-lg"></i></a> |
+    <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit fa-lg"></i></a>
+</span>;
+        }
+        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED)
+        {
+            return @<span>
+    <i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o fa-lg"></i>
 </span>;
         }
         return @<span>

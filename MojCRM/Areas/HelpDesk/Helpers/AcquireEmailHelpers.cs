@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MojCRM.Areas.HelpDesk.Models;
 
 namespace MojCRM.Areas.HelpDesk.Helpers
 {
@@ -28,5 +29,13 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public int ImportedEntities { get; set; }
         public List<string> ValidVATs { get; set; }
         public List<string> InvalidVATs { get; set; }
+    }
+
+    public class AcquireEmailSearchModel
+    {
+        public string CampaignName { get; set; }
+        public string OrganizationName { get; set; }
+        public string TelephoneMail { get; set; }
+        public AcquireEmail.AcquireEmailStatusEnum EmailStatusEnum { get; set; }
     }
 }

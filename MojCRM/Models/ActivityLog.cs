@@ -118,7 +118,7 @@ namespace MojCRM.Models
                     case DepartmentEnum.MojCRM: return "Moj-CRM";
                     case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case DepartmentEnum.Sales: return "Odjel prodaje";
-                    case DepartmentEnum.DatabaseUpdate: return "Ažuriranje baza korisnika";
+                    case DepartmentEnum.DatabaseUpdate: return "Odjel prikupa e-mail adresa";
                 }
                 return "Odjel";
             }

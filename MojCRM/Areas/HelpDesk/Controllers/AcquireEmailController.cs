@@ -2,6 +2,7 @@
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -18,9 +19,36 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         private ApplicationDbContext _db = new ApplicationDbContext();
         // GET: HelpDesk/AcquireEmail
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(AcquireEmailSearchModel model)
         {
-            var list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED);
+            IQueryable<AcquireEmail> list;
+            if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || User.IsInRole("Management"))
+            {
+                list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED);
+            }
+            else
+            {
+                list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED && ae.AssignedTo == User.Identity.Name);
+            }
+
+            //Search Engine
+            if (!String.IsNullOrEmpty(model.CampaignName))
+            {
+                list = list.Where(x => x.Campaign.CampaignName.Contains(model.CampaignName));
+            }
+            if (!String.IsNullOrEmpty(model.OrganizationName))
+            {
+                list = list.Where(x => x.Organization.SubjectName.Contains(model.OrganizationName));
+            }
+            if (!String.IsNullOrEmpty(model.TelephoneMail))
+            {
+                list = list.Where(x => x.Organization.MerDeliveryDetail.Telephone.Contains(model.TelephoneMail) || x.Organization.MerDeliveryDetail.AcquiredReceivingInformation.Contains(model.TelephoneMail));
+            }
+            if (model.EmailStatusEnum != null)
+            {
+                list = list.Where(x => x.AcquireEmailStatus == model.EmailStatusEnum);
+            }
+
             return View(list.OrderByDescending(x => x.Id));
         }
 
@@ -257,16 +285,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     entity.UpdateDate = DateTime.Now;
                     updated++;
                 }
-                else
-                {
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CREATED;
-                    entity.UpdateDate = DateTime.Now;
-                    updated++;
-                }
+                //else
+                //{
+                //    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CREATED;
+                //    entity.UpdateDate = DateTime.Now;
+                //    updated++;
+                //}
             }
             _db.SaveChanges();
 
             return Json(new { updated }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AdminAssignEntities(int campaignId, int number, string agent)
+        {
+            var entites = _db.AcquireEmails.Where(c => c.RelatedCampaignId == campaignId && c.IsAssigned == false).Take(number);
+
+            foreach (var entity in entites)
+            {
+                entity.IsAssigned = true;
+                entity.AssignedTo = agent;
+                entity.UpdateDate = DateTime.Now;
+            }
+            _db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)

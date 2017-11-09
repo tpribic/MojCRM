@@ -7,11 +7,17 @@
 <h2>Detalji unosa za ažuriranje baze korisnika</h2>
 <hr />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <strong>Naziv kampanje: </strong>@Model.Campaign.CampaignName
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <strong>Subjekt u obradi: </strong>@Model.Organization.SubjectName
+    </div>
+    <div class="col-md-2">
+        <strong>Aktivnosti: </strong><a class="add-successfull-call" data-entity-id="@Model.Id" title="Zabilježi uspješan poziv"><i style="color: forestgreen" class="fa fa-phone-square fa-lg"></i></a> | <a class="add-unsuccessfull-call" data-entity-id="@Model.Id" title="Zabilježi neuspješan poziv"><i style="color: red" class="fa fa-phone-square fa-lg"></i></a>
+    </div>
+    <div class="col-md-2">
+        <strong>Alati: </strong><a class="mark-checked" data-entity-id="@Model.Id" title="Označi kao provjereno"><i style="color: red" class="fa fa-check-circle-o fa-lg"></i></a> | <a href="@Url.RouteUrl(new { action = "Index", controller = "AcquireEmail", area = "HelpDesk"})" title="Povratak na popis predmeta"><i class="fa fa-arrow-left fa-lg"></i></a>
     </div>
 </div>
 <hr />
@@ -70,3 +76,54 @@
     </div>
 </div>
 }
+<script>
+    $(document).on("click", "a.add-successfull-call", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "LogActivity", controller = "AcquireEmail", area = "HelpDesk" })',
+            data: {
+                entityId: $(this).data("entity-id"),
+                identifier: 1
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Zabilježili ste uspješan poziv!");
+            },
+            dataType: 'json'
+        });
+    });
+        $(document).on("click", "a.add-unsuccessfull-call", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "LogActivity", controller = "AcquireEmail", area = "HelpDesk" })',
+            data: {
+                entityId: $(this).data("entity-id"),
+                identifier: 2
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Zabilježili ste neuspješan poziv!");
+            },
+            dataType: 'json'
+        });
+    });
+        $(document).on("click", "a.mark-checked", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "ChangeStatus", controller = "AcquireEmail", area = "HelpDesk" })',
+            data: {
+                entityId: $(this).data("entity-id"),
+                identifier: 1
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Označili ste unos provjerenim!");
+            },
+            dataType: 'json'
+        });
+        window.location.reload(true);
+    });
+</script>

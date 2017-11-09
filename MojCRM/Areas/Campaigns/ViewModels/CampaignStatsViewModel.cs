@@ -62,7 +62,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
         public IQueryable<EmailBasesCampaignStatsViewModel> GetModels()
         {
-            var campaignsTemp = _db.Campaigns.Where(c => c.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES);
+            var campaignsTemp = _db.Campaigns.Where(c => c.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES && c.CampaignStatus != Campaign.CampaignStatusEnum.COMPLETED);
             var list = new List<EmailBasesCampaignStatsViewModel>();
 
             if (campaignsTemp.Count() != 0)

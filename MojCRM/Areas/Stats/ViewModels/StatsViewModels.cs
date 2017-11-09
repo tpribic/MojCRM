@@ -89,6 +89,7 @@ namespace MojCRM.Areas.Stats.ViewModels
                     case ActivityLog.DepartmentEnum.MojCRM: return "Moj-CRM";
                     case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
+                    case ActivityLog.DepartmentEnum.DatabaseUpdate: return "Odjel prikupa e-mail adresa";
                 }
                 return "Odjel";
             }
