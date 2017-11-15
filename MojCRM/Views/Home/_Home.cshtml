@@ -44,7 +44,7 @@
                         @foreach (var Campaign in Model.Campaigns)
                         {
                             <tr>
-                                <td>@Campaign.Campaign.CampaignName</td>
+                                <td><strong>@Campaign.Campaign.CampaignName</strong></td>
                                 <td>@Campaign.Campaign.CampaignDescription</td>
                                 <td>@Campaign.Campaign.CampaignInitiatior</td>
                                 @if (Campaign.Campaign.CampaignStatus == MojCRM.Areas.Campaigns.Models.Campaign.CampaignStatusEnum.START)

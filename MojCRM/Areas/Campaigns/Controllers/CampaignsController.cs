@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MojCRM.Areas.Campaigns.Helpers;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Models;
 using MojCRM.Areas.Campaigns.ViewModels;
@@ -17,9 +18,20 @@ namespace MojCRM.Areas.Campaigns.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Campaigns/Campaigns
-        public ActionResult Index()
+        public ActionResult Index(CampaignSearchHelper model)
         {
             var campaigns = db.Campaigns.Include(c => c.RelatedCompany);
+
+            //Search Engine
+            if (!String.IsNullOrEmpty(model.Organization))
+            {
+                campaigns = campaigns.Where(x => x.RelatedCompany.SubjectName.Contains(model.Organization));
+            }
+            if (!String.IsNullOrEmpty(model.CampaignName))
+            {
+                campaigns = campaigns.Where(x => x.CampaignName.Contains(model.CampaignName));
+            }
+
             return View(campaigns.OrderByDescending(c => c.InsertDate));
         }
 

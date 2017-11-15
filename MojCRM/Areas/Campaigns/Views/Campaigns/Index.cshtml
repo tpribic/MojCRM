@@ -1,4 +1,5 @@
-﻿@model IQueryable<MojCRM.Areas.Campaigns.Models.Campaign>
+﻿@using GridMvc.Html
+@model IQueryable<MojCRM.Areas.Campaigns.Models.Campaign>
 
 @{
     ViewBag.Title = "Pregled kampanja";
@@ -21,81 +22,76 @@
     </div>
 </div>*@
 
-<hr />
-
-<table class="table">
-    <tr>
-        <th>
-            OIB povezane tvrtke
-        </th>
-        <th>
-            Naziv kampanje
-        </th>
-        <th>
-            Opis kampanje
-        </th>
-        <th>
-            Pokrenuo
-        </th>
-        <th>
-            Tip kampanje
-        </th>
-        <th>
-            Status kampanje
-        </th>
-        <th>
-            Datum početka
-        </th>
-        <th>
-            Planirani datum završetka
-        </th>
-        <th>
-            Datum završetka
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.RelatedCompany.VAT)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignInitiatior)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignTypeString)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignStatusString)
-        </td>
-        <td>
-            @Html.Raw(item.CampaignStartDate.ToShortDateString())
-        </td>
-        <td>
-            @Html.Raw(item.CampaignPlannedEndDate.ToShortDateString())
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CampaignEndDate)
-        </td>
-        <td>
-            @if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || (item.CampaignInitiatior == User.Identity.Name))
-            {
-                <a href="@Url.RouteUrl(new { action = "Details", controller = "Campaigns", area = "Campaigns", id=item.CampaignId, returnUrl = Request.Url })" title="Detalji kampanje"><i class="fa fa-list"></i></a>
-                <a href="@Url.RouteUrl(new { action = "Edit", controller = "Campaigns", area = "Campaigns", id=item.CampaignId, returnUrl = Request.Url})" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
-            }
-            @if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
-            {
-                <a href="@Url.RouteUrl(new { action = "Delete", controller = "Campaigns", area = "Campaigns", id=item.CampaignId, returnUrl = Request.Url})" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
-            }
-        </td>
-    </tr>
+@if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || User.IsInRole("Management"))
+{
+    <hr />
+    using (Html.BeginForm("Index", "Campaigns", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="organization">Povezana tvrtka</label>
+                    <div id="organization">
+                        @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Povezana tvrtka" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="campaign-name">Naziv kampanje</label>
+                    <div id="campaign-name">
+                        @Html.TextBox("CampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv kampanje" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group" style="margin-bottom:0">
+                <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+            </div>
+        </div>
+    }
+    <hr />
 }
 
-</table>
+<hr />
+
+@Html.Grid(Model).Named("PopisKampanja").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+columns.Add(m => m.RelatedCompany.VAT).Encoded(false).Sanitized(false).Titled("Povezana tvrtka").RenderValueAs(x =>
+    Html.RouteLink(x.RelatedCompany.SubjectName + " (" + x.RelatedCompany.VAT + ") ", new {action = "Details", controller = "Organizations", area = "", id = x.RelatedCompany.MerId})).Sortable(true);
+columns.Add(m => m.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(false);
+columns.Add(m => m.CampaignDescription).Encoded(false).Sanitized(false).Titled("Opis kampanje").Sortable(false);
+columns.Add(m => m.CampaignInitiatior).Encoded(false).Sanitized(false).Titled("Pokrenuo").Sortable(false);
+columns.Add(m => m.CampaignTypeString).Encoded(false).Sanitized(false).Titled("Tip kampanje").Sortable(false);
+columns.Add(m => m.CampaignStatusString).Encoded(false).Sanitized(false).Titled("Status").Sortable(true);
+columns.Add(m => m.CampaignStartDate).Encoded(false).Sanitized(false).Titled("Datum početka").Sortable(false).RenderValueAs(m =>
+{
+    return @<div><span>@Html.Raw(m.CampaignStartDate.ToShortDateString())</span></div>;
+});
+columns.Add(m => m.CampaignPlannedEndDate).Encoded(false).Sanitized(false).Titled("Planirani završetak").Sortable(false).RenderValueAs(m =>
+{
+return @<div><span>@Html.Raw(m.CampaignPlannedEndDate.ToShortDateString())</span></div>;
+}); ;
+    columns.Add(m => m.CampaignEndDate).Encoded(false).Sanitized(false).Titled("Datum završetka").Sortable(false);
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || (m.CampaignInitiatior == User.Identity.Name))
+        {
+            return @<div><span>
+                       <a href="@Url.RouteUrl(new { action = "Details", controller = "Campaigns", area = "Campaigns", id=m.CampaignId, returnUrl = Request.Url })" title="Detalji kampanje"><i class="fa fa-list"></i></a>
+                       <a href="@Url.RouteUrl(new { action = "Edit", controller = "Campaigns", area = "Campaigns", id=m.CampaignId, returnUrl = Request.Url})" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
+                   </span>
+               </div>;
+    }
+    if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+    {
+    return @<div><span>
+        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Campaigns", area = "Campaigns", id=m.CampaignId, returnUrl = Request.Url })" title="Brisanje kampanje"><i class="fa fa-trash"></i></a>
+        </span>
+    </div>;
+    }
+    return @<span></span>;
+});
+}).WithPaging(20)

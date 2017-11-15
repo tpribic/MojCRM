@@ -118,21 +118,31 @@
     @if (Model.MerDeliveryDetails.AcquiredReceivingInformationIsVerified == false)
     {
         <div class="row">
-            <div class="col-md-10" title="Napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika">
-                <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
-            </div>
             @if (Model.MerDeliveryDetails.RequiredPostalService)
             {
+                <div class="col-md-10" title="Napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika">
+                    <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
+                </div>
                 <div class="col-md-1" title="Korisnik želi zaprimati račune poštom">
                     <i class="fa fa-envelope" style="color: gold"></i>
                 </div>
             }
+            @if (!Model.MerDeliveryDetails.RequiredPostalService)
+            {
+                <div class="col-md-11" title="Napomena o zaprimanju eRačuna prikupljena prilikom obrade baze podataka korisnika">
+                    <strong>Prikupljena informacija o zaprimanju eRačuna: </strong>@Model.MerDeliveryDetails.AcquiredReceivingInformation
+                </div>   
+            }
             <div class="col-md-1" title="Uredi prikupljenu informaciju o zaprimanju eRačuna za ovog subjekta">
                 <a href="#editAcquiredReceivingInformation" data-toggle="modal"><i class="fa fa-edit"></i></a>
                 <a onclick="MarkVerified()" class="mark-verified"><i class="fa fa-check"></i></a>
-                @if (Model.MerDeliveryDetails.RequiredPostalService == false)
+                @if (!Model.MerDeliveryDetails.RequiredPostalService)
                 {
                     <a onclick="MarkPostalService()" class="mark-postal"><i class="fa fa-envelope"></i></a>
+                }
+                @if (Model.MerDeliveryDetails.RequiredPostalService)
+                {
+                    <a onclick="UnmarkPostalService()" class="unmark-postal"><i class="fa fa-envelope"></i></a>
                 }
             </div>
         </div>
@@ -175,11 +185,32 @@
                 method: 'POST',
                 url: '@Url.RouteUrl(new { action = "MarkAsPostalService", controller = "Organizations", area = "" })',
                 data: {
-                    merId: "@Model.Organization.MerId",
+                    merId: "@Model.Organization.MerId"
                 },
                 success: function (data) {
                     if (data.Status === 'OK')
                         alert("Uspješno ste označili da korisnik želi zaprimati eRačune poštom!");
+                    else
+                        alert("Greška!");
+                },
+                dataType: 'json'
+            });
+            window.location.reload(true);
+        });
+    }
+    function UnmarkPostalService() {
+        $(document).on("click", "a.unmark-postal", function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: 'POST',
+                url: '@Url.RouteUrl(new { action = "MarkAsPostalService", controller = "Organizations", area = "" })',
+                data: {
+                    merId: "@Model.Organization.MerId",
+                    unmark: true
+                },
+                success: function (data) {
+                    if (data.Status === 'OK')
+                        alert("Uspješno ste uklonili oznaku da korisnik želi zaprimati eRačune poštom!");
                     else
                         alert("Greška!");
                 },

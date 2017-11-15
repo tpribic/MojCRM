@@ -491,11 +491,12 @@ namespace MojCRM.Controllers
         }
 
         [HttpPost]
-        public JsonResult MarkAsPostalService(int merId)
+        public JsonResult MarkAsPostalService(int merId, bool unmark = false)
         {
             var organization = db.MerDeliveryDetails.Find(merId);
-            organization.RequiredPostalService = true;
-            organization.AcquiredReceivingInformation = "ŽELE POŠTOM";
+
+            organization.RequiredPostalService = !unmark;
+            organization.AcquiredReceivingInformation = !unmark ? "ŽELE POŠTOM" : String.Empty;
             organization.Organization.LastUpdatedBy = User.Identity.Name;
             organization.Organization.UpdateDate = DateTime.Now;
             db.SaveChanges();

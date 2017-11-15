@@ -322,6 +322,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Campaigns\CampaignsAreaRegistration.cs" />
     <Compile Include="Areas\Campaigns\Controllers\CampaignsController.cs" />
+    <Compile Include="Areas\Campaigns\Helpers\CampaignHelpers.cs" />
     <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
     <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
     <Compile Include="Areas\Campaigns\ViewModels\CampaignViewModels.cs" />
