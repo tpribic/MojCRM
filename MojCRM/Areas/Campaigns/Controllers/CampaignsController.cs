@@ -57,7 +57,8 @@ namespace MojCRM.Areas.Campaigns.Controllers
                         EmailBasesStats = campaignBasesStats.GetModel(id),
                         SalesStats = null,
                         NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
-                        AssignedMembers = list
+                        AssignedMembers = list,
+                        AssignedAgents = model.GetAssignedAgentsInfo(id)
                     };
                     return View(model);
                 case Campaign.CampaignTypeEnum.SALES:
@@ -67,7 +68,8 @@ namespace MojCRM.Areas.Campaigns.Controllers
                         EmailBasesStats = null,
                         SalesStats = campaignSalesStats.GetModel(id),
                         NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
-                        AssignedMembers = list
+                        AssignedMembers = list,
+                        AssignedAgents = model.GetAssignedAgentsInfo(id)
                     };
                     return View(model);
             }

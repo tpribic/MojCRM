@@ -10,4 +10,10 @@ namespace MojCRM.Areas.Campaigns.Helpers
         public string Organization { get; set; }
         public string CampaignName { get; set; }
     }
+
+    public class CampaignAssignedAgents
+    {
+        public string Agent { get; set; }
+        public int NumberOfAssignedEntities { get; set; }
+    }
 }

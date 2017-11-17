@@ -63,6 +63,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? NumberMail { get; set; }
         [Display(Name = "Broj zaključanih kartica (Odjel dostave)")]
         public int? NumberTicketsAssigned { get; set; }
+        [Display(Name = "Vrijeme od zadnjeg poziva")]
+        public int? TimeFromLastCall { get; set; }
     }
     public class CallCenterDailyByDepartment
     {
@@ -138,12 +140,22 @@ namespace MojCRM.Areas.Stats.ViewModels
                     NumberMailchange = mailChange.Count(a => a.User == day.Key),
                     NumberResend = resend.Count(a => a.User == day.Key),
                     NumberMail = deliveryMail.Count(a => a.User == day.Key),
-                    NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key)
+                    NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
+                    TimeFromLastCall = (Int32)(DateTime.Now).Subtract(GetLastCallDateTime(day.Key)).TotalMinutes
                 };
                 activities.Add(dailyActivities);
             }
 
             return activities.AsQueryable();
+        }
+
+        private DateTime GetLastCallDateTime(string agent)
+        {
+            var result = _db.ActivityLogs.OrderByDescending(x => x.Id).First(x =>
+                x.User == agent && (x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL ||
+                                    x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT));
+
+            return result.InsertDate;
         }
     }
 

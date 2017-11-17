@@ -194,8 +194,7 @@
                                 </div>
                             </div>
                         </div>
-                        @*TO DO: Napraviti popis agenata koji su dodijeljeni s brojem dodijeljenih predmeta*@
-                        @*@if (Model.AssignedMembers.Count() != 0)
+                        @if (Model.AssignedAgents.Count() != 0)
                         {
                             <br />
                             <div class="row">
@@ -203,18 +202,21 @@
                                 <table class="table">
                                     <tr>
                                         <th>Agent</th>
-                                        <th>Rola</th>
+                                        <th>Broj dodijeljenih predmeta</th>
                                     </tr>
-                                    @foreach (var agent in Model.AssignedMembers)
+                                    @foreach (var agent in Model.AssignedAgents)
                                     {
-                                        <tr>
-                                            <td>@agent.MemberName</td>
-                                            <td>@agent.MemberRoleString</td>
-                                        </tr>
+                                        if (agent.NumberOfAssignedEntities != 0)
+                                         {
+                                             <tr>
+                                                 <td>@agent.Agent</td>
+                                                 <td>@agent.NumberOfAssignedEntities</td>
+                                             </tr>   
+                                         }
                                     }
                                 </table>
                             </div>
-                        }*@
+                        }
                     </div>
                 </div>
                 <div class="modal-footer">

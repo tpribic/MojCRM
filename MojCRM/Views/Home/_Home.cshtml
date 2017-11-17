@@ -177,7 +177,7 @@
                                     @foreach (var agent in Model.AgentActivities)
                                     {
                                         <tr>
-                                            <td>@agent.Agent</td>
+                                            <td title="Vrijeme od zadnjeg poziva (min): @agent.TimeFromLastCall">@agent.Agent</td>
                                             <td>@agent.NumberSuccessfulCalls</td>
                                             <td>@agent.NumberUnsuccessfulCalls</td>
                                             <td>@agent.NumberMailchange</td>
