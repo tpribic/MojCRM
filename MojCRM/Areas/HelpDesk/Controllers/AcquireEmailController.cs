@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
 using MojCRM.Areas.HelpDesk.Helpers;
+using MojCRM.Areas.HelpDesk.ViewModels;
 using OfficeOpenXml;
 
 namespace MojCRM.Areas.HelpDesk.Controllers
@@ -49,8 +50,16 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         public ActionResult Details(int id)
         {
             var entity = _db.AcquireEmails.Find(id);
+            var activities = _db.ActivityLogs.Where(al =>
+                al.Department == ActivityLog.DepartmentEnum.DatabaseUpdate && al.ReferenceId == id);
 
-            return View(entity);
+            var model = new AcquireEmailViewModel
+            {
+                Entity = entity,
+                Activities = activities
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -117,6 +126,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     break;
             }
             return Json(new { Status = "OK" });
+        }
+
+        [HttpPost]
+        public ActionResult ChangeStatusAdmin(int entityId, int identifier)
+        {
+            var entity = _db.AcquireEmails.Find(entityId);
+            switch (identifier)
+            {
+                case 1:
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Checked;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 2:
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Verified;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 3:
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Reviewed;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+            }
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         [HttpPost]

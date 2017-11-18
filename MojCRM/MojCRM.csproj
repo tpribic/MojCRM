@@ -332,6 +332,7 @@
     <Compile Include="Areas\HelpDesk\HelpDeskAreaRegistration.cs" />
     <Compile Include="Areas\HelpDesk\Helpers\AcquireEmailHelpers.cs" />
     <Compile Include="Areas\HelpDesk\Models\AcquireEmail.cs" />
+    <Compile Include="Areas\HelpDesk\ViewModels\AcquireEmailViewModels.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
