@@ -2,11 +2,8 @@
 using MojCRM.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
 using MojCRM.Areas.HelpDesk.Helpers;
@@ -16,7 +13,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 {
     public class AcquireEmailController : Controller
     {
-        private ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
         // GET: HelpDesk/AcquireEmail
         [Authorize]
         public ActionResult Index(AcquireEmailSearchModel model)
@@ -44,10 +41,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             {
                 list = list.Where(x => x.Organization.MerDeliveryDetail.Telephone.Contains(model.TelephoneMail) || x.Organization.MerDeliveryDetail.AcquiredReceivingInformation.Contains(model.TelephoneMail));
             }
-            if (model.EmailStatusEnum != null)
-            {
-                list = list.Where(x => x.AcquireEmailStatus == model.EmailStatusEnum);
-            }
+            list = list.Where(x => x.AcquireEmailStatus == model.EmailStatusEnum);
 
             return View(list.OrderByDescending(x => x.Id));
         }
@@ -262,6 +256,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             return File(wb.GetAsByteArray(), "application/vnd.ms-excel", "Rezultati.xls");
         }
 
+        public ActionResult ExportEntitiesForEmailNotification(int campaignId)
+        {
+            int cell = 2;
+            string campaignName = _db.Campaigns.First(c => c.CampaignId == campaignId).CampaignName;
+            IList<AcquireEmailExportForEmailNotificationModel> results = GetEntityListForEmailNotification(campaignId);
+
+            var wb = new ExcelPackage();
+            var ws = wb.Workbook.Worksheets.Add("Rezultati obrade baze za tipsku");
+            ws.Cells[1, 1].Value = "Informacija o zaprimanju eRačuna";
+
+            foreach (var res in results)
+            {
+                ws.Cells[cell, 1].Value = res.AcquiredReceivingInformation;
+                cell++;
+            }
+
+            while (cell < 16)
+            {
+                ws.Cells[cell, 1].Value = "";
+                cell++;
+            }
+
+            return File(wb.GetAsByteArray(), "application/vnd.ms-excel", campaignName + ".xls");
+        }
+
         public void CreateEntity(Organizations organization, AcquireEmailStatusEnum status, int campaignId)
         {
             _db.AcquireEmails.Add(new AcquireEmail
@@ -351,6 +370,18 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     SubjectName = ae.Organization.SubjectName,
                     AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation
                 }).ToList();
+            return entityList;
+        }
+
+        public IList<AcquireEmailExportForEmailNotificationModel> GetEntityListForEmailNotification(int campaignId)
+        {
+            var entityList = (from ae in _db.AcquireEmails
+                where ae.RelatedCampaignId == campaignId &&
+                      ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation.Contains("@")
+                      select new AcquireEmailExportForEmailNotificationModel
+                      {
+                          AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation
+                      }).ToList();
             return entityList;
         }
     }

@@ -21,6 +21,11 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public string AcquiredReceivingInformation { get; set; }
     }
 
+    public class AcquireEmailExportForEmailNotificationModel
+    {
+        public string AcquiredReceivingInformation { get; set; }
+    }
+
     public class AcquireEmailCheckResults
     {
         public int CampaignId { get; set; }
