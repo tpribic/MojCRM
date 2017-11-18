@@ -271,15 +271,16 @@ namespace MojCRM.Areas.Stats.Controllers
         }
 
         // GET: Stats/CallCenterWeekly
-        public ActionResult CallCenterWeekly(string search)
+        // Initially planned as weekly stats, but currently displays secificaly defined range
+        public ActionResult CallCenterWeekly(string searchStart, string searchEnd)
         {
 
             var agentActivities = (from a in db.ActivityLogs
-                                   where a.InsertDate >= DateTime.Today
+                                   //where a.InsertDate >= DateTime.Today
                                    group a by a.User into ga
                                    select ga).ToList();
             var departmentActivities = (from a in db.ActivityLogs
-                                        where a.InsertDate >= DateTime.Today
+                                        //where a.InsertDate >= DateTime.Today
                                         group a by a.Department into ga
                                         select ga).ToList();
             var successfulCalls = (from a in db.ActivityLogs
@@ -303,23 +304,23 @@ namespace MojCRM.Areas.Stats.Controllers
             var activities = new List<CallCenterWeekly>();
             var activitiesByDepartment = new List<CallCenterWeeklyByDepartment>();
 
-            if (!String.IsNullOrEmpty(search))
+            if (!String.IsNullOrEmpty(searchStart))
             {
-                var searchDate = Convert.ToDateTime(search);
-                var searchDatePlus = searchDate.AddDays(1);
-                successfulCalls = successfulCalls.Where(a => (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
-                unsuccessfulCalls = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                mailChange = mailChange.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                resend = resend.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                var searchDateStart = Convert.ToDateTime(searchStart);
+                var searchDateEnd = Convert.ToDateTime(searchEnd);
+                successfulCalls = successfulCalls.Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd));
+                unsuccessfulCalls = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                mailChange = mailChange.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                resend = resend.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
 
                 agentActivities = (from a in db.ActivityLogs
-                                   where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
+                                   where (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd)
                                    group a by a.User into ga
                                    select ga).ToList();
                 departmentActivities = (from a in db.ActivityLogs
-                                        where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
+                                        where (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd)
                                         group a by a.Department into ga
                                         select ga).ToList();
                 foreach (var day in agentActivities)

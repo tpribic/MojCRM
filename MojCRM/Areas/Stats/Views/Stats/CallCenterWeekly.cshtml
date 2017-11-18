@@ -5,7 +5,7 @@
 }
 
 <h2 style="text-align:center"><strong>Statistike agenata</strong></h2>
-<h3 style="text-align:center"><strong>Tjedna statistika poziva</strong></h3>
+<h3 style="text-align:center"><strong>Statistika poziva u periodu</strong></h3>
 <hr />
 <body>
 @using (Html.BeginForm("CallCenterWeekly", "Stats", FormMethod.Get))
@@ -13,9 +13,17 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <label for="search-date">Period pretrage</label>
-                <div id="search-date">
-                    @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Traženi period", @type = "text", @id = "daterange-default", @name = "daterange-default" })
+                <label for="start-search-date">Početak pretrage</label>
+                <div id="start-search-date">
+                    @Html.TextBox("searchStart", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Početak pretrage", @type = "text", @id = "search-date", @name = "search-date" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="end-search-date">Završetak pretrage</label>
+                <div id="end-search-date">
+                    @Html.TextBox("searchEnd", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Završetak pretrage", @type = "text", @id = "search-date", @name = "search-date" })
                 </div>
             </div>
         </div>
@@ -108,9 +116,4 @@
     </table>
 </div>
 </body>
-<script>
-    $('#daterange-default').daterangepicker({
-        format: 'DD-MM-YYYY'
-    });
-</script>
 
