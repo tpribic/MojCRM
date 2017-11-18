@@ -8,9 +8,10 @@
 
     var statusList = new List<ListItem>
     {
-        new ListItem{ Value= "0", Text = "Kreirano"},
-        new ListItem{ Value= "1", Text = "Provjereno"},
-        new ListItem{ Value= "2", Text = "Verificirano"}
+        new ListItem{ Value= @"0", Text = @"Kreirano"},
+        new ListItem{ Value= @"1", Text = @"Provjereno"},
+        new ListItem{ Value= @"2", Text = @"Verificirano"},
+        new ListItem{ Value= @"3", Text = @"Revidirano"}
     };
 }
 
@@ -97,24 +98,31 @@
     });
     columns.Add().Encoded(false).Sanitized(false).Titled("Alati").RenderValueAs(v =>
     {
-        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CREATED)
+        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.Created)
         {
             return @<span>
                  <a class="mark-checked" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: red" class="fa fa-check-circle-o fa-lg"></i></a> |
                  <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit fa-lg"></i></a>
     </span>;
         }
-        if ((User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED)
+        if ((User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.Checked)
         {
             return @<span>
     <a class="mark-verified" data-entity-id="@v.Id" title="Označi kao provjereno"><i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o fa-lg"></i></a> |
     <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit fa-lg"></i></a>
 </span>;
         }
-        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.CHECKED)
+        if (v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.Checked)
         {
             return @<span>
     <i style="color: gold" title="Provjereno / Čeka verifikaciju" class="fa fa-check-circle-o fa-lg"></i>
+</span>;
+        }
+        if ((User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) && v.AcquireEmailStatus == MojCRM.Areas.HelpDesk.Models.AcquireEmail.AcquireEmailStatusEnum.Verified)
+        {
+            return @<span>
+    <a class="mark-reviewed" data-entity-id="@v.Id" title="Označi kao revidirano"><i style="color: blue" title="Verificarno" class="fa fa-check-circle-o fa-lg"></i></a> |
+    <a href="@Url.RouteUrl(new { action = "Details", controller = "AcquireEmail", area = "HelpDesk", id = v.Id })" title="Uredi informaciju o zaprimanju eRačuna"><i class="fa fa-edit fa-lg"></i></a>
 </span>;
         }
         return @<span>
@@ -184,6 +192,23 @@
             success: function (data) {
                 if (data.Status === 'OK')
                     alert("Označili ste unos verificiranim!");
+            },
+            dataType: 'json'
+        });
+        window.location.reload(true);
+        });
+    $(document).on("click", "a.mark-reviewed", function (e) {
+        e.preventDefault();
+        $.ajax({
+            method: 'POST',
+            url: '@Url.RouteUrl(new { action = "ChangeStatus", controller = "AcquireEmail", area = "HelpDesk" })',
+            data: {
+                entityId: $(this).data("entity-id"),
+                identifier: 3
+            },
+            success: function (data) {
+                if (data.Status === 'OK')
+                    alert("Označili ste unos revidiranim!");
             },
             dataType: 'json'
         });

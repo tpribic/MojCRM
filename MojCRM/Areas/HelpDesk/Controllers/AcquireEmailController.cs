@@ -24,11 +24,11 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             IQueryable<AcquireEmail> list;
             if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || User.IsInRole("Management"))
             {
-                list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED);
+                list = _db.AcquireEmails;
             }
             else
             {
-                list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.VERIFIED && ae.AssignedTo == User.Identity.Name);
+                list = _db.AcquireEmails.Where(ae => ae.AcquireEmailStatus != AcquireEmailStatusEnum.Verified && ae.AssignedTo == User.Identity.Name);
             }
 
             //Search Engine
@@ -107,12 +107,17 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             switch (identifier)
             {
                 case 1:
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CHECKED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Checked;
                     entity.UpdateDate = DateTime.Now;
                     _db.SaveChanges();
                     break;
                 case 2:
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Verified;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 3:
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Reviewed;
                     entity.UpdateDate = DateTime.Now;
                     _db.SaveChanges();
                     break;
@@ -183,24 +188,24 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
                 if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
                 {
-                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.Verified, campaignId);
                 }
                 else if (relatedOrganization.MerDeliveryDetail.RequiredPostalService)
                 {
-                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CHECKED, campaignId);
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.Checked, campaignId);
                 }
                 else if (relatedOrganization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && relatedOrganization.MerDeliveryDetail.RequiredPostalService)
                 {
-                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.VERIFIED, campaignId);
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.Verified, campaignId);
                 }
                 else
                 {
-                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.CREATED, campaignId);
+                    CreateEntity(relatedOrganization, AcquireEmailStatusEnum.Created, campaignId);
                 }
             }
         }
 
-        public ActionResult ExportEntities(int campaignId)
+        public ActionResult ExportEntities(int campaignId, int identifier)
         {
             #region OldWay
             //var gv = new GridView();
@@ -221,7 +226,17 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             #endregion
 
             int cell = 2;
-            var results = GetEntityList(campaignId);
+            IList<AcquireEmailExportModel> results = null;
+
+            switch (identifier)
+            {
+                case 1:
+                    results = GetEntityList(campaignId);
+                    break;
+                case 2:
+                    results = GetReviewedEntityList(campaignId);
+                    break;
+            }
             var wb = new ExcelPackage();
             var ws = wb.Workbook.Worksheets.Add("Rezultati obrade baze");
             ws.Cells[1, 1].Value = "Naziv kampanje";
@@ -269,19 +284,19 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             {
                 if (entity.Organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified)
                 {
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Verified;
                     entity.UpdateDate = DateTime.Now;
                     updated++;
                 }
                 else if (entity.Organization.MerDeliveryDetail.RequiredPostalService)
                 {
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.CHECKED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Checked;
                     entity.UpdateDate = DateTime.Now;
                     updated++;
                 }
                 else if (entity.Organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified && entity.Organization.MerDeliveryDetail.RequiredPostalService)
                 {
-                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.VERIFIED;
+                    entity.AcquireEmailStatus = AcquireEmailStatusEnum.Verified;
                     entity.UpdateDate = DateTime.Now;
                     updated++;
                 }
@@ -315,7 +330,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)
         {
             var entityList = (from ae in _db.AcquireEmails
-                              where ae.RelatedCampaignId == campaignId && ae.AcquireEmailStatus == AcquireEmailStatusEnum.VERIFIED
+                              where ae.RelatedCampaignId == campaignId && (ae.AcquireEmailStatus == AcquireEmailStatusEnum.Reviewed || ae.AcquireEmailStatus == AcquireEmailStatusEnum.Verified)
                               select new AcquireEmailExportModel
                               {
                                   CampaignName = ae.Campaign.CampaignName,
@@ -323,6 +338,19 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                                   SubjectName = ae.Organization.SubjectName,
                                   AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation
                               }).ToList();
+            return entityList;
+        }
+        public IList<AcquireEmailExportModel> GetReviewedEntityList(int campaignId)
+        {
+            var entityList = (from ae in _db.AcquireEmails
+                where ae.RelatedCampaignId == campaignId && ae.AcquireEmailStatus == AcquireEmailStatusEnum.Reviewed
+                select new AcquireEmailExportModel
+                {
+                    CampaignName = ae.Campaign.CampaignName,
+                    VAT = ae.Organization.VAT,
+                    SubjectName = ae.Organization.SubjectName,
+                    AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation
+                }).ToList();
             return entityList;
         }
     }

@@ -69,7 +69,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
 
         public int GetUnassignedEntities(int campaignId)
         {
-            var number = _db.AcquireEmails.Count(x => x.Campaign.CampaignId == campaignId && x.AcquireEmailStatus == AcquireEmail.AcquireEmailStatusEnum.CREATED && x.IsAssigned == false);
+            var number = _db.AcquireEmails.Count(x => x.Campaign.CampaignId == campaignId && x.AcquireEmailStatus == AcquireEmail.AcquireEmailStatusEnum.Created && x.IsAssigned == false);
             return number;
         }
 

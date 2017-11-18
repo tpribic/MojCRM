@@ -1,12 +1,9 @@
 ﻿using MojCRM.Models;
 using MojCRM.Areas.Campaigns.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MojCRM.Areas.HelpDesk.Models
 {
@@ -32,13 +29,16 @@ namespace MojCRM.Areas.HelpDesk.Models
         public enum AcquireEmailStatusEnum
         {
             [Description("Kreirano")]
-            CREATED,
+            Created,
 
             [Description("Provjereno")]
-            CHECKED,
+            Checked,
 
             [Description("Verificirano")]
-            VERIFIED
+            Verified,
+
+            [Description("Revidirano")]
+            Reviewed
         }
 
         public string AcquireEmailStatusString
@@ -47,9 +47,10 @@ namespace MojCRM.Areas.HelpDesk.Models
             {
                 switch (AcquireEmailStatus)
                 {
-                    case AcquireEmailStatusEnum.CREATED: return "Kreirano";
-                    case AcquireEmailStatusEnum.CHECKED: return "Provjereno";
-                    case AcquireEmailStatusEnum.VERIFIED: return "Verificirano";
+                    case AcquireEmailStatusEnum.Created: return "Kreirano";
+                    case AcquireEmailStatusEnum.Checked: return "Provjereno";
+                    case AcquireEmailStatusEnum.Verified: return "Verificirano";
+                    case AcquireEmailStatusEnum.Reviewed: return "Revidirano";
                 }
                 return "Status provjere";
             }

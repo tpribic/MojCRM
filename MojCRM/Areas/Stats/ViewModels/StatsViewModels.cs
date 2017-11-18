@@ -141,7 +141,7 @@ namespace MojCRM.Areas.Stats.ViewModels
                     NumberResend = resend.Count(a => a.User == day.Key),
                     NumberMail = deliveryMail.Count(a => a.User == day.Key),
                     NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
-                    TimeFromLastCall = (Int32)(DateTime.Now).Subtract(GetLastCallDateTime(day.Key)).TotalMinutes
+                    TimeFromLastCall = (int)DateTime.Now.Subtract(GetLastCallDateTime(day.Key)).TotalMinutes
                 };
                 activities.Add(dailyActivities);
             }
@@ -155,7 +155,9 @@ namespace MojCRM.Areas.Stats.ViewModels
                 x.User == agent && (x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL ||
                                     x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT));
 
-            return result.InsertDate;
+
+            if (result != null) return result.InsertDate;
+            return DateTime.Now;
         }
     }
 
