@@ -347,7 +347,7 @@ namespace MojCRM.Controllers
             organization.Organization.UpdateDate = DateTime.Now;
             organization.Organization.LastUpdatedBy = User.Identity.Name;
 
-            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
 
             db.SaveChanges();
 
@@ -372,7 +372,7 @@ namespace MojCRM.Controllers
             organization.Organization.UpdateDate = DateTime.Now;
             organization.Organization.LastUpdatedBy = User.Identity.Name;
 
-            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
 
             db.SaveChanges();
 
@@ -429,7 +429,7 @@ namespace MojCRM.Controllers
             organization.UpdateDate = DateTime.Now;
             organization.LastUpdatedBy = User.Identity.Name;
 
-            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
 
             db.SaveChanges();
 
@@ -512,7 +512,7 @@ namespace MojCRM.Controllers
                 User = User,
                 ReferenceId = ActivityReferenceId,
                 ActivityType = ActivityType,
-                Department = ActivityLog.DepartmentEnum.MojCRM,
+                Department = ActivityLog.DepartmentEnum.MojCrm,
                 Module = ActivityLog.ModuleEnum.Organizations,
                 InsertDate = DateTime.Now
             });

@@ -24,22 +24,22 @@ namespace MojCRM.Areas.Stats.Controllers
 
 
             var SuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL 
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.Succall 
                                    select a);
             var ShortSuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT 
+                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort 
                                    select a);
             var UnsuccessfulCalls = (from a in db.ActivityLogs
-                                     where a.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL
+                                     where a.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal
                                      select a);
             var MailChange = (from a in db.ActivityLogs
-                              where a.ActivityType == ActivityLog.ActivityTypeEnum.MAILCHANGE
+                              where a.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange
                               select a);
             var Resend = (from a in db.ActivityLogs
-                          where a.ActivityType == ActivityLog.ActivityTypeEnum.RESEND
+                          where a.ActivityType == ActivityLog.ActivityTypeEnum.Resend
                           select a);
             var DeliveryMail = (from a in db.ActivityLogs
-                                where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
+                                where a.ActivityType == ActivityLog.ActivityTypeEnum.Email
                                 select a);
 
             var ReferenceDate = DateTime.Today.AddDays(-1);
@@ -140,131 +140,127 @@ namespace MojCRM.Areas.Stats.Controllers
         }
 
         // GET: Stats/CallCenterDaily
-        public ActionResult CallCenterDaily(string SearchDate)
+        public ActionResult CallCenterDaily(string search)
         {
-            var AgentActivities = (from a in db.ActivityLogs
+            var agentActivities = (from a in db.ActivityLogs
                                    where a.InsertDate >= DateTime.Today
                                    group a by a.User into ga
                                    select ga).ToList();
-            var DepartmentActivities = (from a in db.ActivityLogs
+            var departmentActivities = (from a in db.ActivityLogs
                                         where a.InsertDate >= DateTime.Today
                                         group a by a.Department into ga
                                         select ga).ToList();
-            var SuccessfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT
-                                   select a);
-            var UnsuccessfulCalls = (from a in db.ActivityLogs
-                                     where a.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL
-                                     select a);
-            var MailChange = (from a in db.ActivityLogs
-                              where a.ActivityType == ActivityLog.ActivityTypeEnum.MAILCHANGE
-                              select a);
-            var Resend = (from a in db.ActivityLogs
-                          where a.ActivityType == ActivityLog.ActivityTypeEnum.RESEND
-                          select a);
-            var DeliveryMail = (from a in db.ActivityLogs
-                                where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
-                                select a);
-            var TicketsAssigned = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.TICKETASSIGN
-                                   select a);
-            var Activities = new List<CallCenterDaily>();
-            var ActivitiesByDepartment = new List<CallCenterDailyByDepartment>();
+            var successfulCalls = db.ActivityLogs.Where(a =>
+                a.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
+                a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort);
+            var unsuccessfulCalls = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal);
+            var mailChange = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange);
+            var resend = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Resend);
+            var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
+            var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
+            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@"));
+            var activities = new List<CallCenterDaily>();
+            var activitiesByDepartment = new List<CallCenterDailyByDepartment>();
 
-            if (!String.IsNullOrEmpty(SearchDate))
+            if (!string.IsNullOrEmpty(search))
             {
-                var searchDate = Convert.ToDateTime(SearchDate);
+                var searchDate = Convert.ToDateTime(search);
                 var searchDatePlus = searchDate.AddDays(1);
-                SuccessfulCalls = SuccessfulCalls.Where(a => (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
-                UnsuccessfulCalls = UnsuccessfulCalls.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                MailChange = MailChange.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                Resend = Resend.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                DeliveryMail = DeliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
-                TicketsAssigned = TicketsAssigned.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                successfulCalls = successfulCalls.Where(a => (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
+                unsuccessfulCalls = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                mailChange = mailChange.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                resend = resend.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                acquiredEmails = acquiredEmails.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
 
-                AgentActivities = (from a in db.ActivityLogs
+                agentActivities = (from a in db.ActivityLogs
                                    where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
                                    group a by a.User into ga
                                    select ga).ToList();
-                DepartmentActivities = (from a in db.ActivityLogs
+                departmentActivities = (from a in db.ActivityLogs
                                         where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
                                         group a by a.Department into ga
                                         select ga).ToList();
-                foreach (var Day in AgentActivities)
+                foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterDaily
                     {
-                        Agent = Day.Key,
-                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.User == Day.Key).Count(),
-                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.User == Day.Key).Count(),
-                        NumberMailchange = MailChange.Where(a => a.User == Day.Key).Count(),
-                        NumberResend = Resend.Where(a => a.User == Day.Key).Count(),
-                        NumberMail = DeliveryMail.Where(a => a.User == Day.Key).Count(),
-                        NumberTicketsAssigned = TicketsAssigned.Where(a => a.User == Day.Key).Count()
+                        Agent = day.Key,
+                        NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberMailchange = mailChange.Count(a => a.User == day.Key),
+                        NumberResend = resend.Count(a => a.User == day.Key),
+                        NumberMail = deliveryMail.Count(a => a.User == day.Key),
+                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
                     };
-                    Activities.Add(dailyActivities);
+                    activities.Add(dailyActivities);
                 }
-                foreach (var Department in DepartmentActivities)
+                foreach (var department in departmentActivities)
                 {
                     var dailyActivitiesByDepartment = new CallCenterDailyByDepartment
                     {
-                        Department = Department.Key,
-                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
-                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
-                        NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
-                        NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
-                        NumberMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                        Department = department.Key,
+                        NumberSuccessfulCalls = successfulCalls.Count(a => a.Department == department.Key),
+                        NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.Department == department.Key),
+                        NumberMailchange = mailChange.Count(a => a.Department == department.Key),
+                        NumberResend = resend.Count(a => a.Department == department.Key),
+                        NumberMail = deliveryMail.Count(a => a.Department == department.Key)
                     };
-                    ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
+                    activitiesByDepartment.Add(dailyActivitiesByDepartment);
                 }
             }
             else
             {
-                SuccessfulCalls = SuccessfulCalls.Where(a => a.InsertDate >= DateTime.Today);
-                UnsuccessfulCalls = UnsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today);
-                MailChange = MailChange.Where(t => t.InsertDate >= DateTime.Today);
-                Resend = Resend.Where(t => t.InsertDate >= DateTime.Today);
-                DeliveryMail = DeliveryMail.Where(t => t.InsertDate >= DateTime.Today);
-                TicketsAssigned = TicketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
-                foreach (var Day in AgentActivities)
+                successfulCalls = successfulCalls.Where(a => a.InsertDate >= DateTime.Today);
+                unsuccessfulCalls = unsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today);
+                mailChange = mailChange.Where(t => t.InsertDate >= DateTime.Today);
+                resend = resend.Where(t => t.InsertDate >= DateTime.Today);
+                deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
+                ticketsAssigned = ticketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
+                acquiredEmails = acquiredEmails.Where(t => t.InsertDate >= DateTime.Today);
+                foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterDaily
                     {
-                        Agent = Day.Key,
-                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.User == Day.Key).Count(),
-                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.User == Day.Key).Count(),
-                        NumberMailchange = MailChange.Where(a => a.User == Day.Key).Count(),
-                        NumberResend = Resend.Where(a => a.User == Day.Key).Count(),
-                        NumberMail = DeliveryMail.Where(a => a.User == Day.Key).Count(),
-                        NumberTicketsAssigned = TicketsAssigned.Where(a => a.User == Day.Key).Count()
+                        Agent = day.Key,
+                        NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberMailchange = mailChange.Count(a => a.User == day.Key),
+                        NumberResend = resend.Count(a => a.User == day.Key),
+                        NumberMail = deliveryMail.Count(a => a.User == day.Key),
+                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
                     };
-                    Activities.Add(dailyActivities);
+                    activities.Add(dailyActivities);
                 }
-                foreach (var Department in DepartmentActivities)
+                foreach (var department in departmentActivities)
                 {
                     var dailyActivitiesByDepartment = new CallCenterDailyByDepartment
                     {
-                        Department = Department.Key,
-                        NumberSuccessfulCalls = SuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
-                        NumberUnsuccessfulCalls = UnsuccessfulCalls.Where(a => a.Department == Department.Key).Count(),
-                        NumberMailchange = MailChange.Where(a => a.Department == Department.Key).Count(),
-                        NumberResend = Resend.Where(a => a.Department == Department.Key).Count(),
-                        NumberMail = DeliveryMail.Where(a => a.Department == Department.Key).Count()
+                        Department = department.Key,
+                        NumberSuccessfulCalls = successfulCalls.Count(a => a.Department == department.Key),
+                        NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.Department == department.Key),
+                        NumberMailchange = mailChange.Count(a => a.Department == department.Key),
+                        NumberResend = resend.Count(a => a.Department == department.Key),
+                        NumberMail = deliveryMail.Count(a => a.Department == department.Key)
                     };
-                    ActivitiesByDepartment.Add(dailyActivitiesByDepartment);
+                    activitiesByDepartment.Add(dailyActivitiesByDepartment);
                 }
             }
 
             var model = new CallCenterDailyStatsViewModel
             {
-                Activities = Activities.AsQueryable(),
-                ActivitiesByDepartment = ActivitiesByDepartment.AsQueryable(),
-                SumSuccessfulCalls = SuccessfulCalls.Count(),
-                SumUnsuccessfulCalls = UnsuccessfulCalls.Count(),
-                SumMailchange = MailChange.Count(),
-                SumResend = Resend.Count(),
-                SumSentMail = DeliveryMail.Count(),
-                SumTicketsAssigned = TicketsAssigned.Count()
+                Activities = activities.AsQueryable(),
+                ActivitiesByDepartment = activitiesByDepartment.AsQueryable(),
+                SumSuccessfulCalls = successfulCalls.Count(),
+                SumUnsuccessfulCalls = unsuccessfulCalls.Count(),
+                SumMailchange = mailChange.Count(),
+                SumResend = resend.Count(),
+                SumSentMail = deliveryMail.Count(),
+                SumTicketsAssigned = ticketsAssigned.Count(),
+                SumAcquiredEmails = acquiredEmails.Count()
             };
 
             return View(model);
@@ -275,36 +271,21 @@ namespace MojCRM.Areas.Stats.Controllers
         public ActionResult CallCenterWeekly(string searchStart, string searchEnd)
         {
 
-            var agentActivities = (from a in db.ActivityLogs
-                                   //where a.InsertDate >= DateTime.Today
-                                   group a by a.User into ga
-                                   select ga).ToList();
-            var departmentActivities = (from a in db.ActivityLogs
-                                        //where a.InsertDate >= DateTime.Today
-                                        group a by a.Department into ga
-                                        select ga).ToList();
-            var successfulCalls = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT
-                                   select a);
-            var unsuccessfulCalls = (from a in db.ActivityLogs
-                                     where a.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL
-                                     select a);
-            var mailChange = (from a in db.ActivityLogs
-                              where a.ActivityType == ActivityLog.ActivityTypeEnum.MAILCHANGE
-                              select a);
-            var resend = (from a in db.ActivityLogs
-                          where a.ActivityType == ActivityLog.ActivityTypeEnum.RESEND
-                          select a);
-            var deliveryMail = (from a in db.ActivityLogs
-                                where a.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL
-                                select a);
-            var ticketsAssigned = (from a in db.ActivityLogs
-                                   where a.ActivityType == ActivityLog.ActivityTypeEnum.TICKETASSIGN
-                                   select a);
+            var agentActivities = db.ActivityLogs.GroupBy(a => a.User).Select(ga => ga);
+            var departmentActivities = db.ActivityLogs.GroupBy(a => a.Department).Select(ga => ga);
+            var successfulCalls = (db.ActivityLogs.Where(a =>
+                a.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
+                a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort));
+            var unsuccessfulCalls = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal);
+            var mailChange = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange);
+            var resend = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Resend);
+            var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
+            var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
+            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@"));
             var activities = new List<CallCenterWeekly>();
             var activitiesByDepartment = new List<CallCenterWeeklyByDepartment>();
 
-            if (!String.IsNullOrEmpty(searchStart))
+            if (!string.IsNullOrEmpty(searchStart))
             {
                 var searchDateStart = Convert.ToDateTime(searchStart);
                 var searchDateEnd = Convert.ToDateTime(searchEnd);
@@ -314,15 +295,16 @@ namespace MojCRM.Areas.Stats.Controllers
                 resend = resend.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                acquiredEmails = acquiredEmails.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
 
-                agentActivities = (from a in db.ActivityLogs
-                                   where (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd)
-                                   group a by a.User into ga
-                                   select ga).ToList();
-                departmentActivities = (from a in db.ActivityLogs
-                                        where (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd)
-                                        group a by a.Department into ga
-                                        select ga).ToList();
+                agentActivities = db.ActivityLogs
+                    .Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd))
+                    .GroupBy(a => a.User)
+                    .Select(ga => ga);
+                departmentActivities = db.ActivityLogs
+                    .Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd))
+                    .GroupBy(a => a.Department)
+                    .Select(ga => ga);
                 foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterWeekly
@@ -333,7 +315,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
-                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key)
+                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
                     };
                     activities.Add(dailyActivities);
                 }
@@ -359,6 +342,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 resend = resend.Where(t => t.InsertDate >= DateTime.Today);
                 deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
                 ticketsAssigned = ticketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
+                acquiredEmails = acquiredEmails.Where(t => t.InsertDate >= DateTime.Today);
                 foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterWeekly
@@ -369,7 +353,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
-                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key)
+                        NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
                     };
                     activities.Add(dailyActivities);
                 }
@@ -397,7 +382,8 @@ namespace MojCRM.Areas.Stats.Controllers
                 SumMailchange = mailChange.Count(),
                 SumResend = resend.Count(),
                 SumSentMail = deliveryMail.Count(),
-                SumTicketsAssigned = ticketsAssigned.Count()
+                SumTicketsAssigned = ticketsAssigned.Count(),
+                SumAcquiredEmails = acquiredEmails.Count()
             };
 
             return View(model);

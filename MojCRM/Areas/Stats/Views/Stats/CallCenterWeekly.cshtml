@@ -1,6 +1,6 @@
 ﻿@model MojCRM.Areas.Stats.ViewModels.CallCenterWeeklyStatsViewModel
 @{
-    ViewBag.Title = "Tjedna statistika poziva";
+    ViewBag.Title = "Statistika poziva u periodu";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
@@ -48,6 +48,7 @@
             <th>@Html.LabelFor(model => model.SumMailchange)</th>
             <th>@Html.LabelFor(model => model.SumResend)</th>
             <th>@Html.LabelFor(model => model.SumTicketsAssigned)</th>
+            <th>@Html.LabelFor(model => model.SumAcquiredEmails)</th>
         </tr>
         <tr>
             <td>@Model.SumSuccessfulCalls</td>
@@ -56,6 +57,7 @@
             <td>@Model.SumMailchange</td>
             <td>@Model.SumResend</td>
             <td>@Model.SumTicketsAssigned</td>
+            <td>@Model.SumAcquiredEmails</td>
         </tr>
     </table>
 </div>
@@ -99,6 +101,7 @@
             <th>Ispravak mailova (Odjel dostave)</th>
             <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
             <th>Dodijeljene kartice (Odjel dostave)</th>
+            <th>Prikupljene e-mail adrese</th>
         </tr>
         @foreach (var activity in Model.Activities)
         {
@@ -110,6 +113,7 @@
                 <td>@activity.NumberMailchange</td>
                 <td>@activity.NumberResend</td>
                 <td>@activity.NumberTicketsAssigned</td>
+                <td>@activity.NumberAcquiredEmails</td>
             </tr>
         }
         <tr></tr>

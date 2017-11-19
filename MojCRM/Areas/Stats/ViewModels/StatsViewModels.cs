@@ -63,6 +63,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? NumberMail { get; set; }
         [Display(Name = "Broj zaključanih kartica (Odjel dostave)")]
         public int? NumberTicketsAssigned { get; set; }
+        [Display(Name = "Broj prikupljenih e-mail adresa")]
+        public int? NumberAcquiredEmails { get; set; }
         [Display(Name = "Vrijeme od zadnjeg poziva")]
         public int? TimeFromLastCall { get; set; }
     }
@@ -88,7 +90,7 @@ namespace MojCRM.Areas.Stats.ViewModels
             {
                 switch (Department)
                 {
-                    case ActivityLog.DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case ActivityLog.DepartmentEnum.MojCrm: return "Moj-CRM";
                     case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
                     case ActivityLog.DepartmentEnum.DatabaseUpdate: return "Odjel prikupa e-mail adresa";
@@ -113,18 +115,20 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? SumResend { get; set; }
         [Display(Name = "Zaključane kartice (Odjel dostave)")]
         public int? SumTicketsAssigned { get; set; }
+        [Display(Name = "Broj prikupljenih e-mail adresa")]
+        public int? SumAcquiredEmails { get; set; }
 
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
         public IQueryable<CallCenterDaily> GetActivitiesForDashboard()
         {
             var referenceDate = DateTime.Now.Date;
             var activities = new List<CallCenterDaily>();
-            var successfulCalls = _db.ActivityLogs.Where(a => (a.InsertDate >= referenceDate) && (a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL || a.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT));
-            var unsuccessfulCalls = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.UNSUCCAL));
-            var mailChange = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.MAILCHANGE));
-            var resend = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.RESEND));
-            var deliveryMail = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.EMAIL));
-            var ticketsAssigned = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.TICKETASSIGN));
+            var successfulCalls = _db.ActivityLogs.Where(a => (a.InsertDate >= referenceDate) && (a.ActivityType == ActivityLog.ActivityTypeEnum.Succall || a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort));
+            var unsuccessfulCalls = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal));
+            var mailChange = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange));
+            var resend = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.Resend));
+            var deliveryMail = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.Email));
+            var ticketsAssigned = _db.ActivityLogs.Where(t => (t.InsertDate >= referenceDate) && (t.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign));
 
             var agentActivities = (from a in _db.ActivityLogs
                                where (a.InsertDate >= referenceDate)
@@ -152,8 +156,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         private DateTime GetLastCallDateTime(string agent)
         {
             var result = _db.ActivityLogs.OrderByDescending(x => x.Id).First(x =>
-                x.User == agent && (x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALL ||
-                                    x.ActivityType == ActivityLog.ActivityTypeEnum.SUCCALSHORT));
+                x.User == agent && (x.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
+                                    x.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort));
 
 
             if (result != null) return result.InsertDate;
@@ -177,6 +181,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? NumberMail { get; set; }
         [Display(Name = "Broj zaključanih kartica (Odjel dostave)")]
         public int? NumberTicketsAssigned { get; set; }
+        [Display(Name = "Broj prikupljenih e-mail adresa")]
+        public int? NumberAcquiredEmails { get; set; }
     }
     public class CallCenterWeeklyByDepartment
     {
@@ -200,7 +206,7 @@ namespace MojCRM.Areas.Stats.ViewModels
             {
                 switch (Department)
                 {
-                    case ActivityLog.DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case ActivityLog.DepartmentEnum.MojCrm: return "Moj-CRM";
                     case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
                 }
@@ -224,6 +230,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? SumResend { get; set; }
         [Display(Name = "Zaključane kartice (Odjel dostave)")]
         public int? SumTicketsAssigned { get; set; }
+        [Display(Name = "Broj prikupljenih e-mail adresa")]
+        public int? SumAcquiredEmails { get; set; }
     }
 
     public class PersonalDailyActivitiesViewModel

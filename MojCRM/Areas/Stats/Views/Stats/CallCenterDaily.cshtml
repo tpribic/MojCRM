@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <label for="search-date">Datum pretrage</label>
                     <div id="search-date">
-                        @Html.TextBox("SearchDate", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                        @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
                     </div>
                 </div>
             </div>
@@ -40,6 +40,7 @@
                 <th>@Html.LabelFor(model => model.SumMailchange)</th>
                 <th>@Html.LabelFor(model => model.SumResend)</th>
                 <th>@Html.LabelFor(model => model.SumTicketsAssigned)</th>
+                <th>@Html.LabelFor(model => model.SumAcquiredEmails)</th>
             </tr>
             <tr>
                 <td>@Model.SumSuccessfulCalls</td>
@@ -48,6 +49,7 @@
                 <td>@Model.SumMailchange</td>
                 <td>@Model.SumResend</td>
                 <td>@Model.SumTicketsAssigned</td>
+                <td>@Model.SumAcquiredEmails</td>
             </tr>
         </table>
     </div>
@@ -91,6 +93,7 @@
                     <th>Ispravak mailova (Odjel dostave)</th>
                     <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
                     <th>Dodijeljene kartice (Odjel dostave)</th>
+                    <th>Prikupljene e-mail adrese</th>
                 </tr>
                 @foreach (var activity in Model.Activities)
             {
@@ -102,6 +105,7 @@
                         <td>@activity.NumberMailchange</td>
                         <td>@activity.NumberResend</td>
                         <td>@activity.NumberTicketsAssigned</td>
+                        <td>@activity.NumberAcquiredEmails</td>
                     </tr>
                 }
                 <tr></tr>

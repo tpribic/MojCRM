@@ -74,7 +74,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                         Description = "Agent " + User.Identity.Name + " je obavio uspješan poziv za ažuriranje baze korisnika.",
                         User = User.Identity.Name,
                         ReferenceId = entityId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.SUCCALL,
+                        ActivityType = ActivityLog.ActivityTypeEnum.Succall,
                         Department = ActivityLog.DepartmentEnum.DatabaseUpdate,
                         Module = ActivityLog.ModuleEnum.AqcuireEmail,
                         InsertDate = DateTime.Now
@@ -89,7 +89,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                         Description = "Agent " + User.Identity.Name + " je pokušao obaviti poziv za ažuriranje baze korisnika.",
                         User = User.Identity.Name,
                         ReferenceId = entityId,
-                        ActivityType = ActivityLog.ActivityTypeEnum.UNSUCCAL,
+                        ActivityType = ActivityLog.ActivityTypeEnum.Unsuccal,
                         Department = ActivityLog.DepartmentEnum.DatabaseUpdate,
                         Module = ActivityLog.ModuleEnum.AqcuireEmail,
                         InsertDate = DateTime.Now
