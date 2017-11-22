@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using MojCRM.Models;
 
 namespace MojCRM.Helpers
@@ -11,10 +8,12 @@ namespace MojCRM.Helpers
     public class HelperMethods
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly ActivityLog _al = new ActivityLog();
 
         public void LogActivity(string activityDescription, string user, int activityReferenceId, 
             ActivityLog.ActivityTypeEnum activityType, ActivityLog.DepartmentEnum department, ActivityLog.ModuleEnum module)
         {
+            var isSuspicious = _al.CheckSuspiciousActivity(user, activityType);
             _db.ActivityLogs.Add(new ActivityLog
             {
                 Description = activityDescription,
@@ -23,7 +22,8 @@ namespace MojCRM.Helpers
                 ActivityType = activityType,
                 Department = department,
                 Module = module,
-                InsertDate = DateTime.Now
+                InsertDate = DateTime.Now,
+                IsSuspiciousActivity = isSuspicious
             });
             _db.SaveChanges();
         }

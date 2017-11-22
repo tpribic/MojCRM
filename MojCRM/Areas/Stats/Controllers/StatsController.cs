@@ -153,12 +153,14 @@ namespace MojCRM.Areas.Stats.Controllers
             var successfulCalls = db.ActivityLogs.Where(a =>
                 a.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
                 a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort);
+            var successfulCallsSuspicious = successfulCalls.Where(a => a.IsSuspiciousActivity);
             var unsuccessfulCalls = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal);
+            var unsuccessfulCallsSuspicious = unsuccessfulCalls.Where(a => a.IsSuspiciousActivity);
             var mailChange = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange);
             var resend = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Resend);
             var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
             var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
-            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@"));
+            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@") && al.Description.Contains("nova informacija o preuzimanju"));
             var activities = new List<CallCenterDaily>();
             var activitiesByDepartment = new List<CallCenterDailyByDepartment>();
 
@@ -167,7 +169,9 @@ namespace MojCRM.Areas.Stats.Controllers
                 var searchDate = Convert.ToDateTime(search);
                 var searchDatePlus = searchDate.AddDays(1);
                 successfulCalls = successfulCalls.Where(a => (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
+                successfulCallsSuspicious = successfulCallsSuspicious.Where(a => (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus));
                 unsuccessfulCalls = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                unsuccessfulCallsSuspicious = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 mailChange = mailChange.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 resend = resend.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
@@ -188,7 +192,9 @@ namespace MojCRM.Areas.Stats.Controllers
                     {
                         Agent = day.Key,
                         NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
@@ -214,7 +220,9 @@ namespace MojCRM.Areas.Stats.Controllers
             else
             {
                 successfulCalls = successfulCalls.Where(a => a.InsertDate >= DateTime.Today);
+                successfulCallsSuspicious = successfulCallsSuspicious.Where(a => a.InsertDate >= DateTime.Today);
                 unsuccessfulCalls = unsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today);
+                unsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Where(a => a.InsertDate >= DateTime.Today);
                 mailChange = mailChange.Where(t => t.InsertDate >= DateTime.Today);
                 resend = resend.Where(t => t.InsertDate >= DateTime.Today);
                 deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
@@ -226,7 +234,9 @@ namespace MojCRM.Areas.Stats.Controllers
                     {
                         Agent = day.Key,
                         NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
@@ -255,7 +265,9 @@ namespace MojCRM.Areas.Stats.Controllers
                 Activities = activities.AsQueryable(),
                 ActivitiesByDepartment = activitiesByDepartment.AsQueryable(),
                 SumSuccessfulCalls = successfulCalls.Count(),
+                SumSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(),
                 SumUnsuccessfulCalls = unsuccessfulCalls.Count(),
+                SumUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(),
                 SumMailchange = mailChange.Count(),
                 SumResend = resend.Count(),
                 SumSentMail = deliveryMail.Count(),
@@ -276,21 +288,25 @@ namespace MojCRM.Areas.Stats.Controllers
             var successfulCalls = (db.ActivityLogs.Where(a =>
                 a.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
                 a.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort));
+            var successfulCallsSuspicious = successfulCalls.Where(a => a.IsSuspiciousActivity);
             var unsuccessfulCalls = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Unsuccal);
+            var unsuccessfulCallsSuspicious = unsuccessfulCalls.Where(a => a.IsSuspiciousActivity);
             var mailChange = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Mailchange);
             var resend = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Resend);
             var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
             var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
-            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@"));
+            var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@") && al.Description.Contains("nova informacija o preuzimanju"));
             var activities = new List<CallCenterWeekly>();
             var activitiesByDepartment = new List<CallCenterWeeklyByDepartment>();
 
             if (!string.IsNullOrEmpty(searchStart))
             {
                 var searchDateStart = Convert.ToDateTime(searchStart);
-                var searchDateEnd = Convert.ToDateTime(searchEnd);
+                var searchDateEnd = Convert.ToDateTime(searchEnd).AddDays(1);
                 successfulCalls = successfulCalls.Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd));
+                successfulCallsSuspicious = successfulCallsSuspicious.Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd));
                 unsuccessfulCalls = unsuccessfulCalls.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                unsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd));
                 mailChange = mailChange.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 resend = resend.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
@@ -311,7 +327,9 @@ namespace MojCRM.Areas.Stats.Controllers
                     {
                         Agent = day.Key,
                         NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
@@ -337,7 +355,9 @@ namespace MojCRM.Areas.Stats.Controllers
             else
             {
                 successfulCalls = successfulCalls.Where(a => a.InsertDate >= DateTime.Today);
+                successfulCallsSuspicious = successfulCallsSuspicious.Where(a => a.InsertDate >= DateTime.Today);
                 unsuccessfulCalls = unsuccessfulCalls.Where(t => t.InsertDate >= DateTime.Today);
+                unsuccessfulCallsSuspicious= unsuccessfulCallsSuspicious.Where(a => a.InsertDate >= DateTime.Today);
                 mailChange = mailChange.Where(t => t.InsertDate >= DateTime.Today);
                 resend = resend.Where(t => t.InsertDate >= DateTime.Today);
                 deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
@@ -349,7 +369,9 @@ namespace MojCRM.Areas.Stats.Controllers
                     {
                         Agent = day.Key,
                         NumberSuccessfulCalls = successfulCalls.Count(a => a.User == day.Key),
+                        NumberSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberUnsuccessfulCalls = unsuccessfulCalls.Count(a => a.User == day.Key),
+                        NumberUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(a => a.User == day.Key),
                         NumberMailchange = mailChange.Count(a => a.User == day.Key),
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
@@ -378,7 +400,9 @@ namespace MojCRM.Areas.Stats.Controllers
                 Activities = activities.AsQueryable(),
                 ActivitiesByDepartment = activitiesByDepartment.AsQueryable(),
                 SumSuccessfulCalls = successfulCalls.Count(),
+                SumSuccessfulCallsSuspicious = successfulCallsSuspicious.Count(),
                 SumUnsuccessfulCalls = unsuccessfulCalls.Count(),
+                SumUnsuccessfulCallsSuspicious = unsuccessfulCallsSuspicious.Count(),
                 SumMailchange = mailChange.Count(),
                 SumResend = resend.Count(),
                 SumSentMail = deliveryMail.Count(),

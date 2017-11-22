@@ -268,7 +268,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
                     if (exists)
                     {
-                        var ticket = _db.DeliveryTicketModels.Find(result.Id);
+                        var ticket = _db.DeliveryTicketModels.First(x => x.MerElectronicId == result.Id);
                         if (ticket.DocumentStatus != 30)
                             ticket.DocumentStatus = 30;
                         ticket.UpdateDate = DateTime.Now;
@@ -725,10 +725,6 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         [Authorize]
         public ActionResult Details(int id, int? receiverId)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Delivery deliveryTicketModel = _db.DeliveryTicketModels.Find(id);
             if (deliveryTicketModel == null)
             {
@@ -737,59 +733,59 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
             //UpdateStatus(ElectronicId);
 
-            DateTime ReferenceDate = DateTime.Now.AddMonths(-2);
+            DateTime referenceDate = DateTime.Now.AddMonths(-2);
+            TimeSpan referenceGetSentDocumentsDate;
 
-            var _RelatedInvoicesList = (from t in _db.DeliveryTicketModels
-                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > ReferenceDate && t.DocumentStatus == 30
+            var relatedInvoicesList = (from t in _db.DeliveryTicketModels
+                                        where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > referenceDate && t.DocumentStatus == 30
                                         select t);
 
-            var _RelatedDeliveryContacts = (from t in _db.Contacts
+            var relatedDeliveryContacts = (from t in _db.Contacts
                                             where t.Organization.MerId == receiverId && t.ContactType == Contact.ContactTypeEnum.DELIVERY
                                             select t);
 
-            var _RelatedDeliveryDetails = (from t in _db.DeliveryDetails
+            var relatedDeliveryDetails = (from t in _db.DeliveryDetails
                                            where t.Receiver.MerId == receiverId
                                            select t).OrderByDescending(t => t.Id);
 
-            var _ImportantComment = (from dd in _db.MerDeliveryDetails
+            var importantComment = (from dd in _db.MerDeliveryDetails
                                      where dd.MerId == receiverId
                                      select dd.ImportantComments).First();
 
-            var _RelatedActivities = (from a in _db.ActivityLogs
+            var relatedActivities = (from a in _db.ActivityLogs
                                       where a.ReferenceId == id
                                       select a).OrderByDescending(a => a.Id);
 
             #region Postmark API
-            MessagesOutboundOpenResponse OpeningHistoryResponse;
-            BouncesResponse Bounces;
-            string PostmarkLinkOpeningHistory = @"https://api.postmarkapp.com/messages/outbound/opens?count=20&offset=0&recipient=" + deliveryTicketModel.BuyerEmail;
-            string PostmarkBounces = @"https://api.postmarkapp.com/bounces?count=20&offset=0&emailFilter=" + deliveryTicketModel.BuyerEmail;
-            using (var Postmark = new WebClient())
+            MessagesOutboundOpenResponse openingHistoryResponse;
+            BouncesResponse bounces;
+            string postmarkLinkOpeningHistory = @"https://api.postmarkapp.com/messages/outbound/opens?count=20&offset=0&recipient=" + deliveryTicketModel.BuyerEmail;
+            string postmarkBounces = @"https://api.postmarkapp.com/bounces?count=20&offset=0&emailFilter=" + deliveryTicketModel.BuyerEmail;
+            using (var postmark = new WebClient())
             {
-                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
-                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
-                var OpeningHistoryRequest = Postmark.DownloadString(PostmarkLinkOpeningHistory);
-                OpeningHistoryResponse = JsonConvert.DeserializeObject<MessagesOutboundOpenResponse>(OpeningHistoryRequest);
+                postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var openingHistoryRequest = postmark.DownloadString(postmarkLinkOpeningHistory);
+                openingHistoryResponse = JsonConvert.DeserializeObject<MessagesOutboundOpenResponse>(openingHistoryRequest);
             }
 
-            using (var Postmark = new WebClient())
+            using (var postmark = new WebClient())
             {
-                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
-                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
-                var BouncesRequest = Postmark.DownloadString(PostmarkBounces);
-                Bounces = JsonConvert.DeserializeObject<BouncesResponse>(BouncesRequest);
+                postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var bouncesRequest = postmark.DownloadString(postmarkBounces);
+                bounces = JsonConvert.DeserializeObject<BouncesResponse>(bouncesRequest);
             }
             #endregion
 
-
-            var Credentials = (from u in _db.Users
+            var credentials = (from u in _db.Users
                                where u.UserName == User.Identity.Name
                                select new { MerUser = u.MerUserUsername, MerPass = u.MerUserPassword }).First();
 
-            MerApiGetSentDocuments RequestGetSentDocuments = new MerApiGetSentDocuments()
+            MerApiGetSentDocuments requestGetSentDocuments = new MerApiGetSentDocuments()
             {
-                Id = Credentials.MerUser,
-                Pass = Credentials.MerPass,
+                Id = credentials.MerUser,
+                Pass = credentials.MerPass,
                 Oib = "99999999927",
                 PJ = "",
                 SoftwareId = "MojCRM-001",
@@ -797,17 +793,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 Take = 20
             };
 
-            string MerRequest = JsonConvert.SerializeObject(RequestGetSentDocuments);
+            string merRequest = JsonConvert.SerializeObject(requestGetSentDocuments);
 
-            using (var Mer = new WebClient() { Encoding = Encoding.UTF8 })
+            using (var mer = new WebClient() { Encoding = Encoding.UTF8 })
             {
-                Mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                Mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
-                var ResponseRegularDelivery = Mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSentDocuments").ToString(), "POST", MerRequest);
-                //ResponseRegularDelivery = ResponseRegularDelivery.Replace("[", "").Replace("]", "");
-                MerGetSentDocumentsResponse[] ResultsDocumentHistory = JsonConvert.DeserializeObject<MerGetSentDocumentsResponse[]>(ResponseRegularDelivery);
+                MerGetSentDocumentsResponse[] resultsDocumentHistory;
+                if (deliveryTicketModel.LastGetSentDocumentsDate == null || (int)DateTime.Now.Subtract((DateTime)deliveryTicketModel.LastGetSentDocumentsDate).TotalHours > 3)
+                {
+                    mer.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                    mer.Headers.Add(HttpRequestHeader.AcceptCharset, "utf-8");
+                    var responseRegularDelivery = mer.UploadString(new Uri(@"https://www.moj-eracun.hr/apis/v21/getSentDocuments").ToString(), "POST", merRequest);
+                    //ResponseRegularDelivery = ResponseRegularDelivery.Replace("[", "").Replace("]", "");
+                    resultsDocumentHistory = JsonConvert.DeserializeObject<MerGetSentDocumentsResponse[]>(responseRegularDelivery);
 
-                var DeliveryDetails = new DeliveryDetailsViewModel
+                    deliveryTicketModel.GetSentDocumentsResult = responseRegularDelivery;
+                    deliveryTicketModel.UpdateDate = DateTime.Now;
+                    deliveryTicketModel.LastGetSentDocumentsDate = DateTime.Now;
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    resultsDocumentHistory = JsonConvert.DeserializeObject<MerGetSentDocumentsResponse[]>(deliveryTicketModel.GetSentDocumentsResult);
+                }
+                
+
+                var deliveryDetails = new DeliveryDetailsViewModel
                 {
                     TicketId = id,
                     SenderName = deliveryTicketModel.Sender.SubjectName,
@@ -819,23 +829,23 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     ReceiverEmail = deliveryTicketModel.BuyerEmail,
                     MerDeliveryDetailComment = deliveryTicketModel.Receiver.MerDeliveryDetail.Comments,
                     MerDeliveryDetailTelephone = deliveryTicketModel.Receiver.MerDeliveryDetail.Telephone,
-                    ImportantComment = _ImportantComment,
+                    ImportantComment = importantComment,
                     MerElectronicId = deliveryTicketModel.MerElectronicId,
                     ReceiverId = deliveryTicketModel.ReceiverId,
                     ReceiverVAT = deliveryTicketModel.Receiver.VAT,
                     SenderVAT = deliveryTicketModel.Sender.VAT,
-                    RelatedInvoices = _RelatedInvoicesList,
-                    RelatedDeliveryContacts = _RelatedDeliveryContacts,
-                    RelatedDeliveryDetails = _RelatedDeliveryDetails,
-                    RelatedActivities = _RelatedActivities,
+                    RelatedInvoices = relatedInvoicesList,
+                    RelatedDeliveryContacts = relatedDeliveryContacts,
+                    RelatedDeliveryDetails = relatedDeliveryDetails,
+                    RelatedActivities = relatedActivities,
                     IsAssigned = deliveryTicketModel.IsAssigned,
                     AssignedTo = deliveryTicketModel.AssignedTo,
-                    DocumentHistory = ResultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (/*i.DokumentTypeId != 6 && -- This was removed from API on Moj-eRačun*/ i.DokumentTypeId != 632)).AsQueryable(),
-                    PostmarkOpenings = OpeningHistoryResponse,
-                    PostmarkBounces = Bounces
+                    DocumentHistory = resultsDocumentHistory.Where(i => (i.DokumentStatusId != 10) && (/*i.DokumentTypeId != 6 && -- This was removed from API on Moj-eRačun*/ i.DokumentTypeId != 632)).AsQueryable(),
+                    PostmarkOpenings = openingHistoryResponse,
+                    PostmarkBounces = bounces
                 };
 
-                return View(DeliveryDetails);
+                return View(deliveryDetails);
             }
         }
 
@@ -1096,33 +1106,33 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 User.Identity.Name, _TicketId, ActivityLog.ActivityTypeEnum.Email, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
         }
 
-        public JsonResult Assign(int Id)
+        public JsonResult Assign(int id)
         {
-            var TicketForAssignement = _db.DeliveryTicketModels.Find(Id);
-            TicketForAssignement.IsAssigned = true;
-            TicketForAssignement.AssignedTo = User.Identity.Name;
+            var ticketForAssignement = _db.DeliveryTicketModels.Find(id);
+            ticketForAssignement.IsAssigned = true;
+            ticketForAssignement.AssignedTo = User.Identity.Name;
             _db.SaveChanges();
-            _helper.LogActivity("Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + TicketForAssignement.Receiver.SubjectName + ", za eDokument: " + TicketForAssignement.InvoiceNumber,
-                User.Identity.Name, Id, ActivityLog.ActivityTypeEnum.Ticketassign, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
+            _helper.LogActivity("Agent " + User.Identity.Name + " si je dodijelio karticu za primatelja: " + ticketForAssignement.Receiver.SubjectName + ", za eDokument: " + ticketForAssignement.InvoiceNumber,
+                User.Identity.Name, id, ActivityLog.ActivityTypeEnum.Ticketassign, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
 
             return Json(new { Status = "OK" });
         }
 
-        public ActionResult Reassing(bool Unassign, string ReassignedTo, string TicketId)
+        public ActionResult Reassing(bool unassign, string reassignedTo, string ticketId)
         {
-            int TicketIdInt = Int32.Parse(TicketId);
-            var TicketForReassingement = (from t in _db.DeliveryTicketModels
-                                          where t.Id == TicketIdInt
+            int ticketIdInt = Int32.Parse(ticketId);
+            var ticketForReassingement = (from t in _db.DeliveryTicketModels
+                                          where t.Id == ticketIdInt
                                           select t).First();
-            if (Unassign == true)
+            if (unassign)
             {
-                TicketForReassingement.IsAssigned = false;
-                TicketForReassingement.AssignedTo = String.Empty;
+                ticketForReassingement.IsAssigned = false;
+                ticketForReassingement.AssignedTo = String.Empty;
                 _db.SaveChanges();
             }
             else
             {
-                TicketForReassingement.AssignedTo = ReassignedTo;
+                ticketForReassingement.AssignedTo = reassignedTo;
                 _db.SaveChanges();
             }
 
@@ -1133,32 +1143,32 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         [HttpPost, ActionName("AssignManagement")]
         public JsonResult AssignManagement(AssigningTickets[] forAssign)
         {
-            foreach (var Assign in forAssign)
+            foreach (var assign in forAssign)
             {
-                if (Assign.TicketDate == null)
+                if (assign.TicketDate == null)
                 {
-                    var _sentDate = Convert.ToDateTime(Assign.SentDate);
-                    var TicketsForAssing = (from t in _db.DeliveryTicketModels
-                                            where (t.InsertDate >= DateTime.Today) && (t.SentDate >= _sentDate)
+                    var sentDate = Convert.ToDateTime(assign.SentDate);
+                    var ticketsForAssing = (from t in _db.DeliveryTicketModels
+                                            where (t.InsertDate >= DateTime.Today) && (t.SentDate >= sentDate)
                                             select t).AsEnumerable();
-                    foreach (var Ticket in TicketsForAssing)
+                    foreach (var ticket in ticketsForAssing)
                     {
-                        Ticket.IsAssigned = true;
-                        Ticket.AssignedTo = Assign.Agent;
+                        ticket.IsAssigned = true;
+                        ticket.AssignedTo = assign.Agent;
                     }
                     _db.SaveChanges();
                 }
                 else
                 {
-                    var _ticketDate = Convert.ToDateTime(Assign.TicketDate);
-                    var _sentDate = Convert.ToDateTime(Assign.SentDate);
-                    var TicketsForAssing = (from t in _db.DeliveryTicketModels
-                                            where (t.InsertDate == _ticketDate) && (t.SentDate == _sentDate)
+                    var ticketDate = Convert.ToDateTime(assign.TicketDate);
+                    var sentDate = Convert.ToDateTime(assign.SentDate);
+                    var ticketsForAssing = (from t in _db.DeliveryTicketModels
+                                            where (t.InsertDate == ticketDate) && (t.SentDate == sentDate)
                                             select t).AsEnumerable();
-                    foreach (var Ticket in TicketsForAssing)
+                    foreach (var ticket in ticketsForAssing)
                     {
-                        Ticket.IsAssigned = true;
-                        Ticket.AssignedTo = Assign.Agent;
+                        ticket.IsAssigned = true;
+                        ticket.AssignedTo = assign.Agent;
                     }
                     _db.SaveChanges();
                 }
@@ -1168,20 +1178,19 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
         // POST: Delivery/PostmarkActivateBounce
         [HttpPost]
-        public JsonResult PostmarkActivateBounce(int BounceId, int TicketId)
+        public JsonResult PostmarkActivateBounce(int bounceId, int ticketId)
         {
-            ActivateBounceResponse ActivateResponse;
-            string ActivateLink = String.Format(@"https://api.postmarkapp.com/bounces/" + BounceId + "/activate");
+            string activateLink = String.Format(@"https://api.postmarkapp.com/bounces/" + bounceId + "/activate");
 
-            using (var Postmark = new WebClient())
+            using (var postmark = new WebClient())
             {
-                Postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
-                Postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
-                var Response = Postmark.UploadString(ActivateLink, "PUT", ActivateLink);
-                ActivateResponse = JsonConvert.DeserializeObject<ActivateBounceResponse>(Response);
+                postmark.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                postmark.Headers.Add("X-Postmark-Server-Token", "8ab33a3d-a800-405f-afad-9c75c2f08c0b");
+                var response = postmark.UploadString(activateLink, "PUT", activateLink);
+                var activateResponse = JsonConvert.DeserializeObject<ActivateBounceResponse>(response);
 
-                _helper.LogActivity(User.Identity.Name + " je reaktivirao e-mail adresu " + ActivateResponse.Bounce.Email + " u Postmarku",
-                    User.Identity.Name, TicketId, ActivityLog.ActivityTypeEnum.Postmarkactivatebounce, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
+                _helper.LogActivity(User.Identity.Name + " je reaktivirao e-mail adresu " + activateResponse.Bounce.Email + " u Postmarku",
+                    User.Identity.Name, ticketId, ActivityLog.ActivityTypeEnum.Postmarkactivatebounce, ActivityLog.DepartmentEnum.Delivery, ActivityLog.ModuleEnum.Delivery);
             }
 
             return Json(new { Status = "OK" });

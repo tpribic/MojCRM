@@ -52,6 +52,12 @@ namespace MojCRM.Areas.HelpDesk.Models
         [Display(Name = "Dodijeljeno agentu")]
         public string AssignedTo { get; set; }
 
+        [Display(Name = "Datum i vrijeme zadnje provjere povijesti dokumenata")]
+        public DateTime? LastGetSentDocumentsDate { get; set; }
+
+        [Display(Name = "Povijest primljenih dokumenata")]
+        public string GetSentDocumentsResult { get; set; }
+
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
 
         [NotMapped]

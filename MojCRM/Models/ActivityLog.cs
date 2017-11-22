@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace MojCRM.Models
 {
@@ -14,6 +15,7 @@ namespace MojCRM.Models
         public ModuleEnum? Module { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public bool IsSuspiciousActivity { get; set; }
         public enum ActivityTypeEnum
         {
             [Description("Sistemske akcije")]
@@ -139,6 +141,17 @@ namespace MojCRM.Models
                 return "Modul";
             }
         }
-        
+
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public bool CheckSuspiciousActivity(string user, ActivityTypeEnum activityType)
+        {
+            var reference = _db.ActivityLogs.OrderByDescending(a => a.InsertDate).First(a =>
+                a.User == user && a.ActivityType == activityType);
+
+            if (reference != null)
+                if ((int)DateTime.Now.Subtract(reference.InsertDate).TotalMinutes < 1)
+                return true;
+            return false;
+        }
     }
 }

@@ -53,8 +53,12 @@ namespace MojCRM.Areas.Stats.ViewModels
         public string Agent { get; set; }
         [Display(Name = "Broj uspješnih poziva")]
         public int NumberSuccessfulCalls { get; set; }
+        [Display(Name = "Uspješni pozivi (sumnjivi)")]
+        public int NumberSuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Broj neuspješnih poziva")]
         public int NumberUnsuccessfulCalls { get; set; }
+        [Display(Name = "Neuspješni pozivi (sumnjivi)")]
+        public int NumberUnsuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Broj ispravaka mailova")]
         public int? NumberMailchange { get; set; }
         [Display(Name = "Broj ponovno poslanih obavijesti o dostavi")]
@@ -105,8 +109,12 @@ namespace MojCRM.Areas.Stats.ViewModels
         public IQueryable<CallCenterDailyByDepartment> ActivitiesByDepartment { get; set; }
         [Display(Name = "Uspješni pozivi")]
         public int SumSuccessfulCalls { get; set; }
+        [Display(Name = "Uspješni pozivi (sumnjivi)")]
+        public int SumSuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Neuspješni pozivi")]
         public int SumUnsuccessfulCalls { get; set; }
+        [Display(Name = "Neuspješni pozivi (sumnjivi)")]
+        public int SumUnsuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Poslani e-mailovi vezani za dostavu")]
         public int? SumSentMail { get; set; }
         [Display(Name = "Ispravci e-mailova (Odjel dostave)")]
@@ -159,7 +167,6 @@ namespace MojCRM.Areas.Stats.ViewModels
                 x.User == agent && (x.ActivityType == ActivityLog.ActivityTypeEnum.Succall ||
                                     x.ActivityType == ActivityLog.ActivityTypeEnum.Succalshort));
 
-
             if (result != null) return result.InsertDate;
             return DateTime.Now;
         }
@@ -171,8 +178,12 @@ namespace MojCRM.Areas.Stats.ViewModels
         public string Agent { get; set; }
         [Display(Name = "Broj uspješnih poziva")]
         public int NumberSuccessfulCalls { get; set; }
+        [Display(Name = "Uspješni pozivi (sumnjivi)")]
+        public int NumberSuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Broj neuspješnih poziva")]
         public int NumberUnsuccessfulCalls { get; set; }
+        [Display(Name = "Neuspješni pozivi (sumnjivi)")]
+        public int NumberUnsuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Broj ispravaka mailova")]
         public int? NumberMailchange { get; set; }
         [Display(Name = "Broj ponovno poslanih obavijesti o dostavi")]
@@ -209,6 +220,7 @@ namespace MojCRM.Areas.Stats.ViewModels
                     case ActivityLog.DepartmentEnum.MojCrm: return "Moj-CRM";
                     case ActivityLog.DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case ActivityLog.DepartmentEnum.Sales: return "Odjel prodaje";
+                    case ActivityLog.DepartmentEnum.DatabaseUpdate: return "Odjel prikupa e-mail adresa";
                 }
                 return "Odjel";
             }
@@ -220,8 +232,12 @@ namespace MojCRM.Areas.Stats.ViewModels
         public IQueryable<CallCenterWeeklyByDepartment> ActivitiesByDepartment { get; set; }
         [Display(Name = "Uspješni pozivi")]
         public int SumSuccessfulCalls { get; set; }
+        [Display(Name = "Uspješni pozivi (sumnjivi)")]
+        public int SumSuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Neuspješni pozivi")]
         public int SumUnsuccessfulCalls { get; set; }
+        [Display(Name = "Neuspješni pozivi (sumnjivi)")]
+        public int SumUnsuccessfulCallsSuspicious { get; set; }
         [Display(Name = "Poslani e-mailovi vezani za dostavu")]
         public int? SumSentMail { get; set; }
         [Display(Name = "Ispravci e-mailova (Odjel dostave)")]

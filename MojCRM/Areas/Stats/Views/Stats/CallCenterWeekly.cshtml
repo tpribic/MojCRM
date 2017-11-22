@@ -51,8 +51,22 @@
             <th>@Html.LabelFor(model => model.SumAcquiredEmails)</th>
         </tr>
         <tr>
-            <td>@Model.SumSuccessfulCalls</td>
-            <td>@Model.SumUnsuccessfulCalls</td>
+            @if (Model.SumSuccessfulCallsSuspicious == 0)
+            {
+                <td>@Model.SumSuccessfulCalls</td>    
+            }
+            @if (Model.SumSuccessfulCallsSuspicious != 0)
+            {
+                <td>@Model.SumSuccessfulCalls <strong style="color:red">(@Model.SumSuccessfulCallsSuspicious)</strong></td>
+            }
+            @if (Model.SumUnsuccessfulCallsSuspicious == 0)
+            {
+                <td>@Model.SumUnsuccessfulCallsSuspicious</td>
+            }
+            @if (Model.SumUnsuccessfulCallsSuspicious != 0)
+            {
+                <td>@Model.SumUnsuccessfulCalls <strong style="color:red">(@Model.SumUnsuccessfulCallsSuspicious)</strong></td>
+            }
             <td>@Model.SumSentMail</td>
             <td>@Model.SumMailchange</td>
             <td>@Model.SumResend</td>
@@ -107,8 +121,22 @@
         {
             <tr>
                 <td>@activity.Agent</td>
-                <td>@activity.NumberSuccessfulCalls</td>
-                <td>@activity.NumberUnsuccessfulCalls</td>
+                @if (activity.NumberSuccessfulCallsSuspicious == 0)
+                {
+                    <td>@activity.NumberSuccessfulCalls</td>   
+                }
+                @if (activity.NumberSuccessfulCallsSuspicious != 0)
+                {
+                    <td>@activity.NumberSuccessfulCalls <strong style="color: red">(@activity.NumberSuccessfulCallsSuspicious)</strong></td>
+                }
+                @if (activity.NumberUnsuccessfulCallsSuspicious == 0)
+                {
+                    <td>@activity.NumberUnsuccessfulCalls</td>   
+                }
+                @if (activity.NumberUnsuccessfulCallsSuspicious != 0)
+                {
+                    <td>@activity.NumberUnsuccessfulCalls <strong style="color: red">(@activity.NumberUnsuccessfulCallsSuspicious)</strong></td>
+                }
                 <td>@activity.NumberMail</td>
                 <td>@activity.NumberMailchange</td>
                 <td>@activity.NumberResend</td>
