@@ -1,0 +1,102 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    @if (Model.TicketsAsSender.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Pošiljatelj</th>
+                <th>Tip dokumenta</th>
+                <th>E-mail adresa</th>
+                <th>Broj dokumenta</th>
+                <th>Datum slanja</th>
+                <th></th>
+            </tr>
+            @foreach (var Invoice in Model.TicketsAsSender)
+            {
+                <tr>
+                    <td>@Invoice.Receiver.SubjectName</td>
+                    @if (Invoice.DocumentStatus == 10)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 30)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-warning">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 40)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-success">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 50)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-danger">@Invoice.DocumentStatusString</span></td>
+                    }
+                    @if (Invoice.DocumentStatus == 55)
+                    {
+                        <td>@Invoice.MerDocumentTypeIdString<br /><span class="label label-info">@Invoice.DocumentStatusString</span></td>
+                    }
+                    <td>@Invoice.BuyerEmail</td>
+                    <td>@Invoice.InvoiceNumber</td>
+                    <td>@Invoice.SentDate.ToShortDateString()</td>
+                    <td>
+                        @if (Invoice.DocumentStatus == 30 && Invoice.IsAssigned == false)
+                        {
+                            <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
+                            <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "HelpDesk", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+                            <a method="post" title="Dodijeli karticu" class="fa fa-check-circle-o text-success assinged" data-ticket-id="@Html.Raw(Invoice.Id)" onclick="javascript: Assign()"></a>
+                        }
+                        @if (Invoice.DocumentStatus == 30 && (Invoice.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")) || Invoice.AssignedTo == User.Identity.Name))
+                        {
+                            <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
+                            <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "HelpDesk", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+                            <i class="fa fa-times-circle-o text-danger" title="Kartica je već dodijeljena agentu @Invoice.AssignedTo"></i>
+                        }
+                        @if (Invoice.DocumentStatus == 30 && (Invoice.IsAssigned == true && Invoice.AssignedTo != User.Identity.Name))
+                        {
+                            <i class="fa fa-times-circle-o text-danger" title="Kartica je već dodijeljena agentu @Invoice.AssignedTo"></i>
+                        }
+                        @if (Invoice.DocumentStatus != 30 && Invoice.IsAssigned == true)
+                        {
+                            <a href="@Url.RouteUrl(new { action = "Details", controller = "Delivery", area = "HelpDesk", Invoice.Id, Invoice.ReceiverId, returnUrl = Request.Url })"><i class="fa fa-edit"></i></a>
+                            <a href="@Url.RouteUrl(new { action = "UpdateStatusIndex", controller = "Delivery", area = "HelpDesk", Invoice.MerElectronicId, returnUrl = Request.Url })"><i style="color: forestgreen" class="fa fa-refresh"></i></a>
+                            <i class="fa fa-times-circle-o text-danger" title="Kartica je već dodijeljena agentu @Invoice.AssignedTo"></i>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Za ovu tvrtku nisu kreirane kartice za izlazne eDokumente</p>
+    }
+</div>
+<script>
+    function Assign() {
+            $(document).on("click", ".assinged", function (e) {
+            e.preventDefault();
+            if (window.confirm("Jeste li sigurni da želite dodijeliti ovu karticu sebi?"))
+                $.ajax({
+                    method: 'POST',
+                    url: '@Url.RouteUrl(new { action = "Assign", controller = "Delivery", area = "HelpDesk" })',
+                    data: {
+                        Id: $(this).data("ticket-id")
+                    },
+                    success: function (data) {
+                        if (data.Status === 'OK')
+                            alert("Kartica Vam je dodijeljenja!");
+                        else
+                            alert("Greška!");
+                    },
+                    dataType: 'json'
+                });
+            //window.location.reload(true)
+        });
+    }
+</script>

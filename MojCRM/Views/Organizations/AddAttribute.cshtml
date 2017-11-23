@@ -1,0 +1,54 @@
+﻿@model MojCRM.ViewModels.AddOrganizationAttributeViewModel
+
+@{
+    ViewBag.Title = "Dodavanje atributa";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2>Dodavanje atributa tvrtki</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <h5>Odaberite tvrtku za dodavanje atributa</h5>
+    @Html.Label("Tvrtka:")
+    @Html.TextBoxFor(m => m.Organization, new { @class = "form-control ui-autocomplete-input" })
+    @Html.ValidationMessageFor(m => m.Organization)
+    @Html.HiddenFor(m => m.MerId);
+    <br />
+    @Html.DropDownList("AttributeClass", Model.ClassDropdown, new { @class= "form-control" })
+    <br />
+    @Html.DropDownList("AttributeType", Model.TypeDropdown, new { @class = "form-control" })
+    <br />
+
+    <input class="btn btn-sm btn-default" type="submit" value="Dodaj atribut" />
+}
+
+<script>
+    $('#Organization').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("AutocompleteOrganization", "Organizations")',
+                dataType: "json",
+                data: { query: $('#Organization').val() },
+                success: function (jsonResponse) {
+                    response($/*("OrganizationSearch", jsonResponse)*/.map(jsonResponse, function (val, item) {
+                        return {
+                            label: val.Organization,
+                            value: val.Organization,
+                            id: val.MerId
+                        }
+                    }));
+                }
+            });
+        },
+        minLength: 3,
+        delay: 100,
+        select: function (event, ui) {
+            event.preventDefault();
+            $('#MerId').val(ui.item.id);
+            $('#Organization').val(ui.item.value);
+        }
+    });
+</script>

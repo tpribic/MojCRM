@@ -1,4 +1,5 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

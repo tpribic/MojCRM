@@ -4,14 +4,58 @@
     ViewBag.Title = "Prijava";
 }
 
-<h2 style="text-align:center"><strong>@ViewBag.Title</strong></h2>
+<body>
+    <div class="wrapper full-page-wrapper page-auth page-login text-center">
+        <div class="inner-page">
+            <div class="logo">
+                <img alt="Moj-CRM logo" src="@Url.Content("~/Content/CRM_logo_source-krivulje.tekst.svg")" />
+            </div>
+            <div class="login-box center-block">
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <form class="form-horizontal" role="form">
+        <p class="title">Unesite korisničke podatke</p>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Ime i prezime" })
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                </div>
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Lozinka" })
+                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                </div>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @*<div class="fancy-checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            <span>Zapamti me</span>
+        </div>*@
+        <button class="btn btn-custom-primary btn-lg btn-block btn-auth"><i class="fa fa-arrow-circle-o-right"></i> Prijavi se</button>
+    </form>
+}
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--Old login-->
+@*<h2 style="text-align:center"><strong>@ViewBag.Title</strong></h2>
 <div class="row">
     <div class="col-md-12">
         <section id="loginForm">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @*<h4>Prijava s lokalnim računom</h4>*@
+                <h4>Prijava s lokalnim računom</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -41,22 +85,22 @@
                         <input type="submit" value="Prijavi se" class="btn btn-default" />
                     </div>
                 </div>
-                @*<p>
+                <p>
                     @Html.ActionLink("Register as a new user", "Register")
                 </p>
                  Enable this once you have account confirmation enabled for password reset functionality
                     <p>
                         @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
+                    </p>
             }
         </section>
     </div>
-    @*div class="col-md-4">
+    div class="col-md-4">
         <section id="socialLoginForm">
             @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
-    </div>*@
-</div>
+    </div>
+</div>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

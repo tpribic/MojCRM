@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace MojCRM.Helpers
 {
@@ -44,5 +45,11 @@ namespace MojCRM.Helpers
         public string SubjektOib { get; set; }
         public string SubjektPJ { get; set; }
         public int? Take { get; set; }
+    }
+
+    public class MerApiGetContracts : MerApiRequest
+    {
+        [JsonProperty]
+        public DateTime From { get; set; }
     }
 }
