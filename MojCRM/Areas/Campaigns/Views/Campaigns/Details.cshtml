@@ -1,100 +1,360 @@
-﻿@model MojCRM.Areas.Campaigns.Models.Campaign
+﻿@using MojCRM.Areas.Campaigns.Models
+@model MojCRM.Areas.Campaigns.ViewModels.CampaignDetailsViewModel
 
 @{
     ViewBag.Title = "Detalji kampanje";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
+<!--Modal - Change Status-->
+@using (Html.BeginForm("ChangeStatus", "Campaigns", new { area = "Campaigns"}, FormMethod.Post))
+{
+    <div class="modal fade" id="ChangeStatus" tabindex="-1" role="dialog" aria-labelledby="ChangeStatus">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Promijeni status kampanje</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                Molimo odaberite status u koji želite staviti kampanju.
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="status-ons">Status</label>
+                                <div id="status-ons">
+                                    @Html.DropDownList("newStatus", Model.CampaignStatusList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Predaj promjenu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - Add Member-->
+@using (Html.BeginForm("AddMember", "Campaigns", new { area = "Campaigns" }, FormMethod.Post))
+{
+    <div class="modal fade" id="AddAgent" tabindex="-1" role="dialog" aria-labelledby="AddAgent">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Dodijeli agenta kampanji</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                Molimo odaberite agenta i njegovu rolu u kampanji.
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="agent">Agent</label>
+                                <div id="agent">
+                                    @Html.DropDownList("agent", Model.AgentList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="status">Status</label>
+                                <div id="status">
+                                    @Html.DropDownList("role", Model.MemberRoleList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.AssignedMembers.Count() != 0)
+                        {
+                            <br/>
+                            <div class="row">
+                                <label>Dodijeljeni agenti</label>
+                                <table class="table">
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Rola</th>
+                                    </tr>
+                                    @foreach (var agent in Model.AssignedMembers)
+                                    {
+                                        <tr>
+                                            <td>@agent.MemberName</td>
+                                            <td>@agent.MemberRoleString</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>   
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Predaj dodjelu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - Upload File-->
+@using (Html.BeginForm("CheckEntitiesForImport", "AcquireEmail", new { area = "HelpDesk" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal fade" id="checkEntities" tabindex="-1" role="dialog" aria-labelledby="checkEntities">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Učitavanje podataka</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                Molimo odaberite tablicu iz koje želite pročitati podatke.
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="file">Učitaj tablicu s podacima:</label>
+                                <input type="file" name="file" id="file"/><br><br>
+                                <br/>
+                                <div class="hidden">
+                                    <div id="ticketid">
+                                        @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new {@class = "form-control", @Value = Model.Campaign.CampaignId})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Učitaj</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - Admin Assign-->
+@using (Html.BeginForm("AdminAssignEntities", "AcquireEmail", new { area = "HelpDesk" }, FormMethod.Post))
+{
+    <div class="modal fade" id="adminAssign" tabindex="-1" role="dialog" aria-labelledby="adminAssign">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Dodijeli predmete agentima</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align: center">
+                                Preostali broj predmeta za dodjelu: <strong>@Model.NumberOfUnassignedEntities</strong>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="agent">Agent</label>
+                                <div id="agent">
+                                    @Html.DropDownList("agent", Model.AgentList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="number">Željeni broj predmeta za dodjelu</label>
+                                <div id="number">
+                                    @Html.TextBox("number", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = @"Unesite željeni broj" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("campaignId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Campaign.CampaignId })
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.AssignedAgents.Count() != 0)
+                        {
+                            <br />
+                            <div class="row">
+                                <label>Dodijeljeni agenti</label>
+                                <table class="table">
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Broj dodijeljenih predmeta</th>
+                                    </tr>
+                                    @foreach (var agent in Model.AssignedAgents)
+                                    {
+                                        if (agent.NumberOfAssignedEntities != 0)
+                                         {
+                                             <tr>
+                                                 <td>@agent.Agent</td>
+                                                 <td>@agent.NumberOfAssignedEntities</td>
+                                             </tr>   
+                                         }
+                                    }
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Predaj dodjelu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <h2 style="text-align:center"><strong>Detalji kampanje</strong></h2>
 
 <div>
-    <h4 style="text-align:center">Kampanja - @Html.Raw(Model.CampaignName)</h4>
+    <h4 style="text-align:center">Kampanja - @Html.Raw(Model.Campaign.CampaignName)</h4>
+    <div>
+        <div class="row" style="text-align:center">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Superadmin") || User.IsInRole("Management"))
+                    {
+                        <a href="@Url.RouteUrl(new {action = "Edit", controller = "Campaigns", area = "Campaigns", id = Model.Campaign.CampaignId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
+                        <button type="button" title="Promijeni status kampanje" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
+                        <button type="button" title="Dodijeli agenta kampanji" class="btn btn-sm btn-default" data-toggle="modal" href="#AddAgent"><i class="fa fa-plus"></i> <i class="fa fa-user"></i></button>
+                        if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
+                         {
+                             <button type="button" title="Dodijeli predmete" class="btn btn-default btn-sm" data-toggle="modal" href="#adminAssign"><i class="fa fa-reply-all"></i></button>
+                             <button type="button" title="Kreiraj unose za ažuriranje baze" class="btn btn-sm btn-default" data-toggle="modal" href="#checkEntities"><i class="fa fa-plus"></i></button>
+                             <a href="@Url.RouteUrl(new {action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId, identifier = 1 })" class="btn btn-sm btn-default" title="Preuzmi sve rezultate"><i class="fa fa-file-excel-o" style="color: lightgreen"></i></a>
+                             <a href="@Url.RouteUrl(new {action = "ExportEntities", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId, identifier = 2 })" class="btn btn-sm btn-default" title="Preuzmi samo revidirane rezultate"><i class="fa fa-file-excel-o" style="color: blue"></i></a>
+                             <a href="@Url.RouteUrl(new {action = "ExportEntitiesForEmailNotification", controller = "AcquireEmail", area = "HelpDesk", Model.Campaign.CampaignId })" class="btn btn-sm btn-default" title="Preuzmi rezultate formirane za tipsku obavijest"><i class="fa fa-file-excel-o" style="color: yellow"></i></a>
+                        }
+                        <a href="@Url.RouteUrl(new {action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>   
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <hr />
+    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES && Model.SalesStats.TotalCount != 0)
+    {
+        <label for="bases-progress" title="Broj obrađenih prodajnih prilika">Status obrade: @Model.SalesStats.NotStartedCount / @Model.SalesStats.TotalCount</label>
+        <div id="bases-progress" class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="@Model.SalesStats.NotStartedPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Model.SalesStats.NotStartedPercent%;">
+                @Model.SalesStats.NotStartedPercent% dovršeno
+            </div>
+        </div>
+    }
+    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES && Model.EmailBasesStats.TotalCount != 0)
+    {
+        <label for="bases-progress" title="Preostalo za obradu od ukupnog broja kreiranih predmeta">Status obrade: @Model.EmailBasesStats.NotVerifiedCount / @Model.EmailBasesStats.TotalCount</label>
+        <div id="bases-progress" class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="@Model.EmailBasesStats.VerifiedPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Model.EmailBasesStats.VerifiedPercent%;">
+                @Model.EmailBasesStats.VerifiedPercent% dovršeno
+            </div>
+        </div>
+    }
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.RelatedCompany.SubjectName)
+            @Html.DisplayNameFor(model => model.Campaign.RelatedCompany.SubjectName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RelatedCompany.SubjectName) (@Html.DisplayFor(model => model.RelatedCompany.VAT))
+            @Html.DisplayFor(model => model.Campaign.RelatedCompany.SubjectName) (@Html.DisplayFor(model => model.Campaign.RelatedCompany.VAT))
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignName)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignName)
+            @Html.DisplayFor(model => model.Campaign.CampaignName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignDescription)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignDescription)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignDescription)
+            @Html.DisplayFor(model => model.Campaign.CampaignDescription)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignInitiatior)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignInitiatior)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignInitiatior)
+            @Html.DisplayFor(model => model.Campaign.CampaignInitiatior)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignType)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignType)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignType)
+            @Html.DisplayFor(model => model.Campaign.CampaignTypeString)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignStatus)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignStatus)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignStatus)
+            @Html.DisplayFor(model => model.Campaign.CampaignStatusString)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignStartDate)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignStartDate)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignStartDate)
+            @Html.DisplayFor(model => model.Campaign.CampaignStartDate)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignPlannedEndDate)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignPlannedEndDate)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignPlannedEndDate)
+            @Html.DisplayFor(model => model.Campaign.CampaignPlannedEndDate)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CampaignEndDate)
+            @Html.DisplayNameFor(model => model.Campaign.CampaignEndDate)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignEndDate)
+            @Html.DisplayFor(model => model.Campaign.CampaignEndDate)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.InsertDate)
+            @Html.DisplayNameFor(model => model.Campaign.InsertDate)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.InsertDate)
+            @Html.DisplayFor(model => model.Campaign.InsertDate)
         </dd>
         
     </dl>
 </div>
-<p>
-    <a href="@Url.RouteUrl(new { action = "Edit", controller = "Campaigns", area = "Campaigns", id=Model.CampaignId, returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Uređivanje kampanje"><i class="fa fa-edit"></i></a>
-    <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
-</p>

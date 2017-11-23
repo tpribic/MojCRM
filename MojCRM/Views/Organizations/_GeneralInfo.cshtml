@@ -113,6 +113,64 @@
         </div>
 }
 
+<!--Modal - ChangeGroupLegalForm-->
+@using (Html.BeginForm("EditImportantOrganizationInfo", "Organizations", FormMethod.Post))
+{
+    <div class="modal fade" id="changeGroupLegalForm" tabindex="-1" role="dialog" aria-labelledby="changeGroupLegalForm">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Izmijeni podatke o pravnom obliku i statusu / članstvu u grupaciji</h4>
+                </div>
+                <div class="modal-body changeEmail">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="legal-form">Pravni oblik:</label>
+                                <div id="legal-form">
+                                    @Html.DropDownList("LegalForm", Model.LegalFormDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="legal-status">Pravni status:</label>
+                                <div id="legal-status">
+                                    @Html.DropDownList("LegalStatus", Model.LegalStatusDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <label for="organization-group">Članstvo u grupaciji:</label>
+                                <div id="organization-group">
+                                    @Html.DropDownList("OrganizationGroup", Model.OrganizationGroupDropdown, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            <div id="organization-id">
+                                @Html.TextBox("MerId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Organization.MerId })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer ouside of content, new design. If reactions are bad return it one level up-->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Izmijeni podatke</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="col-md-3">
 
 </div>
@@ -121,14 +179,20 @@
         <div class="col-md-6" title="Osobni identifikacijski broj">
             <strong>OIB: </strong>@Model.Organization.VAT
         </div>
-        <div class="col-md-6" title="Podaci iz 2015.">
+        <div class="col-md-5" title="Podaci iz 2015.">
             <strong>Ukupni godišnji prihod: </strong>@Html.DisplayFor(m => m.Organization.Income)
         </div>
+        @if (User.IsInRole("Superadmin"))
+        {
+            <div class="col-md-1" title="Uredi pravni oblik / članstvo u grupaciji">
+                <a href="#changeGroupLegalForm" data-toggle="modal"><i class="fa fa-edit"></i></a>
+            </div>
+        }
     </div>
     <br />
     <div class="row">
         <div class="col-md-6">
-            <strong>Članstvo u grupaciji: </strong>@Model.OrganizationGroupString
+            <strong>Članstvo u grupaciji: </strong>@Model.OrganizationDetails.OrganizationGroupString
         </div>
         <div class="col-md-6" title="Podaci iz 2015.">
             <strong>Broj zaposlenih: </strong>@Model.Organization.Employees
@@ -160,8 +224,11 @@
     </div>
     <hr />
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <strong>Adresa sjedišta</strong>
+        </div>
+        <div class="col-md-1">
+            <a class="copy-main-address" title="Kopiraj adresu sjedišta u adresu dostave" onclick="javascript: CopyMainAddress()"><i class="fa fa-exchange"></i></a>
         </div>
         <div class="col-md-5">
             <strong>Adresa za dostavu</strong>
@@ -215,7 +282,7 @@
             @Model.OrganizationDetails.CorrespondenceCity
         </div>
     </div>
-    @if (Model.OrganizationDetails.MainCountry == MojCRM.Models.OrganizationDetail.CountryIdentificationCodeEnum.HR)
+    @if (Model.OrganizationDetails.MainCountry == MojCRM.Models.OrganizationDetail.CountryIdentificationCodeEnum.Hr)
     {
         <br />
         <div class="row">

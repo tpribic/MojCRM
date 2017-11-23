@@ -1,11 +1,8 @@
-﻿using MojCRM.Helpers;
-using System;
-using System.Collections.Generic;
+﻿using MojCRM.Areas.Cooperation.Models;
+using MojCRM.Helpers;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MojCRM.Models
 {
@@ -42,15 +39,59 @@ namespace MojCRM.Models
         public string NumberOfInvoicesReceived { get; set; }
         public OrganizationGroupEnum OrganizationGroup { get; set; }
 
+        public int? MerSendSoftware { get; set; }
+        [ForeignKey("MerSendSoftware")]
+        public virtual MerIntegrationSoftware SendSoftware { get; set; }
+
+        public int? MerReceiveSoftware { get; set; }
+        [ForeignKey("MerReceiveSoftware")]
+        public virtual MerIntegrationSoftware ReceiveSoftware { get; set; }
+
         public virtual Organizations Organization { get; set; }
 
         public enum CountryIdentificationCodeEnum
         {
             [Description("Nema podatka")]
-            NOINFO,
+            Noinfo,
 
             [Description("Hrvatska")]
-            HR,
+            Hr,
+
+            [Description("Slovenija")]
+            Si
+        }
+
+        public string OrganizationGroupString
+        {
+            get
+            {
+                switch (OrganizationGroup)
+                {
+                    case OrganizationGroupEnum.Nema: return "Ne pripada grupaciji";
+                    case OrganizationGroupEnum.AdrisGrupa: return "Adris Grupa";
+                    case OrganizationGroupEnum.Agrokor: return "Koncern Agrokor";
+                    case OrganizationGroupEnum.AtlanticGrupa: return "Atlantic Grupa";
+                    case OrganizationGroupEnum.AutoHrvatska: return "Poslovna grupacija Auto Hrvatska";
+                    case OrganizationGroupEnum.BabićPekare: return "Babić Pekare";
+                    case OrganizationGroupEnum.COMET: return "COMET";
+                    case OrganizationGroupEnum.CIOS: return "CIOS";
+                    case OrganizationGroupEnum.CVH: return "CVH";
+                    case OrganizationGroupEnum.Holcim: return "Holcim Grupa";
+                    case OrganizationGroupEnum.MSAN: return "MSAN Grupa";
+                    case OrganizationGroupEnum.NEXE: return "NEXE Grupa";
+                    case OrganizationGroupEnum.NTL: return "NTL Grupa";
+                    case OrganizationGroupEnum.PivacGrupa: return "Pivac Grupa";
+                    case OrganizationGroupEnum.RijekaHolding: return "Rijeka Holding";
+                    case OrganizationGroupEnum.STRABAG: return "STRABAG";
+                    case OrganizationGroupEnum.StyriaGrupa: return "Styria Grupa";
+                    case OrganizationGroupEnum.SunceKoncern: return "Koncern Sunce";
+                    case OrganizationGroupEnum.UltraGros: return "Ultra Gros";
+                    case OrganizationGroupEnum.Žito: return "Žito Grupa";
+                    case OrganizationGroupEnum.ZagrebačkiHolding: return "Zagrebački Holding";
+                    case OrganizationGroupEnum.Ciak: return "C.I.A.K. Grupa";
+                }
+                return "Ne pripada grupaciji";
+            }
         }
     }
 }

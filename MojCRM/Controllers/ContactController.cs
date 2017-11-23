@@ -1,4 +1,5 @@
-﻿using MojCRM.Areas.Sales.Helpers;
+﻿using MojCRM.Areas.HelpDesk.Helpers;
+using MojCRM.Areas.Sales.Helpers;
 using MojCRM.Helpers;
 using MojCRM.Models;
 using MojCRM.ViewModels;
@@ -68,7 +69,7 @@ namespace MojCRM.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+                return Redirect(Request.UrlReferrer.ToString());
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)
@@ -285,7 +286,7 @@ namespace MojCRM.Controllers
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+            return RedirectToAction("Details", "Delivery", new { area = "HelpDesk", id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST: Contact/EditFromSales

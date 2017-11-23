@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Moj-CRM</title>
-    <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/CRM_logo_ico.png" rel="shortcut icon" type="image/x-icon" />
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -79,33 +79,50 @@
                         <li class="active">
                             <a href="@Url.RouteUrl(new { action = "Index", controller = "Home", area = ""})"><i class="fa fa-home"></i><span class="text">Početna</span></a>
                         </li>
-                        <li>
-                            <a href="#" class="js-sub-menu-toggle">
-                                <i class="fa fa-list"></i><span class="text">Popisi</span>
-                                <i class="toggle-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu ">
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><span class="text">Tvrtke</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contact", area = ""})"><span class="text">Kontakti</span></a></li>
-                            </ul> 
-                        </li>
+                        @if (!User.IsInRole("Guest"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-list"></i><span class="text">Popisi</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu ">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><span class="text">Tvrtke</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contact", area = ""})"><span class="text">Kontakti</span></a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <li>
                                 <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns"})"><i class="fa fa-phone"></i><span class="text">Kampanje</span></a>
                             </li>
                         }
-                        <li>
-                            <a href="#" class="js-sub-menu-toggle">
-                                <i class="fa fa-money"></i><span class="text">Prodaja</span>
-                                <i class="toggle-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu">
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
-                                <li><a href="@Url.RouteUrl(new { action = "SalesStat", controller = "Stats", area = ""})"><span class="text">Podaci agenata prodaje</span></a></li>
-                            </ul>
-                        </li>
+                        @if (!User.IsInRole("Guest"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-money"></i><span class="text">Prodaja</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><span class="text">Popis prodajnih priika</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><span class="text">Popis leadova</span></a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Guest") || User.IsInRole("Sales"))
+                        {
+                            <li>
+                                <a href="#" class="js-sub-menu-toggle">
+                                    <i class="fa fa-wrench"></i><span class="text">Podrška</span>
+                                    <i class="toggle-icon fa fa-angle-left"></i>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "AcquireEmail", area = "HelpDesk"})"><span class="text">Ažuriranje baza korisnika</span></a></li>
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <li>
@@ -114,8 +131,9 @@
                                     <i class="toggle-icon fa fa-angle-left"></i>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = ""})"><span class="text">Popis kartica za dostavu</span></a></li>
-                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = ""})"><span class="text">Popis kontakata za dostavu</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "AcquireEmail", area = "HelpDesk"})"><span class="text">Ažuriranje baza korisnika</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "HelpDesk"})"><span class="text">Popis kartica za dostavu</span></a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = "HelpDesk"})"><span class="text">Popis kontakata za dostavu</span></a></li>
                                     @if (User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                                     {
                                     }
@@ -123,7 +141,7 @@
                             </li>
                         }
                         <li>
-                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Stats", area = ""})"><i class="fa fa-book"></i><span class="text">Izvještaji</span></a>
+                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Stats", area = "Stats"})"><i class="fa fa-book"></i><span class="text">Izvještaji</span></a>
                         </li>
                         @if (User.IsInRole("Superadmin"))
                         {

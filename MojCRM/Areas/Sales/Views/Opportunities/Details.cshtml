@@ -13,10 +13,10 @@
             new ListItem{ Value= "1", Text = "U kontaktu"},
             new ListItem{ Value= "4", Text = "Potrebno dogovoriti sastanak"},
             new ListItem{ Value= "5", Text = "Procesne poteškoće"},
-            new ListItem{ Value= "2", Text = "Kreiran lead"},
+            //new ListItem{ Value= "2", Text = "Kreiran lead"},
             new ListItem{ Value= "7", Text = "FINA korisnik"},
             new ListItem{ Value = "8", Text = "eFaktura korisnik"},
-            new ListItem{ Value= "3", Text = "Odbijeno"}
+            //new ListItem{ Value= "3", Text = "Odbijeno"}
         };
 }
 
@@ -800,7 +800,7 @@
     <h2 style="text-align:center"><strong>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
     @*<h2>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</h2>*@
     <br />
-    @if (Model.IsAssigned == true)
+    @if (Model.IsAssigned)
     {
         <h4 style="text-align:center; color:red">Ova prodajna prilika je dodijeljena agentu: <strong>@Model.AssignedTo</strong></h4>
     }
@@ -815,16 +815,23 @@
                     <button type="button" title="Pregled aktivnosti vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
                     <button type="button" title="Pregled bilješki vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#OpportunityNotes"><i class="fa fa-sticky-note"></i></button>
                     <button type="button" title="Pregled kontakata za prodaju" class="btn btn-sm btn-default" data-toggle="modal" href="#SalesContacts"><i class="fa fa-address-book"></i></button>
-                    @if (Model.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    @if (!Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                     {
                         <button type="button" title="Dodijeli prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                     }
                     @if (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD && Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED)
                     {
-                        if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                        if (Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                         {
                             <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                         }
+                        <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
+                        <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
+                        <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
+                    }
+                    @if ((Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD && Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED) && User.IsInRole("Superadmin"))
+                    {
+                        <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                         <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                         <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
                         <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
@@ -966,6 +973,7 @@
 
     function AddNote() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
@@ -986,6 +994,7 @@
         }
     function AddNoteInfo() {
         $(document).on("click", "#add-note-info", function (e) {
+        this.disabled = true;
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -1004,6 +1013,7 @@
     }
     function AddNoteNoActivity() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({

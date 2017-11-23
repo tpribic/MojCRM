@@ -1,5 +1,8 @@
-﻿using MojCRM.Models;
+﻿using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Models;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -45,6 +48,8 @@ namespace MojCRM.Areas.Campaigns.Models
         [Display(Name = "Datum promjene")]
         public DateTime? UpdateDate { get; set; }
 
+        public virtual ICollection<AcquireEmail> AcquireEmails { get; set; }
+
         public enum CampaignTypeEnum
         {
             [Description("Test")]
@@ -76,6 +81,36 @@ namespace MojCRM.Areas.Campaigns.Models
 
             [Description("Završeno")]
             COMPLETED
+        }
+
+        public string CampaignTypeString
+        {
+            get
+            {
+                switch (CampaignType)
+                {
+                    case CampaignTypeEnum.TEST: return "Test";
+                    case CampaignTypeEnum.EMAILBASES: return "Ažuriranje baze korisnika";
+                    case CampaignTypeEnum.SALES: return "Prodajna kampanja";
+                    case CampaignTypeEnum.CRM: return "CRM kampanja";
+                }
+                return "Tip kampanje";
+            }
+        }
+        public string CampaignStatusString
+        {
+            get
+            {
+                switch (CampaignStatus)
+                {
+                    case CampaignStatusEnum.START: return "Pokrenuto";
+                    case CampaignStatusEnum.INPROGRESS: return "U tijeku";
+                    case CampaignStatusEnum.HOLD: return "Privremeno zaustavljeno";
+                    case CampaignStatusEnum.ENDED: return "Prekinuto";
+                    case CampaignStatusEnum.COMPLETED: return "Završeno";
+                }
+                return "Status kampanje";
+            }
         }
     }
 }

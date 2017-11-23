@@ -27,15 +27,20 @@
             Ažuriranje tvrtki iz Moj-eRačun
         </a>
     </div>
+    <div class="col-md-3">
+        <a href="@Url.RouteUrl(new { action = "AddAttribute", controller = "Organizations", area = "" })" class="btn btn-default btn-sm">
+            Dodavanje atributa tvrtke
+        </a>
+    </div>
 </div>
 <hr />
 <h4><i class="fa fa-ticket"></i> Dostava</h4>
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTicketsFirstTime", controller = "Delivery", area = "" })">Kreiranje kartica za prvi put</a>
+        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTicketsFirstTime", controller = "Delivery", area = "HelpDesk" })">Kreiranje kartica za prvi put</a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "" })">Kreiranje kartica za preuzimanje</a>
+        <a class="btn btn-default btn-sm" href="@Url.RouteUrl(new { action = "CreateTickets", controller = "Delivery", area = "HelpDesk" })">Kreiranje kartica za preuzimanje</a>
     </div>
 </div>
 <hr />

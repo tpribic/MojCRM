@@ -458,7 +458,7 @@
                             <div class="col-md-12">
                                 <label for="status-lns">Status</label>
                                 <div id="status-lns">
-                                    @Html.DropDownList("NewStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi novi status prilike", new { @class = "form-control", @id = "lns" })
+                                    @Html.DropDownList("NewStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi novi status leada", new { @class = "form-control", @id = "lns" })
                                 </div>
                             </div>
                             <br />
@@ -707,9 +707,9 @@
 
 
 
-<h2 style="text-align:center"><strong>Detalji leda: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
+<h2 style="text-align:center"><strong>Detalji leada: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
 <br />
-@if (Model.IsAssigned == true)
+@if (Model.IsAssigned)
 {
     <h4 style="text-align:center; color:red">Ovaj lead je dodijeljen agentu: <strong>@Model.AssignedTo</strong></h4>
 }
@@ -720,15 +720,20 @@
                 <button type="button" title="Pregled aktivnosti vezanih uz ovaj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
                 <button type="button" title="Pregled bilješki vezanih uz ovaj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#LeadNotes"><i class="fa fa-sticky-note"></i></button>
                 <button type="button" title="Pregled kontakata za prodaju" class="btn btn-sm btn-default" data-toggle="modal" href="#SalesContacts"><i class="fa fa-address-book"></i></button>
-                @if (Model.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                @if (!Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
                     <button type="button" title="Dodijeli lead" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                 }
-                @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                @if (Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                 {
                     <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
                 }
-                @if (Model.LeadStatus != "Odbijeno" || Model.LeadStatus != "Ponuda prihvaćena")
+                @if (Model.LeadStatus != "Odbijeno" && Model.LeadStatus != "Ponuda prihvaćena")
+                {
+                    <button type="button" title="Promijeni status leada" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
+                    <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
+                }
+                @if ((Model.LeadStatus == "Odbijeno" || Model.LeadStatus == "Ponuda prihvaćena") && User.IsInRole("Superadmin"))
                 {
                     <button type="button" title="Promijeni status leada" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                     <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
@@ -868,6 +873,7 @@
 
     function AddNote() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
@@ -888,6 +894,7 @@
         }
     function AddNoteInfo() {
         $(document).on("click", "#add-note-info", function (e) {
+        this.disabled = true;
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -906,6 +913,7 @@
     }
     function AddNoteNoActivity() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({

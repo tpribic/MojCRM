@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MojCRM.Areas.Campaigns.Helpers;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Models;
 using MojCRM.Areas.Campaigns.ViewModels;
@@ -17,25 +18,62 @@ namespace MojCRM.Areas.Campaigns.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Campaigns/Campaigns
-        public ActionResult Index()
+        public ActionResult Index(CampaignSearchHelper model)
         {
             var campaigns = db.Campaigns.Include(c => c.RelatedCompany);
-            return View(campaigns.ToList().OrderByDescending(c => c.InsertDate));
+
+            //Search Engine
+            if (!String.IsNullOrEmpty(model.Organization))
+            {
+                campaigns = campaigns.Where(x => x.RelatedCompany.SubjectName.Contains(model.Organization));
+            }
+            if (!String.IsNullOrEmpty(model.CampaignName))
+            {
+                campaigns = campaigns.Where(x => x.CampaignName.Contains(model.CampaignName));
+            }
+
+            return View(campaigns.OrderByDescending(c => c.InsertDate));
         }
 
         // GET: Campaigns/Campaigns/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Campaign campaign = db.Campaigns.Find(id);
+            var model = new CampaignDetailsViewModel();
+            var campaignBasesStats = new EmailBasesCampaignStatsViewModel();
+            var campaignSalesStats = new SalesCampaignStatsViewModel();
             if (campaign == null)
             {
                 return HttpNotFound();
             }
-            return View(campaign);
+
+            var list = db.CampaignMembers.Where(cm => cm.CampaignId == id);
+            switch (campaign.CampaignType)
+            {
+                case Campaign.CampaignTypeEnum.EMAILBASES:
+                    model = new CampaignDetailsViewModel
+                    {
+                        Campaign = campaign,
+                        EmailBasesStats = campaignBasesStats.GetModel(id),
+                        SalesStats = null,
+                        NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
+                        AssignedMembers = list,
+                        AssignedAgents = model.GetAssignedAgentsInfo(id)
+                    };
+                    return View(model);
+                case Campaign.CampaignTypeEnum.SALES:
+                    model = new CampaignDetailsViewModel
+                    {
+                        Campaign = campaign,
+                        EmailBasesStats = null,
+                        SalesStats = campaignSalesStats.GetModel(id),
+                        NumberOfUnassignedEntities = model.GetUnassignedEntities(id),
+                        AssignedMembers = list,
+                        AssignedAgents = model.GetAssignedAgentsInfo(id)
+                    };
+                    return View(model);
+            }
+            return View(model);
         }
 
         // GET: Campaigns/Campaigns/Create
@@ -67,18 +105,18 @@ namespace MojCRM.Areas.Campaigns.Controllers
         // POST: Campaigns/Campaigns/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateCampaign Model)
+        public ActionResult Create(CreateCampaign model)
         {
             db.Campaigns.Add(new Campaign
             {
-                CampaignName = Model.CampaignName,
-                CampaignDescription = Model.CampaignDescription,
-                CampaignInitiatior = User.Identity.Name,
-                RelatedCompanyId = 111955,
-                CampaignType = Model.CampaignType,
+                CampaignName = model.CampaignName,
+                CampaignDescription = model.CampaignDescription,
+                CampaignInitiatior = model.CampaignInitiator,
+                RelatedCompanyId = model.RelatedCompanyId,
+                CampaignType = model.CampaignType,
                 CampaignStatus = Campaign.CampaignStatusEnum.START,
-                CampaignStartDate = Model.CampaignStartDate,
-                CampaignPlannedEndDate = Model.CampaignPlannedEndDate,
+                CampaignStartDate = model.CampaignStartDate,
+                CampaignPlannedEndDate = model.CampaignPlannedEndDate,
                 InsertDate = DateTime.Now
             });
             db.SaveChanges();
@@ -144,6 +182,34 @@ namespace MojCRM.Areas.Campaigns.Controllers
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeStatus(Campaign.CampaignStatusEnum newStatus, int campaignId)
+        {
+            Campaign campaign = db.Campaigns.Find(campaignId);
+            campaign.CampaignStatus = newStatus;
+            campaign.UpdateDate = DateTime.Now;
+            if (newStatus == Campaign.CampaignStatusEnum.COMPLETED)
+            {
+                campaign.CampaignEndDate = DateTime.Now;
+            }
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        [HttpPost]
+        public ActionResult AddMember(string agent, CampaignMember.MemberRoleEnum role, int campaignId)
+        {
+            db.CampaignMembers.Add(new CampaignMember
+            {
+                CampaignId = campaignId,
+                MemberName = agent,
+                MemberRole = role,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         protected override void Dispose(bool disposing)

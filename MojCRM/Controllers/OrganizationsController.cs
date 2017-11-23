@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using MojCRM.Areas.HelpDesk.Helpers;
 
 namespace MojCRM.Controllers
 {
@@ -43,6 +44,8 @@ namespace MojCRM.Controllers
                 MerDeliveryDetails = db.MerDeliveryDetails.Where(mdd => mdd.MerId == id).First(),
                 OrganizationBusinessUnits = db.Organizations.Where(o => o.VAT == organization.VAT && o.SubjectBusinessUnit != ""),
                 Contacts = db.Contacts.Where(c => c.OrganizationId == id),
+                CampaignsFor = db.Campaigns.Where(c => c.RelatedCompanyId == id),
+                AcquireEmails = db.AcquireEmails.Where(a => a.RelatedOrganizationId == id),
                 Opportunities = db.Opportunities.Where(op => op.RelatedOrganizationId == id),
                 OpportunitiesCount = db.Opportunities.Where(op => op.RelatedOrganizationId == id).Count(),
                 Leads = db.Leads.Where(l => l.RelatedOrganizationId == id),
@@ -267,13 +270,11 @@ namespace MojCRM.Controllers
 
         // POST: Organizations/EditImportantComment
         [HttpPost]
-        public ActionResult EditImportantComment(string Comment, string ReceiverId)
+        public ActionResult EditImportantComment(string Comment, int ReceiverId)
         {
-            int ReceiverIdInt = Int32.Parse(ReceiverId);
-
             var DetailForEdit = (from dd in db.MerDeliveryDetails
-                                   where dd.MerId == ReceiverIdInt
-                                   select dd).First();
+                                 where dd.MerId == ReceiverId
+                                 select dd).First();
 
             DetailForEdit.ImportantComments = Comment;
             db.SaveChanges();
@@ -346,11 +347,161 @@ namespace MojCRM.Controllers
             organization.Organization.UpdateDate = DateTime.Now;
             organization.Organization.LastUpdatedBy = User.Identity.Name;
 
-            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.ORGANIZATIONUPDATE);
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
 
             db.SaveChanges();
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // POST: Organizations/EditAcquiredReceivingInformation
+        public ActionResult EditAcquiredReceivingInformation(EditAcquiredReceivingInformationHelper model)
+        {
+            var organization = db.MerDeliveryDetails.Find(model.MerId);
+            string LogString = "Agent " + User.Identity.Name + " je izmjenio informaciju za preuzimanju na subjektu: "
+                + organization.Organization.SubjectName + ". Izmjenjeno je:";
+
+            if (!String.IsNullOrEmpty(model.NewAcquiredReceivingInformation))
+            {
+                if (!String.Equals(model.NewAcquiredReceivingInformation, organization.AcquiredReceivingInformation))
+                    LogString += " stara informacija o preuzimanju: " + organization.AcquiredReceivingInformation + ", nova informacija o preuzimanju " + model.NewAcquiredReceivingInformation;
+                organization.AcquiredReceivingInformation = model.NewAcquiredReceivingInformation;
+            }
+
+            LogString += ".";
+            organization.Organization.UpdateDate = DateTime.Now;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // POST: Organizations/EditImportantOrganizationInfo
+        [Authorize(Roles = "Superadmin")]
+        public ActionResult EditImportantOrganizationInfo(EditImportantOrganizationInfo Model)
+        {
+            var organization = db.Organizations.Find(Model.MerId);
+
+            string LogString = "Agent " + User.Identity.Name + " je napravio izmjene na subjektu: "
+                + organization.SubjectName + ". Izmjenjeni su:";
+
+            if (Model.LegalForm != null)
+            {
+                if (Model.LegalForm != organization.LegalForm)
+                    LogString += " - pravni oblik iz " + organization.LegalForm + " u " + Model.LegalForm;
+                organization.LegalForm = (Organizations.LegalFormEnum)Model.LegalForm;
+            }
+            if (Model.OrganizationGroup != null)
+            {
+                if (Model.OrganizationGroup != organization.OrganizationDetail.OrganizationGroup)
+                    LogString += " - članstvo u grupaciji iz " + organization.OrganizationDetail.OrganizationGroup + " u " + Model.OrganizationGroup;
+                organization.OrganizationDetail.OrganizationGroup = (OrganizationGroupEnum)Model.OrganizationGroup;
+            }
+            if (Model.ServiceProvider != null)
+            {
+                if (Model.ServiceProvider != organization.ServiceProvider)
+                    LogString += " - informacijski posrednik iz " + organization.ServiceProvider + " u " + Model.ServiceProvider;
+                organization.ServiceProvider = (Organizations.ServiceProviderEnum)Model.ServiceProvider;
+            }
+            if (Model.LegalStatus != null)
+            {
+                if (Model.LegalStatus == 0)
+                {
+                    var temp = false;
+                    if (temp != organization.IsActive)
+                        LogString += " - pravni status iz aktivnog u brisano";
+                    organization.IsActive = false;
+                    organization.MerDeliveryDetail.AcquiredReceivingInformation = "ZATVORENA TVRTKA";
+                    organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified = true;
+                }
+                if (Model.LegalStatus == 1)
+                {
+                    var temp = true;
+                    if (temp != organization.IsActive)
+                        LogString += " - pravni status iz brisanog u aktivno";
+                    organization.IsActive = true;
+                }
+            }
+            LogString += ".";
+            organization.UpdateDate = DateTime.Now;
+            organization.LastUpdatedBy = User.Identity.Name;
+
+            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
+
+            db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        // GET: Organizations/AddAttribute
+        public ActionResult AddAttribute()
+        {
+            var model = new AddOrganizationAttributeViewModel();
+            return View(model);
+        }
+
+        // POST: Organizations/AddAttribute
+        [HttpPost]
+        [Authorize(Roles = "Superadmin")]
+        public ActionResult AddAttribute(AddOrganizationAttribute Model)
+        {
+            db.OrganizationAttributes.Add(new OrganizationAttribute
+            {
+                OrganizationId = Model.MerId,
+                AttributeClass = Model.AttributeClass,
+                AttributeType = Model.AttributeType,
+                IsActive = true,
+                AssignedBy = User.Identity.Name,
+                InsertDate = DateTime.Now
+            });
+            db.SaveChanges();
+            return RedirectToAction("Details", new { id = Model.MerId });
+        }
+
+        // POST: Organizations/CopyMainAddress
+        [HttpPost]
+        public JsonResult CopyMainAddress(EditOrganizationDetails Model)
+        {
+            var organization = db.OrganizationDetails.Find(Model.MerId);
+
+            organization.CorrespondenceAddress = Model.MainAddress;
+            organization.CorrespondencePostalCode = Model.MainPostalCode;
+            organization.CorrespondenceCity = Model.MainCity;
+            organization.CorrespondenceCountry = Model.MainCountry;
+            organization.Organization.UpdateDate = DateTime.Now;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
+        }
+
+        [HttpPost]
+        public JsonResult MarkAsVerified(int merId)
+        {
+            var organization = db.MerDeliveryDetails.Find(merId);
+            organization.AcquiredReceivingInformationIsVerified = true;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            organization.Organization.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new {Status = "OK"});
+        }
+
+        [HttpPost]
+        public JsonResult MarkAsPostalService(int merId, bool unmark = false)
+        {
+            var organization = db.MerDeliveryDetails.Find(merId);
+
+            organization.RequiredPostalService = !unmark;
+            organization.AcquiredReceivingInformation = !unmark ? "ŽELE POŠTOM" : String.Empty;
+            organization.Organization.LastUpdatedBy = User.Identity.Name;
+            organization.Organization.UpdateDate = DateTime.Now;
+            db.SaveChanges();
+
+            return Json(new { Status = "OK" });
         }
 
         public void LogActivity(string ActivityDescription, string User, int ActivityReferenceId, ActivityLog.ActivityTypeEnum ActivityType)
@@ -361,11 +512,47 @@ namespace MojCRM.Controllers
                 User = User,
                 ReferenceId = ActivityReferenceId,
                 ActivityType = ActivityType,
-                Department = ActivityLog.DepartmentEnum.MojCRM,
+                Department = ActivityLog.DepartmentEnum.MojCrm,
                 Module = ActivityLog.ModuleEnum.Organizations,
                 InsertDate = DateTime.Now
             });
             db.SaveChanges();
+        }
+
+        public JsonResult AutocompleteOrganization(string query)
+        {
+            try
+            {
+                var organizations = db.Organizations.Where(o =>
+                o.SubjectName.StartsWith(query) ||
+                o.VAT.StartsWith(query))
+                .Select(o => new { Organization = o.SubjectName + " - " + o.VAT, MerId = o.MerId})
+                .Take(10)
+                .ToList();
+
+                //var _model = new List<OrganizationSearch>();
+                //foreach (var org in organizations)
+                //    _model.Add(new OrganizationSearch
+                //    {
+                //        MerId = org.MerId,
+                //        OrganizationName = org.SubjectName + " - " + org.VAT
+                //    });
+                //var model = JsonConvert.SerializeObject(_model);
+                return Json(organizations, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                db.LogError.Add(new LogError
+                {
+                    Method = @"Organizations - AutocompleteOrganization",
+                    Parameters = query,
+                    Message = @"Dogodila se greška prilikom pretraživanja tvrtki. Opis: " + ex.Message,
+                    User = User.Identity.Name,
+                    InsertDate = DateTime.Now
+                });
+                db.SaveChanges();
+                throw;
+            }
         }
 
         protected override void Dispose(bool disposing)

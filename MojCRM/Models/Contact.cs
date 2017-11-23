@@ -38,10 +38,14 @@ namespace MojCRM.Models
         public string MobilePhoneNumber { get; set; }
 
         [Display(Name = "E-mail adresa")]
+        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,20}", ErrorMessage = "E-mail adresa je nepravilno unesena.")]
         public string Email { get; set; }
 
         [Display(Name = "Agent")]
         public string User { get; set; }
+        [Display(Name = "Zabrana kontakta")]
+        public bool DoNotCall { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
