@@ -38,16 +38,40 @@ namespace MojCRM.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<MojCRM.Models.Delivery> DeliveryTicketModels { get; set; }
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.Delivery> DeliveryTicketModels { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Organizations> Organizations { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.Contact> Contacts { get; set; }
 
-        public System.Data.Entity.DbSet<MojCRM.Models.DeliveryDetail> DeliveryDetails { get; set; }
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.DeliveryDetail> DeliveryDetails { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.LogError> LogError { get; set; }
 
         public System.Data.Entity.DbSet<MojCRM.Models.ActivityLog> ActivityLogs { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.MerDeliveryDetails> MerDeliveryDetails { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Campaigns.Models.Campaign> Campaigns { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Campaigns.Models.CampaignMember> CampaignMembers { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.Opportunity> Opportunities { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.Lead> Leads { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.OrganizationDetail> OrganizationDetails { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.OpportunityNote> OpportunityNotes { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Sales.Models.LeadNote> LeadNotes { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Models.OrganizationAttribute> OrganizationAttributes { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Cooperation.Models.MerIntegrationSoftware> MerIntegrationSoftware { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.Stats.Models.MerDocumentExchangeHistory> MerDocumentExchangeHistory { get; set; }
+
+        public System.Data.Entity.DbSet<MojCRM.Areas.HelpDesk.Models.AcquireEmail> AcquireEmails { get; set; }
     }
 }

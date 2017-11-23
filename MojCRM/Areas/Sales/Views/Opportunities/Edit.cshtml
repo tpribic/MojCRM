@@ -1,0 +1,115 @@
+﻿@model MojCRM.Areas.Sales.Models.Opportunity
+
+@{
+    ViewBag.Title = "Uređivanje prodajne prilike";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Uređivanje prodajne prilike</strong></h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4 style="text-align:center">Prodajna prilika - @Html.Raw(Model.OpportunityTitle)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.OpportunityId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OpportunityTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OpportunityTitle, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.OpportunityTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OpportunityDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OpportunityDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OpportunityDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OpportunityStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" id="opportunityStatus">
+                @Html.EnumDropDownListFor(model => model.OpportunityStatus, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OpportunityStatus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div id="rejectReason" class="form-group">
+            @Html.LabelFor(model => model.RejectReason, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.RejectReason, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RejectReason, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssignedTo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AssignedTo, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.AssignedTo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastContactedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastContactedBy, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.LastContactedBy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastUpdatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastUpdatedBy, new { htmlAttributes = new { @class = "form-control", @disabled = true } })
+                @Html.ValidationMessageFor(model => model.LastUpdatedBy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-sm btn-default" title="Spremi promjene"><i class="fa fa-save"></i></button>
+                <a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    status = document.getElementById('opportunityStatus');
+    if (status) {
+        reason = document.getElementById('rejectReason');
+        if (status.value != 3) reason.style.display = 'none';
+
+        status.onchange = function () {
+            if (this.value == 3) {
+                reason.show();
+            }
+            else {
+                reason.style.display = 'none'
+            }
+        }
+    }
+    //$('#opportunityStatus').on('change', function () {
+    //    if ($(this).val() === 3) {
+    //        $('#rejectReason').show()
+    //    }
+    //    else {
+    //        $('#rejectReason').hide()
+    //    }
+    //});
+</script>

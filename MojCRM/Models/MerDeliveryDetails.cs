@@ -15,10 +15,16 @@ namespace MojCRM.Models
         public virtual Organizations Organization { get; set; }
         public string Comments { get; set; }
         public string Telephone { get; set; }
-    }
+        public string ImportantComments { get; set; }
 
-    public class DeliveryDetailsDbContext : ApplicationDbContext
-    {
-        public DbSet<MerDeliveryDetails> MerDeliveryDetails { get; set; }
+        [Display(Name = "Ukupan broj poslanih dokumenata")]
+        public int? TotalSent { get; set; }
+        [Display(Name = "Ukupan broj primljenih dokumenata")]
+        public int? TotalReceived { get; set; }
+
+        [Display(Name = "Prikupljena informacija o zaprimanju eRačuna")]
+        public string AcquiredReceivingInformation { get; set; }
+        public bool AcquiredReceivingInformationIsVerified { get; set; }
+        public bool RequiredPostalService { get; set; }
     }
 }

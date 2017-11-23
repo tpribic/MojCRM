@@ -22,8 +22,15 @@ namespace MojCRM.Helpers
         public string Adresa { get; set; }
         public string Mjesto { get; set; }
         public string Županija { get; set; }
+        public string IBAN { get; set; }
+        public int? TotalReceived { get; set; }
+        public int? TotalSent { get; set; }
+        public DateTime? FirstReceived { get; set; }
+        public DateTime? FirstSent { get; set; }
+        public int ServiceProviderId { get; set; }
     }
 
+    //CreateTickets
     public class MerGetNondeliveredDocumentsResponse
     {
         [JsonProperty]
@@ -42,6 +49,7 @@ namespace MojCRM.Helpers
         public int TotalReceived { get; set; } // No. of total documents with DocumentStatus = 40
     }
 
+    //DocumentHistory
     public class MerGetSentDocumentsResponse
     {
         [JsonProperty]
@@ -49,7 +57,7 @@ namespace MojCRM.Helpers
         public string InterniBroj { get; set; }
         public int DokumentTypeId { get; set; }
         public int DokumentStatusId { get; set; }
-        public DateTime DatumOtpreme { get; set; }
+        public DateTime? DatumOtpreme { get; set; }
         public DateTime? DatumZadnjePoruke { get; set; }
         public DateTime? DatumDostave { get; set; }
         public string EmailPrimatelja { get; set; }
@@ -86,18 +94,64 @@ namespace MojCRM.Helpers
                     case 1: return "eRačun";
                     case 3: return "Storno";
                     case 4: return "eOpomena";
-                    case 6: return "ePrimka - tip 6";
+                    case 6: return "ePrimka (tip 6)";
                     case 7: return "eOdgovor";
                     case 105: return "eNarudžba";
                     case 226: return "eOpoziv";
                     case 230: return "eIzmjena";
                     case 231: return "eOdgovorN";
-                    case 351: return "eOtpremnica";
+                    case 351: return "eOtrpemnica";
                     case 381: return "eOdobrenje";
                     case 383: return "eTerećenje";
+                    case 632: return "ePrimka";
                 }
                 return "Tip dokumenta";
             }
         }
+    }
+
+    public class MerGetContractsResponse
+    {
+        [JsonProperty]
+        public int Id { get; set; }
+        public string ContractNumber { get; set; }
+        public string CompanyId { get; set; }
+        public int? SubjektId { get; set; }
+        public string ProposalNumber { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
+        public int GracePeriod { get; set; }
+        public string Note { get; set; }
+        public int? UserId { get; set; }
+        public DateTime? ActivatedDate { get; set; }
+        public int? ActivatedUserId { get; set; }
+        public DateTime? DeactivatedDate { get; set; }
+        public int? DeactivatedUserId { get; set; }
+        public string DeactivateReason { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsLocked { get; set; }
+        public DateTime? LockDate { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime Changed { get; set; }
+        public DateTime? LevelingDate { get; set; }
+        public MerContractProduct[] Products { get; set; }
+    }
+
+    public class MerContractProduct
+    {
+        [JsonProperty]
+        public int ContractId { get; set; }
+        public int ProductId { get; set; }
+        public decimal ListPrice { get; set; }
+        public decimal Price { get; set; }
+        public string Name { get; set; }
+        public decimal? Quantity { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsLocked { get; set; }
+        public int? UserId { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime Changed { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/cae1139d-8dc3-4950-baa2-57b6fa693957/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/MojCRM</ApplicationInsightsResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,6 +94,12 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ClosedXML, Version=0.90.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.90.0\lib\net452\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -100,12 +107,16 @@
       <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.Signed.1.1.0\lib\net40\FastMember.Signed.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Ado, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Glimpse.Ado.1.7.3\lib\net45\Glimpse.Ado.dll</HintPath>
@@ -131,33 +142,26 @@
       <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.7\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.2.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.4.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.2.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.4.1\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.2.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.4.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.Web, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.2.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.Web, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.4.1\lib\net45\Microsoft.AI.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AI.WindowsServer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.2.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.4.1\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.4.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -168,44 +172,51 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Facebook">
-      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Google">
-      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.1.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
-      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.1.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.1.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Twitter">
-      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.1.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -224,6 +235,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net45\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net.Http" />
@@ -238,7 +252,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Abstractions">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -271,7 +287,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -289,8 +307,8 @@
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.2.3\lib\net45\WebMatrix.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -300,6 +318,21 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Campaigns\CampaignsAreaRegistration.cs" />
+    <Compile Include="Areas\Campaigns\Controllers\CampaignsController.cs" />
+    <Compile Include="Areas\Campaigns\Helpers\CampaignHelpers.cs" />
+    <Compile Include="Areas\Campaigns\Models\Campaign.cs" />
+    <Compile Include="Areas\Campaigns\Models\CampaignMember.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CampaignViewModels.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CreateCampaign.cs" />
+    <Compile Include="Areas\Campaigns\ViewModels\CampaignStatsViewModel.cs" />
+    <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
+    <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
+    <Compile Include="Areas\HelpDesk\Controllers\AcquireEmailController.cs" />
+    <Compile Include="Areas\HelpDesk\HelpDeskAreaRegistration.cs" />
+    <Compile Include="Areas\HelpDesk\Helpers\AcquireEmailHelpers.cs" />
+    <Compile Include="Areas\HelpDesk\Models\AcquireEmail.cs" />
+    <Compile Include="Areas\HelpDesk\ViewModels\AcquireEmailViewModels.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -328,22 +361,36 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\Sales\Controllers\LeadsController.cs" />
+    <Compile Include="Areas\Sales\Controllers\OpportunitiesController.cs" />
+    <Compile Include="Areas\Sales\Helpers\LeadHelpers.cs" />
+    <Compile Include="Areas\Sales\Helpers\OpportunityHelpers.cs" />
+    <Compile Include="Areas\Sales\Models\Lead.cs" />
+    <Compile Include="Areas\Sales\Models\LeadNote.cs" />
+    <Compile Include="Areas\Sales\Models\Opportunity.cs" />
+    <Compile Include="Areas\Sales\Models\OpportunityNote.cs" />
+    <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
+    <Compile Include="Areas\Sales\ViewModels\LeadDetailViewModel.cs" />
+    <Compile Include="Areas\Sales\ViewModels\OpportunityDetailViewModel.cs" />
+    <Compile Include="Areas\Stats\Models\MerDocumentExchangeHistory.cs" />
+    <Compile Include="Areas\Stats\StatsAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
-    <Compile Include="Controllers\DeliveryController.cs" />
+    <Compile Include="Areas\HelpDesk\Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
     <Compile Include="Controllers\OrganizationsController.cs" />
-    <Compile Include="Controllers\StatsController.cs" />
+    <Compile Include="Areas\Stats\Controllers\StatsController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
+    <Compile Include="Areas\HelpDesk\Helpers\DeliveryHelpers.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\MerApiRequests.cs" />
     <Compile Include="Helpers\MerApiResponses.cs" />
     <Compile Include="Helpers\MerDeliveryJsonResponse.cs" />
+    <Compile Include="Helpers\OrganizationHelpers.cs" />
+    <Compile Include="Helpers\PostmarkApi.cs" />
     <Compile Include="Migrations\201702061631424_Init.cs" />
     <Compile Include="Migrations\201702061631424_Init.Designer.cs">
       <DependentUpon>201702061631424_Init.cs</DependentUpon>
@@ -432,25 +479,118 @@
     <Compile Include="Migrations\201705281108171_May28UpdateActivities.Designer.cs">
       <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706061752477_Jun6Update.cs" />
+    <Compile Include="Migrations\201706061752477_Jun6Update.Designer.cs">
+      <DependentUpon>201706061752477_Jun6Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706291517070_Jun29OrganizationsUpdate.cs" />
+    <Compile Include="Migrations\201706291517070_Jun29OrganizationsUpdate.Designer.cs">
+      <DependentUpon>201706291517070_Jun29OrganizationsUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707012140368_Jul1OrganizationsUpdate.cs" />
+    <Compile Include="Migrations\201707012140368_Jul1OrganizationsUpdate.Designer.cs">
+      <DependentUpon>201707012140368_Jul1OrganizationsUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.cs" />
+    <Compile Include="Migrations\201707021939062_Jul2UpdateCampaigns.Designer.cs">
+      <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707031710095_Jul3UpdateCampaigns.cs" />
+    <Compile Include="Migrations\201707031710095_Jul3UpdateCampaigns.Designer.cs">
+      <DependentUpon>201707031710095_Jul3UpdateCampaigns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707091841048_Jul9Update.cs" />
+    <Compile Include="Migrations\201707091841048_Jul9Update.Designer.cs">
+      <DependentUpon>201707091841048_Jul9Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707101706186_Jul10UpdateOpportunityLead.cs" />
+    <Compile Include="Migrations\201707101706186_Jul10UpdateOpportunityLead.Designer.cs">
+      <DependentUpon>201707101706186_Jul10UpdateOpportunityLead.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707111556344_Jul11Update.cs" />
+    <Compile Include="Migrations\201707111556344_Jul11Update.Designer.cs">
+      <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707131828531_Jul13UpdateLeads.cs" />
+    <Compile Include="Migrations\201707131828531_Jul13UpdateLeads.Designer.cs">
+      <DependentUpon>201707131828531_Jul13UpdateLeads.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707131908026_Jul13UpdateLeadsv2.cs" />
+    <Compile Include="Migrations\201707131908026_Jul13UpdateLeadsv2.Designer.cs">
+      <DependentUpon>201707131908026_Jul13UpdateLeadsv2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707171041287_Jul17Update.cs" />
+    <Compile Include="Migrations\201707171041287_Jul17Update.Designer.cs">
+      <DependentUpon>201707171041287_Jul17Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707182158401_Jul18UpdateInvoiceNumbers.cs" />
+    <Compile Include="Migrations\201707182158401_Jul18UpdateInvoiceNumbers.Designer.cs">
+      <DependentUpon>201707182158401_Jul18UpdateInvoiceNumbers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707270638161_Jul27QuickUpdate.cs" />
+    <Compile Include="Migrations\201707270638161_Jul27QuickUpdate.Designer.cs">
+      <DependentUpon>201707270638161_Jul27QuickUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707311439532_Jul31Update.cs" />
+    <Compile Include="Migrations\201707311439532_Jul31Update.Designer.cs">
+      <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708261654174_Aug26Update.cs" />
+    <Compile Include="Migrations\201708261654174_Aug26Update.Designer.cs">
+      <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708261931576_Aug26Update2.cs" />
+    <Compile Include="Migrations\201708261931576_Aug26Update2.Designer.cs">
+      <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708271453120_Aug27Update.cs" />
+    <Compile Include="Migrations\201708271453120_Aug27Update.Designer.cs">
+      <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709021823473_Sep2Update.cs" />
+    <Compile Include="Migrations\201709021823473_Sep2Update.Designer.cs">
+      <DependentUpon>201709021823473_Sep2Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709061918463_Sep6Update.cs" />
+    <Compile Include="Migrations\201709061918463_Sep6Update.Designer.cs">
+      <DependentUpon>201709061918463_Sep6Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709161018443_Sep16Update.cs" />
+    <Compile Include="Migrations\201709161018443_Sep16Update.Designer.cs">
+      <DependentUpon>201709161018443_Sep16Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709241226582_Sep24Update.cs" />
+    <Compile Include="Migrations\201709241226582_Sep24Update.Designer.cs">
+      <DependentUpon>201709241226582_Sep24Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711191729100_Nov11Update.cs" />
+    <Compile Include="Migrations\201711191729100_Nov11Update.Designer.cs">
+      <DependentUpon>201711191729100_Nov11Update.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\Delivery.cs" />
-    <Compile Include="Models\DeliveryDetail.cs" />
+    <Compile Include="Areas\HelpDesk\Models\Delivery.cs" />
+    <Compile Include="Areas\HelpDesk\Models\DeliveryDetail.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Helpers\LogError.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MerDeliveryDetails.cs" />
     <Compile Include="Models\MeViewModels.cs" />
+    <Compile Include="Models\OrganizationAttribute.cs" />
+    <Compile Include="Models\OrganizationDetail.cs" />
     <Compile Include="Models\Organizations.cs" />
+    <Compile Include="MvcApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ContactDetailsViewModel.cs" />
-    <Compile Include="ViewModels\DeliveryDetailsViewModel.cs" />
-    <Compile Include="ViewModels\StatsViewModels.cs" />
+    <Compile Include="Areas\HelpDesk\ViewModels\DeliveryDetailsViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationsViewModels.cs" />
+    <Compile Include="Areas\Stats\ViewModels\StatsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.SqlServer.sql" />
@@ -458,12 +598,18 @@
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="bin\MojCRM.dll" />
+    <Content Include="bin\MojCRM.pdb" />
+    <Content Include="Content\630px-FINA_Logo.svg.png" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CRM_logo_ico.png" />
     <Content Include="Content\CRM_logo_source-krivulje.tekst.svg" />
+    <Content Include="Content\CustomPTISheet.css" />
+    <Content Include="Content\eFaktura2.png" />
     <Content Include="Content\eracun_logo.png" />
     <Content Include="Content\e_racun_logo_source.png" />
     <Content Include="Content\font-awesome.css" />
@@ -471,6 +617,8 @@
     <Content Include="Content\Gridmvc.css" />
     <Content Include="Content\ikona-preglednik.ico" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\my-custom-styles.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -517,6 +665,9 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\lato-bol-webfont.svg" />
+    <Content Include="fonts\lato-lig-webfont.svg" />
+    <Content Include="fonts\lato-reg-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
@@ -554,27 +705,91 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Areas\Campaigns\Views\web.config" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Create.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Delete.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Details.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Edit.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\Index.cshtml" />
+    <Content Include="Areas\Sales\Views\web.config" />
+    <Content Include="Areas\Sales\Views\Opportunities\Index.cshtml" />
+    <Content Include="Areas\Sales\Views\Opportunities\Details.cshtml" />
+    <Content Include="Areas\Sales\Views\Opportunities\Edit.cshtml" />
+    <Content Include="Areas\Sales\Views\Leads\Index.cshtml" />
+    <Content Include="Areas\Sales\Views\Leads\Details.cshtml" />
+    <Content Include="Content\main.css.map" />
+    <Content Include="fonts\lato-bol-webfont.eot" />
+    <Content Include="fonts\lato-bol-webfont.ttf" />
+    <Content Include="fonts\lato-bol-webfont.woff" />
+    <Content Include="fonts\lato-lig-webfont.eot" />
+    <Content Include="fonts\lato-lig-webfont.ttf" />
+    <Content Include="fonts\lato-lig-webfont.woff" />
+    <Content Include="fonts\lato-reg-webfont.eot" />
+    <Content Include="fonts\lato-reg-webfont.ttf" />
+    <Content Include="fonts\lato-reg-webfont.woff" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap-progressbar.js" />
+    <Content Include="Areas\HelpDesk\Views\AcquireEmail\CheckEntitiesForImport.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\SalesStat.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\CallCenterWeekly.cshtml" />
+    <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
+    <Content Include="Scripts\daterangepicker.js" />
+    <Content Include="Scripts\jquery-3.2.1.js" />
+    <Content Include="Scripts\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.js" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\king-elements.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Views\Shared\ErrorNoLead.cshtml" />
+    <Content Include="Areas\Cooperation\Views\web.config" />
+    <Content Include="Areas\Stats\Views\web.config" />
+    <Content Include="Areas\HelpDesk\Views\web.config" />
+    <Content Include="Areas\HelpDesk\Views\AcquireEmail\Index.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\AcquireEmail\Details.cshtml" />
     <None Include="Properties\PublishProfiles\MerDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\MojCRM - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Properties\PublishProfiles\MerDeploy.pubxml.user" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-tour.custom.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\gridmvc.js" />
     <Content Include="Scripts\gridmvc.lang.ru.js" />
     <Content Include="Scripts\gridmvc.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.easypiechart.min.js" />
+    <Content Include="Scripts\jquery.flot.min.js" />
+    <Content Include="Scripts\jquery.flot.pie.min.js" />
+    <Content Include="Scripts\jquery.flot.resize.min.js" />
+    <Content Include="Scripts\jquery.flot.time.min.js" />
+    <Content Include="Scripts\jquery.flot.tooltip.min.js" />
+    <Content Include="Scripts\jquery.mapael.js" />
+    <Content Include="Scripts\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\jquery.sparkline.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js" />
+    <Content Include="Scripts\king-chart-stat.js" />
+    <Content Include="Scripts\king-common.js" />
+    <Content Include="Scripts\king-components.js" />
+    <Content Include="Scripts\king-table.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\knockout.validation.js" />
@@ -582,11 +797,8 @@
     <Content Include="Scripts\merscripts.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\moment-with-locales.js" />
-    <Content Include="Scripts\moment-with-locales.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\npm.js" />
+    <Content Include="Scripts\raphael-2.1.0.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -638,35 +850,53 @@
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Shared\_UserLayout.cshtml" />
-    <Content Include="Views\Delivery\CreateTicketsOld.cshtml" />
-    <Content Include="Views\Delivery\Index.cshtml" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Areas\HelpDesk\Views\Delivery\CreateTicketsOld.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\Delivery\Index.cshtml" />
     <Content Include="Scripts\knockout.validation.min.js.map" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
-    <Content Include="Views\Delivery\Details.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\Delivery\Details.cshtml" />
     <Content Include="Views\Home\_Home.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Contact\Create.cshtml" />
     <Content Include="Views\Administration\Index.cshtml" />
-    <Content Include="Views\Stats\Index.cshtml" />
-    <Content Include="Views\Stats\CallCenterDaily.cshtml" />
-    <Content Include="Views\Stats\_CallCenterDailyQuery.cshtml" />
-    <Content Include="Views\Stats\Delivery.cshtml" />
-    <Content Include="Views\Stats\PersonalDailyActivities.cshtml" />
-    <Content Include="Views\Delivery\Contacts.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Index.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\CallCenterDaily.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\_CallCenterDailyQuery.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Delivery.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\PersonalDailyActivities.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\Delivery\Contacts.cshtml" />
     <Content Include="Views\Contact\Details.cshtml" />
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Delete.cshtml" />
+    <Content Include="Views\Organizations\Index.cshtml" />
+    <Content Include="Views\Shared\_UserLayoutNew.cshtml" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
+    <Content Include="Views\Organizations\Details.cshtml" />
+    <Content Include="Views\Organizations\_TicketsAsReceiver.cshtml" />
+    <Content Include="Views\Organizations\_TicketsAsSender.cshtml" />
+    <Content Include="Views\Organizations\_BusinessUnits.cshtml" />
+    <Content Include="Views\Organizations\_GeneralInfo.cshtml" />
+    <Content Include="Views\Organizations\_Opportunities.cshtml" />
+    <Content Include="Views\Organizations\_Leads.cshtml" />
+    <Content Include="Views\Organizations\_AdditionalInfo.cshtml" />
+    <Content Include="Views\Organizations\_MerDeliveryData.cshtml" />
+    <Content Include="Views\Organizations\_Contacts.cshtml" />
+    <Content Include="Views\Organizations\AddAttribute.cshtml" />
+    <Content Include="Views\Organizations\_Campaigns.cshtml" />
+    <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.2.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Support\Controllers\" />
-    <Folder Include="Areas\Support\Models\" />
-    <Folder Include="Areas\Support\Views\" />
-    <Folder Include="Views\Organizations\" />
+    <Folder Include="Areas\Campaigns\Views\Shared\" />
+    <Folder Include="Areas\Cooperation\Controllers\" />
+    <Folder Include="Areas\Cooperation\Views\Shared\" />
+    <Folder Include="Areas\HelpDesk\Views\Shared\" />
+    <Folder Include="Areas\Sales\Views\Shared\" />
+    <Folder Include="Areas\Stats\Views\Shared\" />
+    <Folder Include="ImportFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -745,6 +975,92 @@
     <EmbeddedResource Include="Migrations\201705281108171_May28UpdateActivities.resx">
       <DependentUpon>201705281108171_May28UpdateActivities.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706061752477_Jun6Update.resx">
+      <DependentUpon>201706061752477_Jun6Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706291517070_Jun29OrganizationsUpdate.resx">
+      <DependentUpon>201706291517070_Jun29OrganizationsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707012140368_Jul1OrganizationsUpdate.resx">
+      <DependentUpon>201707012140368_Jul1OrganizationsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707021939062_Jul2UpdateCampaigns.resx">
+      <DependentUpon>201707021939062_Jul2UpdateCampaigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707031710095_Jul3UpdateCampaigns.resx">
+      <DependentUpon>201707031710095_Jul3UpdateCampaigns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707091841048_Jul9Update.resx">
+      <DependentUpon>201707091841048_Jul9Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707101706186_Jul10UpdateOpportunityLead.resx">
+      <DependentUpon>201707101706186_Jul10UpdateOpportunityLead.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707111556344_Jul11Update.resx">
+      <DependentUpon>201707111556344_Jul11Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707131828531_Jul13UpdateLeads.resx">
+      <DependentUpon>201707131828531_Jul13UpdateLeads.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707131908026_Jul13UpdateLeadsv2.resx">
+      <DependentUpon>201707131908026_Jul13UpdateLeadsv2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707171041287_Jul17Update.resx">
+      <DependentUpon>201707171041287_Jul17Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707182158401_Jul18UpdateInvoiceNumbers.resx">
+      <DependentUpon>201707182158401_Jul18UpdateInvoiceNumbers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707270638161_Jul27QuickUpdate.resx">
+      <DependentUpon>201707270638161_Jul27QuickUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707311439532_Jul31Update.resx">
+      <DependentUpon>201707311439532_Jul31Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708261654174_Aug26Update.resx">
+      <DependentUpon>201708261654174_Aug26Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708261931576_Aug26Update2.resx">
+      <DependentUpon>201708261931576_Aug26Update2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708271453120_Aug27Update.resx">
+      <DependentUpon>201708271453120_Aug27Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709021823473_Sep2Update.resx">
+      <DependentUpon>201709021823473_Sep2Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709061918463_Sep6Update.resx">
+      <DependentUpon>201709061918463_Sep6Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709161018443_Sep16Update.resx">
+      <DependentUpon>201709161018443_Sep16Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709241226582_Sep24Update.resx">
+      <DependentUpon>201709241226582_Sep24Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711191729100_Nov11Update.resx">
+      <DependentUpon>201711191729100_Nov11Update.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -778,8 +1094,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.4.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,207 @@
+﻿@using GridMvc.Html
+@using System.Web.UI.WebControls
+@model IQueryable<MojCRM.Areas.Sales.Models.Lead>
+
+@{
+    ViewBag.Title = "Pregled leadova";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+@{ 
+    var leadStatusList = new List<ListItem>
+        {
+            new ListItem{ Value= "0", Text = "Kreirano"},
+            new ListItem{ Value= "1", Text = "U kontaktu"},
+            new ListItem{ Value= "6", Text = "Procesne poteškoće"},
+            new ListItem{ Value= "2", Text = "Odbijeno"},
+            new ListItem{ Value= "3", Text = "Poslana ponuda"},
+            new ListItem{ Value= "4", Text = "Prihvaćena ponuda"}
+        };
+    var leadRejectReasonList = new List<ListItem>
+        {
+            new ListItem{ Value= "0", Text = "Ne želi navesti"},
+            new ListItem{ Value= "1", Text = "Nema interesa za uslugu"},
+            new ListItem{ Value= "2", Text = "Previsoka cijena"},
+            new ListItem{ Value= "3", Text = "Neadekvatna ponuda"},
+            new ListItem{ Value= "4", Text = "Koristi drugog posrednika"}
+        };
+    var assigned = new List<ListItem>
+        {
+            new ListItem{ Value = "1", Text = "Nedodijeljene"},
+            new ListItem{ Value = "2", Text = "Dodijeljene"}
+        };
+    var salesAgents = new List<ListItem>
+        {
+            new ListItem{ Value = "Josip Kovačec", Text = "Josip Kovačec"},
+            new ListItem{ Value = "Dominik Antonio Turudić", Text = "Dominik Antonio Turudić"},
+            new ListItem{ Value = "Ivan Tomljenović", Text = "Ivan Tomljenović"},
+            new ListItem{ Value = "Marin Štimac", Text = "Marin Štimac"},
+            new ListItem{ Value = "Karlo Vuljanko", Text = "Karlo Vuljanko"},
+            new ListItem{ Value = "Davor Hruban", Text = "Davor Hruban"},
+            new ListItem{ Value = "Diana Dragija", Text = "Diana Dragija"},
+            new ListItem{ Value = "Sonja Franjčić", Text = "Sonja Franjčić"}
+        };
+}
+
+<h2 style="text-align:center"><strong>Pregled leadova</strong></h2>
+
+<hr />
+
+@*@if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+{
+    <div>
+        <div class="row" style="text-align:center">
+            <div class="col-md-12">
+                <div class="btn btn-group" role="group">
+                    <a href="@Url.Action("Create", "Leads")" class="btn btn-default btn-sm" title="Dodaj lead">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+}*@
+
+@using (Html.BeginForm("Index", "Leads", new { area = "Sales" }, FormMethod.Get))
+    {
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="campaign-search">Naziv kampanje</label>
+            <div id="campaign-search">
+                @Html.TextBox("Campaign", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv kampanje" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="lead-search">Naziv leada</label>
+            <div id="lead-search">
+                @Html.TextBox("Lead", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv leada" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="organization-search">Naziv ili OIB tvrtke</label>
+            <div id="organization-search">
+                @Html.TextBox("Organization", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Naziv ili OIB tvrtke" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="lead-status-search">Status leada</label>
+            <div id="lead-detail-contact">
+                @Html.DropDownList("LeadStatus", new SelectList(leadStatusList, "Value", "Text"), "Odaberi status leada", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="reject-reason-search">Razlog odbijanja</label>
+            <div>
+                @Html.DropDownList("RejectReason", new SelectList(leadRejectReasonList, "Value", "Text"), "Odaberi razlog odbijanja", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+    {
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="assigned-search">Dodijeljeno</label>
+                <div>
+                    @Html.DropDownList("Assigned", new SelectList(assigned, "Value", "Text"), "Odaberi", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="assigned-to-search">Dodijeljeno agentu</label>
+                <div>
+                    @Html.DropDownList("AssignedTo", new SelectList(salesAgents, "Value", "Text"), "Dodijeljeno agentu", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-md-3">
+        <div class="alert alert-info">
+            Broj rezultata pretrage: <strong title="Ukupan broj rezultata pretrage">@ViewBag.SearchResults</strong> <strong style="color:green" title="Broj rezultata pretrage koji su dodijeljeni">(@ViewBag.SearchResultsAssigned)</strong>
+        </div>
+    </div>
+</div>
+<br />
+<div class="col-md-12">
+    <div class="form-group" style="margin-bottom:0">
+        <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+        <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+    </div>
+</div>
+    }
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            Vaše brojno stanje: Trenutno imate <strong>@ViewBag.UsersAssigned</strong> dodijeljenih leadova. Od toga <strong>@ViewBag.UsersCreated</strong> kreiranih, <strong>@ViewBag.UsersInContact</strong> s kojima ste u kontaktu, <strong>@ViewBag.UsersRejected</strong> gdje su odbili daljnji kontakt, <strong>@ViewBag.QuoteSent</strong> gdje ste poslali ponudu te <strong>@ViewBag.QuoteAccepted</strong> gdje su prihvatili ponudu.
+        </div>
+    </div>
+</div>
+
+<hr />
+
+@Html.Grid(Model).Named("PopisLeadova").SetLanguage("hr").EmptyText("Nema rezultata").Columns(columns =>
+{
+columns.Add(m => m.RelatedCampaign.CampaignName).Encoded(false).Sanitized(false).Titled("Naziv kampanje").Sortable(true);
+columns.Add(m => m.LeadTitle).Encoded(false).Sanitized(false).Titled("Naziv leada").Sortable(false);
+columns.Add(m => m.RelatedOrganization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke").Sortable(false).RenderValueAs(m =>
+Html.RouteLink(m.RelatedOrganization.SubjectName, new { action = "Details", controller = "Organizations", area = "", id = m.RelatedOrganizationId }));
+columns.Add(m => m.LeadStatus).Encoded(false).Sanitized(false).Titled("Status leada").Sortable(true).RenderValueAs(m =>
+{
+    if (m.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.START)
+    {
+        return @<div><span class="label label-default">@Html.Raw(m.LeadStatusString)</span></div>;
+        }
+        if (m.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.INCONTACT)
+        {
+            return @<div><span class="label label-primary">@Html.Raw(m.LeadStatusString)</span></div>;
+        }
+        if (m.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.QOUTESENT)
+        {
+            return @<div><span class="label label-primary">@Html.Raw(m.LeadStatusString)</span></div>;
+        }
+        if (m.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.ACCEPTED)
+        {
+            return @<div><span class="label label-success">@Html.Raw(m.LeadStatusString)</span></div>;
+        }
+
+        return @<div><span class="label label-danger">@Html.Raw(m.LeadStatusString)</span><br /><span style="color:red">@Html.Raw(m.LeadRejectReasonString)</span></div>;
+    });
+    columns.Add(m => m.LeadDescription).Encoded(false).Sanitized(false).Titled("Opis leada").Sortable(false).RenderValueAs(m =>
+    {
+        if (m.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+        {
+            return @<div><i title="Lead je slobodan za dodijeljivanje" class="fa fa-check-circle-o fa-2x text-success assinged"></i></div>;
+        }
+        return @<div><span><i class="fa fa-times-circle-o fa-2x text-danger" title="Lead je već dodijeljen"></i> Dodijeljeno agentu: <strong>@Html.Raw(m.AssignedTo)</strong></span></div>;
+    });
+    columns.Add().Encoded(false).Sanitized(false).RenderValueAs(m =>
+    {
+        if ((User.Identity.Name == m.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+        {
+            return @<div><span>
+        <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = m.LeadId })" title="Detalji leada"><i class="fa fa-list"></i></a>
+        @*<a href="@Url.RouteUrl(new { action = "Edit", controller = "Leads", area = "Sales", id = m.LeadId, returnUrl = Request.Url })" title="Uređivanje leada"><i class="fa fa-edit"></i></a>*@
+    </span></div>;
+        }
+        if (User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+        {
+            return @<div><span>
+        <a href="@Url.RouteUrl(new { action = "Delete", controller = "Leads", area = "Sales", id = m.LeadId })" title="Brisanje leada"><i class="fa fa-trash"></i></a>
+    </span></div>;
+        }
+            return @<span></span>;
+});
+}).WithPaging(20)

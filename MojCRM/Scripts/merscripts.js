@@ -4,7 +4,7 @@
         weekStart: 1,
         format: "dd.mm.yyyy.",
         autoclose: true,
-        orientation: "auto bottom",
+        orientation: "auto top",
     });
     $("#btn-reset").click(function (e) {
         $(document).find('input[type=text]').attr('value', '');

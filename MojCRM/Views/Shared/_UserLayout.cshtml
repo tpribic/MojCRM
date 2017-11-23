@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Moj-CRM</title>
-    <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/CRM_logo_ico.png" rel="shortcut icon" type="image/x-icon" />
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -43,18 +43,44 @@
             <form class="form-inline">
                 <div class="row" style="padding-top:6px; margin-top:6px">
                     <div class="col-md-12">
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                        <a href="@Url.RouteUrl(new { action = "Index", controller = "Home", area = ""})" class="btn btn-default btn-sm">
                             <i class="fa fa-home"></i>
                             Početna
                         </a>
+                        <div class="btn-group dropdown">
+                            <a data-target="listsDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#listsDropdownMenu"><i class="fa fa-list"></i> Popisi <span class="caret"></span></a>
+                            <ul id="listsDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="listsDropdownMenu">
+                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Organizations", area = ""})"><i class="fa fa-industry"></i> Tvrtke</a></li>
+                                <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Contacts", area = ""})"><i class="fa fa-vcard"></i> Kontakti</a></li>
+                            </ul>
+                        </div>
+                        @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+                        {
+                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns"})" class="btn btn-default btn-sm">
+                                <i class="fa fa-phone"></i>
+                                Kampanje
+                            </a>
+                        }
+                        @if (true)
+                        {
+                            <div class="btn-group dropdown">
+                                <a data-target="salesDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="salesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#salesDropdownMenu"><i class="fa fa-money"></i> Prodaja <span class="caret"></span></a>
+                                <ul id="salesDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="salesDropdown">
+                                    <li class="dropdown-header" style="color:cornflowerblue"><strong>Prodajne prilike</strong></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Opportunities", area = "Sales"})"><i class="fa fa-list"></i> Pregled</a></li>
+                                    <li class="dropdown-header" style="color:cornflowerblue"><strong>Leadovi</strong></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Leads", area = "Sales"})"><i class="fa fa-list"></i> Pregled</a></li>
+                                </ul>
+                            </div>
+                        }
                         @if (User.IsInRole("Delivery") || User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                         {
                             <div class="btn-group dropdown">
-                                <a data-target="deliveryDropdownMenu" class="btn btn-default dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#deliveryDropdownMenu"><i class="fa fa-wrench"></i> Podrška <span class="caret"></span></a>
+                                <a data-target="deliveryDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#deliveryDropdownMenu"><i class="fa fa-wrench"></i> Podrška <span class="caret"></span></a>
                                 <ul id="deliveryDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="deliveryDropdown">
                                     <li class="dropdown-header" style="color:cornflowerblue"><strong>Dostava eRačuna</strong></li>
-                                    <li><a href="@Url.Action("Index", "Delivery")"><i class="fa fa-ticket"></i> Kartice</a></li>
-                                    <li><a href="@Url.Action("Contacts", "Delivery")"><i class="fa fa-vcard"></i> Kontakti dostave</a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "HelpDesk"})"><i class="fa fa-ticket"></i> Kartice</a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = "HelpDesk"})"><i class="fa fa-vcard"></i> Kontakti dostave</a></li>
                                     @if (User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                                     {
                                         <li class="dropdown-header" style="color:cornflowerblue"><strong>MeRHelpdesk</strong></li>
@@ -62,17 +88,13 @@
                                 </ul>
                             </div>
                         }
-                        <a href="@Url.Action("Index", "Contact")" class="btn btn-default">
-                            <i class="fa fa-address-book"></i>
-                            Kontakti
-                        </a>
-                        <a href="@Url.Action("Index", "Stats")" class="btn btn-default">
+                        <a href="@Url.RouteUrl(new { action = "Index", controller = "Stats", area = ""})" class="btn btn-default btn-sm">
                             <i class="fa fa-book"></i>
                             Izvještaji
                         </a>
                         @if (User.IsInRole("Superadmin"))
                         {
-                            <a href="@Url.Action("Index", "Administration")" class="btn btn-default">
+                            <a href="@Url.RouteUrl(new { action = "Index", controller = "Administration", area = ""})" class="btn btn-default btn-sm">
                                 <i class="fa fa-cogs"></i>
                                 Administracija sustava
                             </a>

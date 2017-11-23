@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - Moj-CRM</title>
-    <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/CRM_logo_ico.png" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
 
-    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/scripts")
+    @Styles.Render("~/Content/css")
 </head>
 <body>
     <!--Header Wrapper-->
     <div class="special-wrap">
-        <nav id="navbar-top" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-static-top">
+        @*<nav id="navbar-top" style="text-align: justify; background-color: lavender; border-color: lavender; margin-bottom: 0px" ; class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header" style="color: lavender">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -30,7 +34,7 @@
                 </div>
             </div>
         </nav>
-    </div>
+    </div>*@
     <div class="container body-content">
         @*<div class="row">
             <div class="col-md-12">

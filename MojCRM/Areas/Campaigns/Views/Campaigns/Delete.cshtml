@@ -1,0 +1,113 @@
+﻿@model MojCRM.Areas.Campaigns.Models.Campaign
+
+@{
+    ViewBag.Title = "Brisanje kampanje";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Brisanje kampanje</strong></h2>
+
+<h3 style="text-align:center">Jeste li sigurni da želite obrisati ovu kampanju?</h3>
+<div>
+    <h4 style="text-align:center">Kampanja - @Html.Raw(Model.CampaignName)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RelatedCompany.VAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RelatedCompany.VAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignInitiatior)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignInitiatior)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignStartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignPlannedEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignPlannedEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InsertDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InsertDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <button type="submit" class="btn btn-sm btn-default" title="Brisanje kampanje"><i class="fa fa-trash"></i></button>
+            <a href="@Url.RouteUrl(new { action = "Index", controller = "Campaigns", area = "Campaigns", returnUrl = Request.Url})" class="btn btn-sm btn-default" title="Povratak na popis kampanja"><i class="fa fa-arrow-left"></i></a>
+        </div>
+    }
+</div>
