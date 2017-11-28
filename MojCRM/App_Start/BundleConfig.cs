@@ -111,7 +111,7 @@ namespace MojCRM
                     "~/Scripts/jquery-{version}-slim.js"
                 )); */
 
-            BundleTable.EnableOptimizations = true;
+          //  BundleTable.EnableOptimizations = true;
         }
     }
 }
