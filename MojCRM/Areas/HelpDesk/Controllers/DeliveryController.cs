@@ -734,7 +734,6 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             //UpdateStatus(ElectronicId);
 
             DateTime referenceDate = DateTime.Now.AddMonths(-2);
-            TimeSpan referenceGetSentDocumentsDate;
 
             var relatedInvoicesList = (from t in _db.DeliveryTicketModels
                                         where t.Id != id && t.ReceiverId == deliveryTicketModel.ReceiverId && t.SentDate > referenceDate && t.DocumentStatus == 30

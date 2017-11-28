@@ -203,6 +203,7 @@
                                     <tr>
                                         <th>Agent</th>
                                         <th>Broj dodijeljenih predmeta</th>
+                                        <th></th>
                                     </tr>
                                     @foreach (var agent in Model.AssignedAgents)
                                     {
@@ -211,6 +212,7 @@
                                              <tr>
                                                  <td>@agent.Agent</td>
                                                  <td>@agent.NumberOfAssignedEntities</td>
+                                                 <td><a href="@Url.RouteUrl(new { action = "AdminUnassignEntities", controller = "AcquireEmail", area = "HelpDesk", campaignId=Model.Campaign.CampaignId, agent = agent.Agent, returnUrl = Request.Url })" title="Makni dodjelu za ovog agenta"><i class="fa fa-remove" style="color: red"></i></a></td>
                                              </tr>   
                                          }
                                     }
@@ -275,86 +277,109 @@
         </div>
     }
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.RelatedCompany.SubjectName)
-        </dt>
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.RelatedCompany.SubjectName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.RelatedCompany.SubjectName) (@Html.DisplayFor(model => model.Campaign.RelatedCompany.VAT))
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.RelatedCompany.SubjectName) (@Html.DisplayFor(model => model.Campaign.RelatedCompany.VAT))
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignName)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignName)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignDescription)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignDescription)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignDescription)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignDescription)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignInitiatior)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignInitiatior)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignInitiatior)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignInitiatior)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignType)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignType)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignTypeString)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignTypeString)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignStatus)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignStatus)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignStatusString)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignStatusString)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignStartDate)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignStartDate)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignStartDate)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignStartDate)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignPlannedEndDate)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignPlannedEndDate)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignPlannedEndDate)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignPlannedEndDate)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.CampaignEndDate)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.CampaignEndDate)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.CampaignEndDate)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.CampaignEndDate)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campaign.InsertDate)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Campaign.InsertDate)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campaign.InsertDate)
-        </dd>
-        
-    </dl>
+                <dd>
+                    @Html.DisplayFor(model => model.Campaign.InsertDate)
+                </dd>
+
+            </dl>
+        </div>
+        @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.EMAILBASES)
+        {
+            <div class="col-md-8" title="Statistički podaci o statusu unosa predmeta">
+                <dl class="dl-horizontal">
+
+                    @foreach (var stat in Model.EmailsBasesEntityStatusStats)
+                    {
+                        <dt>
+                            @stat.StatusName
+                        </dt>
+
+                        <dd>
+                            @stat.SumOfEntities
+                        </dd>
+                    }
+
+                </dl>
+            </div>
+        }
+    </div>
 </div>

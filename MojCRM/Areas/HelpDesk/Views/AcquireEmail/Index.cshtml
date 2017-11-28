@@ -70,7 +70,7 @@
 {
     //columns.Add().Encoded(false).Sanitized(false).RenderValueAs(r => Html.CheckBox("checked", false, new { r.Id, @class = "checked", @id = "checkbox" }));
     columns.Add(r => r.Campaign.CampaignName).Encoded(false).Sanitized(false).Titled("Kampanja").Sortable(true);
-    columns.Add(r => r.Organization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke za kontakt").RenderValueAs(v =>
+    columns.Add(r => r.Organization.SubjectName).Encoded(false).Sanitized(false).Titled("Naziv tvrtke za kontakt").Sortable(true).RenderValueAs(v =>
     {
     if (User.IsInRole("Guest"))
     {
@@ -83,12 +83,13 @@
         return @<span title="@v.Organization.SubjectName (@v.Organization.VAT), @v.Organization.OrganizationDetail.MainAddress, @v.Organization.OrganizationDetail.MainPostalCode @v.Organization.OrganizationDetail.MainCity">
         @Html.RouteLink(v.Organization.SubjectName + " (" + v.Organization.VAT + ")", new { action = "Details", controller = "Organizations", area = "", id = v.RelatedOrganizationId })
     </span>;
-    }
-});
-    columns.Add(r => r.Organization.OrganizationDetail.TelephoneNumber).Encoded(false).Sanitized(false).Titled("Kontakt brojevi telefona").RenderValueAs(v =>
+        }
+    });
+    columns.Add(r => r.Organization.OrganizationDetail.TelephoneNumber).Encoded(false).Sanitized(false).Titled("Kontakt brojevi telefona").Sortable(true).RenderValueAs(v =>
     v.Organization.OrganizationDetail.TelephoneNumber + ";" + v.Organization.OrganizationDetail.MobilePhoneNumber);
-    columns.Add(r => r.Organization.MerDeliveryDetail.AcquiredReceivingInformation).Encoded(false).Sanitized(false).Titled("Informacija o zaprimanju eRačuna").Sortable(false);
-    columns.Add(r => r.AcquireEmailStatusString).Encoded(false).Sanitized(false).Titled("Status");
+    columns.Add(r => r.Organization.MerDeliveryDetail.AcquiredReceivingInformation).Encoded(false).Sanitized(false).Titled("Informacija o zaprimanju eRačuna").Sortable(true);
+    columns.Add(r => r.AcquireEmailStatusString).Encoded(false).Sanitized(false).Titled("Status predmeta").Sortable(true);
+    columns.Add(r => r.AcquireEmailEntityStatusString).Encoded(false).Sanitized(false).Titled("Status obrade").Sortable(true);
     columns.Add().Encoded(false).Sanitized(false).Titled("Aktivnosti").RenderValueAs(v =>
     {
         return @<span>

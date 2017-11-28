@@ -18,6 +18,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         public int NumberOfUnassignedEntities { get; set; }
         public IQueryable<CampaignMember> AssignedMembers { get; set; }
         public IQueryable<CampaignAssignedAgents> AssignedAgents { get; set; }
+        public IQueryable<EmailBasesCampaignStatusHelper> EmailsBasesEntityStatusStats { get; set; }
 
         public IQueryable<SelectListItem> CampaignStatusList
         {
@@ -88,7 +89,54 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                 };
                 model.Add(temp);
             }
+            return model.AsQueryable();
+        }
 
+        public IQueryable<EmailBasesCampaignStatusHelper> GetEmailBasesEntityStats(int campaignId)
+        {
+            var entites = _db.AcquireEmails.Where(x => x.Campaign.CampaignId == campaignId).GroupBy(x => x.AcquireEmailEntityStatus);
+            var model = new List<EmailBasesCampaignStatusHelper>();
+
+            foreach (var entity in entites)
+            {
+                string status = string.Empty;
+                switch (entity.Key)
+                {
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.Created:
+                        status = "Kreirano";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.AcquiredInformation:
+                        status = "Prikupljena povratna informacija";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.NoAnswer:
+                        status = "Nema odgovora / Ne javlja se";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.ClosedOrganization:
+                        status = "Zatvorena tvrtka";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.OldPartner:
+                        status = "Ne poslujus s korisnikom";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.PartnerWillContactUser:
+                        status = "Partner će se javiti korisniku samostalno";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.WrittenConfirmationRequired:
+                        status = "Potrebno poslati pisanu suglasnost";
+                        break;
+                    case AcquireEmail.AcquireEmailEntityStatusEnum.WrongTelephoneNumber:
+                        status = "Neispravan kontakt broj";
+                        break;
+                    default:
+                        status = "Status unosa";
+                        break;
+                }
+                var temp = new EmailBasesCampaignStatusHelper()
+                {
+                    StatusName = status,
+                    SumOfEntities = entity.Count()
+                };
+                model.Add(temp);
+            }
             return model.AsQueryable();
         }
     }

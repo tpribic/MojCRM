@@ -12,6 +12,17 @@
         new ListItem{ Value= @"2", Text = @"Verificirano"},
         new ListItem{ Value= @"3", Text = @"Revidirano"}
     };
+    var entityStatusList = new List<ListItem>
+    {
+        new ListItem{ Value= @"0", Text = @"Kreirano"},
+        new ListItem{ Value= @"1", Text = @"Dobivena povratna informacija"},
+        new ListItem{ Value= @"2", Text = @"Nema odgovora / Ne javlja se"},
+        new ListItem{ Value= @"3", Text = @"Zatvoren subjekt (sudski / obrtni registar)"},
+        new ListItem{ Value= @"4", Text = @"Ne posluju s korisnikom"},
+        new ListItem{ Value= @"5", Text = @"Partner će se javiti korisniku samostalno"},
+        new ListItem{ Value= @"6", Text = @"Potrebno poslati pisanu suglasnost"},
+        new ListItem{ Value= @"7", Text = @"Neispravan kontakt broj"},
+    };
 }
 
 <!--Modal - Change Status-->
@@ -37,6 +48,48 @@
                                 <label for="status-lns">Status</label>
                                 <div id="status-lns">
                                     @Html.DropDownList("identifier", new SelectList(statusList, "Value", "Text"), "Odaberi novi status", new { @class = "form-control", @id = "lns" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="hidden">
+                                <div id="ticketid">
+                                    @Html.TextBox("entityId", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.Entity.Id })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Predaj promjenu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Prekini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal - Change Entity Status-->
+@using (Html.BeginForm("ChangeEntityStatus", "AcquireEmail", FormMethod.Post))
+{
+    <div class="modal fade" id="ChangeEntityStatus" tabindex="-1" role="dialog" aria-labelledby="ChangeEntityStatus">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="overflow:hidden">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>Promijeni status predmeta</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                Molimo odaberite status obrade u koji želite staviti predmet.
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="status-lns">Status</label>
+                                <div id="status-lns">
+                                    @Html.DropDownList("identifier", new SelectList(entityStatusList, "Value", "Text"), "Odaberi novi status", new { @class = "form-control", @id = "lns" })
                                 </div>
                             </div>
                             <br />
@@ -93,10 +146,10 @@
 <h2>Detalji unosa za ažuriranje baze korisnika (dodijeljeno agentu: @Model.Entity.AssignedTo)</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <strong>Naziv kampanje: </strong>@Model.Entity.Campaign.CampaignName
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <strong>Subjekt u obradi: </strong>@Model.Entity.Organization.SubjectName
     </div>
     <div class="col-md-2">
@@ -113,6 +166,9 @@
         {
             <a href="@Url.RouteUrl(new {action = "Index", controller = "AcquireEmail", area = "HelpDesk"})" title="Povratak na popis predmeta"><i class="fa fa-arrow-left fa-lg"></i></a>
         }
+    </div>
+    <div class="col-md-2">
+        <button type="button" title="Promijeni status obrade" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeEntityStatus"><i class="fa fa-refresh"></i></button>
     </div>
 </div>
 @if (User.IsInRole("Management") || User.IsInRole("Superadmin") || User.IsInRole("Administrator"))

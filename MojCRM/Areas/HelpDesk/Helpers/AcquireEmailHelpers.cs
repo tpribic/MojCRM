@@ -19,6 +19,7 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public string VAT { get; set; }
         public string SubjectName { get; set; }
         public string AcquiredReceivingInformation { get; set; }
+        public string AcquiredEmailEntityStatus { get; set; }
     }
 
     public class AcquireEmailExportForEmailNotificationModel

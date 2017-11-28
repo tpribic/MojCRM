@@ -154,6 +154,56 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         }
 
         [HttpPost]
+        public ActionResult ChangeEntityStatus(int entityId, int identifier)
+        {
+            var entity = _db.AcquireEmails.Find(entityId);
+            switch (identifier)
+            {
+                case 0:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.Created;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 1:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.AcquiredInformation;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 2:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.NoAnswer;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 3:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.ClosedOrganization;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 4:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.OldPartner;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 5:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.PartnerWillContactUser;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 6:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.WrittenConfirmationRequired;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+                case 7:
+                    entity.AcquireEmailEntityStatus = AcquireEmailEntityStatusEnum.WrongTelephoneNumber;
+                    entity.UpdateDate = DateTime.Now;
+                    _db.SaveChanges();
+                    break;
+            }
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        [HttpPost]
         public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId)
         {
             int importedEntities = 0;
@@ -271,6 +321,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             ws.Cells[1, 2].Value = "OIB partnera";
             ws.Cells[1, 3].Value = "Naziv partnera";
             ws.Cells[1, 4].Value = "Informacija o zaprimanju eRačuna";
+            ws.Cells[1, 5].Value = "Status obrade";
 
             foreach (var res in results)
             {
@@ -278,6 +329,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 ws.Cells[cell, 2].Value = res.VAT;
                 ws.Cells[cell, 3].Value = res.SubjectName;
                 ws.Cells[cell, 4].Value = res.AcquiredReceivingInformation;
+                ws.Cells[cell, 5].Value = res.AcquiredEmailEntityStatus;
                 cell++;
             }
 
@@ -317,11 +369,26 @@ namespace MojCRM.Areas.HelpDesk.Controllers
 
         public void CreateEntity(Organizations organization, AcquireEmailStatusEnum status, int campaignId)
         {
+            AcquireEmailEntityStatusEnum entityStatusEnum = AcquireEmailEntityStatusEnum.Created;
+            switch (status)
+            {
+                case AcquireEmailStatusEnum.Created:
+                    entityStatusEnum = AcquireEmailEntityStatusEnum.Created;
+                    break;
+                case AcquireEmailStatusEnum.Checked:
+                    entityStatusEnum = AcquireEmailEntityStatusEnum.Created;
+                    break;
+                case AcquireEmailStatusEnum.Verified:
+                    entityStatusEnum = AcquireEmailEntityStatusEnum.AcquiredInformation;
+                    break;
+            }
+
             _db.AcquireEmails.Add(new AcquireEmail
             {
                 RelatedOrganizationId = organization.MerId,
                 RelatedCampaignId = campaignId,
                 AcquireEmailStatus = status,
+                AcquireEmailEntityStatus = entityStatusEnum,
                 InsertDate = DateTime.Now
             });
             _db.SaveChanges();
@@ -380,10 +447,26 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        public ActionResult AdminUnassignEntities(int campaignId, string agent)
+        {
+            var entites = _db.AcquireEmails.Where(c => c.RelatedCampaignId == campaignId && c.AssignedTo == agent);
+
+            foreach (var entity in entites)
+            {
+                entity.IsAssigned = false;
+                entity.AssignedTo = string.Empty;
+                entity.UpdateDate = DateTime.Now;
+            }
+            _db.SaveChanges();
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)
         {
             var entityList = (from ae in _db.AcquireEmails
-                              where ae.RelatedCampaignId == campaignId && (ae.AcquireEmailStatus == AcquireEmailStatusEnum.Reviewed || ae.AcquireEmailStatus == AcquireEmailStatusEnum.Verified)
+                              where ae.RelatedCampaignId == campaignId && (ae.AcquireEmailStatus == AcquireEmailStatusEnum.Reviewed 
+                              || ae.AcquireEmailStatus == AcquireEmailStatusEnum.Verified || ae.AcquireEmailStatus == AcquireEmailStatusEnum.Checked /*Ptiček request - temporary!*/)
                               select new AcquireEmailExportModel
                               {
                                   CampaignName = ae.Campaign.CampaignName,
@@ -402,7 +485,8 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     CampaignName = ae.Campaign.CampaignName,
                     VAT = ae.Organization.VAT,
                     SubjectName = ae.Organization.SubjectName,
-                    AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation
+                    AcquiredReceivingInformation = ae.Organization.MerDeliveryDetail.AcquiredReceivingInformation,
+                    AcquiredEmailEntityStatus = ae.AcquireEmailEntityStatusString
                 }).ToList();
             return entityList;
         }
