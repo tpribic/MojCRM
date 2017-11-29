@@ -77,41 +77,8 @@ namespace MojCRM
                  "~/Scripts/king-elements.js",
                  "~/Scripts/daterangepicker.js",
                  "~/Scripts/moment.min.js"));
-
-          /*   
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.css",
-                "~/Content/bootstrap.min.css",
-                "~/Content/Site.css",
-                "~/Content/bootstrap-datepicker3.min.css",
-                "~/Content/font-awesome.css",
-                "~/Content/font-awesome.min.css",
-                "~/Content/main.css",
-                "~/Content/my-custom-styles.css"));
-
-            bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                 "~/Scripts/app/compressedapp.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/compressedscripts").Include(
-                 "~/Scripts/jquery-ui/compressed01js",
-                 "~/Scripts/jquery-ui2/compressed02.js",
-                 "~/Scripts/jscompress-1/compressed1.js",
-                 "~/Scripts/jscompress-2/compressed2.js",
-                 "~/Scripts/jscompress-3/compressed3.js",
-                 "~/Scripts/jscompress-4/compressed4.js",
-                 "~/Scripts/jscompress-5/compressed5.js",
-                 "~/Scripts/jscompress-6/compressed6.js",
-                 "~/Scripts/jscompress-7/compressed7.js",
-                 "~/Scripts/jscompress-8/compressed8.js",
-                 "~/Scripts/jscompress-9/compressed9.js"
-                 ));
-
-            bundles.Add(new ScriptBundle("~/bundles/required").Include(
-                    "~/Scripts/jquery-{version}.js",
-                    "~/Scripts/jquery-{version}-slim.js"
-                )); */
-
-          //  BundleTable.EnableOptimizations = true;
+                               
+                BundleTable.EnableOptimizations = true;
         }
     }
 }
