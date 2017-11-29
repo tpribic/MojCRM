@@ -30,7 +30,7 @@ namespace MojCRM.Controllers
         // GET: Contact/Create
         public ActionResult Create()
         {
-            return View("Sucessfull");
+            return View();
         }
 
         // POST: Contact/Create
@@ -44,7 +44,7 @@ namespace MojCRM.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View();
+            return View("Sucessfull");
         }
 
         // POST: Contact/CreateFromDelivery
