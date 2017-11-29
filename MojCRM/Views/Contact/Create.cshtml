@@ -12,6 +12,8 @@
     var coctactTypeList = new List<ListItem>
         {
             new ListItem {Text = "Odaberi tip kontakta", Value = null },
+            new ListItem {Text = "Testni podatak1", Value = null }, // Koristim ove podatke samo da
+            new ListItem {Text = "Testni podatak2", Value = null }, // bih povećao listu da ima više itema zbog preglednosti
             new ListItem {Text = "Dostava", Value = "Delivery" },
         };
 }
@@ -83,7 +85,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ContactType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ContactType, new SelectList(coctactTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle", @type = "text"})
+                @Html.DropDownListFor(model => model.ContactType, new SelectList(coctactTypeList, "Value", "Text"), null, new { @class = "btn btn-default dropdown-toggle custom", @type = "text"})
             </div>
         </div>
 
