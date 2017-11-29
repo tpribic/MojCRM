@@ -381,5 +381,40 @@
                 </dl>
             </div>
         }
+        @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES)
+        {
+            <div class="col-md-4" title="Statistički podaci o statusu prodajnih prilika u kampanji">
+                <dl class="dl-horizontal">
+
+                    @foreach (var stat in Model.SalesOpportunitiesStatusStats)
+                    {
+                        <dt>
+                            @stat.StatusName
+                        </dt>
+
+                        <dd>
+                            @stat.SumOfEntities
+                        </dd>
+                    }
+
+                </dl>
+            </div>
+            <div class="col-md-4" title="Statistički podaci o statusu leadova u kampanji">
+                <dl class="dl-horizontal">
+
+                    @foreach (var stat in Model.SalesLeadsStatusStats)
+                    {
+                        <dt>
+                            @stat.StatusName
+                        </dt>
+
+                        <dd>
+                            @stat.SumOfEntities
+                        </dd>
+                    }
+
+                </dl>
+            </div>
+        }
     </div>
 </div>

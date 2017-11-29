@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using MojCRM.Areas.Campaigns.Helpers;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Areas.Sales.Models;
 using MojCRM.Models;
 
 namespace MojCRM.Areas.Campaigns.ViewModels
@@ -19,6 +20,8 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         public IQueryable<CampaignMember> AssignedMembers { get; set; }
         public IQueryable<CampaignAssignedAgents> AssignedAgents { get; set; }
         public IQueryable<EmailBasesCampaignStatusHelper> EmailsBasesEntityStatusStats { get; set; }
+        public IQueryable<SalesOpportunitiesCampaignStatusHelper> SalesOpportunitiesStatusStats { get; set; }
+        public IQueryable<SalesLeadsCampaignStatusHelper> SalesLeadsStatusStats { get; set; }
 
         public IQueryable<SelectListItem> CampaignStatusList
         {
@@ -131,6 +134,102 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                         break;
                 }
                 var temp = new EmailBasesCampaignStatusHelper()
+                {
+                    StatusName = status,
+                    SumOfEntities = entity.Count()
+                };
+                model.Add(temp);
+            }
+            return model.AsQueryable();
+        }
+
+        public IQueryable<SalesOpportunitiesCampaignStatusHelper> GetOpportunitiesSalesStatusStats(int campaignId)
+        {
+            var entites = _db.Opportunities.Where(x => x.RelatedCampaignId == campaignId).GroupBy(x => x.OpportunityStatus);
+            var model = new List<SalesOpportunitiesCampaignStatusHelper>();
+
+            foreach (var entity in entites)
+            {
+                string status = string.Empty;
+                switch (entity.Key)
+                {
+                    case Opportunity.OpportunityStatusEnum.Start:
+                        status = "Kreirano";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Incontact:
+                        status = "U kontaktu";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Lead:
+                        status = "Kreiran lead";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Rejected:
+                        status = "Odbijeno";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Arrangemeeting:
+                        status = "Potrebno dogovoriti sastanak";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Processdifficulties:
+                        status = "Procesne poteškoće";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Meruser:
+                        status = "Moj-eRačun korisnik";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.Finauser:
+                        status = "FINA korisnik";
+                        break;
+                    case Opportunity.OpportunityStatusEnum.EFakturauser:
+                        status = "eFaktura korisnik";
+                        break;
+                        default:
+                            status = "Status prodajne prilike";
+                            break;
+                }
+                var temp = new SalesOpportunitiesCampaignStatusHelper
+                {
+                    StatusName = status,
+                    SumOfEntities = entity.Count()
+                };
+                model.Add(temp);
+            }
+            return model.AsQueryable();
+        }
+
+        public IQueryable<SalesLeadsCampaignStatusHelper> GetLeadsSalesStatusStats(int campaignId)
+        {
+            var entites = _db.Leads.Where(x => x.RelatedCampaignId == campaignId).GroupBy(x => x.LeadStatus);
+            var model = new List<SalesLeadsCampaignStatusHelper>();
+
+            foreach (var entity in entites)
+            {
+                string status = string.Empty;
+                switch (entity.Key)
+                {
+                    case Lead.LeadStatusEnum.Start:
+                        status = "Kreirano";
+                        break;
+                    case Lead.LeadStatusEnum.Incontact:
+                        status = "U kontaktu";
+                        break;
+                    case Lead.LeadStatusEnum.Rejected:
+                        status = "Odbijeno";
+                        break;
+                    case Lead.LeadStatusEnum.Quotesent:
+                        status = "Poslana ponuda";
+                        break;
+                    case Lead.LeadStatusEnum.Accepted:
+                        status = "Prihvaćena ponuda";
+                        break;
+                    case Lead.LeadStatusEnum.Meeting:
+                        status = "Dogovoren sastanak";
+                        break;
+                    case Lead.LeadStatusEnum.Processdifficulties:
+                        status = "Procesne poteškoće";
+                        break;
+                    default:
+                        status = "Status leada";
+                        break;
+                }
+                var temp = new SalesLeadsCampaignStatusHelper
                 {
                     StatusName = status,
                     SumOfEntities = entity.Count()

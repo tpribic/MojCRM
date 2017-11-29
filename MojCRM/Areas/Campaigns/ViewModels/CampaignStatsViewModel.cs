@@ -27,9 +27,9 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                 {
                     Campaign = campaign,
                     TotalCount = _db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId),
-                    StartedCount = _db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.START),
-                    NotStartedCount = _db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus != Opportunity.OpportunityStatusEnum.START),
-                    NotStartedPercent = Math.Round(((_db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus != Opportunity.OpportunityStatusEnum.START)
+                    StartedCount = _db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.Start),
+                    NotStartedCount = _db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus != Opportunity.OpportunityStatusEnum.Start),
+                    NotStartedPercent = Math.Round(((_db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId && op.OpportunityStatus != Opportunity.OpportunityStatusEnum.Start)
                                                      / (decimal)_db.Opportunities.Count(op => op.RelatedCampaignId == campaign.CampaignId)) * 100), 0),
                 };
 

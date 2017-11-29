@@ -119,16 +119,16 @@ namespace MojCRM.Areas.Sales.Controllers
             ViewBag.SearchResultsAssigned = opportunities.Count(op => op.IsAssigned);
 
             ViewBag.UsersAssigned = opportunities.Count(op => op.AssignedTo == User.Identity.Name);
-            ViewBag.UsersCreated = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.START);
-            ViewBag.UsersInContact = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.INCONTACT);
-            ViewBag.UsersLead = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD);
-            ViewBag.UsersRejected = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.REJECTED);
+            ViewBag.UsersCreated = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.Start);
+            ViewBag.UsersInContact = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.Incontact);
+            ViewBag.UsersLead = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.Lead);
+            ViewBag.UsersRejected = opportunities.Count(op => op.AssignedTo == User.Identity.Name && op.OpportunityStatus == Opportunity.OpportunityStatusEnum.Rejected);
 
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
                 return View(opportunities.OrderByDescending(op => op.InsertDate));
             }
-            return View(opportunities.Where(op => op.OpportunityStatus != Opportunity.OpportunityStatusEnum.LEAD || op.OpportunityStatus != Opportunity.OpportunityStatusEnum.REJECTED).OrderByDescending(op => op.InsertDate));
+            return View(opportunities.Where(op => op.OpportunityStatus != Opportunity.OpportunityStatusEnum.Lead || op.OpportunityStatus != Opportunity.OpportunityStatusEnum.Rejected).OrderByDescending(op => op.InsertDate));
         }
 
         // GET: Sales/Opportunities/Details/5
@@ -162,7 +162,7 @@ namespace MojCRM.Areas.Sales.Controllers
                                         select c).First();
                 var users = _db.Users;
                 var relatedLeadId = 0;
-                if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD)
+                if (opportunity.OpportunityStatus == Opportunity.OpportunityStatusEnum.Lead)
                 {
                     relatedLeadId = _db.Leads.Where(l => l.RelatedOpportunityId == id).Select(l => l.LeadId).First();
                 }
@@ -482,7 +482,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 RelatedCampaignId = model.RelatedCampaignId,
                 RelatedOpportunityId = model.OpportunityId,
                 RelatedOrganizationId = model.OrganizationId,
-                LeadStatus = Lead.LeadStatusEnum.START,
+                LeadStatus = Lead.LeadStatusEnum.Start,
                 CreatedBy = User.Identity.Name,
                 AssignedTo = User.Identity.Name,
                 IsAssigned = model.IsAssigned,
@@ -499,7 +499,7 @@ namespace MojCRM.Areas.Sales.Controllers
                 InsertDate = DateTime.Now
             });
             var opportunity = _db.Opportunities.Find(model.OpportunityId);
-            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.LEAD;
+            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.Lead;
             opportunity.UpdateDate = DateTime.Now;
             opportunity.LastUpdatedBy = User.Identity.Name;
             _db.SaveChanges();
@@ -532,7 +532,7 @@ namespace MojCRM.Areas.Sales.Controllers
         public ActionResult MarkRejected(OpportunityMarkRejectedHelper model)
         {
             var opportunity = _db.Opportunities.Find(model.RelatedOpportunityId);
-            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.REJECTED;
+            opportunity.OpportunityStatus = Opportunity.OpportunityStatusEnum.Rejected;
             opportunity.RejectReason = model.RejectReason;
             opportunity.RejectReasonDescription = model.RejectReasonDescription;
             opportunity.UpdateDate = DateTime.Now;

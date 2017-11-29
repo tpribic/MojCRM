@@ -119,11 +119,11 @@ namespace MojCRM.Areas.Sales.Controllers
             ViewBag.SearchResultsAssigned = leads.Where(op => op.IsAssigned == true).Count();
 
             ViewBag.UsersAssigned = leads.Where(l => l.AssignedTo == User.Identity.Name).Count();
-            ViewBag.UsersCreated = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.START).Count();
-            ViewBag.UsersInContact = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.INCONTACT).Count();
-            ViewBag.UsersRejected = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.REJECTED).Count();
-            ViewBag.QuoteSent = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.QOUTESENT).Count();
-            ViewBag.QuoteAccepted = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.ACCEPTED).Count();
+            ViewBag.UsersCreated = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.Start).Count();
+            ViewBag.UsersInContact = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.Incontact).Count();
+            ViewBag.UsersRejected = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.Rejected).Count();
+            ViewBag.QuoteSent = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.Quotesent).Count();
+            ViewBag.QuoteAccepted = leads.Where(l => l.AssignedTo == User.Identity.Name && l.LeadStatus == Lead.LeadStatusEnum.Accepted).Count();
 
             if (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Board") || User.IsInRole("Superadmin"))
             {
@@ -131,7 +131,7 @@ namespace MojCRM.Areas.Sales.Controllers
             }
             else
             {
-                return View(leads.Where(l => l.LeadStatus != Lead.LeadStatusEnum.REJECTED || l.LeadStatus != Lead.LeadStatusEnum.ACCEPTED).OrderByDescending(l => l.InsertDate));
+                return View(leads.Where(l => l.LeadStatus != Lead.LeadStatusEnum.Rejected || l.LeadStatus != Lead.LeadStatusEnum.Accepted).OrderByDescending(l => l.InsertDate));
             }
         }
 
@@ -470,7 +470,7 @@ namespace MojCRM.Areas.Sales.Controllers
         public ActionResult MarkRejected(LeadMarkRejectedHelper Model)
         {
             var lead = db.Leads.Find(Model.RelatedLeadId);
-            lead.LeadStatus = Lead.LeadStatusEnum.REJECTED;
+            lead.LeadStatus = Lead.LeadStatusEnum.Rejected;
             lead.RejectReason = Model.RejectReason;
             lead.UpdateDate = DateTime.Now;
             lead.LastUpdatedBy = User.Identity.Name;

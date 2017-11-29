@@ -22,4 +22,16 @@ namespace MojCRM.Areas.Campaigns.Helpers
         public string StatusName { get; set; }
         public int SumOfEntities { get; set; }
     }
+
+    public class SalesOpportunitiesCampaignStatusHelper
+    {
+        public string StatusName { get; set; }
+        public int SumOfEntities { get; set; }
+    }
+
+    public class SalesLeadsCampaignStatusHelper
+    {
+        public string StatusName { get; set; }
+        public int SumOfEntities { get; set; }
+    }
 }

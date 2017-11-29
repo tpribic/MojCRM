@@ -30,16 +30,16 @@ namespace MojCRM.Controllers
             var countModel = new GeneralCampaignStatusViewModelCount
             {
                 NumberOfOpportunitiesCreated = opportunities.Count(),
-                NumberOfOpportunitiesInProgress = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.START || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.ARRANGEMEETING || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.INCONTACT || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.PROCESSDIFFICULTIES),
-                NumberOfOpportunitiesUser = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.MERUSER),
-                NumberOfOpportunitiesToLead = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.LEAD),
-                NumberOfOpportunitiesRejected = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.REJECTED),
+                NumberOfOpportunitiesInProgress = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Start || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Arrangemeeting || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Incontact || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Processdifficulties),
+                NumberOfOpportunitiesUser = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Meruser),
+                NumberOfOpportunitiesToLead = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Lead),
+                NumberOfOpportunitiesRejected = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Rejected),
                 NumberOfLeadsCreated = leads.Count(),
-                NumberOfLeadsInProgress = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.INCONTACT || l.LeadStatus == Lead.LeadStatusEnum.MEETING || l.LeadStatus == Lead.LeadStatusEnum.START),
-                NumberOfLeadsMeetings = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.MEETING),
-                NumberOfLeadsQuotes = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.QOUTESENT),
-                NumberOfLeadsRejected = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.REJECTED),
-                NumberOfLeadsAccepted = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.ACCEPTED)
+                NumberOfLeadsInProgress = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Incontact || l.LeadStatus == Lead.LeadStatusEnum.Meeting || l.LeadStatus == Lead.LeadStatusEnum.Start),
+                NumberOfLeadsMeetings = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Meeting),
+                NumberOfLeadsQuotes = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Quotesent),
+                NumberOfLeadsRejected = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Rejected),
+                NumberOfLeadsAccepted = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Accepted)
             };
 
             var modelIna = new GeneralCampaignStatusViewModel
