@@ -30,7 +30,7 @@ namespace MojCRM.Controllers
         // GET: Contact/Create
         public ActionResult Create()
         {
-            return View();
+            return View("Sucessfull");
         }
 
         // POST: Contact/Create
