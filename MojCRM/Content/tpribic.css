@@ -1,9 +1,28 @@
-﻿.customdropform {
-    background-color: steelblue;
+﻿/* this original for Autocomplete Combobox */
+.ui-button {
+    margin-left: -1px;
 }
-.customdropform:hover{
-    background-color: dodgerblue;
+
+.ui-button-icon-only .ui-button-text {
+    padding: 0.35em;
 }
-.customdropformk ul li{
-    padding: 15px;
+
+.ui-autocomplete-input {
+    margin: 0;
+    padding: 0.48em 0 0.47em 0.45em;
+}
+/* *** Add this for visible Scrolling ;) */
+.ui-autocomplete {
+    max-height: 350px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    /* add padding to account for vertical scrollbar */
+    padding-right: 20px;
+}
+/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+* html .ui-autocomplete {
+    height: 100px;
 }
