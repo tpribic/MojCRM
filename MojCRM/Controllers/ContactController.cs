@@ -374,5 +374,16 @@ namespace MojCRM.Controllers
                     .Select(c => new { Naziv = c.SubjectName, OIB = c.VAT }).Distinct().ToList();
             return Json(OrganizationList, JsonRequestBehavior.AllowGet);
         }
+
+        //get org by oib
+        public JsonResult GetOrganizationByOIB(string term = "")
+        {
+            var OrganizationList = db.Organizations.Where(
+                c =>
+                    c.VAT.Contains(term)
+                    )
+                    .Select(c => new { Naziv = c.SubjectName, OIB = c.VAT }).Distinct().ToList();
+            return Json(OrganizationList, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -14,7 +14,7 @@
     padding: 4px 0;
     margin: 2px 0 0 0;
     list-style: none;
-    background-color: #ffffff;
+    background-color: #eee;
     border-color: #ccc;
     border-color: rgba(0, 0, 0, 0.2);
     border-style: solid;
@@ -45,7 +45,7 @@
 {
     color: #ffffff;
     text-decoration: none;
-    background-color: #0088cc;
+    background-color: #006496;
     border-radius: 0px;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
