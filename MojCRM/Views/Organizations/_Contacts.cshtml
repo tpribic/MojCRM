@@ -1,0 +1,40 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    @if (Model.Contacts.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Ime kontakta</th>
+                <th>Prezime kontakta</th>
+                <th>Titula</th>
+                <th>Kontakt brojevi</th>
+                <th>Kontakt e-mail</th>
+                <th>Agent</th>
+                <th>Tip kontakta</th>
+            </tr>
+            @foreach (var Contact in Model.Contacts)
+            {
+                <tr>
+                    <td>@Contact.ContactFirstName</td>
+                    <td>@Contact.ContactLastName</td>
+                    <td>@Contact.Title</td>
+                    <td>@Contact.TelephoneNumber;@Contact.MobilePhoneNumber</td>
+                    <td>@Contact.Email</td>
+                    <td>@Contact.User</td>
+                    <td>@Contact.ContactTypeString</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Ova tvrtka nema unesenih kontakata</p>
+    }
+</div>
+

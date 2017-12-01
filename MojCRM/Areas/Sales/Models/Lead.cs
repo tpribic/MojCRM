@@ -47,76 +47,79 @@ namespace MojCRM.Areas.Sales.Models
         public enum LeadStatusEnum
         {
             [Description("Početno")]
-            START,
+            Start,
 
             [Description("U kontaktu")]
-            INCONTACT,
+            Incontact,
 
             [Description("Odbijeno")]
-            REJECTED,
+            Rejected,
 
             [Description("Poslana ponuda")]
-            QOUTESENT,
+            Quotesent,
 
             [Description("Prihvaćena ponuda")]
-            ACCEPTED,
+            Accepted,
 
             [Description("Dogovoren sastanak")]
-            MEETING
+            Meeting,
+
+            [Description("Procesne poteškoće")]
+            Processdifficulties,
         }
 
         public enum LeadRejectReasonEnum
         {
             [Description("Ne želi navesti")]
-            NOINFO,
+            Noinfo,
 
             [Description("Nema interesa")]
-            NOINTEREST,
+            Nointerest,
 
             [Description("Previsoka cijena")]
-            PRICE,
+            Price,
 
             [Description("Neadekvatna ponuda")]
-            QUOTE,
+            Quote,
 
             [Description("Drugi pružatelj usluga")]
-            SERVICEPROVIDER,
+            Serviceprovider,
 
             [Description("Nedostatak vremena za pokretanje projekta")]
-            NOTIME,
+            Notime,
 
             [Description("Dio strane grupacije / Strano vlasništvo")]
-            FOREIGNCOMPANY,
+            Foreigncompany,
 
             [Description("Drugo / Ostalo")]
-            OTHER
+            Other
         }
 
         public enum QuoteTypeEnum
         {
             [Description("PrePaid paket (Moj-eRačun)")]
-            ADVANSEeR,
+            AdvanceeR,
 
             [Description("Ugovor (Moj-eRačun)")]
-            CONTRACTeR,
+            ContracteR,
 
             [Description("Paket (Moj-DMS)")]
-            PACKAGEDMS,
+            Packagedms,
 
             [Description("Paket (Moj-eArhiv)")]
-            PACKAGEeA,
+            PackageeA,
 
             [Description("Paket (Moj-eRačun + Moj-DMS)")]
-            PACKAGEeRDMS,
+            PackageeRdms,
 
             [Description("Paket (Moj-eRačun + Moj-eArhiv)")]
-            PACKAGEeReA,
+            PackageeReA,
 
             [Description("Paket (Moj-eArhiv + Moj-DMS")]
-            PACKAGEeADMS,
+            PackageeAdms,
 
             [Description("Bundle paket (Moj-eRačun + Moj-DMS + Moj-eArhiv")]
-            BUNDLE
+            Bundle
 
         }
 
@@ -126,12 +129,13 @@ namespace MojCRM.Areas.Sales.Models
             {
                 switch(LeadStatus)
                 {
-                    case LeadStatusEnum.START: return "Kreirano";
-                    case LeadStatusEnum.INCONTACT: return "U kontaktu";
-                    case LeadStatusEnum.REJECTED: return "Odbijeno";
-                    case LeadStatusEnum.QOUTESENT: return "Poslana ponuda";
-                    case LeadStatusEnum.ACCEPTED: return "Ponuda prihvaćena";
-                    case LeadStatusEnum.MEETING: return "Dogovoren sastanak";
+                    case LeadStatusEnum.Start: return "Kreirano";
+                    case LeadStatusEnum.Incontact: return "U kontaktu";
+                    case LeadStatusEnum.Rejected: return "Odbijeno";
+                    case LeadStatusEnum.Quotesent: return "Poslana ponuda";
+                    case LeadStatusEnum.Accepted: return "Ponuda prihvaćena";
+                    case LeadStatusEnum.Meeting: return "Dogovoren sastanak";
+                    case LeadStatusEnum.Processdifficulties: return "Procesne poteškoće";
                 }
                 return "Status leada";
             }
@@ -143,14 +147,14 @@ namespace MojCRM.Areas.Sales.Models
             {
                 switch (RejectReason)
                 {
-                    case LeadRejectReasonEnum.NOINFO: return "Ne želi navesti";
-                    case LeadRejectReasonEnum.NOINTEREST: return "Nema interesa za uslugu";
-                    case LeadRejectReasonEnum.PRICE: return "Previsoka cijena";
-                    case LeadRejectReasonEnum.QUOTE: return "Neadekvatna ponuda";
-                    case LeadRejectReasonEnum.SERVICEPROVIDER: return "Koristi drugog posrednika";
-                    case LeadRejectReasonEnum.NOTIME: return "Nedostatak vremena za pokretanje projekta";
-                    case LeadRejectReasonEnum.FOREIGNCOMPANY: return "Dio strane grupacije / Strano vlasništvo";
-                    case LeadRejectReasonEnum.OTHER: return "Drugo / Ostalo";
+                    case LeadRejectReasonEnum.Noinfo: return "Ne želi navesti";
+                    case LeadRejectReasonEnum.Nointerest: return "Nema interesa za uslugu";
+                    case LeadRejectReasonEnum.Price: return "Previsoka cijena";
+                    case LeadRejectReasonEnum.Quote: return "Neadekvatna ponuda";
+                    case LeadRejectReasonEnum.Serviceprovider: return "Koristi drugog posrednika";
+                    case LeadRejectReasonEnum.Notime: return "Nedostatak vremena za pokretanje projekta";
+                    case LeadRejectReasonEnum.Foreigncompany: return "Dio strane grupacije / Strano vlasništvo";
+                    case LeadRejectReasonEnum.Other: return "Drugo / Ostalo";
                 }
                 return "Nije odbijeno";
             }

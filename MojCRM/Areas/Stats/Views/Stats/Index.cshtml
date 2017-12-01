@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Izvještaji";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Izvještaji</strong></h2>
+
+<hr />
+<h4>Osobni izvještaji</h4>
+<div class="row">
+    <div class="col-md-3">
+        <a href="@Url.RouteUrl(new { action = "PersonalDailyActivities", controller = "Stats", area = "Stats", User.Identity.Name})" class="btn btn-default btn-sm">
+            <i class="fa fa-book"></i>
+            Osobni dnevnik
+        </a>
+    </div>
+</div>
+@if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
+{
+    <hr />
+    <h4>Statistike djelatnika</h4>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="@Url.RouteUrl(new { action = "CallCenterDaily", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
+                <i class="fa fa-headphones"></i>
+                Dnevna statistika aktivnosti
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.RouteUrl(new { action = "CallCenterWeekly", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
+                <i class="fa fa-headphones"></i>
+                Statistika aktivnosti u periodu
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.RouteUrl(new { action = "SalesStat", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
+                <i class="fa fa-money"></i>
+                Osnovna prodajna statistika
+            </a>
+        </div>
+    </div>
+    <hr />
+    <h4>Statistike odjela dostave</h4>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="@Url.RouteUrl(new { action = "Delivery", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
+                <i class="fa fa-ticket"></i>
+                Statistika kreiranih kartica
+            </a>
+        </div>
+    </div>
+    <hr />
+}
+

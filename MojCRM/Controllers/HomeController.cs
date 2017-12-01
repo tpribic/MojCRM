@@ -1,68 +1,84 @@
-﻿using MojCRM.Models;
+﻿using System.Web.Mvc;
+using MojCRM.Areas.Campaigns.Models;
+using MojCRM.Areas.Campaigns.ViewModels;
+using MojCRM.Areas.Stats.ViewModels;
+//using MojCRM.Models;
 using MojCRM.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace MojCRM.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        //private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         public ActionResult Index()
         {
-            var campaign = (from c in db.Campaigns
-                            where c.CampaignId == 1
-                            select c).First();
-            var opportunities = (from o in db.Opportunities
-                                 where o.RelatedCampaignId == 1
-                                 select o);
-            var leads = (from l in db.Leads
-                         where l.RelatedCampaignId == 1
-                         select l);
+            #region Old INA Campaign Procedures
 
-            var countModel = new GeneralCampaignStatusViewModelCount()
-            {
-                NumberOfOpportunitiesCreated = opportunities.Count(),
-                NumberOfOpportunitiesInProgress = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.START || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.ARRANGEMEETING || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.INCONTACT || o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.PROCESSDIFFICULTIES).Count(),
-                NumberOfOpportunitiesUser = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.MERUSER).Count(),
-                NumberOfOpportunitiesToLead = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD).Count(),
-                NumberOfOpportunitiesRejected = opportunities.Where(o => o.OpportunityStatus == Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED).Count(),
-                NumberOfLeadsCreated = leads.Count(),
-                NumberOfLeadsInProgress = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.INCONTACT || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.MEETING || l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.START).Count(),
-                NumberOfLeadsMeetings = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.MEETING).Count(),
-                NumberOfLeadsQuotes = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.QOUTESENT).Count(),
-                NumberOfLeadsRejected = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.REJECTED).Count(),
-                NumberOfLeadsAccepted = leads.Where(l => l.LeadStatus == Areas.Sales.Models.Lead.LeadStatusEnum.ACCEPTED).Count()
-            };
 
-            var model = new GeneralCampaignStatusViewModel()
+            //var campaignIna = (from c in _db.Campaigns
+            //                where c.CampaignId == 1
+            //                select c).First();
+            //var opportunities = (from o in _db.Opportunities
+            //                     where o.RelatedCampaignId == 1
+            //                     select o);
+            //var leads = (from l in _db.Leads
+            //             where l.RelatedCampaignId == 1
+            //             select l);
+
+            //var countModel = new GeneralCampaignStatusViewModelCount
+            //{
+            //    NumberOfOpportunitiesCreated = opportunities.Count(),
+            //    NumberOfOpportunitiesInProgress = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Start || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Arrangemeeting || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Incontact || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Processdifficulties),
+            //    NumberOfOpportunitiesUser = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Meruser),
+            //    NumberOfOpportunitiesToLead = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Lead),
+            //    NumberOfOpportunitiesRejected = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Rejected),
+            //    NumberOfLeadsCreated = leads.Count(),
+            //    NumberOfLeadsInProgress = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Incontact || l.LeadStatus == Lead.LeadStatusEnum.Meeting || l.LeadStatus == Lead.LeadStatusEnum.Start),
+            //    NumberOfLeadsMeetings = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Meeting),
+            //    NumberOfLeadsQuotes = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Quotesent),
+            //    NumberOfLeadsRejected = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Rejected),
+            //    NumberOfLeadsAccepted = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Accepted)
+            //};
+
+            //var modelIna = new GeneralCampaignStatusViewModel
+            //{
+            //    RelatedCampaignId = 6,
+            //    RelatedCampaignName = campaignIna.CampaignName,
+            //    NumberOfOpportunitiesCreated = countModel.NumberOfOpportunitiesCreated,
+            //    NumberOfOpportunitiesInProgress = countModel.NumberOfOpportunitiesInProgress,
+            //    NumberOfOpportunitiesInProgressPercent = Math.Round(((countModel.NumberOfOpportunitiesInProgress / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+            //    NumberOfOpportunitesUser = countModel.NumberOfOpportunitiesUser,
+            //    NumberOfOpportunitiesUserPercent = Math.Round(((countModel.NumberOfOpportunitiesUser / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+            //    NumberOfOpportunitiesToLead = countModel.NumberOfOpportunitiesToLead,
+            //    NumberOfOpportunitiesToLeadPercent = Math.Round(((countModel.NumberOfOpportunitiesToLead / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+            //    NumberOfOpportunitiesRejected = countModel.NumberOfOpportunitiesRejected,
+            //    NumberOfOpportunitiesRejectedPercent = Math.Round(((countModel.NumberOfOpportunitiesRejected / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+            //    NumberOfLeadsCreated = countModel.NumberOfLeadsCreated,
+            //    NumberOfLeadsInProgress = countModel.NumberOfLeadsInProgress,
+            //    NumberOfLeadsInProgressPercent = Math.Round(((countModel.NumberOfLeadsInProgress / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+            //    NumberOfLeadsMeetings = countModel.NumberOfLeadsMeetings,
+            //    NumberOfLeadsMeetingsPercent = Math.Round(((countModel.NumberOfLeadsMeetings / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+            //    NumberOfLeadsQuotes = countModel.NumberOfLeadsQuotes,
+            //    NumberOfLeadsQuotesPercent = Math.Round(((countModel.NumberOfLeadsQuotes / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+            //    NumberOfLeadsRejected = countModel.NumberOfLeadsRejected,
+            //    NumberOfLeadsRejectedPercent = Math.Round(((countModel.NumberOfLeadsRejected / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+            //    NumberOfLeadsAccepted = countModel.NumberOfLeadsAccepted,
+            //    NumberOfLeadsAcceptedPercent = Math.Round(((countModel.NumberOfLeadsAccepted / (decimal)countModel.NumberOfLeadsCreated) * 100), 2)
+            //};
+            #endregion
+
+            var campaignsModel = new EmailBasesCampaignStatsViewModel();
+            var campaignMemberModel = new CampaignMember();
+            var agentActivities = new CallCenterDailyStatsViewModel();
+
+            var model = new HomeViewModel
             {
-                RelatedCampaignId = 6,
-                RelatedCampaignName = campaign.CampaignName,
-                NumberOfOpportunitiesCreated = countModel.NumberOfOpportunitiesCreated,
-                NumberOfOpportunitiesInProgress = countModel.NumberOfOpportunitiesInProgress,
-                NumberOfOpportunitiesInProgressPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesInProgress / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
-                NumberOfOpportunitesUser = countModel.NumberOfOpportunitiesUser,
-                NumberOfOpportunitiesUserPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesUser / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
-                NumberOfOpportunitiesToLead = countModel.NumberOfOpportunitiesToLead,
-                NumberOfOpportunitiesToLeadPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesToLead / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
-                NumberOfOpportunitiesRejected = countModel.NumberOfOpportunitiesRejected,
-                NumberOfOpportunitiesRejectedPercent = Math.Round((((decimal)countModel.NumberOfOpportunitiesRejected / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
-                NumberOfLeadsCreated = countModel.NumberOfLeadsCreated,
-                NumberOfLeadsInProgress = countModel.NumberOfLeadsInProgress,
-                NumberOfLeadsInProgressPercent = Math.Round((((decimal)countModel.NumberOfLeadsInProgress / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
-                NumberOfLeadsMeetings = countModel.NumberOfLeadsMeetings,
-                NumberOfLeadsMeetingsPercent = Math.Round((((decimal)countModel.NumberOfLeadsMeetings / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
-                NumberOfLeadsQuotes = countModel.NumberOfLeadsQuotes,
-                NumberOfLeadsQuotesPercent = Math.Round((((decimal)countModel.NumberOfLeadsQuotes / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
-                NumberOfLeadsRejected = countModel.NumberOfLeadsRejected,
-                NumberOfLeadsRejectedPercent = Math.Round((((decimal)countModel.NumberOfLeadsRejected / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
-                NumberOfLeadsAccepted = countModel.NumberOfLeadsAccepted,
-                NumberOfLeadsAcceptedPercent = Math.Round((((decimal)countModel.NumberOfLeadsAccepted / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+                //INACampaign = modelIna,
+                Campaigns = campaignsModel.GetModels(),
+                CampaignMembers = campaignMemberModel.GetCamapigns(User.Identity.Name),
+                AgentActivities = agentActivities.GetActivitiesForDashboard()
             };
             return View(model);
         }

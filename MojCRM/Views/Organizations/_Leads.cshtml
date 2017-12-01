@@ -1,0 +1,64 @@
+﻿@model MojCRM.ViewModels.OrganizationDetailsViewModel
+@{
+    Layout = null;
+}
+<div class="col-md-3">
+
+</div>
+<div class="col-md-9">
+    @if (Model.Leads.Count() != 0)
+    {
+        <table class="table">
+            <tr>
+                <th>Naziv kampanje</th>
+                <th>Status leada</th>
+                <th>Opis leada</th>
+                <th>Zadnji kontakt</th>
+                <th>Dodijeljeno agentu</th>
+                <th></th>
+            </tr>
+            @foreach (var Lead in Model.Leads)
+            {
+                <tr>
+                    <td>@Lead.RelatedCampaign.CampaignName</td>
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.Start)
+                    {
+                        <td><span class="label label-default">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.Incontact)
+                    {
+                        <td><span class="label label-primary">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.Quotesent)
+                    {
+                        <td><span class="label label-primary">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.Accepted)
+                    {
+                        <td><span class="label label-success">@Html.Raw(Lead.LeadStatusString)</span></td>
+                    }
+                    @if (Lead.LeadStatus == MojCRM.Areas.Sales.Models.Lead.LeadStatusEnum.Rejected)
+                    {
+                        <td><span class="label label-danger">@Html.Raw(Lead.LeadStatusString)</span><br /><span style="color:red">@Html.Raw(Lead.LeadRejectReasonString)</span></td>
+                    }
+                    <td>@Lead.LeadDescription</td>
+                    <td>@Lead.LastContactDate</td>
+                    <td>@Lead.AssignedTo</td>
+                    @if ((User.Identity.Name == Lead.AssignedTo) || (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    {
+                    <td>
+                        <span>
+                            <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = Lead.LeadId })" title="Detalji leada"><i class="fa fa-list"></i></a>
+                        </span>
+                    </td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>Za ovu tvrtku nisu kreirani leadovi</p>
+    }
+</div>
+

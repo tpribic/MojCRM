@@ -13,10 +13,10 @@
             new ListItem{ Value= "1", Text = "U kontaktu"},
             new ListItem{ Value= "4", Text = "Potrebno dogovoriti sastanak"},
             new ListItem{ Value= "5", Text = "Procesne poteškoće"},
-            new ListItem{ Value= "2", Text = "Kreiran lead"},
+            //new ListItem{ Value= "2", Text = "Kreiran lead"},
             new ListItem{ Value= "7", Text = "FINA korisnik"},
             new ListItem{ Value = "8", Text = "eFaktura korisnik"},
-            new ListItem{ Value= "3", Text = "Odbijeno"}
+            //new ListItem{ Value= "3", Text = "Odbijeno"}
         };
 }
 
@@ -615,31 +615,28 @@
                     <h5>Potvrđivanjem ove akcije kreirat ćete lead za niže navedene podatke.</h5>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <label for="organization-name">Naziv tvrtke</label>
                                 <div id="organization-name">
-                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName, @disabled = true })
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <label for="opportunity-description">Opis prodajne prilike</label>
-                                <div id="opportunity-description">
-                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription, @disabled = true })
+                                    @Html.TextBox("OrganizationName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OrganizationName })
                                 </div>
                             </div>
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="campaign-name">Naziv povezane kampanje</label>
-                                <div id="campaign-name">
-                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName, @disabled = true })
+                            <div class="col-md-8">
+                                <label for="opportunity-description">Opis prodajne prilike</label>
+                                <div id="opportunity-description">
+                                    @Html.TextBox("OpportunityDescription", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.OpportunityDescription })
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label for="campaign-name">Dodijeljeno agentu</label>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="campaign-name">Naziv povezane kampanje</label>
                                 <div id="campaign-name">
-                                    @Html.TextBox("AssignedTo", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = User.Identity.Name, @disabled = true })
+                                    @Html.TextBox("RelatedCampaignName", ViewBag.CurrentFilter as string, new { @class = "form-control", @Value = Model.RelatedCampaignName })
                                 </div>
                             </div>
                         </div>
@@ -801,10 +798,15 @@
 
 <body>
     <h2 style="text-align:center"><strong>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</strong></h2>
+    @*<h2>Detalji prodajne prilike: @Html.DisplayFor(model => model.OrganizationName) (Kampanja : @Html.DisplayFor(model => model.RelatedCampaignName))</h2>*@
     <br />
-    @if (Model.IsAssigned == true)
+    @if (Model.IsAssigned)
     {
         <h4 style="text-align:center; color:red">Ova prodajna prilika je dodijeljena agentu: <strong>@Model.AssignedTo</strong></h4>
+    }
+    @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Lead)
+    {
+        <h4 style="text-align:center">Na temelju ove prilike kreiran je <a href="@Url.RouteUrl(new { action = "Details", controller = "Leads", area = "Sales", id = Model.RelatedLeadId})">lead</a>.</h4>
     }
     <div>
         <div class="row" style="text-align:center">
@@ -813,16 +815,23 @@
                     <button type="button" title="Pregled aktivnosti vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#RelatedActivities"><i class="fa fa-history"></i></button>
                     <button type="button" title="Pregled bilješki vezanih uz ovu prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" href="#OpportunityNotes"><i class="fa fa-sticky-note"></i></button>
                     <button type="button" title="Pregled kontakata za prodaju" class="btn btn-sm btn-default" data-toggle="modal" href="#SalesContacts"><i class="fa fa-address-book"></i></button>
-                    @if (Model.IsAssigned == false && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    @if (!Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
                     {
                         <button type="button" title="Dodijeli prodajnu priliku" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Assign" href="#Assign"><i class="fa fa-mail-reply-all"></i></button>
                     }
-                    @if (Model.IsAssigned == true && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                    @if (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Lead && Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Rejected)
+                    {
+                        if (Model.IsAssigned && (User.IsInRole("Management") || User.IsInRole("Administrator") || User.IsInRole("Superadmin")))
+                        {
+                            <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
+                        }
+                        <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
+                        <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
+                        <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
+                    }
+                    @if ((Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Lead && Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Rejected) && User.IsInRole("Superadmin"))
                     {
                         <button type="button" title="Promijeni dodjelu" class="btn btn-sm btn-default" data-toggle="modal" data-target="#Reassign" href="#Reassign"><i class="fa fa-mail-reply-all"></i></button>
-                    }
-                    @if ((Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.LEAD) || (Model.OpportunityStatus != MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.REJECTED))
-                    {
                         <button type="button" title="Promijeni status prodajne prilike" class="btn btn-sm btn-default" data-toggle="modal" href="#ChangeStatus"><i class="fa fa-refresh"></i></button>
                         <button type="button" title="Kreiraj lead" class="btn btn-sm btn-default" data-toggle="modal" href="#CreateLead"><i class="fa fa-check text-success"></i></button>
                         <button type="button" title="Označi kao odbijeno" class="btn btn-sm btn-default" data-toggle="modal" href="#MarkRejected"><i class="fa fa-times text-danger"></i></button>
@@ -841,7 +850,7 @@
         <div class="row">
             <div class="col-md-4" id="organization-name">
                 <strong>Naziv (OIB) tvrtke:</strong>
-                @Model.OrganizationName (@Model.OrganizationVAT)
+                <a href="@Url.RouteUrl(new { action = "Details", controller = "Organizations", area = "", Id = Model.OrganizationId })">@Model.OrganizationName (@Model.OrganizationVAT)</a>
             </div>
             <div class="col-md-4">
                 <strong>Kontakt brojevi:</strong>
@@ -903,10 +912,13 @@
                 <strong>Status prodajne prilike:</strong>
                 @Model.OpportunityStatusString
             </div>
-            <div class="col-md-4">
-                <strong>Razlog odbijanja prodajne prilike:</strong>
-                @Model.RejectReasson
-            </div>
+            @if (Model.OpportunityStatus == MojCRM.Areas.Sales.Models.Opportunity.OpportunityStatusEnum.Rejected)
+            {
+                <div class="col-md-4">
+                    <strong>Razlog odbijanja prodajne prilike:</strong>
+                    @Model.RejectReasson
+                </div>
+            }
             <div class="col-md-4">
 
             </div>
@@ -961,6 +973,7 @@
 
     function AddNote() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({
@@ -971,7 +984,7 @@
                         RelatedOpportunityId: $(this).data("opportunity-id"),
                         Contact: $("#contact-for-note").val(),
                         Note: $("#note-for-note").val(),
-                        IsActivity: $("#IsActivity").val(),
+                        IsActivity: true,
                         Identifier: 1
                     },
                     dataType: 'json'
@@ -981,6 +994,7 @@
         }
     function AddNoteInfo() {
         $(document).on("click", "#add-note-info", function (e) {
+        this.disabled = true;
         e.preventDefault();
         $.ajax({
             method: 'POST',
@@ -999,6 +1013,7 @@
     }
     function AddNoteNoActivity() {
         $(document).on("click", "#add-note", function (e) {
+            this.disabled = true;
             e.preventDefault();
             var selectedItems = $('input.checked:checked').map(function () { return $(this).attr('template'); }).get();
                 $.ajax({

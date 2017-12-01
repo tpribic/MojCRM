@@ -1,0 +1,163 @@
+﻿@model MojCRM.Areas.Stats.ViewModels.CallCenterDailyStatsViewModel
+@{
+    ViewBag.Title = "Dnevna statistika aktivnosti";
+    Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
+}
+
+<h2 style="text-align:center"><strong>Statistike djelatnika</strong></h2>
+<h3 style="text-align:center"><strong>Dnevna statistika aktivnosti</strong></h3>
+<br/>
+<div class="alert alert-info">
+    <p style="text-align: justify">
+        Ovaj statistički pregled donosi podatke o obavljenim aktivnostima djelatnika. Statistika je podijeljena u:
+        <ul>
+            <li><strong>Skupnu statistiku</strong> - podaci koji predstavljaju sumu svih aktivnosti u pojedinoj kategoriji</li>
+            <li><strong>Statistiku po odjelima</strong> - podaci koji predstavljaju sumu svih aktivnosti po odjelu u pojedinoj kategoriji</li>
+            <li><strong>Statistiku po djelatnicima</strong> - podaci koji predstavljaju sumu svih aktivnosti po djelatniku u pojedinoj kategoriji</li>
+        </ul>
+        <br/>
+        Podaci prikazani u statistici u <strong style="color: red">crvenoj boji</strong> predstavljaju aktivnosti koje je sustav definirao kao sumnjive.<br />
+        Sumnjivom aktivnošću se smatra svaka aktivnost koja je zabilježena u razmaku od 1 minute u odnosu na zadnju zabilježenu aktivnost tog tipa.
+    </p>
+</div>
+<hr />
+<body>
+    @using (Html.BeginForm("CallCenterDaily", "Stats", FormMethod.Get))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="search-date">Datum pretrage</label>
+                    <div id="search-date">
+                        @Html.TextBox("search", ViewBag.CurrentFilter as string, new { @class = "date-picker form-control", @placeholder = "Traženi datum", @type = "text", @id = "search-date", @name = "search-date" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="margin-top:22px">
+                <div class="form-group">
+                    <div>
+                        <input id="Search" type="submit" class="btn btn-primary btn-sm" value="Traži" />
+                        <input id="btn-reset" type="reset" class="btn btn-warning btn-sm" value="Poništi" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <hr />
+    <h3 style="text-align:center"><strong>Skupna statistika</strong></h3>
+    <div>
+        <table class="table">
+            <tr>
+                <th>@Html.LabelFor(model => model.SumSuccessfulCalls)</th>
+                <th>@Html.LabelFor(model => model.SumUnsuccessfulCalls)</th>
+                <th>@Html.LabelFor(model => model.SumSentMail)</th>
+                <th>@Html.LabelFor(model => model.SumMailchange)</th>
+                <th>@Html.LabelFor(model => model.SumResend)</th>
+                <th>@Html.LabelFor(model => model.SumTicketsAssigned)</th>
+                <th>@Html.LabelFor(model => model.SumAcquiredEmails)</th>
+            </tr>
+            <tr>
+                @if (Model.SumSuccessfulCallsSuspicious == 0)
+                {
+                    <td>@Model.SumSuccessfulCalls</td>    
+                }
+                @if (Model.SumSuccessfulCallsSuspicious != 0)
+                {
+                    <td>@Model.SumSuccessfulCalls <strong style="color:red">(@Model.SumSuccessfulCallsSuspicious)</strong></td>
+                }
+                @if (Model.SumUnsuccessfulCallsSuspicious == 0)
+                {
+                    <td>@Model.SumUnsuccessfulCallsSuspicious</td>
+                }
+                @if (Model.SumUnsuccessfulCallsSuspicious != 0)
+                {
+                    <td>@Model.SumUnsuccessfulCalls <strong style="color:red">(@Model.SumUnsuccessfulCallsSuspicious)</strong></td>
+                }
+                <td>@Model.SumSentMail</td>
+                <td>@Model.SumMailchange</td>
+                <td>@Model.SumResend</td>
+                <td>@Model.SumTicketsAssigned</td>
+                <td>@Model.SumAcquiredEmails</td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <hr />
+    <h3 style="text-align:center"><strong>Statistika po odjelima</strong></h3>
+    <div>
+        <table class="table">
+            <tr>
+                <th>Odjel</th>
+                <th>Uspješni pozivi</th>
+                <th>Neuspješni pozivi</th>
+                <th>Poslani e-mailovi korisnicima</th>
+                <th>Ispravak mailova (Odjel dostave)</th>
+                <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
+            </tr>
+            @foreach (var department in Model.ActivitiesByDepartment)
+            {
+                <tr>
+                    <td>@department.DepartmentString</td>
+                    <td>@department.NumberSuccessfulCalls</td>
+                    <td>@department.NumberUnsuccessfulCalls</td>
+                    <td>@department.NumberMail</td>
+                    <td>@department.NumberMailchange</td>
+                    <td>@department.NumberResend</td>
+                </tr>
+            }
+            <tr></tr>
+        </table>
+    </div>
+    <br />
+        <hr />
+        <h3 style="text-align:center"><strong>Statistika po djelatnicima</strong></h3>
+        <div>
+            <table class="table">
+                <tr>
+                    <th>Djelatnik</th>
+                    <th>Uspješni pozivi</th>
+                    <th>Neuspješni pozivi</th>
+                    <th>Poslani e-mailovi korisnicima</th>
+                    <th>Ispravak mailova (Odjel dostave)</th>
+                    <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
+                    <th>Dodijeljene kartice (Odjel dostave)</th>
+                    <th>Prikupljene e-mail adrese</th>
+                </tr>
+                @foreach (var activity in Model.Activities)
+            {
+                    <tr>
+                        <td>@activity.Agent</td>
+                        @if (activity.NumberSuccessfulCallsSuspicious == 0)
+                        {
+                            <td>@activity.NumberSuccessfulCalls</td>   
+                        }
+                        @if (activity.NumberSuccessfulCallsSuspicious != 0)
+                        {
+                            <td>@activity.NumberSuccessfulCalls <strong style="color: red">(@activity.NumberSuccessfulCallsSuspicious)</strong></td>
+                        }
+                        @if (activity.NumberUnsuccessfulCallsSuspicious == 0)
+                        {
+                            <td>@activity.NumberUnsuccessfulCalls</td>   
+                        }
+                        @if (activity.NumberUnsuccessfulCallsSuspicious != 0)
+                        {
+                            <td>@activity.NumberUnsuccessfulCalls <strong style="color: red">(@activity.NumberUnsuccessfulCallsSuspicious)</strong></td>
+                        }
+                        <td>@activity.NumberMail</td>
+                        <td>@activity.NumberMailchange</td>
+                        <td>@activity.NumberResend</td>
+                        <td>@activity.NumberTicketsAssigned</td>
+                        <td>@activity.NumberAcquiredEmails</td>
+                    </tr>
+                }
+                <tr></tr>
+            </table>
+            @*<div class="col-md-6">
+                    <div>
+                        <img alt="CallCenterDailyGraph" src="@Url.Content("~/Views/Stats/_CallCenterDailyQuery.cshtml")" />
+                    </div>
+                    <hr />
+                </div>*@
+        </div>
+</body>
+

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MojCRM.Helpers;
 using System.ComponentModel;
+using System.Linq;
 
 namespace MojCRM.Models
 {
@@ -18,53 +15,63 @@ namespace MojCRM.Models
         public ModuleEnum? Module { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public bool IsSuspiciousActivity { get; set; }
         public enum ActivityTypeEnum
         {
-            [Description("Test")]
-            TEST,
+            [Description("Sistemske akcije")]
+            System,
 
             [Description("Uspješan poziv")]
-            SUCCALL,
+            Succall,
 
             [Description("Uspješan poziv (nekonkretni)")]
-            SUCCALSHORT,
+            Succalshort,
 
             [Description("Neuspješan poziv")]
-            UNSUCCAL,
+            Unsuccal,
 
             [Description("Izmjena e-mail obavijesti")]
-            MAILCHANGE,
+            Mailchange,
 
             [Description("Ponovno slanje obavijesti o dostavi")]
-            RESEND,
+            Resend,
 
             [Description("Poslanih e-mailova")]
-            EMAIL,
+            Email,
 
             [Description("Rektivacija e-mail adrese u Postmarku")]
-            POSTMARKACTIVATEBOUNCE,
+            Postmarkactivatebounce,
 
             [Description("Kreiran lead")]
-            CREATEDLEAD,
+            Createdlead,
 
             [Description("Zaključana kartica")]
-            TICKETASSIGN
+            Ticketassign,
+
+            [Description("Izmjena podataka tvrtke")]
+            Organizationupdate,
+
+            [Description("Prikupljene e-mail adrese")]
+            Acquiredemails
         }
         public enum DepartmentEnum
         {
             [Description("Moj-CRM")]
-            MojCRM,
+            MojCrm,
 
             [Description("Dostava")]
             Delivery,
 
             [Description("Prodaja")]
-            Sales
+            Sales,
+
+            [Description("Baze")]
+            DatabaseUpdate
         }
         public enum ModuleEnum
         {
             [Description("Moj-CRM")]
-            MojCRM,
+            MojCrm,
 
             [Description("Dostava")]
             Delivery,
@@ -73,7 +80,13 @@ namespace MojCRM.Models
             Opportunities,
 
             [Description("Leadovi")]
-            Leads
+            Leads,
+
+            [Description("Tvrtke")]
+            Organizations,
+
+            [Description("Ažuriranje baza")]
+            AqcuireEmail
         }
 
         public string ActivityTypeString
@@ -82,16 +95,17 @@ namespace MojCRM.Models
             {
                 switch (ActivityType)
                 {
-                    case ActivityTypeEnum.TEST: return "Test";
-                    case ActivityTypeEnum.SUCCALL: return "Uspješan poziv";
-                    case ActivityTypeEnum.SUCCALSHORT: return "Uspješan poziv (nekonkretni)";
-                    case ActivityTypeEnum.UNSUCCAL: return "Neuspješan poziv";
-                    case ActivityTypeEnum.MAILCHANGE: return "Izmjena e-mail obavijesti";
-                    case ActivityTypeEnum.RESEND: return "Ponovno slanje obavijesti o dostavi";
-                    case ActivityTypeEnum.EMAIL: return "Slanje e-mailova";
-                    case ActivityTypeEnum.POSTMARKACTIVATEBOUNCE: return "Rektivacija e-mail adrese u Postmarku";
-                    case ActivityTypeEnum.CREATEDLEAD: return "Kreiran lead";
-                    case ActivityTypeEnum.TICKETASSIGN: return "Zaključana kartica";
+                    case ActivityTypeEnum.System: return "Sistemske akcije";
+                    case ActivityTypeEnum.Succall: return "Uspješan poziv";
+                    case ActivityTypeEnum.Succalshort: return "Uspješan poziv (nekonkretni)";
+                    case ActivityTypeEnum.Unsuccal: return "Neuspješan poziv";
+                    case ActivityTypeEnum.Mailchange: return "Izmjena e-mail obavijesti";
+                    case ActivityTypeEnum.Resend: return "Ponovno slanje obavijesti o dostavi";
+                    case ActivityTypeEnum.Email: return "Slanje e-mailova";
+                    case ActivityTypeEnum.Postmarkactivatebounce: return "Rektivacija e-mail adrese u Postmarku";
+                    case ActivityTypeEnum.Createdlead: return "Kreiran lead";
+                    case ActivityTypeEnum.Ticketassign: return "Zaključana kartica";
+                    case ActivityTypeEnum.Acquiredemails: return "Prikupljene e-mail adrese";
                 }
                 return "Tip aktivnosti";
             }
@@ -103,9 +117,10 @@ namespace MojCRM.Models
             {
                 switch (Department)
                 {
-                    case DepartmentEnum.MojCRM: return "Moj-CRM";
+                    case DepartmentEnum.MojCrm: return "Moj-CRM";
                     case DepartmentEnum.Delivery: return "Odjel dostave eRačuna";
                     case DepartmentEnum.Sales: return "Odjel prodaje";
+                    case DepartmentEnum.DatabaseUpdate: return "Odjel prikupa e-mail adresa";
                 }
                 return "Odjel";
             }
@@ -117,13 +132,26 @@ namespace MojCRM.Models
             {
                 switch (Module)
                 {
-                    case ModuleEnum.MojCRM: return "Moj-CRM";
+                    case ModuleEnum.MojCrm: return "Moj-CRM";
                     case ModuleEnum.Delivery: return "Dostava eRačuna";
                     case ModuleEnum.Opportunities: return "Prodajne prilike";
                     case ModuleEnum.Leads: return "Leadovi";
+                    case ModuleEnum.AqcuireEmail: return "Ažuriranje baza";
                 }
                 return "Modul";
             }
+        }
+
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        public bool CheckSuspiciousActivity(string user, ActivityTypeEnum activityType)
+        {
+            var reference = _db.ActivityLogs.OrderByDescending(a => a.InsertDate).First(a =>
+                a.User == user && a.ActivityType == activityType);
+
+            if (reference != null)
+                if ((int)DateTime.Now.Subtract(reference.InsertDate).TotalMinutes < 1)
+                return true;
+            return false;
         }
     }
 }

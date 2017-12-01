@@ -1,4 +1,5 @@
-﻿using MojCRM.Areas.Sales.Helpers;
+﻿using MojCRM.Areas.HelpDesk.Helpers;
+using MojCRM.Areas.Sales.Helpers;
 using MojCRM.Helpers;
 using MojCRM.Models;
 using MojCRM.ViewModels;
@@ -68,7 +69,7 @@ namespace MojCRM.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+                return Redirect(Request.UrlReferrer.ToString());
             }
             // TO DO: This catch part throws DbEntityValidationException in first foreach... I need to check why...
             catch (DbEntityValidationException e)
@@ -269,34 +270,23 @@ namespace MojCRM.Controllers
             var ContactForUpdate = db.Contacts.Find(model.ContactId);
 
             if (!String.IsNullOrEmpty(model.FirstName))
-            {
                 ContactForUpdate.ContactFirstName = model.FirstName;
-            }
             if (!String.IsNullOrEmpty(model.LastName))
-            {
                 ContactForUpdate.ContactLastName = model.LastName;
-            }
             if (!String.IsNullOrEmpty(model.Telephone))
-            {
                 ContactForUpdate.TelephoneNumber = model.Telephone;
-            }
             if (!String.IsNullOrEmpty(model.Mobile))
-            {
                 ContactForUpdate.MobilePhoneNumber = model.Mobile;
-            }
             if (!String.IsNullOrEmpty(model.Email))
-            {
                 ContactForUpdate.Email = model.Email;
-            }
             if (!String.IsNullOrEmpty(model.TitleFunction))
-            {
                 ContactForUpdate.Title = model.TitleFunction;
-            }
+
             ContactForUpdate.UpdateDate = DateTime.Now;
             ContactForUpdate.User = User.Identity.Name;
             db.SaveChanges();
 
-            return RedirectToAction("Details", "Delivery", new { id = model.TicketId, receiverId = model.ReceiverId });
+            return RedirectToAction("Details", "Delivery", new { area = "HelpDesk", id = model.TicketId, receiverId = model.ReceiverId });
         }
 
         // POST: Contact/EditFromSales

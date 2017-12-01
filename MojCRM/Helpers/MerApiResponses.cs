@@ -109,4 +109,49 @@ namespace MojCRM.Helpers
             }
         }
     }
+
+    public class MerGetContractsResponse
+    {
+        [JsonProperty]
+        public int Id { get; set; }
+        public string ContractNumber { get; set; }
+        public string CompanyId { get; set; }
+        public int? SubjektId { get; set; }
+        public string ProposalNumber { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
+        public int GracePeriod { get; set; }
+        public string Note { get; set; }
+        public int? UserId { get; set; }
+        public DateTime? ActivatedDate { get; set; }
+        public int? ActivatedUserId { get; set; }
+        public DateTime? DeactivatedDate { get; set; }
+        public int? DeactivatedUserId { get; set; }
+        public string DeactivateReason { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsLocked { get; set; }
+        public DateTime? LockDate { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime Changed { get; set; }
+        public DateTime? LevelingDate { get; set; }
+        public MerContractProduct[] Products { get; set; }
+    }
+
+    public class MerContractProduct
+    {
+        [JsonProperty]
+        public int ContractId { get; set; }
+        public int ProductId { get; set; }
+        public decimal ListPrice { get; set; }
+        public decimal Price { get; set; }
+        public string Name { get; set; }
+        public decimal? Quantity { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsLocked { get; set; }
+        public int? UserId { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime Changed { get; set; }
+    }
 }

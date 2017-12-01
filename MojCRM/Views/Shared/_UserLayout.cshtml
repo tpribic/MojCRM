@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Moj-CRM</title>
-    <link href="~/Content/ikona-preglednik.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/CRM_logo_ico.png" rel="shortcut icon" type="image/x-icon" />
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -79,8 +79,8 @@
                                 <a data-target="deliveryDropdownMenu" class="btn btn-default btn-sm dropdown-toggle" type="button" id="deliveryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#deliveryDropdownMenu"><i class="fa fa-wrench"></i> Podrška <span class="caret"></span></a>
                                 <ul id="deliveryDropdownMenu" class="dropdown-menu" role="menu" aria-labelledby="deliveryDropdown">
                                     <li class="dropdown-header" style="color:cornflowerblue"><strong>Dostava eRačuna</strong></li>
-                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = ""})"><i class="fa fa-ticket"></i> Kartice</a></li>
-                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = ""})"><i class="fa fa-vcard"></i> Kontakti dostave</a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Index", controller = "Delivery", area = "HelpDesk"})"><i class="fa fa-ticket"></i> Kartice</a></li>
+                                    <li><a href="@Url.RouteUrl(new { action = "Contacts", controller = "Delivery", area = "HelpDesk"})"><i class="fa fa-vcard"></i> Kontakti dostave</a></li>
                                     @if (User.IsInRole("Support") || User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
                                     {
                                         <li class="dropdown-header" style="color:cornflowerblue"><strong>MeRHelpdesk</strong></li>

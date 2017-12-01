@@ -74,11 +74,14 @@ namespace MojCRM.Areas.Sales.ViewModels
         [Display(Name = "Zadnja bilješka")]
         public string LastOpportunityNote { get; set; }
 
-        public IEnumerable<Contact> RelatedSalesContacts { get; set; }
-        public IEnumerable<OpportunityNote> RelatedOpportunityNotes { get; set; }
-        public IEnumerable<ActivityLog> RelatedOpportunityActivities { get; set; }
+        [Display(Name = "ID referentnog leada")]
+        public int? RelatedLeadId { get; set; }
 
-        public virtual IEnumerable<ApplicationUser> Users { get; set; }
+        public IQueryable<Contact> RelatedSalesContacts { get; set; }
+        public IQueryable<OpportunityNote> RelatedOpportunityNotes { get; set; }
+        public IQueryable<ActivityLog> RelatedOpportunityActivities { get; set; }
+
+        public virtual IQueryable<ApplicationUser> Users { get; set; }
 
         public IList<SelectListItem> RelatedSalesContactsForDetails
         {
