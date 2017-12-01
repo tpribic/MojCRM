@@ -193,7 +193,7 @@
                 </div>
             }
         </div>
-        @if (User.IsInRole("Management") || User.IsInRole("Superadmin"))
+        @*@if (User.IsInRole("Management") || User.IsInRole("Superadmin"))
         {
             <br />
             <div class="row">
@@ -204,7 +204,7 @@
                             <div class="btn-group widget-header-toolbar">
                                 <a href="#" title="Fokusiraj" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
                                 <a href="#" title="Proširi/Sažmi" class="btn-borderless btn-toggle-expand"><i class="fa fa-chevron-up"></i></a>
-                                @*<a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>*@
+                                <a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>
                             </div>
                         </div>
                         <div class="widget-content">
@@ -222,7 +222,7 @@
                                     <p class="text-center">Broj prodajnih prilika u obradi</p>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="easy-pie-chart green" data-percent="@Model.INACampaign.NumberOfOpportunitiesUserPercent" title="@Model.INACampaign.NumberOfOpportunitiesRejected">
+                                    <div class="easy-pie-chart green" data-percent="@Model.INACampaign.NumberOfOpportunitiesUserPercent" title="@Model.INACampaign.NumberOfOpportunitesUser">
                                         <span class="percent">@Model.INACampaign.NumberOfOpportunitiesUserPercent</span>
                                     </div>
                                     <p class="text-center">Broj postojećih korisnika</p>
@@ -276,6 +276,6 @@
                     </div>
                 </div>
             </div>
-        }
+        }*@
     </div>
 </div>

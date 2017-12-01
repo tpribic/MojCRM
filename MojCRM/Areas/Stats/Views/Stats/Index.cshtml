@@ -19,23 +19,23 @@
 @if (User.IsInRole("Management") || User.IsInRole("Board") || User.IsInRole("Administrator") || User.IsInRole("Superadmin"))
 {
     <hr />
-    <h4>Statistike agenata</h4>
+    <h4>Statistike djelatnika</h4>
     <div class="row">
         <div class="col-md-3">
             <a href="@Url.RouteUrl(new { action = "CallCenterDaily", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
                 <i class="fa fa-headphones"></i>
-                Dnevna statistika poziva
+                Dnevna statistika aktivnosti
             </a>
         </div>
         <div class="col-md-3">
             <a href="@Url.RouteUrl(new { action = "CallCenterWeekly", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
                 <i class="fa fa-headphones"></i>
-                Statistika poziva u periodu
+                Statistika aktivnosti u periodu
             </a>
         </div>
         <div class="col-md-3">
             <a href="@Url.RouteUrl(new { action = "SalesStat", controller = "Stats", area = "Stats" })" class="btn btn-default btn-sm">
-                <i class="fa fa-phone"></i>
+                <i class="fa fa-money"></i>
                 Osnovna prodajna statistika
             </a>
         </div>

@@ -417,4 +417,87 @@
             </div>
         }
     </div>
+    @if (Model.Campaign.CampaignType == Campaign.CampaignTypeEnum.SALES)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget widget-hide-header">
+                    <div class="widget-header">
+                        <h3>Detalji obrade</h3> <em>- statistički prikaz statusa obrade pojedinih prodajnih predmeta</em>
+                        <div class="btn-group widget-header-toolbar">
+                            <a href="#" title="Fokusiraj" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
+                            <a href="#" title="Proširi/Sažmi" class="btn-borderless btn-toggle-expand"><i class="fa fa-chevron-up"></i></a>
+                            @*<a href="#" title="Remove" class="btn-borderless btn-remove"><i class="fa fa-times"></i></a>*@
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <p class="text-center">Broj kreiranih prodajnih prilika</p>
+                                <p class="text-center"><strong>@Model.SalesGeneralStatus.NumberOfOpportunitiesCreated</strong></p>
+                                <p class="text-center">Broj kreiranih leadova</p>
+                                <p class="text-center"><strong>@Model.SalesGeneralStatus.NumberOfLeadsCreated</strong></p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="easy-pie-chart yellow" data-percent="@Model.SalesGeneralStatus.NumberOfOpportunitiesInProgressPercent" title="@Model.SalesGeneralStatus.NumberOfOpportunitiesInProgress">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfOpportunitiesInProgressPercent</span>
+                                </div>
+                                <p class="text-center">Broj prodajnih prilika u obradi</p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="easy-pie-chart green" data-percent="@Model.SalesGeneralStatus.NumberOfOpportunitiesUserPercent" title="@Model.SalesGeneralStatus.NumberOfOpportunitesUser">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfOpportunitiesUserPercent</span>
+                                </div>
+                                <p class="text-center">Broj postojećih korisnika</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="easy-pie-chart green" data-percent="@Model.SalesGeneralStatus.NumberOfOpportunitiesToLeadPercent" title="@Model.SalesGeneralStatus.NumberOfOpportunitiesToLead">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfOpportunitiesToLeadPercent</span>
+                                </div>
+                                <p class="text-center">Broj kreiranih leadova</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="easy-pie-chart red" data-percent="@Model.SalesGeneralStatus.NumberOfOpportunitiesRejectedPercent" title="@Model.SalesGeneralStatus.NumberOfOpportunitiesRejected">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfOpportunitiesRejectedPercent</span>
+                                </div>
+                                <p class="text-center">Broj odbijenih prodajnih prilika</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="col-md-2">
+                                <div class="easy-pie-chart yellow" data-percent="@Model.SalesGeneralStatus.NumberOfLeadsInProgressPercent" title="@Model.SalesGeneralStatus.NumberOfLeadsInProgress">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfLeadsInProgressPercent</span>
+                                </div>
+                                <p class="text-center">Broj leadova u obradi</p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="easy-pie-chart yellow" data-percent="@Model.SalesGeneralStatus.NumberOfLeadsMeetingsPercent" title="@Model.SalesGeneralStatus.NumberOfLeadsMeetings">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfLeadsMeetingsPercent</span>
+                                </div>
+                                <p class="text-center">Broj leadova sa dogovorenim sastankom</p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="easy-pie-chart yellow" data-percent="@Model.SalesGeneralStatus.NumberOfLeadsQuotesPercent" title="@Model.SalesGeneralStatus.NumberOfLeadsQuotes">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfLeadsQuotesPercent</span>
+                                </div>
+                                <p class="text-center">Broj leadova sa poslanom ponudom</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="easy-pie-chart green" data-percent="@Model.SalesGeneralStatus.NumberOfLeadsAcceptedPercent" title="@Model.SalesGeneralStatus.NumberOfLeadsAccepted">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfLeadsAcceptedPercent</span>
+                                </div>
+                                <p class="text-center">Broj realiziranih (prihvaćenih) ponuda</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="easy-pie-chart red" data-percent="@Model.SalesGeneralStatus.NumberOfLeadsRejectedPercent" title="@Model.SalesGeneralStatus.NumberOfLeadsRejected">
+                                    <span class="percent">@Model.SalesGeneralStatus.NumberOfLeadsRejectedPercent</span>
+                                </div>
+                                <p class="text-center">Broj odbijenih leadova</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

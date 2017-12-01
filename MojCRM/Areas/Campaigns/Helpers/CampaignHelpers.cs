@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace MojCRM.Areas.Campaigns.Helpers
+﻿namespace MojCRM.Areas.Campaigns.Helpers
 {
     public class CampaignSearchHelper
     {
@@ -17,19 +12,7 @@ namespace MojCRM.Areas.Campaigns.Helpers
         public int NumberOfAssignedEntities { get; set; }
     }
 
-    public class EmailBasesCampaignStatusHelper
-    {
-        public string StatusName { get; set; }
-        public int SumOfEntities { get; set; }
-    }
-
-    public class SalesOpportunitiesCampaignStatusHelper
-    {
-        public string StatusName { get; set; }
-        public int SumOfEntities { get; set; }
-    }
-
-    public class SalesLeadsCampaignStatusHelper
+    public class CampaignStatusHelper
     {
         public string StatusName { get; set; }
         public int SumOfEntities { get; set; }

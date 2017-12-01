@@ -1,11 +1,25 @@
 ﻿@model MojCRM.Areas.Stats.ViewModels.CallCenterDailyStatsViewModel
 @{
-    ViewBag.Title = "Dnevna statistika poziva";
+    ViewBag.Title = "Dnevna statistika aktivnosti";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
 
-<h2 style="text-align:center"><strong>Statistike agenata</strong></h2>
-<h3 style="text-align:center"><strong>Dnevna statistika poziva</strong></h3>
+<h2 style="text-align:center"><strong>Statistike djelatnika</strong></h2>
+<h3 style="text-align:center"><strong>Dnevna statistika aktivnosti</strong></h3>
+<br/>
+<div class="alert alert-info">
+    <p style="text-align: justify">
+        Ovaj statistički pregled donosi podatke o obavljenim aktivnostima djelatnika. Statistika je podijeljena u:
+        <ul>
+            <li><strong>Skupnu statistiku</strong> - podaci koji predstavljaju sumu svih aktivnosti u pojedinoj kategoriji</li>
+            <li><strong>Statistiku po odjelima</strong> - podaci koji predstavljaju sumu svih aktivnosti po odjelu u pojedinoj kategoriji</li>
+            <li><strong>Statistiku po djelatnicima</strong> - podaci koji predstavljaju sumu svih aktivnosti po djelatniku u pojedinoj kategoriji</li>
+        </ul>
+        <br/>
+        Podaci prikazani u statistici u <strong style="color: red">crvenoj boji</strong> predstavljaju aktivnosti koje je sustav definirao kao sumnjive.<br />
+        Sumnjivom aktivnošću se smatra svaka aktivnost koja je zabilježena u razmaku od 1 minute u odnosu na zadnju zabilježenu aktivnost tog tipa.
+    </p>
+</div>
 <hr />
 <body>
     @using (Html.BeginForm("CallCenterDaily", "Stats", FormMethod.Get))
@@ -96,11 +110,11 @@
     </div>
     <br />
         <hr />
-        <h3 style="text-align:center"><strong>Statistika po agentima</strong></h3>
+        <h3 style="text-align:center"><strong>Statistika po djelatnicima</strong></h3>
         <div>
             <table class="table">
                 <tr>
-                    <th>Agent</th>
+                    <th>Djelatnik</th>
                     <th>Uspješni pozivi</th>
                     <th>Neuspješni pozivi</th>
                     <th>Poslani e-mailovi korisnicima</th>

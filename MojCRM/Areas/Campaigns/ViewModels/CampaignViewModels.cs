@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using MojCRM.Areas.Campaigns.Helpers;
 using MojCRM.Areas.Campaigns.Models;
 using MojCRM.Areas.HelpDesk.Models;
 using MojCRM.Areas.Sales.Models;
+using MojCRM.Areas.Stats.ViewModels;
 using MojCRM.Models;
 
 namespace MojCRM.Areas.Campaigns.ViewModels
@@ -19,9 +21,10 @@ namespace MojCRM.Areas.Campaigns.ViewModels
         public int NumberOfUnassignedEntities { get; set; }
         public IQueryable<CampaignMember> AssignedMembers { get; set; }
         public IQueryable<CampaignAssignedAgents> AssignedAgents { get; set; }
-        public IQueryable<EmailBasesCampaignStatusHelper> EmailsBasesEntityStatusStats { get; set; }
-        public IQueryable<SalesOpportunitiesCampaignStatusHelper> SalesOpportunitiesStatusStats { get; set; }
-        public IQueryable<SalesLeadsCampaignStatusHelper> SalesLeadsStatusStats { get; set; }
+        public IQueryable<CampaignStatusHelper> EmailsBasesEntityStatusStats { get; set; }
+        public IQueryable<CampaignStatusHelper> SalesOpportunitiesStatusStats { get; set; }
+        public IQueryable<CampaignStatusHelper> SalesLeadsStatusStats { get; set; }
+        public GeneralCampaignStatusViewModel SalesGeneralStatus { get; set; }
 
         public IQueryable<SelectListItem> CampaignStatusList
         {
@@ -95,14 +98,14 @@ namespace MojCRM.Areas.Campaigns.ViewModels
             return model.AsQueryable();
         }
 
-        public IQueryable<EmailBasesCampaignStatusHelper> GetEmailBasesEntityStats(int campaignId)
+        public IQueryable<CampaignStatusHelper> GetEmailBasesEntityStats(int campaignId)
         {
             var entites = _db.AcquireEmails.Where(x => x.Campaign.CampaignId == campaignId).GroupBy(x => x.AcquireEmailEntityStatus);
-            var model = new List<EmailBasesCampaignStatusHelper>();
+            var model = new List<CampaignStatusHelper>();
 
             foreach (var entity in entites)
             {
-                string status = string.Empty;
+                string status;
                 switch (entity.Key)
                 {
                     case AcquireEmail.AcquireEmailEntityStatusEnum.Created:
@@ -133,7 +136,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                         status = "Status unosa";
                         break;
                 }
-                var temp = new EmailBasesCampaignStatusHelper()
+                var temp = new CampaignStatusHelper()
                 {
                     StatusName = status,
                     SumOfEntities = entity.Count()
@@ -143,14 +146,14 @@ namespace MojCRM.Areas.Campaigns.ViewModels
             return model.AsQueryable();
         }
 
-        public IQueryable<SalesOpportunitiesCampaignStatusHelper> GetOpportunitiesSalesStatusStats(int campaignId)
+        public IQueryable<CampaignStatusHelper> GetOpportunitiesSalesStatusStats(int campaignId)
         {
             var entites = _db.Opportunities.Where(x => x.RelatedCampaignId == campaignId).GroupBy(x => x.OpportunityStatus);
-            var model = new List<SalesOpportunitiesCampaignStatusHelper>();
+            var model = new List<CampaignStatusHelper>();
 
             foreach (var entity in entites)
             {
-                string status = string.Empty;
+                string status;
                 switch (entity.Key)
                 {
                     case Opportunity.OpportunityStatusEnum.Start:
@@ -184,7 +187,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                             status = "Status prodajne prilike";
                             break;
                 }
-                var temp = new SalesOpportunitiesCampaignStatusHelper
+                var temp = new CampaignStatusHelper
                 {
                     StatusName = status,
                     SumOfEntities = entity.Count()
@@ -194,14 +197,14 @@ namespace MojCRM.Areas.Campaigns.ViewModels
             return model.AsQueryable();
         }
 
-        public IQueryable<SalesLeadsCampaignStatusHelper> GetLeadsSalesStatusStats(int campaignId)
+        public IQueryable<CampaignStatusHelper> GetLeadsSalesStatusStats(int campaignId)
         {
             var entites = _db.Leads.Where(x => x.RelatedCampaignId == campaignId).GroupBy(x => x.LeadStatus);
-            var model = new List<SalesLeadsCampaignStatusHelper>();
+            var model = new List<CampaignStatusHelper>();
 
             foreach (var entity in entites)
             {
-                string status = string.Empty;
+                string status;
                 switch (entity.Key)
                 {
                     case Lead.LeadStatusEnum.Start:
@@ -229,7 +232,7 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                         status = "Status leada";
                         break;
                 }
-                var temp = new SalesLeadsCampaignStatusHelper
+                var temp = new CampaignStatusHelper
                 {
                     StatusName = status,
                     SumOfEntities = entity.Count()
@@ -237,6 +240,56 @@ namespace MojCRM.Areas.Campaigns.ViewModels
                 model.Add(temp);
             }
             return model.AsQueryable();
+        }
+
+        public GeneralCampaignStatusViewModel GetSalesGeneralStatus(int campaignId)
+        {
+            var opportunities = _db.Opportunities.Where(x => x.RelatedCampaignId == campaignId);
+            var leads = _db.Leads.Where(x => x.RelatedCampaignId == campaignId);
+            var campaign = _db.Campaigns.First(x => x.CampaignId == campaignId);
+
+            var countModel = new GeneralCampaignStatusViewModelCount
+            {
+                NumberOfOpportunitiesCreated = opportunities.Count(),
+                NumberOfOpportunitiesInProgress = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Start || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Arrangemeeting || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Incontact || o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Processdifficulties),
+                NumberOfOpportunitiesUser = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Meruser),
+                NumberOfOpportunitiesToLead = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Lead),
+                NumberOfOpportunitiesRejected = opportunities.Count(o => o.OpportunityStatus == Opportunity.OpportunityStatusEnum.Rejected),
+                NumberOfLeadsCreated = leads.Count(),
+                NumberOfLeadsInProgress = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Incontact || l.LeadStatus == Lead.LeadStatusEnum.Meeting || l.LeadStatus == Lead.LeadStatusEnum.Start),
+                NumberOfLeadsMeetings = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Meeting),
+                NumberOfLeadsQuotes = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Quotesent),
+                NumberOfLeadsRejected = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Rejected),
+                NumberOfLeadsAccepted = leads.Count(l => l.LeadStatus == Lead.LeadStatusEnum.Accepted)
+            };
+
+            var model = new GeneralCampaignStatusViewModel
+            {
+                RelatedCampaignId = 6,
+                RelatedCampaignName = campaign.CampaignName,
+                NumberOfOpportunitiesCreated = countModel.NumberOfOpportunitiesCreated,
+                NumberOfOpportunitiesInProgress = countModel.NumberOfOpportunitiesInProgress,
+                NumberOfOpportunitiesInProgressPercent = Math.Round(((countModel.NumberOfOpportunitiesInProgress / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+                NumberOfOpportunitesUser = countModel.NumberOfOpportunitiesUser,
+                NumberOfOpportunitiesUserPercent = Math.Round(((countModel.NumberOfOpportunitiesUser / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+                NumberOfOpportunitiesToLead = countModel.NumberOfOpportunitiesToLead,
+                NumberOfOpportunitiesToLeadPercent = Math.Round(((countModel.NumberOfOpportunitiesToLead / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+                NumberOfOpportunitiesRejected = countModel.NumberOfOpportunitiesRejected,
+                NumberOfOpportunitiesRejectedPercent = Math.Round(((countModel.NumberOfOpportunitiesRejected / (decimal)countModel.NumberOfOpportunitiesCreated) * 100), 2),
+                NumberOfLeadsCreated = countModel.NumberOfLeadsCreated,
+                NumberOfLeadsInProgress = countModel.NumberOfLeadsInProgress,
+                NumberOfLeadsInProgressPercent = Math.Round(((countModel.NumberOfLeadsInProgress / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+                NumberOfLeadsMeetings = countModel.NumberOfLeadsMeetings,
+                NumberOfLeadsMeetingsPercent = Math.Round(((countModel.NumberOfLeadsMeetings / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+                NumberOfLeadsQuotes = countModel.NumberOfLeadsQuotes,
+                NumberOfLeadsQuotesPercent = Math.Round(((countModel.NumberOfLeadsQuotes / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+                NumberOfLeadsRejected = countModel.NumberOfLeadsRejected,
+                NumberOfLeadsRejectedPercent = Math.Round(((countModel.NumberOfLeadsRejected / (decimal)countModel.NumberOfLeadsCreated) * 100), 2),
+                NumberOfLeadsAccepted = countModel.NumberOfLeadsAccepted,
+                NumberOfLeadsAcceptedPercent = Math.Round(((countModel.NumberOfLeadsAccepted / (decimal)countModel.NumberOfLeadsCreated) * 100), 2)
+            };
+
+            return model;
         }
     }
 }
