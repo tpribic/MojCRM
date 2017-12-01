@@ -42,6 +42,6 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public string CampaignName { get; set; }
         public string OrganizationName { get; set; }
         public string TelephoneMail { get; set; }
-        public AcquireEmail.AcquireEmailStatusEnum EmailStatusEnum { get; set; }
+        public int? EmailStatusEnum { get; set; }
     }
 }

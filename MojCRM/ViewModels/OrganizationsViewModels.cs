@@ -9,6 +9,76 @@ using System.Web.Mvc;
 
 namespace MojCRM.ViewModels
 {
+    public class OrganizationIndexViewModel
+    {
+        public IQueryable<Organizations> OrganizationList { get; set; }
+        public IList<SelectListItem> LegalStatusDropdown
+        {
+            get
+            {
+                var legalStatusList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi pravni status --"},
+                    new SelectListItem{ Value = "0", Text = @"Brisana" },
+                    new SelectListItem{ Value = "1", Text = @"Aktivna" }
+                };
+                return legalStatusList;
+            }
+        }
+        public IList<SelectListItem> LegalFormDropdown
+        {
+            get
+            {
+                var legalFormList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi pravni oblik --"},
+                    new SelectListItem{ Value = "0", Text = @"Nije navedeno" },
+                    new SelectListItem{ Value = "1", Text = @"Društvo s ograničenom odgovornošću" },
+                    new SelectListItem{ Value = "2", Text = @"Jednostavno društvo s ograničenom odgovornošću" },
+                    new SelectListItem{ Value = "3", Text = @"Dioničko društvo" },
+                    new SelectListItem{ Value = "4", Text = @"Ostala trgovačka društva (Komanditno društvo, Javno trgovačko društvo)" },
+                    new SelectListItem{ Value = "5", Text = @"Obrt" },
+                    new SelectListItem{ Value = "6", Text = @"Ostali pravni oblici (Zadruge, OPG, Udruge, Ustanove i sl.)" },
+                };
+                return legalFormList;
+            }
+        }
+        public IList<SelectListItem> OrganizationGroupDropdown
+        {
+            get
+            {
+                var organizationGroupList = new List<SelectListItem>
+                {
+                    new SelectListItem{ Value = null, Text = @"-- Odaberi grupaciju --"},
+                    new SelectListItem{ Value = "0", Text = @"Ne pripada grupaciji" },
+                    new SelectListItem{ Value = "1", Text = @"Adris Grupa" },
+                    new SelectListItem{ Value = "2", Text = @"Koncern Agrokor" },
+                    new SelectListItem{ Value = "3", Text = @"Atlantic Grupa" },
+                    new SelectListItem{ Value = "4", Text = @"Poslovna grupacija Auto Hrvatska" },
+                    new SelectListItem{ Value = "5", Text = @"Babić Pekare" },
+                    new SelectListItem{ Value = "21", Text = @"C.I.A.K. Grupa"},
+                    new SelectListItem{ Value = "6", Text = @"COMET" },
+                    new SelectListItem{ Value = "7", Text = @"CIOS" },
+                    new SelectListItem{ Value = "8", Text = @"CVH" },
+                    new SelectListItem{ Value = "9", Text = @"Holcim Grupa" },
+                    new SelectListItem{ Value = "10", Text = @"MSAN Grupa" },
+                    new SelectListItem{ Value = "11", Text = @"NEXE Grupa" },
+                    new SelectListItem{ Value = "12", Text = @"NTL Grupa" },
+                    new SelectListItem{ Value = "13", Text = @"Pivac Grupa" },
+                    new SelectListItem{ Value = "14", Text = @"Rijeka Holding" },
+                    new SelectListItem{ Value = "15", Text = @"STRABAG" },
+                    new SelectListItem{ Value = "16", Text = @"Styria Grupa" },
+                    new SelectListItem{ Value = "17", Text = @"Koncern Sunce" },
+                    new SelectListItem{ Value = "18", Text = @"Ultra Gros" },
+                    new SelectListItem{ Value = "19", Text = @"Žito Grupa" },
+                    new SelectListItem{ Value = "20", Text = @"Zagrebački Holding" }
+            };
+                return organizationGroupList;
+            }
+        }
+        public int ResultsCount { get; set; }
+    }
+
     public class OrganizationDetailsViewModel
     {
         public Organizations Organization { get; set; }

@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using static MojCRM.Models.Organizations;
 using MojCRM.Models;
-using System.ComponentModel.DataAnnotations;
 using static MojCRM.Models.OrganizationDetail;
 
 namespace MojCRM.Helpers
@@ -48,5 +43,14 @@ namespace MojCRM.Helpers
         [JsonProperty]
         public int MerId { get; set; }
         public string OrganizationName { get; set; }
+    }
+
+    public class OrganizationSearchHelper
+    {
+        public string VAT { get; set; }
+        public string SubjectName { get; set; }
+        public string MainCity { get; set; }
+        public string IsActive { get; set; }
+        public int? Group { get; set; }
     }
 }

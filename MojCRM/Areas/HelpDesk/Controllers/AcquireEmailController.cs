@@ -42,7 +42,11 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             {
                 list = list.Where(x => x.Organization.MerDeliveryDetail.Telephone.Contains(model.TelephoneMail) || x.Organization.MerDeliveryDetail.AcquiredReceivingInformation.Contains(model.TelephoneMail));
             }
-            list = list.Where(x => x.AcquireEmailStatus == model.EmailStatusEnum);
+            if (model.EmailStatusEnum != null)
+            {
+                var tempStatus = (AcquireEmailStatusEnum) model.EmailStatusEnum;
+                list = list.Where(x => x.AcquireEmailStatus == tempStatus);
+            }
 
             return View(list.OrderByDescending(x => x.Id));
         }
