@@ -15,8 +15,6 @@ namespace MojCRM.Controllers
         public ActionResult Index()
         {
             #region Old INA Campaign Procedures
-
-
             //var campaignIna = (from c in _db.Campaigns
             //                where c.CampaignId == 1
             //                select c).First();
@@ -69,14 +67,14 @@ namespace MojCRM.Controllers
             //};
             #endregion
 
-            var campaignsModel = new EmailBasesCampaignStatsViewModel();
+            //var campaignsModel = new EmailBasesCampaignStatsViewModel();
             var campaignMemberModel = new CampaignMember();
             var agentActivities = new CallCenterDailyStatsViewModel();
 
             var model = new HomeViewModel
             {
                 //INACampaign = modelIna,
-                Campaigns = campaignsModel.GetModels(),
+                //Campaigns = campaignsModel.GetModels(),
                 CampaignMembers = campaignMemberModel.GetCamapigns(User.Identity.Name),
                 AgentActivities = agentActivities.GetActivitiesForDashboard()
             };

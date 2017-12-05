@@ -3,6 +3,7 @@ using MojCRM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using static MojCRM.Areas.HelpDesk.Models.AcquireEmail;
@@ -210,55 +211,63 @@ namespace MojCRM.Areas.HelpDesk.Controllers
         [HttpPost]
         public ActionResult CheckEntitiesForImport(HttpPostedFileBase file, int campaignId)
         {
-            int importedEntities = 0;
-            int validEntities = 0;
-            List<string> validVATs = new List<string>();
-            int invalidEntities = 0;
-            List<string> invalidVATs = new List<string>();
-
-            //string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
-            //if(!create)
-            //    file.SaveAs(filepath);
-
-            var wb = new ExcelPackage(file.InputStream);
-            var ws = wb.Workbook.Worksheets[1];
-
-            for (int i = ws.Dimension.Start.Row; i <= ws.Dimension.End.Row; i++)
+            try
             {
-                string VAT = ws.Cells[i, 1].Value.ToString();
+                int importedEntities = 0;
+                int validEntities = 0;
+                List<string> validVATs = new List<string>();
+                int invalidEntities = 0;
+                List<string> invalidVATs = new List<string>();
 
-                if (VAT != "")
+                //string filepath = Path.Combine(Server.MapPath("~/ImportFiles"), "ImportAcquireEmail.xls");
+                //if(!create)
+                //    file.SaveAs(filepath);
+
+                var wb = new ExcelPackage(file.InputStream);
+                var ws = wb.Workbook.Worksheets[1];
+
+                for (int i = ws.Dimension.Start.Row; i <= ws.Dimension.End.Row; i++)
                 {
-                    if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
-                    {
-                        validVATs.Add(VAT);
-                        ImportEntities(campaignId, VAT);
-                        importedEntities++;
+                    string VAT = ws.Cells[i, 1].Value.ToString();
 
-                        validEntities++;
-                    }
-                    else
+                    if (VAT != "")
                     {
-                        invalidVATs.Add(VAT);
-                        invalidEntities++;
+                        if (_db.Organizations.Any(o => o.SubjectBusinessUnit == "" && o.VAT == VAT))
+                        {
+                            validVATs.Add(VAT);
+                            ImportEntities(campaignId, VAT);
+                            importedEntities++;
+
+                            validEntities++;
+                        }
+                        else
+                        {
+                            invalidVATs.Add(VAT);
+                            invalidEntities++;
+                        }
                     }
                 }
+
+                var model = new AcquireEmailCheckResults
+                {
+                    CampaignId = campaignId,
+                    ValidEntities = validEntities,
+                    InvalidEntities = invalidEntities,
+                    ImportedEntities = importedEntities,
+                    ValidVATs = validVATs,
+                    InvalidVATs = invalidVATs
+                };
+
+                //if(create)
+                //    System.IO.File.Delete(filepath);
+
+                wb.Dispose();
+                return View(model);
             }
-            
-            var model = new AcquireEmailCheckResults
+            catch (COMException e)
             {
-                CampaignId = campaignId,
-                ValidEntities = validEntities,
-                InvalidEntities = invalidEntities,
-                ImportedEntities = importedEntities,
-                ValidVATs = validVATs,
-                InvalidVATs = invalidVATs
-            };
-
-            //if(create)
-            //    System.IO.File.Delete(filepath);
-
-            return View(model);
+                return View("ErrorOldExcel");
+            }
         }
 
         [HttpPost]
@@ -383,7 +392,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                     entityStatusEnum = AcquireEmailEntityStatusEnum.Created;
                     break;
                 case AcquireEmailStatusEnum.Verified:
-                    entityStatusEnum = AcquireEmailEntityStatusEnum.AcquiredInformation;
+                    entityStatusEnum = organization.MerDeliveryDetail.AcquiredReceivingInformation == "ZATVORENA TVRTKA" ? AcquireEmailEntityStatusEnum.ClosedOrganization : AcquireEmailEntityStatusEnum.AcquiredInformation;
                     break;
             }
 
@@ -464,6 +473,31 @@ namespace MojCRM.Areas.HelpDesk.Controllers
             _db.SaveChanges();
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        public ActionResult AcquireEmailsAssignedStats()
+        {
+            var entities = _db.AcquireEmails.Where(x => x.AcquireEmailStatus == AcquireEmailStatusEnum.Created && x.IsAssigned)
+                .GroupBy(x => new { x.AssignedTo, x.Campaign.CampaignName});
+            var list = new List<AcquireEmailStatsPerAgentAndCampaign>();
+
+            foreach (var entity in entities)
+            {
+                var temp = new AcquireEmailStatsPerAgentAndCampaign
+                {
+                    Agent = entity.Key.AssignedTo,
+                    CampaignName = entity.Key.CampaignName,
+                    NumberOfEntitiesForProcessing = entity.Count()
+                };
+                list.Add(temp);
+            }
+
+            var model = new AcquireEmailStatsPerAgentViewModel()
+            {
+                Campaigns = list.AsQueryable()
+            };
+
+            return View(model);
         }
 
         public IList<AcquireEmailExportModel> GetEntityList(int campaignId)

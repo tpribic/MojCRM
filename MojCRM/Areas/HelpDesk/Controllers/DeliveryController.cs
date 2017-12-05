@@ -814,7 +814,7 @@ namespace MojCRM.Areas.HelpDesk.Controllers
                 {
                     resultsDocumentHistory = JsonConvert.DeserializeObject<MerGetSentDocumentsResponse[]>(deliveryTicketModel.GetSentDocumentsResult);
                 }
-                
+
 
                 var deliveryDetails = new DeliveryDetailsViewModel
                 {

@@ -14,6 +14,7 @@ namespace MojCRM.Controllers
     public class OrganizationsController : Controller
     {
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
+        private readonly AcquireEmailMethodHelpers _acquireEmailMethodHelpers = new AcquireEmailMethodHelpers();
 
         // GET: Organizations
         public ActionResult Index(OrganizationSearchHelper model)
@@ -416,55 +417,56 @@ namespace MojCRM.Controllers
 
         // POST: Organizations/EditImportantOrganizationInfo
         [Authorize(Roles = "Superadmin")]
-        public ActionResult EditImportantOrganizationInfo(EditImportantOrganizationInfo Model)
+        public ActionResult EditImportantOrganizationInfo(EditImportantOrganizationInfo model)
         {
-            var organization = _db.Organizations.Find(Model.MerId);
+            var organization = _db.Organizations.Find(model.MerId);
 
-            string LogString = "Agent " + User.Identity.Name + " je napravio izmjene na subjektu: "
+            string logString = "Agent " + User.Identity.Name + " je napravio izmjene na subjektu: "
                 + organization.SubjectName + ". Izmjenjeni su:";
 
-            if (Model.LegalForm != null)
+            if (model.LegalForm != null)
             {
-                if (Model.LegalForm != organization.LegalForm)
-                    LogString += " - pravni oblik iz " + organization.LegalForm + " u " + Model.LegalForm;
-                organization.LegalForm = (Organizations.LegalFormEnum)Model.LegalForm;
+                if (model.LegalForm != organization.LegalForm)
+                    logString += " - pravni oblik iz " + organization.LegalForm + " u " + model.LegalForm;
+                organization.LegalForm = (Organizations.LegalFormEnum)model.LegalForm;
             }
-            if (Model.OrganizationGroup != null)
+            if (model.OrganizationGroup != null)
             {
-                if (Model.OrganizationGroup != organization.OrganizationDetail.OrganizationGroup)
-                    LogString += " - članstvo u grupaciji iz " + organization.OrganizationDetail.OrganizationGroup + " u " + Model.OrganizationGroup;
-                organization.OrganizationDetail.OrganizationGroup = (OrganizationGroupEnum)Model.OrganizationGroup;
+                if (model.OrganizationGroup != organization.OrganizationDetail.OrganizationGroup)
+                    logString += " - članstvo u grupaciji iz " + organization.OrganizationDetail.OrganizationGroup + " u " + model.OrganizationGroup;
+                organization.OrganizationDetail.OrganizationGroup = (OrganizationGroupEnum)model.OrganizationGroup;
             }
-            if (Model.ServiceProvider != null)
+            if (model.ServiceProvider != null)
             {
-                if (Model.ServiceProvider != organization.ServiceProvider)
-                    LogString += " - informacijski posrednik iz " + organization.ServiceProvider + " u " + Model.ServiceProvider;
-                organization.ServiceProvider = (Organizations.ServiceProviderEnum)Model.ServiceProvider;
+                if (model.ServiceProvider != organization.ServiceProvider)
+                    logString += " - informacijski posrednik iz " + organization.ServiceProvider + " u " + model.ServiceProvider;
+                organization.ServiceProvider = (Organizations.ServiceProviderEnum)model.ServiceProvider;
             }
-            if (Model.LegalStatus != null)
+            if (model.LegalStatus != null)
             {
-                if (Model.LegalStatus == 0)
+                if (model.LegalStatus == 0)
                 {
-                    var temp = false;
+                    const bool temp = false;
                     if (temp != organization.IsActive)
-                        LogString += " - pravni status iz aktivnog u brisano";
+                        logString += " - pravni status iz aktivnog u brisano";
                     organization.IsActive = false;
                     organization.MerDeliveryDetail.AcquiredReceivingInformation = "ZATVORENA TVRTKA";
                     organization.MerDeliveryDetail.AcquiredReceivingInformationIsVerified = true;
+                    _acquireEmailMethodHelpers.UpdateClosedSubjectEntities(model.MerId);
                 }
-                if (Model.LegalStatus == 1)
+                if (model.LegalStatus == 1)
                 {
-                    var temp = true;
+                    const bool temp = true;
                     if (temp != organization.IsActive)
-                        LogString += " - pravni status iz brisanog u aktivno";
+                        logString += " - pravni status iz brisanog u aktivno";
                     organization.IsActive = true;
                 }
             }
-            LogString += ".";
+            logString += ".";
             organization.UpdateDate = DateTime.Now;
             organization.LastUpdatedBy = User.Identity.Name;
 
-            LogActivity(LogString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
+            LogActivity(logString, User.Identity.Name, organization.MerId, ActivityLog.ActivityTypeEnum.Organizationupdate);
 
             _db.SaveChanges();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MojCRM.Areas.HelpDesk.Models;
+using MojCRM.Models;
 
 namespace MojCRM.Areas.HelpDesk.Helpers
 {
@@ -43,5 +44,30 @@ namespace MojCRM.Areas.HelpDesk.Helpers
         public string OrganizationName { get; set; }
         public string TelephoneMail { get; set; }
         public int? EmailStatusEnum { get; set; }
+    }
+
+    public class AcquireEmailStatsPerAgentAndCampaign
+    {
+        public string Agent { get; set; }
+        public string CampaignName { get; set; }
+        public int NumberOfEntitiesForProcessing { get; set; }
+    }
+
+    public class AcquireEmailMethodHelpers
+    {
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+
+        public void UpdateClosedSubjectEntities(int organizationId)
+        {
+            var entities = _db.AcquireEmails.Where(x => x.RelatedOrganizationId == organizationId);
+
+            foreach (var acquireEmail in entities)
+            {
+                acquireEmail.AcquireEmailStatus = AcquireEmail.AcquireEmailStatusEnum.Verified;
+                acquireEmail.AcquireEmailEntityStatus = AcquireEmail.AcquireEmailEntityStatusEnum.ClosedOrganization;
+                acquireEmail.UpdateDate = DateTime.Now;
+            }
+            _db.SaveChanges();
+        }
     }
 }

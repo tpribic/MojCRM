@@ -190,6 +190,13 @@ namespace MojCRM.Areas.Campaigns.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult EmailBasesStats()
+        {
+            var model = new EmailBasesCampaignStatsViewModel();
+
+            return View(model.GetModels());
+        }
+
         [HttpPost]
         public ActionResult ChangeStatus(Campaign.CampaignStatusEnum newStatus, int campaignId)
         {

@@ -736,6 +736,9 @@
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\CheckEntitiesForImport.cshtml" />
     <Content Include="Areas\Stats\Views\Stats\SalesStat.cshtml" />
     <Content Include="Areas\Stats\Views\Stats\CallCenterWeekly.cshtml" />
+    <Content Include="Areas\Campaigns\Views\Campaigns\EmailBasesStats.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\AcquireEmail\ErrorOldExcel.cshtml" />
+    <Content Include="Areas\HelpDesk\Views\AcquireEmail\AcquireEmailsAssignedStats.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
