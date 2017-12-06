@@ -161,6 +161,8 @@ namespace MojCRM.Areas.Stats.Controllers
             var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
             var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
             var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@") && al.Description.Contains("nova informacija o preuzimanju"));
+            var acquiredTelephoneNumbers = db.ActivityLogs.Where(al =>
+                al.Description.Contains("- broj mobitela") || al.Description.Contains("- broj telefona"));
             var activities = new List<CallCenterDaily>();
             var activitiesByDepartment = new List<CallCenterDailyByDepartment>();
 
@@ -177,6 +179,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
                 acquiredEmails = acquiredEmails.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
+                acquiredTelephoneNumbers = acquiredTelephoneNumbers.Where(t => (t.InsertDate >= searchDate) && (t.InsertDate < searchDatePlus));
 
                 agentActivities = (from a in db.ActivityLogs
                                    where (a.InsertDate >= searchDate) && (a.InsertDate < searchDatePlus)
@@ -199,7 +202,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
                         NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
-                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key),
+                        NumberAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count(a => a.User == day.Key)
                     };
                     activities.Add(dailyActivities);
                 }
@@ -228,6 +232,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
                 ticketsAssigned = ticketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
                 acquiredEmails = acquiredEmails.Where(t => t.InsertDate >= DateTime.Today);
+                acquiredTelephoneNumbers = acquiredTelephoneNumbers.Where(t => t.InsertDate >= DateTime.Today);
                 foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterDaily
@@ -241,7 +246,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
                         NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
-                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key),
+                        NumberAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count(a => a.User == day.Key)
                     };
                     activities.Add(dailyActivities);
                 }
@@ -272,7 +278,8 @@ namespace MojCRM.Areas.Stats.Controllers
                 SumResend = resend.Count(),
                 SumSentMail = deliveryMail.Count(),
                 SumTicketsAssigned = ticketsAssigned.Count(),
-                SumAcquiredEmails = acquiredEmails.Count()
+                SumAcquiredEmails = acquiredEmails.Count(),
+                SumAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count()
             };
 
             return View(model);
@@ -296,6 +303,8 @@ namespace MojCRM.Areas.Stats.Controllers
             var deliveryMail = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Email);
             var ticketsAssigned = db.ActivityLogs.Where(a => a.ActivityType == ActivityLog.ActivityTypeEnum.Ticketassign);
             var acquiredEmails = db.ActivityLogs.Where(al => al.Description.Contains("@") && al.Description.Contains("nova informacija o preuzimanju"));
+            var acquiredTelephoneNumbers = db.ActivityLogs.Where(al =>
+                al.Description.Contains("- broj mobitela") || al.Description.Contains("- broj telefona"));
             var activities = new List<CallCenterWeekly>();
             var activitiesByDepartment = new List<CallCenterWeeklyByDepartment>();
 
@@ -312,6 +321,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 deliveryMail = deliveryMail.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 ticketsAssigned = ticketsAssigned.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
                 acquiredEmails = acquiredEmails.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
+                acquiredTelephoneNumbers = acquiredTelephoneNumbers.Where(t => (t.InsertDate >= searchDateStart) && (t.InsertDate < searchDateEnd));
 
                 agentActivities = db.ActivityLogs
                     .Where(a => (a.InsertDate >= searchDateStart) && (a.InsertDate < searchDateEnd))
@@ -334,7 +344,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
                         NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
-                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key),
+                        NumberAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count(a => a.User == day.Key),
                     };
                     activities.Add(dailyActivities);
                 }
@@ -363,6 +374,7 @@ namespace MojCRM.Areas.Stats.Controllers
                 deliveryMail = deliveryMail.Where(t => t.InsertDate >= DateTime.Today);
                 ticketsAssigned = ticketsAssigned.Where(t => t.InsertDate >= DateTime.Today);
                 acquiredEmails = acquiredEmails.Where(t => t.InsertDate >= DateTime.Today);
+                acquiredTelephoneNumbers = acquiredTelephoneNumbers.Where(t => t.InsertDate >= DateTime.Today);
                 foreach (var day in agentActivities)
                 {
                     var dailyActivities = new CallCenterWeekly
@@ -376,7 +388,8 @@ namespace MojCRM.Areas.Stats.Controllers
                         NumberResend = resend.Count(a => a.User == day.Key),
                         NumberMail = deliveryMail.Count(a => a.User == day.Key),
                         NumberTicketsAssigned = ticketsAssigned.Count(a => a.User == day.Key),
-                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key)
+                        NumberAcquiredEmails = acquiredEmails.Count(a => a.User == day.Key),
+                        NumberAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count(a => a.User == day.Key)
                     };
                     activities.Add(dailyActivities);
                 }
@@ -407,7 +420,8 @@ namespace MojCRM.Areas.Stats.Controllers
                 SumResend = resend.Count(),
                 SumSentMail = deliveryMail.Count(),
                 SumTicketsAssigned = ticketsAssigned.Count(),
-                SumAcquiredEmails = acquiredEmails.Count()
+                SumAcquiredEmails = acquiredEmails.Count(),
+                SumAcquiredTelephoneNumbers = acquiredTelephoneNumbers.Count()
             };
 
             return View(model);

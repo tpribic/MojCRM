@@ -69,6 +69,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? NumberTicketsAssigned { get; set; }
         [Display(Name = "Broj prikupljenih e-mail adresa")]
         public int? NumberAcquiredEmails { get; set; }
+        [Display(Name = "Broj prikupljenih kontakt podataka")]
+        public int? NumberAcquiredTelephoneNumbers { get; set; }
         [Display(Name = "Vrijeme od zadnjeg poziva")]
         public int? TimeFromLastCall { get; set; }
     }
@@ -125,6 +127,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? SumTicketsAssigned { get; set; }
         [Display(Name = "Broj prikupljenih e-mail adresa")]
         public int? SumAcquiredEmails { get; set; }
+        [Display(Name = "Broj prikupljenih kontakt podataka")]
+        public int? SumAcquiredTelephoneNumbers { get; set; }
 
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
         public IQueryable<CallCenterDaily> GetActivitiesForDashboard()
@@ -194,6 +198,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? NumberTicketsAssigned { get; set; }
         [Display(Name = "Broj prikupljenih e-mail adresa")]
         public int? NumberAcquiredEmails { get; set; }
+        [Display(Name = "Broj prikupljenih kontakt podataka")]
+        public int? NumberAcquiredTelephoneNumbers { get; set; }
     }
     public class CallCenterWeeklyByDepartment
     {
@@ -248,6 +254,8 @@ namespace MojCRM.Areas.Stats.ViewModels
         public int? SumTicketsAssigned { get; set; }
         [Display(Name = "Broj prikupljenih e-mail adresa")]
         public int? SumAcquiredEmails { get; set; }
+        [Display(Name = "Broj prikupljenih kontakt podataka")]
+        public int? SumAcquiredTelephoneNumbers { get; set; }
     }
 
     public class PersonalDailyActivitiesViewModel

@@ -55,6 +55,7 @@
                 <th>@Html.LabelFor(model => model.SumResend)</th>
                 <th>@Html.LabelFor(model => model.SumTicketsAssigned)</th>
                 <th>@Html.LabelFor(model => model.SumAcquiredEmails)</th>
+                <th>@Html.LabelFor(model => model.SumAcquiredTelephoneNumbers)</th>
             </tr>
             <tr>
                 @if (Model.SumSuccessfulCallsSuspicious == 0)
@@ -78,6 +79,7 @@
                 <td>@Model.SumResend</td>
                 <td>@Model.SumTicketsAssigned</td>
                 <td>@Model.SumAcquiredEmails</td>
+                <td>@Model.SumAcquiredTelephoneNumbers</td>
             </tr>
         </table>
     </div>
@@ -122,6 +124,7 @@
                     <th>Ponovno poslane obavijesti o dostavi (Odjel dostave)</th>
                     <th>Dodijeljene kartice (Odjel dostave)</th>
                     <th>Prikupljene e-mail adrese</th>
+                    <th>Prikupljeni telefonski kontakti</th>
                 </tr>
                 @foreach (var activity in Model.Activities)
             {
@@ -148,6 +151,7 @@
                         <td>@activity.NumberResend</td>
                         <td>@activity.NumberTicketsAssigned</td>
                         <td>@activity.NumberAcquiredEmails</td>
+                        <td>@activity.NumberAcquiredTelephoneNumbers</td>
                     </tr>
                 }
                 <tr></tr>
