@@ -739,6 +739,9 @@
     <Content Include="Areas\Campaigns\Views\Campaigns\EmailBasesStats.cshtml" />
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\ErrorOldExcel.cshtml" />
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\AcquireEmailsAssignedStats.cshtml" />
+    <Content Include="Areas\Stats\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Stats\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Demografska.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
@@ -902,7 +905,6 @@
     <Folder Include="Areas\Cooperation\Views\Shared\" />
     <Folder Include="Areas\HelpDesk\Views\Shared\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
-    <Folder Include="Areas\Stats\Views\Shared\" />
     <Folder Include="ImportFiles\" />
   </ItemGroup>
   <ItemGroup>
