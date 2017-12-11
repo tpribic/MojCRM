@@ -328,7 +328,6 @@
     <Compile Include="Areas\Campaigns\ViewModels\CampaignStatsViewModel.cs" />
     <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
     <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
-    <Compile Include="Areas\Demografska\Views\Demograf\DemografController.cs" />
     <Compile Include="Areas\HelpDesk\Controllers\AcquireEmailController.cs" />
     <Compile Include="Areas\HelpDesk\HelpDeskAreaRegistration.cs" />
     <Compile Include="Areas\HelpDesk\Helpers\AcquireEmailHelpers.cs" />
@@ -742,9 +741,9 @@
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\AcquireEmailsAssignedStats.cshtml" />
     <Content Include="Areas\Stats\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Stats\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Demografska\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Demografska\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Demografska\Views\Demografska.cshtml" />
+    <Content Include="Areas\Demograf\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Demograf\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Demograf\Demografski.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
