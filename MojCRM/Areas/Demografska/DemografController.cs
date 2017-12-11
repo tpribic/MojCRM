@@ -4,29 +4,29 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MojCRM.Areas.Demograf.Controllers
+namespace MojCRM.Areas.Demografska
 {
     public class DemografController : Controller
     {
-        // GET: Demograf/Demograf
+        // GET: Demografska/Demograf
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Demograf/Demograf/Details/5
+        // GET: Demografska/Demograf/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Demograf/Demograf/Create
+        // GET: Demografska/Demograf/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Demograf/Demograf/Create
+        // POST: Demografska/Demograf/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
@@ -42,13 +42,13 @@ namespace MojCRM.Areas.Demograf.Controllers
             }
         }
 
-        // GET: Demograf/Demograf/Edit/5
+        // GET: Demografska/Demograf/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Demograf/Demograf/Edit/5
+        // POST: Demografska/Demograf/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -64,13 +64,13 @@ namespace MojCRM.Areas.Demograf.Controllers
             }
         }
 
-        // GET: Demograf/Demograf/Delete/5
+        // GET: Demografska/Demograf/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Demograf/Demograf/Delete/5
+        // POST: Demografska/Demograf/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
