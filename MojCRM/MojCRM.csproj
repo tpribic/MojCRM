@@ -328,7 +328,7 @@
     <Compile Include="Areas\Campaigns\ViewModels\CampaignStatsViewModel.cs" />
     <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
     <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
-    <Compile Include="Areas\Demografska\DemografController.cs" />
+    <Compile Include="Areas\Demografska\Views\Demograf\DemografController.cs" />
     <Compile Include="Areas\HelpDesk\Controllers\AcquireEmailController.cs" />
     <Compile Include="Areas\HelpDesk\HelpDeskAreaRegistration.cs" />
     <Compile Include="Areas\HelpDesk\Helpers\AcquireEmailHelpers.cs" />
@@ -906,7 +906,6 @@
     <Folder Include="Areas\Campaigns\Views\Shared\" />
     <Folder Include="Areas\Cooperation\Controllers\" />
     <Folder Include="Areas\Cooperation\Views\Shared\" />
-    <Folder Include="Areas\Demografska\Views\Demograf\" />
     <Folder Include="Areas\HelpDesk\Views\Shared\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
     <Folder Include="ImportFiles\" />
