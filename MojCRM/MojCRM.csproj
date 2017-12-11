@@ -328,6 +328,7 @@
     <Compile Include="Areas\Campaigns\ViewModels\CampaignStatsViewModel.cs" />
     <Compile Include="Areas\Cooperation\CooperationAreaRegistration.cs" />
     <Compile Include="Areas\Cooperation\Models\MerIntegrationSoftware.cs" />
+    <Compile Include="Areas\Demograf\Controllers\DemografController.cs" />
     <Compile Include="Areas\HelpDesk\Controllers\AcquireEmailController.cs" />
     <Compile Include="Areas\HelpDesk\HelpDeskAreaRegistration.cs" />
     <Compile Include="Areas\HelpDesk\Helpers\AcquireEmailHelpers.cs" />
@@ -741,7 +742,9 @@
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\AcquireEmailsAssignedStats.cshtml" />
     <Content Include="Areas\Stats\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Stats\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Stats\Views\Stats\Demografska.cshtml" />
+    <Content Include="Areas\Demograf\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Demograf\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Demograf\Views\Demografska.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
@@ -903,6 +906,7 @@
     <Folder Include="Areas\Campaigns\Views\Shared\" />
     <Folder Include="Areas\Cooperation\Controllers\" />
     <Folder Include="Areas\Cooperation\Views\Shared\" />
+    <Folder Include="Areas\Demograf\Views\Demograf\" />
     <Folder Include="Areas\HelpDesk\Views\Shared\" />
     <Folder Include="Areas\Sales\Views\Shared\" />
     <Folder Include="ImportFiles\" />
