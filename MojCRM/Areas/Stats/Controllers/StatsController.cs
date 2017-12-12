@@ -572,5 +572,42 @@ namespace MojCRM.Areas.Stats.Controllers
              return View(salesStat);
  
          }
+        // GET: Demografski
+        public ActionResult Demografski()
+        {
+            var NOINFO = (from a in db.Organizations
+                          where a.Organizations == Organizations.LegalFormEnum.NOINFO
+                          select a);
+            var DOO = (from a in db.Organizations
+                       where a.Organizations == Organizations.LegalFormEnum.DOO
+                       select a);
+            var JDOO = (from a in db.Organizations
+                        where a.Organizations == Organizations.LegalFormEnum.JDOO
+                        select a);
+            var DD = (from a in db.Organizations
+                      where a.Organizations == Organizations.LegalFormEnum.DD
+                      select a);
+            var KDJTD = (from a in db.Organizations
+                         where a.Organizations == Organizations.LegalFormEnum.KDJTD
+                         select a);
+            var OBRT = (from a in db.Organizations
+                        where a.Organizations == Organizations.LegalFormEnum.OBRT
+                        select a);
+            var OTHER = (from a in db.Organizations
+                         where a.Organizations == Organizations.LegalFormEnum.OTHER
+                         select a);
+
+            var StatsDemografija = new DemografskiViewModel
+            {
+                sumNOINFO = NOINFO.Count(),
+                sumDOO = DOO.Count(),
+                sumDD = DD.Count(),
+                sumKDJTD = KDJTD.Count(),
+                sumOBRT = OBRT.Count(),
+                sumOTHER = OTHER.Count()
+            };
+
+            return View(StatsDemografija);
+        }
     }
 }

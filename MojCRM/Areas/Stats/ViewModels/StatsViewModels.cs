@@ -360,5 +360,14 @@ namespace MojCRM.Areas.Stats.ViewModels
         public string Name { get; set; }
         public int Count { get; set; }
     }
+    public class DemografskiViewModel
+    {
+        public int sumNOINFO { get; set; }
+        public int sumDOO { get; set; }
+        public int sumDD { get; set; }
+        public int sumKDJTD { get; set; }
+        public int sumOBRT { get; set; }
+        public int sumOTHER { get; set; }
+    }
 
 }

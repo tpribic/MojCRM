@@ -741,6 +741,7 @@
     <Content Include="Areas\HelpDesk\Views\AcquireEmail\AcquireEmailsAssignedStats.cshtml" />
     <Content Include="Areas\Stats\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Stats\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Stats\Views\Stats\Demografski.cshtml" />
     <None Include="Scripts\jquery-3.2.1-vsdoc.js" />
     <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
