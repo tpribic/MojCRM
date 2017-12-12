@@ -1,4 +1,5 @@
-﻿@{
+﻿@model MojCRM.Areas.Stats.ViewModels.DemografskiViewModel
+@{
     ViewBag.Title = "Demografska Statistika";
     Layout = "~/Views/Shared/_UserLayoutNew.cshtml";
 }
@@ -103,12 +104,19 @@
                 <th>Obrt</th>
                 <th>Ostali pravni oblici(Zadruge, OPG i sl.)</th>
             </tr>
-            @foreach (var postanski in Model.OrganizationDetail)
+         @*   @foreach (var postanski in Model.OrganizationDetails)
             {
                 <tr>@postanski.MainPostalCode</tr>
-                @foreach (var subjekt in )
-            }
-            <tr></tr>
+                
+            } *@
+            <tr>
+                <td></td>
+                <td>@Model.sumDOO</td>
+                <td>@Model.sumDD</td>
+                <td>@Model.sumOTHER</td>
+                <td>@Model.sumOBRT</td>
+                <td>@Model.sumKDJTD</td>
+            </tr> 
         </table>
 
     </div>

@@ -576,25 +576,25 @@ namespace MojCRM.Areas.Stats.Controllers
         public ActionResult Demografski()
         {
             var NOINFO = (from a in db.Organizations
-                          where a.Organizations == Organizations.LegalFormEnum.NOINFO
+                          where a.LegalForm == Organizations.LegalFormEnum.NOINFO
                           select a);
             var DOO = (from a in db.Organizations
-                       where a.Organizations == Organizations.LegalFormEnum.DOO
+                       where a.LegalForm == Organizations.LegalFormEnum.DOO
                        select a);
             var JDOO = (from a in db.Organizations
-                        where a.Organizations == Organizations.LegalFormEnum.JDOO
+                        where a.LegalForm == Organizations.LegalFormEnum.JDOO
                         select a);
             var DD = (from a in db.Organizations
-                      where a.Organizations == Organizations.LegalFormEnum.DD
+                      where a.LegalForm == Organizations.LegalFormEnum.DD
                       select a);
             var KDJTD = (from a in db.Organizations
-                         where a.Organizations == Organizations.LegalFormEnum.KDJTD
+                         where a.LegalForm == Organizations.LegalFormEnum.KDJTD
                          select a);
             var OBRT = (from a in db.Organizations
-                        where a.Organizations == Organizations.LegalFormEnum.OBRT
+                        where a.LegalForm == Organizations.LegalFormEnum.OBRT
                         select a);
             var OTHER = (from a in db.Organizations
-                         where a.Organizations == Organizations.LegalFormEnum.OTHER
+                         where a.LegalForm == Organizations.LegalFormEnum.OTHER
                          select a);
 
             var StatsDemografija = new DemografskiViewModel
